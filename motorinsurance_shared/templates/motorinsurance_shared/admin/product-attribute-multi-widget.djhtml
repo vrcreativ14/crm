@@ -1,0 +1,26 @@
+<div class="product-attribute-field">
+    {% with subwidget=widget.subwidgets.0 %}
+        <label class="check-label">Available?</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+
+    {% with subwidget=widget.subwidgets.1 %}
+        <label class="check-label">Is add on?</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+
+    {% with subwidget=widget.subwidgets.2 %}
+        <label>Description</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+
+    {% with subwidget=widget.subwidgets.3 %}
+        <label>Price</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+
+    {% with subwidget=widget.subwidgets.4 %}
+        <label>Help text</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+</div>

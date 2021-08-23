@@ -1,0 +1,54 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}{{ form.title }}{% endblock %}
+
+{% block content %}
+<div class="sub-container company_pdf_forms">
+    <div class="mt-1">
+        <div class="preloader">
+        <img src="{% static "images/preloader.svg" %}" width="32" /><br><br>
+            Please wait while we submit your document
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.hellosign.com/public/js/embedded/v2.9.0/embedded.production.min.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        getHSDocument();
+    });
+
+    function getHSDocument() {
+        $('.preloader').show();
+
+        $.get("{{ doc_generate_url }}", function(res) {
+            if(res.success) {
+                $('.preloader').hide();
+                let params = {
+                    clientId: res.hs_cid,
+                    debug: false,
+                    skipDomainVerification: true,
+                    allowCancel: false
+                }
+
+                const client = new window.HelloSign(params);
+                client.open(res.signature_url);
+
+                client.on('sign', (data) => {
+                    console.log(data);
+                    window.location = DjangoUrls["company-forms-web-thankyou"]();
+                });
+            } else {
+                setTimeout(function() {
+                    getHSDocument();
+                }, 1000);
+            }
+        });
+    }
+    </script>
+{% endblock extra_js %}
+

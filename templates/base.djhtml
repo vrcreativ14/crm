@@ -1,0 +1,418 @@
+{% load static %}
+{% load permission_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <title>{% block page_title %}Welcome{% endblock %} - Nexus Advice</title>
+    <meta content="Felix Login" name="description"/>
+    <meta content="Felix.insure" name="author"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <!-- App Icons -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+    {% block extra_css %}{% endblock %}
+
+    <!-- APP CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet"/>
+    <link href="{% static 'dist/style.min.css' %}" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="{% static "js/jquery-3.6.0.min.js" %}"></script>
+    <script src="{% static "js/jquery-migrate-3.3.2.min.js" %}"></script>
+
+    <!-- JS variables populated from backend code -->
+    <script>
+        var __app_name = '{{ request.session.selected_product_line }}';
+
+        if(!__app_name)__app_name = 'motorinsurance';
+
+        var app_config = {
+            ALGOLIA_APP_ID: "{{ algolia_app_id }}",
+            ALGOLIA_SEARCH_API_KEY: "{{ algolia_search_api_key }}"
+        };
+        var loggedin_user_data = {
+            ID: "{{ request.user.id }}",
+            EMAIL: "{{ request.user.email }}",
+            COMPANY: "{{ company.name }}",
+            ROLE: "{{ request.user.userprofile.get_assigned_role }}"
+        };
+        var current_company_info = {
+            ID: "{{ request.company.id }}",
+            NAME: "{{ request.company.name }}",
+        };
+    </script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'dist/scripts.min.js' %}"></script>
+</head>
+<body
+    data-agent="{{ request.user.pk }}"
+    data-current-nav="{% block current_nav %}{% endblock %}"
+    class="{% block body_class %}{% endblock %} {{request.session.selected_product_line}}"
+>
+{% if not debug %}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4RTQ3Q"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+{% endif %}
+
+<div class="header-bg">
+    <!-- Navigation Bar-->
+    <header id="topnav">
+        <div class="topbar-main">
+            <div class="container-fluid squeeze">
+
+                <!-- Logo container-->
+                <div class="logo">
+                    <a href="/" class="felix">
+                        <img src="{% static 'images/nexus-logo.svg' %}" alt="" class="logo-large"/>
+                    </a>
+                </div>
+                <!-- End Logo container-->
+
+                <!-- MENU Start -->
+                {% if user.is_authenticated %}
+                    <div class="navbar-custom m-t-5 float-left">
+                        <div class="container-fluid">
+                            <div id="navigation">
+                                <!-- Navigation Menu-->
+                                {% include 'topmenus/motorinsurance.djhtml' %}
+                                <!-- End navigation menu -->
+                            </div> <!-- end #navigation -->
+                        </div> <!-- end container -->
+                    </div> <!-- end navbar-custom -->
+
+                    <div class="menu-extras topbar-custom">
+                        <ul class="list-inline float-right mb-0">
+                            <li class="list-inline-item dropdown notification-list">
+                                <a class="nav-link dropdown-toggle arrow-none nav-user" data-toggle="dropdown"
+                                   href="#"
+                                   role="button"
+                                   aria-haspopup="false" aria-expanded="false">
+                                    {% if request.user.userprofile.get_profile_image %}
+                                        <img src="{{ request.user.userprofile.get_profile_image }}" alt="user"
+                                             class="rounded-circle user-profile-image"/>
+                                    {% else %}
+                                        <div class="user-profile-image-initials rounded-circle">
+                                            {{ request.user.userprofile.get_initials }}
+                                        </div>
+                                    {% endif %}
+                                    <span class=""> <i class="ti-angle-down font-10"></i> </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                                        <i class="ti-id-badge text-muted"></i> Profile
+                                    </a>
+
+                                    {% if user|can:'list_users' %}
+                                        <a class="dropdown-item" href="{% url 'accounts:agents' %}">
+                                            <i class="ti-user text-muted"></i> Users
+                                        </a>
+                                    {% endif %}
+                                    {% if user|can:'company_settings' %}
+                                        <a class="dropdown-item" href="{% url 'accounts:settings' %}">
+                                            <i class="ti-settings text-muted"></i> Settings
+                                        </a>
+                                    {% endif %}
+
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                                        <i class="ti-shift-right text-muted"></i> Logout
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="menu-item list-inline-item">
+                                <!-- Mobile menu toggle-->
+                                <a class="navbar-toggle nav-link">
+                                    <div class="lines">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </a>
+                                <!-- End mobile menu toggle-->
+                            </li>
+                        </ul>
+                        <div class="app-search m-t-10 m-r-15 float-right">
+                            <input id="general_search_field" type="text" placeholder="Search..." class="search-field">
+                            <button type="submit"><i class="ti-search"></i></button>
+
+                            <div class="search-results-container">
+                                <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active show" data-toggle="tab" href="#tab_search_all"
+                                           role="tab" aria-selected="true">All</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tab_search_leads" role="tab"
+                                           aria-selected="true">Deals</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tab_search_customers" role="tab"
+                                           aria-selected="true">Customers</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane p-3 active show" id="tab_search_all" role="tabpanel">
+                                        <div class="loader-shine"></div>
+                                        <div class="loader-shine"></div>
+                                        <div class="loader-shine"></div>
+                                        <div class="loader-shine"></div>
+                                    </div>
+                                    <div class="tab-pane p-3" id="tab_search_leads" role="tabpanel">
+                                        Leads
+                                    </div>
+                                    <div class="tab-pane p-3" id="tab_search_customers" role="tabpanel">
+                                        Customers
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="navbar-custom m-t-5 float-left">
+                        <div class="container-fluid">
+                            <div id="navigation">
+                                <ul class="navigation-menu">
+                                    <li>
+                                        <a data-elem="logout" href="{% url 'accounts:logout' %}">
+                                            Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- end menu-extras -->
+                <div class="clearfix"></div>
+
+            </div> <!-- end container -->
+        </div>
+        <!-- end topbar-main -->
+    </header>
+    <!-- End Navigation Bar-->
+</div>
+
+<div class="wrapper">
+    <div class="container-fluid">
+        {% block breadcrumb %}{% endblock %}
+    </div>
+    {% block content %}{% endblock %}
+</div>
+<!-- end wrapper -->
+
+{% if not debug %}
+    <script src="https://browser.sentry-cdn.com/5.20.1/bundle.apm.min.js"
+            integrity="sha384-yRb6uqOrDZO0UoaXIwntp3rtwds2Zred8O/qjChDYuUX6ried457MYhtj1ASZEsX"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        Sentry.init({
+            dsn: 'https://20400fe8766f455b9324381244872d60@sentry.io/175964',
+            environment: '{{ environment }}',
+            integrations: [
+                new Sentry.Integrations.Tracing(),
+            ],
+            tracesSampleRate: 0.75
+        });
+        Sentry.configureScope(function (scope) {
+            scope.setTag("public", false);
+        });
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K4RTQ3Q');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Amplitude -->
+    <script type="text/javascript">
+        (function (e, t) {
+            var n = e.amplitude || {_q: [], _iq: {}};
+            var r = t.createElement("script")
+            ;r.type = "text/javascript";
+            r.async = true
+            ;r.src = "https://cdn.amplitude.com/libs/amplitude-4.4.0-min.gz.js"
+            ;r.onload = function () {
+                if (e.amplitude.runQueuedFunctions) {
+                    e.amplitude.runQueuedFunctions()
+                } else {
+                    console.log("[Amplitude] Error: could not load SDK")
+                }
+            }
+            ;var i = t.getElementsByTagName("script")[0];
+            i.parentNode.insertBefore(r, i)
+            ;
+
+            function s(e, t) {
+                e.prototype[t] = function () {
+                    this._q.push([t].concat(Array.prototype.slice.call(arguments, 0)));
+                    return this
+                }
+            }
+
+            var o = function () {
+                    this._q = [];
+                    return this
+                }
+            ;var a = ["add", "append", "clearAll", "prepend", "set", "setOnce", "unset"]
+            ;
+            for (var u = 0; u < a.length; u++) {
+                s(o, a[u])
+            }
+            n.Identify = o;
+            var c = function () {
+                    this._q = []
+                    ;
+                    return this
+                }
+            ;var l = ["setProductId", "setQuantity", "setPrice", "setRevenueType", "setEventProperties"]
+            ;
+            for (var p = 0; p < l.length; p++) {
+                s(c, l[p])
+            }
+            n.Revenue = c
+            ;var d = ["init", "logEvent", "logRevenue", "setUserId", "setUserProperties", "setOptOut", "setVersionName", "setDomain", "setDeviceId", "setGlobalUserProperties", "identify", "clearUserProperties", "setGroup", "logRevenueV2", "regenerateDeviceId", "logEventWithTimestamp", "logEventWithGroups", "setSessionId", "resetSessionId"]
+            ;
+
+            function v(e) {
+                function t(t) {
+                    e[t] = function () {
+                        e._q.push([t].concat(Array.prototype.slice.call(arguments, 0)))
+                    }
+                }
+
+                for (var n = 0; n < d.length; n++) {
+                    t(d[n])
+                }
+            }
+
+            v(n);
+            n.getInstance = function (e) {
+                e = (!e || e.length === 0 ? "$default_instance" : e).toLowerCase()
+                ;
+                if (!n._iq.hasOwnProperty(e)) {
+                    n._iq[e] = {_q: []};
+                    v(n._iq[e])
+                }
+                return n._iq[e]
+            }
+            ;e.amplitude = n
+        })(window, document);
+
+        amplitude.getInstance().init("{{ amplitude_api_key }}");
+    </script>
+    <!-- End of Amplitude -->
+    <script>
+        window.intercomSettings = {
+            app_id: "{{ intercom_app_id }}",
+            user_id: "{{ user.id }}",
+            user_hash: "{{ user_hash }}",
+            name: "{{ user.get_full_name|escapejs }}",
+            email: "{{ user.email|escapejs }}",
+            created_at: "{{ user.date_joined|date:'U' }}",
+            "Role": "{{ user.userprofile.get_assigned_role|title }}",
+            "company": {
+                "id": {{ company.id }},
+                "name": "{{ company.name|escapejs }}",
+                "Company subdomain": "{{ company_subdomain }}",
+            },
+            "Felix User": true
+        };
+    </script>
+    <script>
+        // We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/xd7hyf5z'
+        (function () {
+            var w = window;
+            var ic = w.Intercom;
+            if (typeof ic === "function") {
+                ic('reattach_activator');
+                ic('update', w.intercomSettings);
+            } else {
+                var d = document;
+                var i = function () {
+                    i.c(arguments);
+                };
+                i.q = [];
+                i.c = function (args) {
+                    i.q.push(args);
+                };
+                w.Intercom = i;
+                var l = function () {
+                    var s = d.createElement('script');
+                    s.type = 'text/javascript';
+                    s.async = true;
+                    s.src = 'https://widget.intercom.io/widget/xd7hyf5z';
+                    var x = d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                };
+                if (w.attachEvent) {
+                    w.attachEvent('onload', l);
+                } else {
+                    w.addEventListener('load', l, false);
+                }
+            }
+        })();
+    </script>
+{% endif %}
+
+{% comment %}
+  *** Common Third party CSS.
+{% endcomment %}
+<link href="{% static 'plugins/x-editable/css/bootstrap-editable.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'plugins/chosen/chosen.min.css' %}" rel="stylesheet" type="text/css"/>
+
+<link href="{% static 'plugins/fileuploader/jquery.fileuploader.css' %}" rel="stylesheet" type="text/css"/>
+<link href="{% static 'plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet" type="text/css"/>
+
+<script src="{% static "js/popper.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+
+<script src="{% static 'js/accounting.js' %}"></script>
+<script src="{% static 'js/reverse.js' %}"></script>
+
+{% comment %}
+  *** Common Third party JS Libraries. (Order is important)
+{% endcomment %}
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>
+<script src="{% static 'plugins/jquery.form.js' %}"></script>
+<script src="{% static 'plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+
+<script src="{% static 'plugins/handlebars/handlebars-4.0.11.min.js' %}"></script>
+<script src="{% static 'plugins/x-editable/js/bootstrap-editable.min.js' %}"></script>
+<script src="{% static 'plugins/trumbowyg/trumbowyg.min.js' %}"></script>
+<script src="{% static 'plugins/chosen/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'plugins/modernizr.min.js' %}"></script>
+<script src="{% static 'plugins/felix.filepreview.js' %}"></script>
+
+{% comment %}
+  *** load app.js after all third party plugins
+{% endcomment %}
+<script src="{% static 'dist/app.js' %}"></script>
+<script src="{% static 'js/utilities.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
+<script type="text/javascript">
+    $.trumbowyg.svgPath = '{% static "images/trumbowyg-icons.svg" %}';
+</script>
+
+</body>
+</html>

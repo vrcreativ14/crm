@@ -1,0 +1,18 @@
+// =============================================================================
+// reverses colors of the button
+// =============================================================================
+
+@mixin btn-reverse($color, $bg-color) {
+	&.btn-revert {
+	    background-color: $bg-color;
+	    color: $color;
+	    border: 1px solid $color;
+
+	    &:hover {
+	    	background-color: $color;
+		    color: $bg-color;
+		    border: 1px solid $bg-color;
+	    }
+	}
+
+}

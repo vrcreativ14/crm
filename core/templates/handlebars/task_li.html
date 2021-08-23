@@ -1,0 +1,21 @@
+{% verbatim %}
+<script id="row-tasks-li" type="text/x-handlebars-template">
+{{#each records}}
+<li data-task-id="{{ this.pk }}" class="task {{#if this.is_completed }}completed{{/if}}">
+    <div class="label">
+        {{ this.title }} 
+        <span title="Click to edit" class="edit task-edit" data-id="{{ this.pk }}">
+            <i class="ti-pencil-alt"></i>
+        </span>
+        <span title="Click to remove" class="remove task-remove" data-id="{{ this.pk }}">
+            <i class="ti-trash"></i>
+        </span>
+    </div>
+    <div class="content">{{ this.content }}</div>
+    <div class="due_date {{#if this.is_overdue }}c-error{{/if}}">Due on: {{ this.due_date_display }}</div>
+    <div class="text-muted">
+        Created on {{ this.created_on_display }} {{#if this.added_by }}by {{ this.added_by }}{{/if}}</div>
+</li>
+{{/each}}
+</script>
+{% endverbatim %}

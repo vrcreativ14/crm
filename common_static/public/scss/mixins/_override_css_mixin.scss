@@ -1,0 +1,521 @@
+// Mixin: Override CSS
+// Description: This mixin will return styles for override css
+// Usage: override_css_styles(vars...)
+
+@mixin override-css-styles($primary_color, $secondary_color, $tertiary_color, $logo_url, $car_illustration_image) {
+
+    $secondary_dark_color: darken($secondary_color, 10%);
+    $label_color: #666;
+    $muted_color: #999;
+
+    .primary-color {
+        color: $primary_color !important;
+    }
+
+    // LOGO
+    header .logo-container {
+        text-align: center;
+        width: 100%;
+        a {
+            background-image: url($logo_url) !important;
+            background-size: 40%;
+            height: 60px !important;
+            width: 155px !important;
+            display: inherit !important;
+            margin-bottom: -5px;
+            float: left;
+        }
+    }
+
+    // BUTTONS
+    .btn-primary {
+        background-color: $secondary_color;
+        &:hover, &:active, &:focus {
+            background-color: darken($secondary_color, 5%);
+            box-shadow: none;
+        }
+    }
+
+    .blue-line {
+        border-color: $primary_color !important;
+    }
+    h1, h2 {
+        color: $primary_color !important;
+    }
+    h2 {
+        // color: $secondary_color !important;
+    }
+    p {
+        color: #626466 !important;
+        font-weight: 400 !important;
+    }
+
+    // Checkboxes
+    .checkbox-container input[type="checkbox"]:checked + label span.checkbox::before {
+        background-color: $secondary_color;
+    }
+    .checkbox-section {
+        span.checkbox {
+            &:before {
+                border-color: $secondary_color !important;
+            }
+        }
+        &.item-selection {
+            .label {
+                color: $secondary_color !important;
+            }
+            span.checkbox:before {
+                border-color: $secondary_color !important;
+            }
+        }
+    }
+
+    // MOTOR Lead Form
+    #motor-form {
+        &.show-callback .error a {
+            color: $primary_color;
+        }
+        h1, h2 {
+            color: $primary_color;
+
+            &.blue-line {
+                &:before {
+                    border-bottom: 3px solid $primary_color;
+                }
+            }
+            // &:after {
+            //     content: "\f107" !important;
+            //     display: inline-block !important;
+            //     font: normal normal normal 14px/1 FontAwesome !important;
+            //     font-size: 54px !important;
+            //     background: none !important;
+            //     bottom: -30px !important;
+            // }
+            p {
+                color: $muted_color;
+                font-weight: 400;
+            }
+        }
+        label {
+            color: $label_color;
+        }
+        .blue-line {
+            border-bottom-color: $primary_color;
+        }
+
+        .help-trigger-layout a {
+            color: $secondary_color;
+            border-bottom-color: $secondary_color;
+        }
+        em.error {
+            color: #ea2c00;
+        }
+
+        [aria-label='Pagination'] {
+
+            li {
+                a {
+                    background-color: $secondary_color;
+                    border: 1px solid $secondary_color;
+                    &:hover {
+                        background-color: $secondary_dark_color;
+                    }
+                }
+                &:first-child a:before {
+                    color: #FFF;
+                }
+            }
+        }
+
+        .field-select-buttons button {
+            &.active, &:hover {
+                background-color: $secondary_color;
+                border-color: $secondary_color;
+            }
+        }
+
+        .chosen-container {
+            &.chosen-container-active {
+                .chosen-single {
+                    border-color: $secondary_color;
+                }
+            }
+
+            .chosen-results {
+                li {
+                    &.highlighted {
+                        background-color: $secondary_color;
+                    }
+                }
+            }
+            .chosen-single div b {
+                background: none !important;
+                &:after {
+                    color: $secondary_color;
+                    content: "\f107" !important;
+                    display: inline-block !important;
+                    font: normal normal normal 14px/1 FontAwesome !important;
+                    font-size: 40px !important;
+                    right: 10px;
+                    position: absolute;
+                    top: 5px;
+                }
+            }
+        }
+
+        .tooltip-help {
+            h3 {
+                color: $secondary_color;
+            }
+
+            .btn-contact-tooltip {
+                color: $secondary_color;
+                background: none;
+                &:after {
+                    content: "\f075";
+                    display: inline-block !important;
+                    font: normal normal normal 14px/1 FontAwesome !important;
+                    font-size: 14px !important;
+                    left: 28px;
+                    position: absolute;
+                    top: 23px;
+                }
+            }
+            .tooltip-help-close-container .tooltip-help-close {
+                &:after {
+                    color: $secondary_color;
+                }
+            }
+            a {
+                color: $secondary_color;
+            }
+        }
+
+        .image-container .zoom-icon {
+            background-color: $secondary_color;
+        }
+
+        input[type=text]:focus,
+        input[type=tel]:focus,
+        input[type=email]:focus,
+        input[type=tel]:focus,
+        input[type=password]:focus,
+        input[type=number]:focus {
+            border-color: $secondary_color;
+        }
+
+        .indv-field {
+            label {
+                &:hover {
+                    color: $secondary_dark_color;
+                }
+            }
+        }
+
+        .checkbox-container {
+            input[type="checkbox"]:checked + label span.checkbox::before {
+                background-color: $secondary_color;
+            }
+        }
+        .step-2 .animated-car {
+            &:before {
+                background: url($car_illustration_image) no-repeat;
+            }
+        }
+    }
+
+    // Form thankyou
+    .thankyou {
+        h1,
+        .call-us .phone {
+            color: $primary_color;
+        }
+
+        p {
+            color: $muted_color;
+            font-weight: 400;
+
+            &.note {
+                color: $muted_color;
+            }
+        }
+
+        hr.blue-short, hr.grey-tiny {
+            border-color: $primary_color;
+        }
+
+        .website {
+            color: $primary_color;
+        }
+    }
+
+    // Motor Quote
+    .quotes {
+        h1 {
+            &.name {
+                color: $primary_color;
+            }
+        }
+
+        .message {
+            color: $label_color;
+        }
+
+        .short-line-turquoise {
+            border-color: $primary_color;
+        }
+
+        .user-info .show-more {
+            background-color: $secondary_color;
+            color: #FFF;
+            font-weight: 400;
+
+            img {
+                display: none;
+            }
+        }
+
+        .products {
+            .item {
+                .title {
+                    background-color: #f2f2f2;
+                    h2 {
+                        color: $primary_color !important;
+                    }
+                    .price {
+                        color: $primary_color;
+                    }
+                }
+
+                &.active {
+                    border-color: $secondary_color;
+                }
+
+                .included {
+                    color: $primary_color;
+                }
+
+                .actions {
+                    a {
+                        color: $primary_color;
+                    }
+                }
+                .attributes.car-value {
+                    color: $secondary_color;
+                }
+            }
+        }
+
+        .odometer-inside .odometer-digit:nth-last-child(2) .odometer-value,
+        .odometer-inside .odometer-digit:nth-last-child(1) .odometer-value {
+            border-color: $primary_color;
+        }
+
+        .user-info {
+            .info-tip {
+                background: none;
+                display: inline-block;
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: inherit;
+                text-rendering: auto;
+                -webkit-font-smoothing: antialiased;
+                font-size: 14px;
+                color: $secondary_color;
+                &:before {
+                    content: "\f05a";
+                }
+            }
+            .row {
+                &:nth-child(even) {
+                    background-color: #FFF;
+                }
+                &:nth-child(odd) {
+                    background-color: #EEEEEF;
+                }
+            }
+        }
+    }
+
+    // QUOTE Comparison
+    .quotes-comparison, .quotes-checkout {
+        .back-string {
+            a {
+                color: $secondary_color;
+            }
+        }
+        .products {
+            .item {
+                h2 {
+                    color: $secondary_color !important;
+                }
+                .attributes {
+                    letter-spacing: inherit;
+                }
+                .attributes-container { 
+                    .attributes-title {
+                        color: $primary_color;
+                    }
+                }
+                .attributes.sub-checkbox .price {
+                    color: $tertiary_color;
+                }
+                .included {
+                    color: $tertiary_color;   
+                }
+            }
+        }
+
+        .default-addon .checkbox {
+            background-color: $secondary_color !important;
+            border-color: $secondary_color !important;
+        }
+    }
+
+    // QUOTE Checkout
+    .quotes-checkout {
+        .cart {
+            .addons {
+                color: $primary_color;
+            }
+            .price, .included {
+                color: $primary_color !important;
+            }
+            h2 {
+                color: $secondary_color !important;
+            }
+        }
+    }
+
+    .quotes-comparison-submit-container .col-xs-6.col-6.price {
+        color: $secondary_color;
+    }
+
+    .quotes, .quotes-comparison, .quotes-checkout, .felix-modal, #payment-form, .steps {
+        span.help-icon, span.info-tip {
+            &:after {
+                color: $secondary_color !important;
+            }
+        }
+    }
+
+    // Order Summary
+    #payment-form {
+        h2 {
+            color: $secondary_color !important;
+        }
+        .quote-number a {
+            color: $primary_color !important;
+        }
+
+        .indv-field label {
+            &:hover {
+                color: $secondary_color !important;
+            }
+        }
+        .terms-and-condition a {
+            color: $secondary_color !important;
+            border-bottom-color: $secondary_color !important;
+        }
+        .calendar-icon-svg {
+            #main-stroke {
+                stroke: $secondary_color;
+            }
+        }
+
+        span.addons {
+            color: #FFF;
+            background-color: lighten($secondary_color, 10%) !important;
+        }
+    }
+    // Documents Upload
+    #document-upload {
+        h2 {
+            color: $secondary_color !important;
+        }
+        .info-box .info .item i {
+            color: $primary_color;
+        }
+        .fileuploader-action-view {
+            background-color: $secondary_color !important;
+        }
+        .fileuploader-action-remove {
+            color: #FFF !important;
+            background-color: #BD6663!important;
+        }
+    }
+
+    .selected-product-message-container {
+        background-color: $primary_color !important;
+        h2, a, p {
+            color: #FFF !important;
+        }
+        a.btn {
+            background-color: $secondary_color !important;
+            text-decoration: none;
+        }
+    }
+
+    // others
+    .steps {
+        [role='tablist'] {
+            li.current > *,
+            li.completed > * {
+                border-bottom-color: $primary_color;
+                color: $primary_color;
+            }
+        }
+    }
+
+    button.btn-primary {
+        color: #FFF;
+        &:hover {
+            border-color: darken($secondary_color, 20%)
+        }
+    }
+
+    .felix-modal {
+        .title {
+            .document-link {
+                color: $tertiary_color;
+            }
+        }
+        .attributes {
+            letter-spacing: inherit;
+        }
+        .attributes-container {
+            .attributes-title {
+                color: $primary_color;
+            }
+        }
+    }
+
+    .qtip-light a {
+        color: $secondary_color;
+        border-color: $secondary_color;
+    }
+
+    ::selection {
+        background-color: $secondary_color;
+    }
+
+    .datepicker-container {
+        &.datepicker-top-left, &.datepicker-top-right {
+            border-top-color: $secondary_color !important;
+            &:after, &:before {
+                display: none;
+            }
+        }
+        [data-view='month'] {
+            background-color: $secondary_color !important;
+        }
+        ul[data-view='days'] li.highlighted {
+            color: $secondary_color !important;
+            &.picked {
+                color: #FFF !important;
+            }
+        }
+        ul[data-view='days'] li.picked, ul[data-view='days'] li:hover {
+            background-color: $secondary_color !important;
+        }
+    }
+}

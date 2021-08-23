@@ -1,0 +1,26 @@
+{% verbatim %}
+<script id="row-template" type="text/x-handlebars-template">
+{{#each records}}
+<tr
+    id="tr_{{ this.id }}"
+    data-url="{{ this.view_url }}"
+    data-url-delete="{{ this.delete_url }}"
+    >
+    <td>{{ this.reference_number }} </td>
+    <td class="link">
+        <a href="{{ this.customer_url }}">
+            <div class="user-profile-image-initials rounded-circle">
+                {{ this.customer_initials }}
+            </div> {{ this.customer_name }}
+        </a>
+    </td>
+    <td class="link">
+        <a href="{{ this.deal_url }}">{{ this.deal }}</a>
+    </td>
+    <td>{{ this.status }}</td>
+    <td class="capitalize">{{ this.created_on }}</td>
+    <td class="capitalize">{{ this.updated_on }}</td>
+</tr>
+{{/each}}
+</script>
+{% endverbatim %}

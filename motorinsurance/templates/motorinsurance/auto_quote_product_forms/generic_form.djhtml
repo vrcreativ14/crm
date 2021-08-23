@@ -1,0 +1,48 @@
+{% load static %}
+
+{% for field in form %}
+    {% if '___' not in field.name %}
+        <div class="form-group">
+            {% if field.field.widget.input_type == 'checkbox' %}
+                <label class="label m-b-5 felix-checkbox-form">
+                    {{ field.label }}
+                    {{ field }}
+                    <div class="control__indicator"></div>
+                </label>
+            {% else %}
+                <div class="label m-b-5">{{ field.label }} <span class="c-primary">*</span></div>
+                {{ field }}
+            {% endif %}
+            {{ field.error }}
+        </div>
+    {% endif %}
+{% endfor %}
+
+<fieldset id="autoquoter-extra-fieldset">
+    <legend>
+        Please update the following deal information
+        <span class="help-icon" title="These pieces of information will be updated in the customer and deal record."></span>
+    </legend>
+    {% for field in form %}
+        {% if '___' in field.name %}
+            <div class="form-group">
+                {% if field.field.widget.input_type == 'checkbox' %}
+                    <label class="label m-b-5 felix-checkbox-form">
+                        {{ field.label }}
+                        {{ field }}
+                        <div class="control__indicator"></div>
+                    </label>
+                {% else %}
+                    <div class="label m-b-5">{{ field.label }} <span class="c-primary">*</span></div>
+                    {{ field }}
+                {% endif %}
+                {{ field.error }}
+            </div>
+        {% endif %}
+    {% endfor %}
+</fieldset>
+<script type="text/javascript">
+    if(!$('#autoquoter-extra-fieldset .form-group').length) {
+        $('#autoquoter-extra-fieldset').addClass('hide');
+    }
+</script>

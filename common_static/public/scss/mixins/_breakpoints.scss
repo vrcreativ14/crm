@@ -1,0 +1,95 @@
+// Mixin: Breakpoints
+// Description: devices breakpoints
+// Usage: breakpoint(mobile)
+
+@mixin breakpoint($viewport) {
+    @if $viewport == hd {
+        @media (min-width: $desktop-min-width) and (max-width: $hd-min-width) {
+            @content;
+        }
+    }
+    @if $viewport == hd-md {
+        @media (min-width: $hd-md-min-width) and (max-width: $hd-lg-min-width) {
+            @content;
+        }
+    }
+    @if $viewport == hd-sm {
+        @media (min-width: $hd-sm-min-width) and (max-width: $hd-md-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == hd-max {
+        @media (max-width: $hd-sm-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == desktop {
+        @media (min-width: $desktop-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == desktop-max {
+        @media (max-width: $desktop-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == tablet-desktop {
+        @media only screen and (min-width : $tablet-min-width) and (max-width : $hd-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == tablet {
+        @media (min-width: $tablet-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == tablet-max {
+        @media (max-width: $tablet-min-width) {
+            @content;
+        }
+    }
+    @else if $viewport == tablet-only {
+        @media only screen and (min-width : $tablet-min-width) and (max-width : $tablet-max-width) {
+            @content;
+        }
+    }
+    /* Landscape */
+    @else if $viewport == tablet-landscape {
+        @media only screen and (min-device-width: $tablet-min-width) and (max-device-width: $desktop-min-width) and (orientation: landscape) {
+            @content;
+        }
+    }
+
+    /* Portrait */
+    @else if $viewport == tablet-portrait {
+        @media only screen and (min-device-width: $tablet-min-width) and (max-device-width: $tablet-max-width) and (orientation: portrait) {
+            @content;
+        }
+    }
+
+    @else if $viewport == notebook {
+        @media (min-width: 480px) and (max-width: $mobile-max-width) {
+            @content;
+        }
+    }
+    @else if $viewport == mobile-tablet {
+        @media (max-width: $tablet-max-width) {
+            @content;
+        }
+    }
+    @else if $viewport == mobile {
+        @media (max-width: $mobile-max-width) {
+            @content;
+        }
+    }
+    @else if $viewport == ie-only {
+        @media screen\0 {
+            @content;
+        }
+    }
+    @else {
+        @media (min-width: $viewport) {
+            @content;
+        }
+    }
+}

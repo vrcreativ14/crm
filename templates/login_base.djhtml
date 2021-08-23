@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <title>{% block page_title %}Welcome{% endblock %} - Nexus Advice</title>
+        <meta content="Felix Login" name="description"/>
+        <meta content="Felix.insure" name="author"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+        <!-- App Icons -->
+        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+
+        <!-- APP CSS -->
+        <link href="{% static 'dist/style.min.css' %}" rel="stylesheet" type="text/css"/>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+                integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    </head>
+
+    <body class="login-pages">
+        <!-- Begin page -->
+        <div class="accountbg"></div>
+        <div class="wrapper-page">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <h3 class="text-center m-0">
+                        <a href="{% url 'accounts:dashboard' %}" class="logo logo-admin">
+                            <img src="{% static "images/nexus-logo.svg" %}" height="60" alt="Nexus Logo"/>
+                        </a>
+                    </h3>
+
+                    <div class="p-3">
+                        {% block content %}{% endblock %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="m-t-40 text-center">
+                <p>&copy; {% now "Y" %} NexusAdvice.com</p>
+            </div>
+
+        </div>
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>

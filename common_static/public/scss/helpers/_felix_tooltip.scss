@@ -1,0 +1,256 @@
+/**
+ * Felix Custom Tooltip
+ */
+
+/* Base styles for the element that has a tooltip */
+[data-felix-tooltip],
+.felix-tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Base styles for the entire felix-tooltip */
+[data-felix-tooltip]:before,
+[data-felix-tooltip]:after,
+.felix-tooltip:before,
+.felix-tooltip:after {
+  position: absolute;
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -webkit-transition: 
+      opacity 0.2s ease-in-out,
+        visibility 0.2s ease-in-out,
+        -webkit-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    -moz-transition:    
+        opacity 0.2s ease-in-out,
+        visibility 0.2s ease-in-out,
+        -moz-transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+    transition:         
+        opacity 0.2s ease-in-out,
+        visibility 0.2s ease-in-out,
+        transform 0.2s cubic-bezier(0.71, 1.7, 0.77, 1.24);
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform:    translate3d(0, 0, 0);
+  transform:         translate3d(0, 0, 0);
+  pointer-events: none;
+}
+
+/* Show the entire felix-tooltip on hover and focus */
+[data-felix-tooltip]:hover:before,
+[data-felix-tooltip]:hover:after,
+[data-felix-tooltip]:focus:before,
+[data-felix-tooltip]:focus:after,
+.felix-tooltip:hover:before,
+.felix-tooltip:hover:after,
+.felix-tooltip:focus:before,
+.felix-tooltip:focus:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+/* Base styles for the felix-tooltip's directional arrow */
+.felix-tooltip:before,
+[data-felix-tooltip]:before {
+  z-index: 1001;
+  border: 6px solid transparent;
+  background: transparent;
+  content: "";
+}
+
+/* Base styles for the felix-tooltip's content area */
+.felix-tooltip:after,
+[data-felix-tooltip]:after {
+  z-index: 1000;
+  padding: 10px;
+  width: 160px;
+  color: #858585;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 9px 0 rgba(0,0,0,0.21);
+  content: attr(data-felix-tooltip);
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+/* Directions */
+
+/* Top (default) */
+[data-felix-tooltip]:before,
+[data-felix-tooltip]:after,
+.felix-tooltip:before,
+.felix-tooltip:after,
+.felix-tooltip-top:before,
+.felix-tooltip-top:after {
+  bottom: 100%;
+  left: 50%;
+}
+
+[data-felix-tooltip]:before,
+.felix-tooltip:before,
+.felix-tooltip-top:before {
+  margin-left: -6px;
+  margin-bottom: -12px;
+  border-top-color: #FFF;
+  display: none;
+}
+
+/* Horizontally align top/bottom felix-tooltips */
+[data-felix-tooltip]:after,
+.felix-tooltip:after,
+.felix-tooltip-top:after {
+  margin-left: -80px;
+}
+
+[data-felix-tooltip]:hover:before,
+[data-felix-tooltip]:hover:after,
+[data-felix-tooltip]:focus:before,
+[data-felix-tooltip]:focus:after,
+.felix-tooltip:hover:before,
+.felix-tooltip:hover:after,
+.felix-tooltip:focus:before,
+.felix-tooltip:focus:after,
+.felix-tooltip-top:hover:before,
+.felix-tooltip-top:hover:after,
+.felix-tooltip-top:focus:before,
+.felix-tooltip-top:focus:after {
+  -webkit-transform: translateY(-12px);
+  -moz-transform:    translateY(-12px);
+  transform:         translateY(-12px); 
+}
+
+/* Left */
+.felix-tooltip-left:before,
+.felix-tooltip-left:after {
+  right: 100%;
+  bottom: 50%;
+  left: auto;
+}
+
+.felix-tooltip-left:before {
+  margin-left: 0;
+  margin-right: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+  border-left-color: #FFF;
+}
+
+.felix-tooltip-left:hover:before,
+.felix-tooltip-left:hover:after,
+.felix-tooltip-left:focus:before,
+.felix-tooltip-left:focus:after {
+  -webkit-transform: translateX(-12px);
+  -moz-transform:    translateX(-12px);
+  transform:         translateX(-12px); 
+}
+
+/* Bottom */
+.felix-tooltip-bottom:before,
+.felix-tooltip-bottom:after {
+  top: 100%;
+  bottom: auto;
+  left: 50%;
+}
+
+.felix-tooltip-bottom:before {
+  margin-top: -12px;
+  margin-bottom: 0;
+  border-top-color: transparent;
+
+  border-bottom-color: #FFF;
+}
+
+.felix-tooltip-bottom:hover:before,
+.felix-tooltip-bottom:hover:after,
+.felix-tooltip-bottom:focus:before,
+.felix-tooltip-bottom:focus:after {
+  -webkit-transform: translateY(12px);
+  -moz-transform:    translateY(12px);
+  transform:         translateY(12px); 
+}
+
+/* Right */
+.felix-tooltip-right:before,
+.felix-tooltip-right:after {
+  bottom: 50%;
+  left: 100%;
+}
+
+.felix-tooltip-right:before {
+  margin-bottom: 0;
+  margin-left: -12px;
+  border-top-color: transparent;
+  border-right-color: #000;
+  border-right-color: #FFF;
+}
+
+.felix-tooltip-right:hover:before,
+.felix-tooltip-right:hover:after,
+.felix-tooltip-right:focus:before,
+.felix-tooltip-right:focus:after {
+  -webkit-transform: translateX(12px);
+  -moz-transform:    translateX(12px);
+  transform:         translateX(12px); 
+}
+
+/* Move directional arrows down a bit for left/right felix-tooltips */
+.felix-tooltip-left:before,
+.felix-tooltip-right:before {
+  top: 3px;
+}
+
+/* Vertically center felix-tooltip content for left/right felix-tooltips */
+.felix-tooltip-left:after,
+.felix-tooltip-right:after {
+  margin-left: 0;
+  margin-bottom: -16px;
+}
+
+.felix-tooltip-top,
+.felix-tooltip-bottom,
+.felix-tooltip-left,
+.felix-tooltip-right {
+    .tooltip-temp-content {
+      display: none;
+      z-index: 1000;
+      padding: 10px;
+      width: 220px;
+      color: #858585;
+      border-radius: 8px;
+      background-color: #FFFFFF;
+      box-shadow: 0 2px 9px 0 rgba(0,0,0,0.21);
+      content: attr(data-felix-tooltip);
+      font-size: 13px;
+      line-height: 1.2;
+      position: relative;
+      margin-top: 25px;
+      margin-left: -50px;
+      &:before {
+        position: absolute;
+        z-index: 1001;
+        border: 6px solid transparent;
+        background: transparent;
+        content: "";
+        border-top-color: transparent;
+        border-bottom-color: #FFF;
+        left: 52px;
+        top: -11px;
+      }
+      a {
+        color: $felix-color-primary;
+        border-bottom: 1px dotted $felix-color-primary;
+        cursor: pointer;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    &:hover .tooltip-temp-content {
+      display: block;
+    }
+}

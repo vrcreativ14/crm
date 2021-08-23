@@ -1,0 +1,5 @@
+<li class="{% if note.system_generated %}system{% endif %}">
+    {% if not note.system_generated %}<div class="label">Note created</div>{% endif %}
+    <div class="note">{{ note.content|safe }}</div>
+    <div class="text-muted">{{ note.created_on }} {% if note.added_by %}by {{ note.added_by.get_full_name }}{% endif %}</div>
+</li>

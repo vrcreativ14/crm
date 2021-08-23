@@ -1,0 +1,67 @@
+/*********************
+   Company PDF Forms Web Styling
+   ********************/
+.company_pdf_forms {
+    @include breakpoint(mobile-tablet) {
+        button.btn-primary {
+            font-size: 90%;
+        }
+    }
+    .fsBody {
+        padding: 0px;
+        padding-top: 0px;
+    }
+    .fsRowBody input[type="checkbox"], .fsRowBody input[type="radio"] {
+        top: 6px;
+        height: 14px;
+        
+    }
+
+    .fsRowBody input[type="checkbox"]::before, .fsRowBody input[type="checkbox"]:checked::before, .fsRowBody input[type="radio"]::before, .fsRowBody input[type="radio"]:checked::before {
+        margin-top: 0px;
+        display: block;
+    }
+
+    .form-container {
+        width: 60%;
+        margin: auto;
+        overflow: inherit !important;
+    }
+
+    a.back {
+        margin-bottom: 7px;
+    }
+
+    .intro-text {
+        width: 70%;
+        margin: auto;
+    }
+
+    @include breakpoint(mobile) {
+        .intro-text {
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .form-container {
+            width: 100% !important;
+            margin: auto;
+        }
+
+        a.back {
+            font-size: 14px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 7px;
+            display: block;
+        }
+    }
+    .preloader {
+        color: #333;
+        padding-top: 5%;
+        @include breakpoint(mobile) {
+            height: 100%;
+            padding-top: 40%;
+        }
+    }
+}

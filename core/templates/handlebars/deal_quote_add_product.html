@@ -1,0 +1,60 @@
+{% verbatim %}
+<script id="deal-quote-add-product-template" type="text/x-handlebars-template">
+    <div class="row product" data-id={{ index }}>
+        <div class="status-field col-lg-1 col-md-2 col-sm-2">
+            <input name="status" id="id_status_{{ index }}" type="checkbox" switch="success" name="" {{#if published}}checked{{/if}} class="product-status-checkbox" data-id={{ index }} />
+            <label data-on-label="published" data-off-label="unpublished" for="id_status_{{ index }}" class=""></label>
+        </div>
+        <div class="product-logo-container col-lg-2 col-md-3 m-l-30">
+            <span class="spacer"></span>
+            <img src="{{ product_logo }}">
+        </div>
+        <div class="details col-lg-5 col-md-5 col-sm-7">
+            <div class="heading light">{{ product_name }}</div>
+            <div class="text-muted font-12">Sum Insured: {{ currency }} {{ insured_car_value }}</div>
+            <div class="text-muted font-12">Insurer Quote Reference: {{#if insurer_quote_reference}}{{ insurer_quote_reference }}{{else}}-{{/if}}</div>
+            <ul class="icons">
+                <li>
+                    {{#if agency_repair }}
+                        <i class="ti-check yes"></i> Agency 
+                    {{ else }}
+                        <i class="ti-close no"></i> Agency 
+                    {{/if}}
+                </li>
+                <li>
+                    {{#if ncd_required }}
+                        <i class="ti-check yes"></i> NCD Required 
+                    {{ else }}
+                        <i class="ti-close no"></i> NCD Required 
+                    {{/if}}
+                </li>
+            </ul>
+            {{#each default_add_ons }}
+                <span class="badge badge-default badge-font-light m-t-10">
+                    {{ replaceWith this "_" " " }}
+                </span>
+            {{/each}}
+        </div>
+        <div class="attributes col-lg-3 col-md-2 col-sm-12">
+            <div class="item">
+                <label>Deductible</label>
+                <div class="value">{{ currency }} {{ deductible }}</div>
+            </div>
+            <div class="item">
+                <label>Ded. Extra</label>
+                <div class="value">{{ deductible_extras }}</div>
+            </div>
+            <div class="item">
+                <label>Premium</label>
+                <div class="value">{{ currency }} {{ premium }}</div>
+            </div>
+            <div class="item">
+                <label>Sale Price</label>
+                <div class="value enlarge">{{ currency }} {{#if sale_price}}{{ sale_price }}{{ else }}0{{/if}}</div>
+            </div>
+        </div>
+        <div title="Click to remove" class="remove product-remove" data-id="{{ index }}"><i class="ti-trash"></i></div>
+        <div title="Click to edit" class="edit product-edit" data-qp-id="{{ id }}" data-id="{{ index }}"><i class="ti-pencil-alt"></i></div>
+    </div>
+</script>
+{% endverbatim %}

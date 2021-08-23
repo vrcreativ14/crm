@@ -1,0 +1,104 @@
+/* ==============
+  Helper Classes
+===================*/
+@for $i from 0 through 60 {
+  .p-#{$i} { padding: #{$i}px; &.important { padding: #{$i}px !important;}}
+  .p-t-#{$i} { padding-top: #{$i}px; &.important { padding-top: #{$i}px !important;}}
+  .p-b-#{$i} { padding-bottom: #{$i}px; &.important { padding-bottom: #{$i}px !important;}}
+  .p-l-#{$i} { padding-left: #{$i}px; &.important { padding-left: #{$i}px !important;}}
+  .p-r-#{$i} { padding-right: #{$i}px; &.important { padding-right: #{$i}px !important;}}
+}
+@for $i from -30 through 60 {
+  .m-#{$i} { margin: #{$i}px; &.important { margin: #{$i}px !important;}}
+  .m-t-#{$i} { margin-top: #{$i}px; &.important { margin-top: #{$i}px !important;}}
+  .m-b-#{$i} { margin-bottom: #{$i}px; &.important { margin-bottom: #{$i}px !important;}}
+  .m-l-#{$i} { margin-left: #{$i}px; &.important { margin-left: #{$i}px !important;}}
+  .m-r-#{$i} { margin-right: #{$i}px; &.important { margin-right: #{$i}px !important;}}
+}
+
+@for $i from -30 through 60 {
+  .t-#{$i} { top: #{$i}px; &.important { top: #{$i}px !important;}}
+  .b-#{$i} { bottom: #{$i}px; &.important { bottom: #{$i}px !important;}}
+  .r-#{$i} { right: #{$i}px; &.important { right: #{$i}px !important;}}
+  .l-#{$i} { left: #{$i}px; &.important { left: #{$i}px !important;}}
+}
+
+.w-xs {
+  min-width: 80px;
+}
+.w-sm {
+  min-width: 95px;
+}
+.w-md {
+  min-width: 110px;
+}
+.w-lg {
+  min-width: 140px;
+}
+.m-h-50 {
+  min-height: 50px;
+}
+.l-h-34 {
+  line-height: 34px;
+}
+
+$fontSizes:(8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 21, 22, 23, 30, 32, 40);
+
+@each $number in $fontSizes {
+  .font-#{$number} {
+    font-size: #{$number}px;
+  }
+}
+
+$fontWeights:(normal, 100, 200, 300, 400, 500, 600, 700, 800);
+@each $size in $fontWeights {
+  .fw-#{$size} {
+    font-weight: #{$size};
+  }
+}
+
+.no-border {
+  border: none;
+}
+.bx-shadow {
+  -moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+}
+
+.thumb-sm {
+  height: 32px;
+  width: 32px;
+}
+.thumb-md {
+  height: 48px;
+  width: 48px;
+}
+.thumb-lg {
+  height: 88px;
+  width: 88px;
+}
+.grid-structure {
+  .grid-container {
+    background-color: $light5;
+    margin-bottom: 10px;
+    padding: 10px 20px;
+  }
+}
+
+.t-center {
+  text-align: center;
+}
+.t-left {
+  text-align: left;
+}
+.t-right {
+  text-align: right;
+}
+.font-500 {
+  font-weight: 500;
+}
+
+.header-title {
+  font-size: 16px;
+}

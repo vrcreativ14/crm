@@ -1,0 +1,144 @@
+{% extends 'accounts/settings_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Company Settings - Notifications & Email{% endblock %}
+
+{% block settings_content %}
+    <div class="row justify-content-md-center p-t-60">
+        <div class="col-lg-8">
+            <div class="card m-b-20">
+                <form name="company_settings_form" id="company_settings_form" method="post"
+                      validate enctype="multipart/form-data" action="{% url 'accounts:settings-notifications' %}"
+                      data-module-name='Settings'>
+                    {% csrf_token %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Notifications & Email</h4>
+                    <hr/>
+
+                    <div class="row m-20 m-t-50 m-b-60 justify-content-md-center">
+                        <div class="col-lg-10">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <strong class="font-14">Workspace Email Address</strong>
+                                    <hr/>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-lg-12 m-t-10">
+                                    <div class="checkbox-container">
+                                        {{ settings_form.email }}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <strong class="font-14">New Deal Notifications</strong>
+                                    <hr/>
+                                </div>
+                            </div>
+                            
+                            <div class="row m-t-0">
+                                <div class="col-lg-12">
+                                    <label class="font-12 fw-300 c-vlgrey">Send an email to the company email address when:</label>
+                                </div>
+                                <div class="col-lg-12 m-t-10">
+                                    <div class="checkbox-container">
+                                        {{ settings_form.send_company_email_on_motor_lead_form_submission }}
+                                        <label for="id_send_company_email_on_motor_lead_form_submission">
+                                            <span class="checkbox font-13 c-vlgrey fw-400">A customer completes the motor insurance application form online and a new deal is created</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-20">
+                                <div class="col-lg-12">
+                                    <label class="font-12 fw-300 c-vlgrey">Also send notifications to the following address(es) when a new deal is created online (separate multiple addresses with a semicolon):</label>
+                                </div>
+                                <div class="col-lg-12">
+                                    {{ settings_form.lead_notification_email_list }}
+                                </div>
+                            </div>
+
+
+                            <div class="row m-t-30">
+                                <div class="col-lg-12">
+                                    <strong class="font-14">New Order Notifications</strong>
+                                    <hr/>
+                                </div>
+                            </div>
+                            
+                            <div class="row m-t-0">
+                                <div class="col-lg-12">
+                                    <label class="font-12 fw-300 c-vlgrey">Send an email to the company email address when:</label>
+                                </div>
+                                <div class="col-lg-12 m-t-10">
+                                    <div class="checkbox-container">
+                                        {{ settings_form.send_company_email_on_motor_order_created_online }}
+                                        <label for="id_send_company_email_on_motor_order_created_online">
+                                            <span class="checkbox font-13 c-vlgrey fw-400">A customer places an order for a motor insurance policy online and a new order is created</span>
+                                        </label>
+                                    </div>                                    
+                                </div>
+                            </div>
+
+                            <div class="row m-t-20">
+                                <div class="col-lg-12">
+                                    <label class="font-12 fw-300 c-vlgrey">Also send notifications to the following address(es) when a new order is created online (separate multiple addresses with a semicolon):</label>
+                                </div>
+                                <div class="col-lg-12">
+                                    {{ settings_form.order_notification_email_list }}
+                                </div>
+                            </div>
+
+                            <div class="row m-t-30">
+                                <div class="col-lg-12">
+                                    <strong class="font-14">CRM Emails</strong>
+                                    <hr/>
+                                </div>
+                            </div>
+                            <div class="row m-t-0">
+                                <div class="col-lg-12">
+                                    <div class="checkbox-container">
+                                        {{ settings_form.bcc_all_emails }}
+                                        <label for="id_bcc_all_emails">
+                                            <span class="checkbox font-13 c-vlgrey fw-400">Automatically BCC company email address on emails sent to customers from CRM</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-20">
+                                <div class="col-lg-12">
+                                    <strong class="font-14">Reply-To</strong>
+                                    <hr/>
+                                </div>
+                            </div>
+                            <div class="row m-t-10 p-l-40">
+                                <div class="radio-container">
+                                    <input type="radio" name="reply_to_company_email" id="reply_to_company" value="company" {% if companysettings.reply_to_company_email %}checked{% endif %} />
+                                    <label for="reply_to_company">
+                                        <span class="radio font-13 c-vlgrey fw-400">Set 'Reply-To' on CRM emails to company email address</span>
+                                    </label>
+                                </div>
+                                <div class="radio-container">
+                                    <input type="radio" name="reply_to_company_email" id="reply_to_user" value="user" {% if not companysettings.reply_to_company_email %}checked{% endif %} />
+                                    <label for="reply_to_user">
+                                        <span class="radio font-13 c-vlgrey fw-400">Set 'Reply-To' on CRM emails to email address of user assigned to that specific deal</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <button type="submit" class="update-profile float-right m-r-15 m-b-15 btn btn-md btn-primary">
+                        <span>Save</span>
+                        <div class="ball-spinner"></div>
+                    </button>
+                </form>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load permission_tags %}
+
+{% block body_class %}user-profile{% endblock %}
+
+{% block content %}
+    <div class="container-fluid profile info-container m-t--30">
+        {% if request.user.userprofile.get_assigned_role == 'admin' %}
+        <div class="sidebar">
+            <div class="search"></div>
+            <ul>
+                <li>
+                    <a class="{% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'profile-password' %}current{% endif %}" href="{% url 'accounts:profile' %}">
+                        <i class="ti-id-badge hide"></i>&nbsp;&nbsp;Your Profile
+                    </a>
+                </li>
+                {% if user|can:'list_users' %}
+                <li>
+                    <a class="{% if request.resolver_match.url_name == 'agents' or request.resolver_match.url_name == 'agent-edit' or request.resolver_match.url_name == 'agent-new' or request.resolver_match.url_name == 'agent-invites' %}current{% endif %}" href="{% url 'accounts:agents' %}">
+                        <i class="ti-user hide"></i>&nbsp;&nbsp;Users
+                    </a>
+                </li>
+                {% endif %}
+                {% if user|can:'company_settings' %}
+                <li>
+                    <a class="parent-li has-childs {% if request.resolver_match.url_name == 'settings' or request.resolver_match.url_name == 'settings-notifications' or request.resolver_match.url_name == 'settings-integrations' %}current{% endif %}" href="javascript:">
+                        <i class="ti-settings hide"></i>&nbsp;&nbsp;Company Settings
+
+                        <i class="ti-angle-right parent-icon {% if request.resolver_match.url_name == 'settings' or request.resolver_match.url_name == 'settings-notifications' or request.resolver_match.url_name == 'settings-integrations' %}open{% endif %}"></i>
+                    </a>
+
+                    <ul class="{% if request.resolver_match.url_name == 'settings' or request.resolver_match.url_name == 'settings-notifications' or request.resolver_match.url_name == 'settings-integrations' %}{% else %}hide{% endif %}">
+                        <li>
+                            <a class="{% if request.resolver_match.url_name == 'settings' %}current{% endif %}" href="{% url 'accounts:settings' %}">
+                                Account
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{% if request.resolver_match.url_name == 'settings-integrations' %}current{% endif %}" href="{% url 'accounts:settings-integrations' %}">
+                                Integrations
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                {% endif %}
+
+                <li>
+                    <a class="parent-li has-childs {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}" href="javascript:">
+                        <i class="ti-settings hide"></i>&nbsp;&nbsp;Motor Insurance Workspace Settings
+
+                        <i class="ti-angle-right parent-icon {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}open{% endif %}"></i>
+                    </a>
+
+                    <ul class="{% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}{% else %}hide{% endif %}">
+                        <li>
+                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-users' and workspace_shortcode == 'mt' %}current{% endif %}" href="{% url 'accounts:settings-workspace-users' workspace="mt" %}">
+                                Workspace Users
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-motor-crm' %}current{% endif %}" href="{% url 'accounts:settings-workspace-motor-crm' %}">
+                                CRM & E-Commerce
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{% if request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}" href="{% url 'accounts:settings-motor-workspace-notifications' %}">
+                                Notifications & Email
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{% if workspace_shortcode == 'mt' and request.resolver_match.url_name == 'settings-email-templates' %}current{% endif %}" href="{% url 'accounts:settings-email-templates' workspace='mt' %}">
+                                Email Templates
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+        {% endif %}
+        <div class="row">
+            {% if request.user.userprofile.get_assigned_role == 'admin' %}
+            <div class="col col-lg-2">&nbsp;</div>
+            <div class="col col-lg-9">
+            {% else %}
+            <div class="col col-lg-12">
+            {% endif %}
+                {% block settings_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function() {
+           $('.parent-li').click(function() {
+                let childs = $(this).parent().find('ul');
+                if(childs.is(':visible')) {
+                    childs.addClass('hide');
+                    $(this).find('.parent-icon').removeClass('open');
+                } else {
+                    childs.removeClass('hide');
+                    $(this).find('.parent-icon').addClass('open');
+                }
+           });
+        });
+    </script>
+
+{% endblock %}

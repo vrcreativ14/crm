@@ -1,0 +1,192 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+
+<div class="deal-form" data-quote-id="{{ deal.quote.pk }}">
+    {% if deal.quote %}
+    <div class="heading m-b-5">Update Quote</div>
+    <p>Your quote was created {{ deal.quote.created_on|naturaltime }}. You can update your quote and resent it to your customer</p>
+    {% else %}
+    <div class="heading m-b-5">Create a new quote</div>
+    <p>Next, let's add some products to the quote based on the customer's driving and vehicle information</p>
+    {% endif %}
+
+    <div class="products-preview {% if not deal.quote %}hide{% endif %}">
+
+        <div class="products"></div>
+
+        <center class="m-30 add-new-product-cta">
+            <button class="show-insurer-modal btn btn-outline-primary btn-md">
+                Add Another Product(s)
+            </button>
+        </center>
+
+        <hr />
+
+        <div class="row no-hover">
+            <div class="status-field col-lg-1 col-md-1 col-sm-2">
+                {% if deal.quote %}
+                <input name="quote_status" id="id_quote_status" type="checkbox" switch='success' name="" {% if  deal.quote.status == 'published'%}checked{% endif %} />
+                <label data-on-label="published" data-off-label="unpublished" for="id_quote_status" class=""></label>
+                {% endif %}
+            </div>
+            <div class="col col-lg-5">
+                {% if deal.quote %}
+                <div class="copy-link-container m-l-30">
+                    <span class="link-label">Quote Link</span>
+                    <div class="link">
+                        <input id="input_quote_url" readonly="readonly" type="text" value="{{ absolute_quote_url }}" />
+                    </div>
+
+                    <div class="float-right">
+                        <div class="copy felix_tooltip">
+                            <span class="tooltiptext">Click to copy</span>
+                            <a onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="input_quote_url" class="font-12"><i class="ti-files"></i></a>
+                        </div>
+                        <div class="open felix_tooltip">
+                            <span class="tooltiptext">Click to open</span>
+                            <a href="{{ absolute_quote_url }}" target="_blank" class="m-l-5 float-right"><i class="ti-new-window"></i></a>
+                        </div>
+                        <div class="open felix_tooltip">
+                            <span class="tooltiptext">Download PDF</span>
+                            <a href="{{ quote_pdf_download_url }}" target="_blank" class="m-l-5 float-right"><i class="ti-download"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% endif %}
+            </div>
+            <div class="col col-lg-6 float-right">
+                <button class="quote-submit-send save-and-send float-right btn btn-primary btn-md btn-wide-deal" {% if deal.quote.status != 'published' and deal.quote %}disabled="disabled"{% endif %}>
+                    <span>{% if deal.quote %}Update & Send{% else %}Save & Send{% endif %}</span>
+                </button>
+                <button class="loader-blue quote-submit m-r-10 float-right btn btn-outline-primary btn-md btn-wide-deal">
+                    {% if deal.quote %}Update{% else %}Save{% endif %}
+                </button>
+                {% if deal.quote %}
+                <button class="cancel-quote m-r-10 float-right btn btn-outline-secondary btn-md btn-wide-deal">
+                    Cancel
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="form {% if deal.quote %}hide{% endif %}">
+        <input type="hidden" name="edited_qp_id" id="edited_qp_id" value="" />
+        <input type="hidden" name="edited_id" id="edited_id" value="" />
+        <div class="products-container">
+            <div class="row product-row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <!--Product-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">Product *</div>
+                                <select name="product" id="id_product" class="product-field sorted">
+                                    {% for id, product in products_data.items %}
+                                        {% if product.active %}
+                                            <option value="{{ product.id }}" data-insurer-id="{{ product.insurer_id }}">{{ product.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!--Insurer-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">Insurer Quote Reference</div>
+                                {{ quoted_product_form.insurer_quote_reference }}
+                            </div>
+                        </div>
+
+                        <!--Car Value-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">Sum Insured</div>
+                                <input type="text" name="insured_car_value" class="form-control auto-format-money-field" id="id_insured_car_value" value="{{ deal.vehicle_insured_value }}" />
+                            </div>
+                        </div>
+
+                        <!--Premium-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">Base Premium incl. 5% VAT *</div>
+                                {{ quoted_product_form.premium }}
+                            </div>
+                        </div>
+
+                        <!-- Sale Price-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">
+                                    Sale Price incl. 5% VAT
+                                    <span class="help-icon" title="If you want to offer your client a discounted premium or a sale price then enter it here. Otherwise leave it blank to quote the standard base premium."></span>
+                                </div>
+                                {{ quoted_product_form.sale_price }}
+                            </div>
+                        </div>
+
+                        <!--Deductible-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">Deductible</div>
+                                {{ quoted_product_form.deductible }}
+                            </div>
+                        </div>
+
+                        <!--Extra-->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <div class="label m-b-5">Ancillary Deductible</div>
+                                {{ quoted_product_form.deductible_extras }}
+                            </div>
+                        </div>
+
+                        <!--Agency Checkbox-->
+                        <div class="col-lg-4">
+                            <div class="form-group m-t-25 m-l-5">
+
+                                <label class="felix-checkbox-form">
+                                    Agency Repair
+                                    {{ quoted_product_form.agency_repair }}
+                                    <div class="control__indicator"></div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!--NCD Checkbox-->
+                        <div class="col-lg-4">
+                            <div class="form-group m-t-25 m-l-5">
+                                <label class="felix-checkbox-form">
+                                    NCD Required
+                                    {{ quoted_product_form.ncd_required }}
+                                    <div class="control__indicator"></div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="clear m-10"></div>
+
+                        <!--Addons-->
+                        <div class="addons col-md-12"
+                             data-selected-addons="{{ quoted_product_form.default_add_ons.value }}">
+                            <div class="form-group">
+                                <div class="label m-b-5">Default add-ons</div>
+                                {{ quoted_product_form.default_add_ons }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="add-product float-right btn btn-success btn-md m-l-10 m-t-10">
+            <span class="add-label">Add product</span><span class="edit-label hide">Update product</span>
+        </button>
+        <button type="button" class="float-right btn-cancel-generate-new-quote btn btn-outline-secondary btn-md m-t-10">
+            Cancel
+        </button>
+    </div>
+</div>
+{% include 'handlebars/deal_quote_add_product.html' %}

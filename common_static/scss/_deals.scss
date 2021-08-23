@@ -1,0 +1,141 @@
+/*
+ DEALS
+ */
+.motor-deals, .imedical-deals {
+	.card {
+		.preloader {
+			position: absolute;
+		    top: 20px;
+		    right: 20px;
+		}
+
+		.hide-form-elements {
+			#id_customer, .customer-container, .block-sub-heading {
+				display: none;
+			}
+		}
+	}
+
+	.deals-total-amount {
+		position: absolute;
+		top: 75px;
+		right: 15px;
+		height: 19px;
+		color: #212529;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 19px;
+		text-align: right;
+	}
+	.felix-checkbox {
+		margin-right: 10px;
+	}
+
+	.table-filters {
+		float: none;
+	}
+
+	.quick-filters {
+		margin-top: 30px;
+		margin-bottom: 20px;
+		float: left;
+		.title {
+			font-size: 16px;
+			font-weight: 500;
+			margin-right: 10px;
+		}
+		.sub-title {
+			font-size: 14px;
+			font-weight: 400;
+			border-bottom: 1px solid #DDD;
+			margin-top: 17px;
+			margin-bottom: 10px;
+			padding-bottom: 10px;
+		}
+		ul {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			label {
+				font-weight: normal;
+				font-size: 12px;
+				cursor: pointer;
+				padding-left: 7px;
+				width: 100%;
+				text-transform: capitalize;
+				&:hover {
+					font-weight: 500;
+				}
+			}
+			input {
+				margin-right: 5px;
+			}
+		}
+		button {
+			font-size: 13px;
+			color: #343A40;
+			border-radius: 3.6px;
+			padding: 7px 12px;
+			@include breakpoint(mobile-tablet) {
+				padding: 2px 5px;
+			}
+
+			span {
+				font-size: 9px;
+				margin-top: -10px;
+				background-color: #F2F2F2;
+				padding: 0px 2px;
+				border-radius: 2px;
+			}
+
+			&.active, &:hover {
+				border-color: $primary;
+				box-shadow: none;
+			}
+			&:active {
+				border: 1px outset $primary-darker;
+			}
+		}
+		.select2-container,
+		.chosen-container
+		 {
+			max-width: 200px;
+			width: 200px !important;
+			margin-left: 10px;
+			background-color: #FFF;
+			border-radius: 3.6px;
+			.select2-selection--single {
+				border: none !important;
+				background-color: transparent !important;
+				padding-left: 5px;
+				font-size: 13px;
+				color: #343A40;
+			}
+		}
+	}
+
+	.table-filters {
+		margin-top: 30px;
+		margin-bottom: 20px;
+	}
+	.deal-detail-settings {
+		position: absolute;
+		z-index: 1;
+		top: 105px;
+		right: 15px;
+		background-color: #FFF;
+		padding: 5px 15px;
+		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+		border-radius: .25rem;
+		a.dropdown-toggle {
+			color: inherit;
+		}
+		.dropdown-menu {
+			font-size: 13px;
+			.dropdown-item {
+			    padding: 6px 1rem;
+			}
+		}
+	}
+
+}

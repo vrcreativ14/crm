@@ -1,0 +1,27 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+
+{% block page_title %}Select a product to buy{% endblock %}
+{% block tagline %}Quick &amp; Easy Car Insurance{% endblock %}
+
+{% block content %}
+    <div id="app-container">
+        <br><br>
+        <br><br>
+        <div class="sub-container">
+            <div class="quotes inner-small-container single-product">
+                <div class="row">
+                    <div id="main-heading" class="col-sm-12 col-md-12 col-lg-12">
+                        <center>
+                            <h2>The quote you're trying to access has been unpublished.</h2><br>
+                            <h4>Please contact our customer support team for more info.</h4>
+                        </center>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

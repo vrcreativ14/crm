@@ -1,0 +1,152 @@
+{% extends "base.djhtml" %}
+{% load static %}
+
+{% block page_title %}Policies{% endblock %}
+{% block body_class %}policies{% endblock %}
+{% block current_nav %}policies{% endblock %}
+
+{% block breadcrumb %}
+    <!-- Page-Title -->
+    <div class="breadcrumb">
+
+        {% if policy or deal %}
+        <ul>
+            <li><a href="{% url 'motorinsurance:deals' %}">Deals</a></li>
+            <li class="muted">/</li>
+            <li><a href="{% url 'motorinsurance:deal-edit' pk=deal.pk %}">{{ deal }}</a></li>
+            <li class="muted">/</li>
+            {% if policy %}
+                <li>{{ policy }}</li>
+            {% else %}
+                    <li>Upload Policy</li>
+            {% endif %}
+        </ul>
+        {% else %}
+            <ul>
+                <li><a href="{% url 'motorinsurance:policies' %}">Policies</a></li>
+                <li class="muted">/</li>
+                <li>Upload Policy</li>
+            </ul>
+        {% endif %}
+    </div>
+    <!-- end page title end breadcrumb -->
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        {% if policy %}
+            {% if policy.status == 'deleted' %}
+                {% include 'core/_deleted_record_message.djhtml' %}
+            {% endif %}
+        {% endif %}
+        <form name="policy_form" id="policy_form" method="post" validate data-module-name="Quote">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card m-b-20">
+                        <div class="card-body">
+                            <h4 class="mt-0 header-title">
+                                {% if policy %}
+                                    Edit Policy
+                                {% else %}
+                                    Upload a new Policy
+                                {% endif %}
+                            </h4>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                {{ form.reference_number.label_tag }} *
+                                                {{ form.reference_number }}
+                                            </div>
+                                            <div class="col-lg-4">
+                                                {{ form.customer.label_tag }} *
+                                                {{ form.customer }}
+                                            </div>
+                                            <div class="col-lg-4">
+                                                {{ form.deal.label_tag }} *
+                                                <div data-id="{{ form.deal.value }}">
+                                                    {{ form.deal }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                {{ form.product.label_tag }} *
+                                                <div data-id="{{ form.product.value }}">
+                                                    {{ form.product }}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                {{ form.policy_expiry_date.label_tag }} *
+                                                {{ form.policy_expiry_date }}
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                {{ form.policy_document.label_tag }}
+                                                {{ form.policy_document }}
+                                                {% if policy %}
+                                                    <br>
+                                                    <a target="_blank" href="{{ policy.policy_document.url }}">
+                                                        <i class="ti-search"></i> View File
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <iframe width="100%" height="200px" id="file_preview_frame"></iframe>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <button type="submit" class="update-profile btn btn-primary">
+                                {% if policy %}
+                                    <span>Save</span>
+                                {% else %}
+                                    <span>Send Policy to Customer</span>
+                                {% endif %}
+                                <div class="ball-spinner"></div>
+                            </button>
+                            <a href="{% url 'motorinsurance:policies' %}" class="btn btn-secondary">Cancel</a>
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </form>
+        {% if policy %}
+            <div class="card m-b-20 activity-container">
+                <div class="card-body">
+                    <h4 class="mt-0 header-title">ACTIVTY</h4>
+                    <p class="text-muted m-b-30 font-14"></p>
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                        <li class="nav-item active show">
+                            <a class="nav-link active show" data-toggle="tab" href="#tab_history" role="tab" aria-selected="false">History</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane p-3 active show" id="tab_history" role="tabpanel">
+                            {% include 'core/_audit_trail.djhtml' with trail=policy.get_audit_trail.change_history %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock %}

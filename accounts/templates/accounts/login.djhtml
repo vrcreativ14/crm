@@ -1,0 +1,56 @@
+{% extends 'login_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Login{% endblock %}
+
+{% block content %}
+    <h4 class="text-muted font-18 m-b-5 text-center">Welcome to Nexus!</h4>
+    <p class="text-muted text-center">Sign in to continue.</p>
+
+    <form class="form-horizontal m-t-30" method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for key,value in form.errors.items %}
+                    {{ value|escape }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="form-group">
+            <label for="username">Email</label>
+            <input type="text" class="form-control" id="id_username" name="username" placeholder="Enter email address" autofocus="autofocus"
+                   required/>
+        </div>
+
+        <div class="form-group">
+            <label for="userpassword">Password</label>
+            <div class="password-field">
+                <input type="password" id="id_password" name="password" class="form-control" value=""
+                       placeholder="Enter password" required/>
+                <div class="password-show-toggle">
+                    <i class="mdi mdi-eye"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row m-t-20">
+            <div class="col-sm-6">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customControlInline">
+                    <label class="custom-control-label" for="customControlInline">Remember me</label>
+                </div>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-primary-new w-md waves-effect waves-light" type="submit">Log In</button>
+            </div>
+        </div>
+
+        <div class="form-group m-t-10 mb-0 row">
+            <div class="col-12 m-t-20">
+                <a href="{% url 'accounts:password_reset' %}" class="text-muted"><i class="mdi mdi-lock"></i> Forgot
+                    your password?</a>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

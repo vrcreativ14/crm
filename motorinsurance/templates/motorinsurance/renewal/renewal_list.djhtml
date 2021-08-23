@@ -1,0 +1,156 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load permission_tags %}
+
+{% block page_title %}Motor Renewals{% endblock %}
+{% block body_class %}policies renewals{% endblock %}
+{% block current_nav %}renewals{% endblock %}
+
+{% block content %}
+     <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Motor Renewals</h1>
+
+            <div class="float-right policies-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+
+            <button title="Select at least one record to create a renewal deal" type="button" class="renewal-deal btn btn-md btn-primary disabled">
+                Create Renewal Deal
+            </button>
+
+            <div class="clear"></div>
+
+            <div class="table-filters">
+                <form action="{% url 'motorinsurance:renewals' %}" method="get">
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="sort_by" id="id_sort_by" value="{{ sort_by }}" />
+                    <input type="hidden" name="from_date" id="id_from_date" value="{{ from_date }}" />
+                    <input type="hidden" name="to_date" id="id_to_date" value="{{ to_date }}" />
+                    <input type="hidden" name="hide_renewal_deal" id="id_hide_renewal_deal" />
+
+                    <div class="quick-filters">
+                        <span class="title">Select Expiring Date Range:</span>
+
+                        <span class="renewal_date_filter_field_container">
+                            <div class="btn btn-white renewal_date_filter_field" id="renewal_date_filter"></div>
+                        </span>
+
+                        <span class="title ml-3">Hide Policies with Renewal Deals:</span>
+                        <span class="checkbox">
+                            <label class="felix-checkbox">
+                                <input type="checkbox" name="hide-renewaldeals" class="hide-renewaldeals" />
+                                <span class="checkmark big"></span>
+                            </label>
+                        </span>
+                    </div>
+
+                    <div class="table-filters float-right">
+                        {% if user|can:'export_motor_deals' %}
+                        <div class="options-table float-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-settings"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item export" data-url="{% url 'motorinsurance:renewals-export' %}" href="javascript:">
+                                    <i class="ti-export m-r-7"></i> Export to CSV
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+        {% include 'motorinsurance/deal/components/deal_policy_modal.djhtml' %}
+        <div class="row">
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table data-update-callback="__POLICY._updateTableAttributes" class="table no-footer felix-table opacity" cellspacing="0" width="100%"
+                        data-index="{{ algolia_env }}_motor_policies_{{ company.pk }}"
+                        data-mode='index'
+                        data-securedapikey="{{ algolia_secured_search_api_key }}"
+                        data-name='renewals'>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="felix-checkbox parent">
+                                        <input class="select-record-all" type="checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th
+                                    data-name="policy_expiry_date"
+                                    class="p-l-15">
+                                    Status
+                                </th>
+                                <th
+                                    data-name="reference_number"
+                                    class="">
+                                    Policy No.
+                                </th>
+                                <th>Renewal Deal</th>
+                                <th
+                                    data-name="customer__name"
+                                    class="">
+                                    Customer
+                                </th>
+                                <th
+                                    data-name="owner_name"
+                                    class="">
+                                    Owner
+                                </th>
+                                <th
+                                    data-name="customer__name"
+                                    class="">
+                                    Expiring Insurer
+                                </th>
+                                <th>Expiring Premium ({{ companysettings.get_currency_display }})</th>
+                                <th
+                                    data-name="deal__vehicle_insured_value"
+                                    class="">
+                                    Expiring Sum Insured ({{ companysettings.get_currency_display }})
+                                </th>
+                                <th
+                                    data-name="policy_expiry_date"
+                                    class="sortable {% if sort_by == 'policy_expiry_date_desc'%}desc{% endif %}{% if sort_by == 'policy_expiry_date_asc'%}asc{% endif %}">
+                                    Expiry Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body"></tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center>
+                        <ul class="pagination"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/renewals_list.html' %}
+    {% include 'handlebars/pagination.html' %}
+    {% include 'handlebars/policy_modal.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+    <link rel="stylesheet" type="text/css" href="{% static "plugins/daterangepicker/daterangepicker.css" %}" />
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+    <script src="{% static "plugins/daterangepicker/daterangepicker.js" %}"></script>
+    <script type="text/javascript">
+    var __current_timestamp = {{ current_timestamp }};
+    </script>
+{% endblock %}

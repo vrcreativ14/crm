@@ -1,0 +1,98 @@
+{% load static %}
+{% verbatim %}
+<script id="documents-template" type="text/x-handlebars-template">
+
+<h5 class="mt-4">
+	{{ records.title }} Documents 
+	{{#ifCond records.title "Customer"}}
+		<span class="help-icon" title="These are documents that are linked to this customer. If you need to copy documents from deals to this customer then you can do that below."></span>
+	{{/ifCond}}
+	{{#ifCond records.title "Deal"}}
+		<span class="help-icon" title="These are documents that are linked to this deal. If you need to copy documents from the customer record or from other deals to this deal then you can do that below."></span>
+	{{/ifCond}}
+</h5>
+<div class="row files-container squeeze">
+    {{#if records.documents }}
+	    <div class="row files">
+	        <div class="col-9 pl-2"><strong>Filename</strong></div>
+	        <div class="col-1 pr-0"><strong>Type</strong></div>
+	        <div class="col-2 pl-0"></div>
+	    </div>
+	    {{#each records.documents}}
+	        <div class="row files">
+			    <div class="col-9 pl-2">
+			        <a data-id={{this.id}} href="{{ this.url_for_linking }}"
+
+			           {{#if this.can_preview }}data-preview-image="{{ this.url }}"{{/if}}
+
+			           target="_blank"
+			           class="text-editable attachment-field"
+			           data-class="form-control-sm"
+			           data-name="label"
+			           data-toggle="manual"
+			           data-value="{{ this.label }}"
+			           data-title="{{ this.label }}"
+			           data-pk="{{ this.id }}"
+			           data-url="{{ this.update_url }}"
+			        >{{ this.label }}</a>
+			        <a class="edit-file" href="javascript:"><i class="ti-pencil"></i></a>
+			    </div>
+			    <div class="col-1 pr-0">
+			        {{ this.extension }}
+			    </div>
+			    <div class="col-2 text-right pr-0">
+			        <a href="javascript:" class="delete-file" data-id="{{ this.id }}">Delete</a>
+			    </div>
+			</div>
+	    {{/each}}
+    {{else}}
+		<center class="text-muted w-100 font-12">No document found.</center>
+	{{/if}}
+</div>
+<h5 class="mt-5">Related Documents <span class="help-icon" title="These are related documents that are linked to this customer or to this customer's other deals. You can copy any related document to this deal if you need to."></span></h5>
+<div class="row files-container squeeze">
+    {{#if records.related_documents }}
+	    <div class="row files">
+	        <div class="col-5 pl-2"><strong>Filename</strong></div>
+	        <div class="col-4"><strong>Document Location</strong></div>
+	        <div class="col-1 pr-0"><strong>Type</strong></div>
+	        <div class="col-2 pr-0"></div>
+	    </div>
+
+	    {{#each records.related_documents}}
+	        <div class="row files">
+			    <div class="col-5 pl-2">
+			        <a data-id={{this.id}} href="{{ this.url_for_linking }}"
+
+			           {{#if this.can_preview }}data-preview-image="{{ this.url }}"{{/if}}
+
+			           target="_blank"
+			           class="text-editable attachment-field"
+			           data-class="form-control-sm"
+			           data-name="label"
+			           data-toggle="manual"
+			           data-value="{{ this.label }}"
+			           data-title="{{ this.label }}"
+			           data-pk="{{ this.id }}"
+			           data-url="{{ this.update_url }}"
+			        >{{ this.label }}</a>
+			        <a class="edit-file" href="javascript:"><i class="ti-pencil"></i></a>
+			    </div>
+			    <div class="col-4">
+			    	<a title="{{ this.location_label }}" href="{{ this.location_url }}">{{ this.location_label }}</a>
+			    </div>
+			    <div class="col-1 pr-0">
+			        {{ this.extension }}
+			    </div>
+
+			    <div class="col-2 text-right pr-0">
+			        <a href="javascript:" class="copy-file" data-id="{{ this.id }}">Copy to {{ ../records.title }}</a>
+			    </div>
+			</div>
+	    {{/each}}
+	{{else}}
+		<center class="text-muted w-100 font-12">No document found.</center>
+	{{/if}}
+</div>
+</script>
+{% endverbatim %}

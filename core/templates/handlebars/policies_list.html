@@ -1,0 +1,32 @@
+{% verbatim %}
+<script id="row-template" type="text/x-handlebars-template">
+{{#each records}}
+<tr
+    id="tr_{{ this.objectID }}"
+    data-felix-modal="modal_view_policy"
+    data-click-callback="__POLICY._getPolicyDetail({{ this.objectID }})"
+    >
+    <td class="p-l-15 important capitalize">
+        <span class="capitalize stage-icon status-{{{ policyStatus this.policy_expiry_date }}}"></span> {{{ policyStatus this.policy_expiry_date }}}
+    </td>
+    <td>{{ this.reference_number }}</td>
+    <td class="new-tab link">
+        {{#if this.deal_title }}
+            <a title="{{ this.car_trim }}" href="{{{ felixUrl 'motorinsurance:deal-edit' this.deal_id}}}" class="link limit-text">{{ this.deal_title }}</a>
+        {{else}}
+            -
+        {{/if}}
+    </td>
+    <td class="link">
+        <a class="link" href="{{{ felixUrl 'customers:edit' this.customer_id}}}">{{ this.customer_name }}</a>
+    </td>
+    <td>{{ this.owner_name }}</td>
+    <td>{{#if this.product_name }}{{ this.product_name }}{{ else }}{{ this.custom_product_name }}{{/if}}</td>
+    <td>{{#if this.premium }}{{{ money this.premium 2 }}}{{else}}-{{/if}}</td>
+    <td>{{{ money this.car_value }}}</td>
+    <td>{{ this.policy_start_date_display }}</td>
+    <td>{{ this.policy_expiry_date_display }}</td>
+</tr>
+{{/each}}
+</script>
+{% endverbatim %}

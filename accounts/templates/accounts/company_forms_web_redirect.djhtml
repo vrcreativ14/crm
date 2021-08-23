@@ -1,0 +1,35 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<div class="sub-container company_pdf_forms">
+    <div class="mt-1">
+        <div class="preloader" style="display: block">
+            <div class="loader">
+                <img src="{% static "images/preloader.svg" %}" width="32" /><br><br>
+                Please wait while we redirect you...
+            </div>
+            <div class="error" style="display:none">
+                <i class="fa fa-times-circle d-inline alert-danger mb-4" style="font-size: 22px;"></i><br/>
+                An error occurred. Please contact us a <a href="mailto:support@felix.insure">support@felix.insure</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        let u = Utilities.Cookie.get('__felix_cf_s_url');
+        if (u) {
+            window.location = u;
+        } else {
+            $('.loader').hide();
+            $('.error').show();
+        }
+    });
+    </script>
+{% endblock extra_js %}

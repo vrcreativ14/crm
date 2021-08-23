@@ -1,0 +1,342 @@
+/*********************
+   Motor Lead Form Styling
+   ********************/
+
+#motor-form {
+    text-align: left;
+
+    h1, h2 {
+        color: $felix-color-turquoise;
+        font-size: 26px;
+        font-weight: 600;
+        text-align: left;
+        width: 43%;
+        margin: 40px 0px 60px 0;
+        position: relative;
+
+        @include breakpoint(mobile-tablet) {
+            width: 100%;
+            font-size: 24px;
+            margin: 50px 0px;
+        }
+
+        p {
+            color: $felix-color-turquoise;
+            font-size: 20px;
+            font-weight: normal;
+        }
+    }
+
+    h1.down-arrow, h2.down-arrow {
+        &:after {
+            font-family: 'themify';
+            content: "\e64b";
+            font-size: 30px;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            bottom: -40px;
+            left: 0px;
+        }
+    }
+
+    h1.blue-line, h2.blue-line {
+        &:before {
+            content: ' ';
+            height: 1px;
+            border-bottom: 3px solid $felix-color-turquoise;
+            width: 48%;
+            position: absolute;
+            left: -55%;
+            top: 15px;
+        }
+    }
+
+    .m-b-5 {
+        margin-bottom: 5px;
+    }
+    .m-t-5 {
+        margin-top: 5px;
+    }
+
+    .checkbox-container {
+        span.checkbox{
+            position: relative;
+            max-width: 78%;
+            line-height: 20px;
+            &:before {
+                top: 8px;
+                left: -50px;
+                @include breakpoint(mobile) {
+                    left: -42px;
+                }
+            }
+            &:after {
+                left: -43px;
+                top: 1px;
+                background-size: 100%;
+                @include breakpoint(mobile) {
+                    left: -36px;
+                }
+            }
+
+            .asterisk-field {
+                top: 5px;
+                margin-left: 7px;
+                @include breakpoint(mobile) {
+                    position: relative;
+                    right: 0;
+                    top: 2px !important;
+                }
+            }
+        }
+    }
+
+    .field-checkbox.checkbox-section {
+        .checkbox-container {
+            margin-top: 20px;
+            label {
+                width: 100%;
+                font-size: 17px
+            }
+            span.checkbox {
+                margin-left: 15px;
+                @include breakpoint(mobile-tablet) {
+                    margin-left: 50px;
+                }
+                &:after {
+                    top: -7px;
+                    left: -40px;
+                }
+                &:before {
+                    top: -10px;
+                    left: -46px;
+                }
+            }
+        }
+    }
+    .custom_car_name_field {
+        display: none;
+    }
+    // Safari specific style
+    @media not all and (min-resolution:.001dpcm) {
+        @supports (-webkit-appearance:none) { 
+            .checkbox-container {
+                span.checkbox::after {
+                    top: 0px;
+                }
+
+            }
+        }
+    }
+
+    .image-container {
+        position: relative;
+        cursor: pointer;
+        margin: auto; 
+        @include breakpoint(mobile) {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: table;
+        }
+        .zoom-icon  {
+            background: rgba(0,159,171,0.81);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            position: absolute;
+            top: -12px;
+            right: -180px;
+            color: #FFF;
+            text-align: center;
+            padding: 2px;
+            font-size: 18px;
+            @include breakpoint(mobile) {
+                right: -12px;
+            }
+            @include breakpoint(tablet) {
+                right: auto;
+                margin-left: 160px;
+            }
+        }
+        img {
+            width: 184px;
+        }
+    }
+
+    #div_id_claim_certificate_available {
+        display: none;
+    }
+
+    .tooltip-help {
+        @include breakpoint(mobile-tablet) {
+            top: 100%;
+        }
+        .row {
+            @include breakpoint(mobile) {
+                margin: 0;
+                display: inline-flex;
+            }
+        }
+    }
+
+     @include breakpoint(desktop) {
+        .tooltip-help-layout {
+            top: 50%;
+            transform: translate(0%,-50%);
+        }
+
+        .modal-field {
+            .tooltip-help-layout {
+                top: 0px;
+                transform: inherit;
+            }        
+        }
+    }
+
+    .felix-modal-container {
+        .close-bar {
+            background: transparent;
+            border: none;
+        }
+        .close:before,
+        .close:after {
+            background-color: #FFF;
+        }
+    }
+    .felix-modal {
+        background: transparent;
+        @include breakpoint(mobile){
+            // height: 100%;
+            text-align: center;
+        }
+        img {
+            width: 100%;
+            @include breakpoint(mobile){
+                margin-top: 20%;
+                width: 90%;
+            }
+        }
+
+        h1 {
+            width: 90%;
+            text-align: center;
+        }
+    }
+
+    .calendar-icon {
+        width: 70%;
+    }
+
+    .visible-tooltip {
+        @include breakpoint(mobile-tablet) {
+            .help-trigger {
+                display: none;
+            }
+            .tooltip-help {
+                display: block !important;
+                background-color: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                position: relative;
+                &:after, &:before {
+                    display: none;
+                }
+                p {
+                    padding: 0;
+                    margin: 0;
+                }
+
+                .tooltip-help-close-container {
+                    display: none;
+                }
+            }
+        }
+    }
+    #div_id_callback{
+        display: none;
+    }
+    #modal_request-callback-form {
+        .felix-modal {
+            width: 400px;
+            @include breakpoint(mobile) {
+                width: 100%;
+            }
+        }
+        .close:after, 
+        .close:before {
+            @include breakpoint(mobile) {
+                background-color: #555;
+            }
+        }
+        h1 {
+            text-align: left;
+            border-bottom: 1px solid #EEE;
+            padding-bottom: 7px;
+        }
+        p {
+            font-weight: normal;
+            font-size: 20px;
+        }
+        .error {
+            color: $error-color;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .preloader {
+            padding: 0px;
+            position: relative;
+            text-align: center;
+            font-size: 14px;
+            font-weight: normal;
+            img {
+                width: 14px;
+                @include breakpoint(mobile) {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+
+    .age-field-container {
+        width: 42%;
+        @include breakpoint(mobile) {
+            width: 100%;
+        }
+        span.label {
+            font-weight: normal;
+            font-size: 14px;
+            display: inline-block;
+            width: 25%;
+            padding-left: 7px;
+
+            &:first-child {
+                width: 45%;
+            }
+        }
+        .age-field {
+            width: 25%;
+            margin-right: 2px;
+        }
+        .chosen-container {
+            width: 45% !important;
+            margin-top: -6px;
+            margin-right: 3px;
+            height: 50px;
+        }
+    }
+}
+
+#motor-form.show-callback {
+    #div_id_callback {
+        display: block;
+    }
+    .error {
+        line-height: 18px;
+    }
+    .error a {
+        color: $felix-color-turquoise;
+    }
+}

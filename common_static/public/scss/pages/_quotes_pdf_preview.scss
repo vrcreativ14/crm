@@ -1,0 +1,172 @@
+/*********************
+   QUOTES Styling
+   ********************/
+
+$border-color: #EBEBEB;
+$bg-color: #EBEBEB;
+
+.quote-pdf-preview {
+	background: #FFF;
+	font-family: 'Source Sans Pro', sans-serif;
+
+	header {
+		border: none;
+		padding: 0;
+		width: 100%;
+        display: block;
+		.title {
+			color: #111;
+			font-weight: 300;
+			font-size: 20px;
+			padding: 20px 10px;
+		}
+		.logo-container {
+	        float: right;
+	        width: fit-content;
+	        margin: 10px;
+	        a {
+				background-repeat: no-repeat;
+				background-size: contain;
+				background-position: right;
+			}
+	    }
+	}
+
+
+	.customer-info {
+		margin: auto;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		font-size: 14px;
+		width: 99%;
+		td {
+			&.reference_number {
+				font-weight: 600;
+			}
+			margin-right: 10px;
+			padding: 5px;
+			width: 50%;
+			&.empty {
+				width: 20px;
+			}
+		}
+		label {
+			color: #7B7B7B;
+			min-width: 30%;
+			margin: 0px;
+			padding-left: 5px;
+		}
+		.bg {
+			background-color: $bg-color;
+		}
+	}
+
+	.products {
+		margin-left: 10px;
+		margin-top: 20px;
+		border-color: 1px solid $border-color;
+		.logo-container {
+			width: 100px;
+			height: 70px;
+
+			img {
+				max-width: 95px;
+    			max-height: 50px;
+			}
+		}
+		.addon {
+			font-weight: 600;
+			display: block;
+		}
+
+		.product-name {
+			padding: 2px 0;
+			background-color: $bg-color;
+			font-size: 15px;
+			padding: 2px 0;
+			color: #111;
+			font-weight: bold;
+		}
+		.product-price {
+			font-size: 12px;
+			font-weight: 300;
+			padding: 2px 0;
+			span {
+				display: block;
+				font-weight: 600;
+				font-size: 20px;
+			}
+		}
+
+		.product-original-price {
+			font-size: 12px !important;
+			font-weight: normal !important;
+		    display: inline-block !important;
+		    text-decoration: line-through;
+		    margin-left: 2px;
+		}
+
+		.product-cta {
+			font-size: 14px;
+			text-transform: capitalize;
+		}
+		.product-sum-insured {
+			padding: 2px 0;
+			color: #167000;
+    		font-size: 13px;
+		}
+
+		td, th {
+			border-right: 1px solid $border-color;;
+			border-left: 1px solid $border-color;;
+			padding: 5px 10px;
+			font-size: 12px;
+			text-align: center;
+			width: 400px;
+			max-width: 30%;
+
+			th:first {
+				border-top: 1px solid $border-color;;
+			}
+
+			&.empty {
+				width: 20px;
+				background-color: #FFF;
+				border-bottom: 1px solid #FFF !important;
+				border-top: 1px solid #FFF !important;
+			}
+		}
+
+		th {
+			border-top: 1px solid $border-color;
+		}
+
+		tr {
+			&:nth-child(even) {
+				background-color: $bg-color;
+			}
+		}
+	}
+
+	.disclaimer {
+		width: 99%;
+		margin: auto;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		color: #111;
+		font-size: 12px;
+	}
+
+	.capitalize {
+		text-transform: capitalize;
+	}
+
+	.primary-color {
+		color: #D9B200 !important;
+	}
+
+	.btn-primary {
+		background-color: #167000;
+	}
+
+}

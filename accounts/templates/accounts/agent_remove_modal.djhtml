@@ -1,0 +1,45 @@
+{% load static %}
+<button data-felix-modal="modal_agent_delete_confirm" class="hide"></button>
+<div id="modal_agent_delete_confirm" class="felix-modal-container agent-delete-confirm">
+    <div class="felix-modal">
+        <h1>Delete User: <span class="agent-name"></span></h1>
+        <form id="delete-user-form" method="post" action="">
+            {% csrf_token %}
+            <input type="hidden" name="agent_id" id="agent_id" />
+
+            <div class="content">
+                <div>There are <span class="agent-motor-deals fw-700">0</span> Motor deals and <span class="agent-medical-deals fw-700">0</span> Health Insurance deals assigned to <span class="agent-name"></span>.</div>
+
+                <em class="mt-4 d-block">Before you delete this user, please select one of these options:</em>
+
+                <div class="m-4 mt-2">
+                    <label class="d-block" for='assigned-option-0'>
+                        <input class="mr-2" type="radio" id="assigned-option-0" name="assign_option" value="0" checked /> 
+                        Unassign all deals assigned to <span class="agent-name"></span>
+                    </label>
+                    <label class="d-block" for='assigned-option-1'>
+                        <input class="mr-2" type="radio" id="assigned-option-1" name="assign_option" value="1" /> 
+                        Assign all deals to 
+                        <select name="assigned_to" disabled>
+                            {% for agent in all_agents %}
+                                <option value="{{ agent.pk }}">{{ agent.user.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+
+                <div class="alert alert-warning mt-5 m-4">
+                    <i class="ti-alert"></i> There is no undo available for this action.
+                </div>
+
+                <div class="float-right m-4">
+                    <div class="preloader hide d-inline mr-2">
+                        <img src="{% static "images/preloader.svg" %}" width="12" /> Deleting user account. Please wait...
+                    </div>
+                    <button type="button" class="btn btn-danger btn-md mr-2 confirm-delete-user">Yes, delete <span class="agent-name"></span></button>
+                    <button type="button" class="btn btn-secondary btn-md" onclick="$('#modal_agent_delete_confirm .close').click()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

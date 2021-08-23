@@ -1,0 +1,83 @@
+{% extends 'accounts/settings_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Company Settings - Account{% endblock %}
+
+{% block settings_content %}
+    <div class="row justify-content-md-center p-t-60">
+        <div class="col-lg-8">
+            <div class="card m-b-20">
+                <form name="company_settings_form" id="company_settings_form" method="post"
+                      validate enctype="multipart/form-data" action="{% url 'accounts:settings' %}"
+                      data-module-name='Settings'>
+                    {% csrf_token %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Account Settings</h4>
+                    <hr/>
+
+                    <div class="row m-20 m-t-50 m-b-60 justify-content-md-center">
+                        <div class="col-lg-10">
+                            <div class="row">
+                                <div class="col-lg-3 pl-1">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Company Name 
+                                        <span class="help-icon" title="This is the legal name of your organisation and is used in communications with your customers."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 pr-0">
+                                    {{ settings_form.displayed_name }}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-3 pl-1">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Company Phone 
+                                        <span class="help-icon" title="This is included in emails sent to your customers and it is also displayed on your online application form and e-commerce pages. Please ensure this is a valid number that customers can use to get in touch with you."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 pr-0">
+                                    {{ settings_form.phone }}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-3 pl-1">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Company Website 
+                                        <span class="help-icon" title="This is displayed to your customers in some emails and on e-commerce pages."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 pr-0">
+                                    {{ settings_form.website }}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-3 pl-1">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Company Address 
+                                        <span class="help-icon" title="This is displayed to your customers in some emails and on e-commerce pages."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8 pr-0">
+                                    {{ settings_form.address }}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-3 pl-1">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                    System Currency</label>
+                                </div>
+                                <div class="col-lg-8 pr-0">
+                                    {{ settings_form.currency }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <button type="submit" class="update-profile float-right m-r-15 m-b-15 btn btn-md btn-primary">
+                        <span>Save</span>
+                        <div class="ball-spinner"></div>
+                    </button>
+                </form>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+{% endblock %}

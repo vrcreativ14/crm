@@ -1,0 +1,245 @@
+.steps {
+    background-color: #FFF;
+    width: 100%;
+    border-bottom: 1px solid #EDEDED;
+    box-shadow: 1px 1px 1px #EDEDED;
+    .current-info {
+        display: none;
+    }
+    
+    [role='tablist'] {
+        width: 800px;
+        margin: auto;
+        padding: 0;
+
+        @include breakpoint(mobile-tablet) {
+            width: 100%;
+        }
+
+        a {
+            &:focus {
+                outline: none;
+            }
+            &:hover {
+                background-color: #FFF;
+            }
+        }
+
+        li {
+            display: inline-block;
+            float: left;
+            margin: 0;
+            position: relative;
+            padding: 0;
+            margin-right: 45px;
+            outline: none;
+            @include breakpoint(mobile-tablet) {
+                display: none;
+
+                &.current {
+                    display: inline-block;
+                }
+            }
+
+            &:after {
+                z-index: 1;
+                transform: translateX(4px);
+                border-left-color: #fff;
+                margin: 0;
+            }
+
+            & > * {
+                display: inline-block;
+                position: relative;
+                padding: 20px 15px;
+                color: #D7D7D7;
+                @include breakpoint(mobile-tablet) {
+                    padding: 14px 30px;
+                }
+
+                &:after {
+                    position: absolute;
+                    content: "\f105";
+                    right: -32px;
+                    top: 17px;
+                    font: normal normal normal 34px/1 FontAwesome;
+                    color: #D7D7D7;
+                    @include breakpoint(mobile-tablet) {
+                        display: none;
+                    }
+                }
+            }
+
+            &.current>* {
+                color: $font-color;
+                border-bottom: 3px solid $felix-color-primary;
+            }
+            &.completed>* {
+                color: $felix-color-primary;
+                &:before {
+                    content: ' ';
+                    margin-top: 3px;
+                    margin-right: 0px;
+                    z-index: 100;
+                    background: $felix-color-primary url(../images/white-check-icon.svg) no-repeat center center;
+                    border-radius: 50%;
+                    width: 17px;
+                    height: 17px;
+                    background-size: 70%;
+                    text-align: center;
+                }
+            }
+
+            a {
+                text-decoration: none !important;
+            }
+
+            a:hover {
+                color: $font-color;
+            }
+        }
+
+        li:last-of-type>*::after {
+            display: none
+        }
+    }
+
+    .info-tip {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        right: -8px;
+        top: 21px;
+        z-index: 1;
+        display: inline-block;
+        cursor: pointer;
+        &:hover {
+            &:after {
+                transform: none;
+            }
+        }
+        &:after {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            margin: auto;
+            content: "\F2FD";
+            font-size: 18px;
+            font-family: 'mdi';
+            color: $felix-color-primary;
+        }
+    }
+
+}
+
+[aria-label='Pagination'] {
+    @include breakpoint(mobile) {
+        text-align: left;
+    }
+    li {
+        display: inline-block;
+        margin-right: 10px;
+        @include breakpoint(mobile) {
+            margin-left: 10px;
+            margin-right: 0px;
+            width: 60%;
+
+            &:nth-child(2) {
+                width: 75%;
+            }
+        }
+        @include breakpoint(tablet-only) {
+            margin-right: 0px;
+            width: 80%;
+        }
+
+        a {
+            border-radius: 300px;
+            cursor: pointer;
+            box-sizing: border-box;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 1em 1.75em;
+            transition: background-color .1s 0s ease-in-out,color .1s 0s ease-in-out;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            display: inline-block;
+            line-height: 1em;
+            margin: 10px 0;
+            border: none;
+            background-color: $felix-color-primary;
+            color: #fff;
+            &:hover {
+                outline: none;
+                background-color: $felix-color-primary-darker;
+                text-decoration: none;
+            }
+            @include breakpoint(mobile-tablet) {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        &.disabled{
+            @include breakpoint(mobile-tablet) {
+                display: none;
+            }
+            a {
+                background-color: $felix-color-grey-lighter;
+                opacity: 0.5;
+            }
+        }
+
+        &:first-child {
+            @include breakpoint(mobile) {
+                width: 52px;
+                a {
+                    text-indent: -9999px;
+                    padding: 16px 0px !important;
+                    position: relative;
+                    background-color: transparent;
+                    border: 1px solid $felix-color-primary;
+                    &:before {
+                        content: "\f104";
+                        color: #009FAB;
+                        font: normal normal normal 34px/1 FontAwesome;
+                        position: absolute;
+                        margin: auto;
+                        left: 0;
+                        right: 0;
+                        top: 5px;
+                        text-indent: 0px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.wizard .actions {
+    padding: 20px;
+    background-color: #FFF;
+    min-height: 108px;
+    @include breakpoint(mobile-tablet) {
+        text-align: center;
+        padding: 0px;
+    }
+    @include breakpoint(mobile) {
+        text-align: center;
+        padding: 10px 0;
+    }
+    ul {
+        padding: 0;
+        margin: auto;
+        border: none;
+        width: $full_page_width_reduced;
+        @include breakpoint(mobile-tablet) {
+            width: 100%;
+        }
+        li a {
+            padding: 1em 3.75em;
+        }
+    }
+}

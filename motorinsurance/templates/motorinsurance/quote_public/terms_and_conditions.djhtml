@@ -1,0 +1,25 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}
+Terms &amp; Conditions
+{% endblock %}
+
+{% block content %}
+
+    <div id="document-upload">
+        <div class="sub-container">
+            <div class="inner-small-container form-headings">
+                <h1 class="thankyou-heading">
+                    Terms &amp; Conditions
+                    <div class="blue-line"></div>
+                </h1>
+            </div>
+            <iframe class="terms-iframe" src="{{ terms_url }}" border="0" width=100% height="100%"></iframe>
+        </div>
+
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}Upload your documents{% endblock %}
+
+{% block content %}
+    {% if motor_document_request.is_completed or motor_document_request.is_verified %}
+        <script type="text/javascript">
+        window.location.href = "{{thankyou_url}}";
+        </script>
+    {% endif %}
+
+    <div id="document-upload">
+        <div class="steps clearfix">
+            <ul role="tablist">
+                <li role="tab" aria-disabled="false" class="first completed">
+                    <span class="desc"><div class="label">Choose Policy</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="completed">
+                    <span class="desc"><div class="label">Choose Add-Ons</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="completed">
+                    <span class="desc"><div class="label">Order Summary</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="current">
+                    <span class="desc"><div class="label">Upload Documents</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="last">
+                    <span class="desc"><div class="label">Policy Issued!</div></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sub-container">
+            <div class="inner-small-container form-headings step-1">
+                <h1 class="down-arrow">
+                    Thank you for your order, you're almost done!
+                    <p>You're two short steps away from having your policy issued, we just need to do a quick review of your documents to ensure that all our information is correct. We will then get in touch with you to collect the payment and proceed to issue your policy.</p>
+
+                    <p>No time to do this now? No problem... there's a link to this page in the order confirmation email we just sent you so you can always come back to this later if you want, it’s your call.</p>
+
+                    <div class="blue-line"></div>
+                </h1>
+            </div>
+            <div class="inner-small-container step-2">
+                <div class="animated-car"></div>
+            </div>
+        </div>
+
+        <div class="sub-container info-box">
+            <div class="inner-small-container">
+                <h2>We'll need scans or photos of the following documents:</h2>
+                <div class="info">
+                    <div class="item">
+                        <i class="mdi mdi-check"></i> Emirates ID (front and back) *
+                    </div>
+                    <div class="item">
+                        <i class="mdi mdi-check"></i> UAE Driving License (front and back) *
+                    </div>
+                    <div class="item">
+                        <i class="mdi mdi-check"></i> Vehicle Registration Card (front and back) *
+                    </div>
+                    <div class="item">
+                        <i class="mdi mdi-check"></i> Home Country Driving License (optional)
+                    </div>
+                    <div class="item">
+                        <i class="mdi mdi-check"></i> No Claims Certificate (if applicable)
+                    </div>
+                    <div class="item">
+                        <i class="mdi mdi-check"></i> VCC Paper (for brand new vehicles)
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if editable %}
+        <div class="sub-container info-box">
+            <div class="inner-small-container">
+                <h2>Please upload your photos, scans or PDFs here:</h2>
+                <div class="info row fileuploader-container {% if not motor_document_request.is_pending %}completed{% endif %}">
+                    <input type="file" name="files" data-fileuploader-files='{{ motor_document_request_files|safe }}'>
+                    
+                    <div class="buttons col-6">
+                        <button type="button" class="btn-primary btn add-file">+ Add File</button>
+                    </div>
+
+                </div>
+                <div class="alert-success save-later-message">File(s) saved successfully</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <div class="sub-container">
+                <div class="inner-small-container main-form">
+                    <div class="row">
+                        <div class="buttons col-lg-5 col-sm-12">
+                            <button data-quote-reference='{{quote.reference_number}}' data-quote-id='{{quote.pk}}' type="button" class="submit-document btn-primary btn">Submit Documents</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% include 'motorinsurance/quote_public/whatsapp_widget.djhtml' %}
+{% endblock %}

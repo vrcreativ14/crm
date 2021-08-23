@@ -1,0 +1,42 @@
+{% verbatim %}
+<script id="autoquoted-product-list-template" type="text/x-handlebars-template">
+{{#each records}}
+    <label for="{{this.productCode}}_{{@index}}" class="felix-checkbox-form">
+        <div class="title">
+            {{this.name}} 
+            {{#if this.canInsure}}
+                ({{#if this.agencyRepair}}Agency{{else}}Non-Agency{{/if}})
+            {{/if}}
+        </div>
+        {{#if this.exception}}
+            <ul>
+                <li class="error">{{this.message}}</li>
+            </ul>
+        {{else}}
+            {{#if this.canInsure}}
+                {{#if this.referralRequired}}
+                <ul>
+                    {{#each this.rulesTrace}}
+                    <li class="error">{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                    Premium: {{this.currency}} {{{money this.premium}}}<br/>
+                    Deductible: {{this.currency}} {{{money this.deductible}}}<br/>
+                {{/if}}
+                {{#unless this.referralRequired}}
+                <input id="{{this.productCode}}_{{@index}}" data-quote='{{{json_stringify this}}}' type="checkbox" class="add-autoquoted-product-checkbox" />
+                <div class="control__indicator"></div>
+                {{/unless}}
+            {{else}}
+                <ul>
+                    {{#each this.rulesTrace}}
+                    <li class="error">{{this}}</li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+        {{/if}}
+    </label>
+{{/each}}
+</script>
+{% endverbatim %}

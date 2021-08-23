@@ -1,0 +1,1424 @@
+/*********************
+   Dashboard Styling
+   ********************/
+.dashboard {
+
+	a {
+		color: $felix-color-primary;
+	}
+
+	h1 {
+		width: 100%;
+		text-align: center;
+		color: #5E5E5E;
+		font-size: 22px;
+		padding: 32px 10px;
+	}
+	.custom-field {
+		border-radius: 0px !important;
+		font-size: 16px !important;
+		width: 95% !important;
+		border: 1px solid #EEE !important;
+		box-shadow: 0px 0px 4px #EEE !important;
+		@include breakpoint(mobile) {
+			width: 100% !important;
+			margin-top: 0px !important;
+		}
+	}
+	.password-show-toggle {
+		color: $felix-color-primary;
+		font-size: 14px;
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		cursor: pointer;
+		width: 54px;
+		height: 27px;
+		overflow: hidden;
+		@include breakpoint(mobile) {
+			left: 10%;
+			top: 93px;
+			width: 100%;
+			text-align: left;
+		}
+		@include breakpoint(tablet-only) {
+			top: 10px;
+		}
+	}
+
+	.hide {
+		display: none;
+	}
+
+	// MAIN FORM
+	.main-form {
+		margin: auto;
+		background-color: #FFF;
+		width: 100%;
+		padding: 0px;
+		margin-top: 72px;
+		box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.1);
+		text-align: center;
+
+		&.low-margin-top {
+			margin-top: 48px;
+		}
+
+		.chosen-container-single .chosen-single {
+			border-radius: 0px !important;
+			font-size: 16px !important;
+			width: 95% !important;
+			border: 1px solid #EEE !important;
+			box-shadow: 0px 0px 4px #EEE !important;
+
+			@include breakpoint(mobile-tablet) {
+				width: 100% !important;
+			}
+		}
+
+		@include breakpoint(mobile) {
+			margin-top: 0px;
+			box-shadow: none;
+		}
+
+		label {
+			width: 100%;
+
+			.label-content {
+				font-size: 20px;
+				margin-top: 10px;
+			}
+		}
+
+		.field {
+			@include breakpoint(mobile-tablet) {
+				padding: 0px;
+				margin-top: 0px;
+			}
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 22px;
+			font-weight: 600;
+			color: #1A1A1A;
+		}
+
+		.splash {
+			background-color: $prototype-color;
+		}
+
+		button {
+			font-weight: 400;
+			letter-spacing: -0.5px;
+		}
+	}
+
+	// LOGIN FORM
+	.main-form.login {
+		h1 {
+			padding: 50px 0;
+			@include breakpoint(mobile) {
+				background: url(../images/artworks/img_sign-in_mobile.png) no-repeat;
+				background-size: cover;
+				padding: 20px 0 86px 0;
+				background-position: center;
+			}
+			@include breakpoint(tablet-only) {
+				background: url(../images/artworks/img_sign-in_mobile.png) no-repeat;
+				background-size: cover;
+				padding: 30px 0 130px 0;
+				background-position: center;
+				margin-bottom: 15px;
+			}
+		}
+		.form {
+			padding: 15px;
+			padding-bottom: 38px;
+			box-sizing: border-box;
+			@include breakpoint(mobile-tablet) {
+				padding: 0px 0px 20px 0px;
+			}
+		}
+
+		.custom-field {
+			@include breakpoint(mobile) {
+				width: 85% !important;
+				margin-top: 15px !important;
+			}
+		}
+
+		.password-show-toggle {
+			@include breakpoint(mobile) {
+				top: 68px;
+				width: fit-content;
+			}
+		}
+
+		ul.errors {
+			width: 95%;
+			@include breakpoint(mobile) {
+				width: 100%;
+			}
+		}
+
+		.forgot-password {
+			font-size: 14px;
+			text-align: center;
+			margin: 16px 0;
+			display: block;
+
+			@include breakpoint(mobile) {
+				text-align: right;
+				margin-top: 0px;
+				padding: 0 10%;
+			}
+		}
+		button {
+			padding-left: 20%;
+			padding-right: 20%;
+			@include breakpoint(mobile) {
+				width: 85% !important;
+			}
+		}
+
+		.splash {
+			background: url(../images/artworks/img_sign-in.png) no-repeat;
+			background-size: cover;
+
+			h2 {
+				font-size: 26px;
+				font-weight: 600;
+				text-transform: uppercase;
+				color: $felix-color-primary-darker;
+				margin: 35px 0 25px 0;
+			}
+
+			span {
+				text-transform: uppercase;
+				color: $felix-color-primary-darker;
+				display: block;
+			}
+		}
+	}
+
+	// PASSWORD RESET FORM
+	.main-form.password-reset {
+		.bg-header {
+			background-color: $prototype-color;
+			padding: 50px 10px;
+
+			@include breakpoint(mobile) {
+				padding: 10px;
+			}
+
+			h1 {
+				color: $felix-color-grey;
+				@include breakpoint(mobile) {
+					padding: 10px;
+				}
+			}
+			p {
+				color: $felix-color-grey-lighter;
+				margin-top: 15px;
+				margin-bottom: 25px;
+				@include breakpoint(mobile) {
+					margin-bottom: 15px;
+					padding: 0 10px;
+				}
+			}
+		}
+
+		.custom-field {
+			width: 70% !important;
+			margin: 32px 0 20px 0;
+			@include breakpoint(mobile) {
+				margin-top: 50px !important;
+				width: 90% !important;
+			}
+		}
+
+		button {
+			@include breakpoint(mobile) {
+				width: 90% !important;
+			}
+		}
+		.back {
+			margin: 20px 0 50px 0;
+		}
+
+		.success-block {
+			padding: 20px 30px;
+
+			h1 {
+				font-size: 22px;
+				font-weight: 600;
+				color: #1A1A1A;
+				padding-bottom: 5px;
+			}
+
+			p {
+				font-size: 16px;
+				font-weight: 400;
+				color: #5E5E5E;
+			}
+
+			.artwork-round {
+				width: 130px;
+				height: 130px;
+				border-radius: 100%;
+				margin: auto;
+				margin-top: 25px;
+				background-color: $prototype-color;
+			}
+		}
+
+		// For password reset confirmation page
+		&.confirmation {
+			.bg-header {
+				padding: 20px 10px;
+			}
+			.field {
+				position: relative;
+			}
+			.custom-field {
+				margin: 0px;
+				margin-top: 10px !important;
+			}
+
+			.password-show-toggle {
+				right: 16%;
+
+				@include breakpoint(mobile) {
+					position: absolute;
+					width: auto;
+					left: auto;
+					top: 18px;
+					right: 10%;
+				}
+			}
+
+			.strength-meter {
+				width: 70%;
+				margin: auto;
+				margin-top: -10px;
+				@include breakpoint(mobile) {
+					width: 90%;
+				}
+			}
+
+			button {
+				// margin-bottom: 40px;
+				// @include breakpoint(mobile) {
+				// 	margin-bottom: 0px;
+				// }
+			}
+		}
+	}
+
+	//POLICIES
+	.policies {
+		@include breakpoint(mobile) {
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+		.product {
+			height: 300px;
+			background-color: #FFF;
+			box-shadow: 0px 15px 45px rgba(0, 0, 0, 0.16);
+			margin-bottom: 50px;
+			@include breakpoint(mobile-tablet) {
+				width: 100%;
+				margin: 0 0 50px 0;
+				height: auto;
+				margin-bottom: 20px;
+			}
+			.motor-bg {
+				background: url(../images/motor-policy-bg-lg.png) no-repeat;
+				background-size: cover;
+			    height: inherit;
+			    background-position: -23px 0px;
+
+			    @include breakpoint(mobile) {
+			    	height: 125px;
+			    	background: url(../images/motor-policy-bg-sm.png) no-repeat;
+			    	background-size: cover;
+			    	background-position: 0;
+			    }
+			}
+			.product-info {
+				padding: 20px;
+				font-weight: 400;
+				position: relative;
+				.logo {
+					position: absolute;
+					padding: 10px;
+					top: 10px;
+					right: 10px;
+					max-width: 215px;
+					height: 80px;
+
+					@include breakpoint(mobile) {
+						top: 5px;
+						right: 5px;
+						height: 50px;
+						padding: 0;
+						max-width: 150px;
+						max-height: 50px;
+					}
+
+					img {
+						max-width: 100%;
+					}
+				}
+				.status {
+					text-transform: uppercase;
+					font-size: 16px;
+					&.active {
+						color: #378343;
+					}
+					&.expired {
+						color: #999999;
+					}
+				}
+
+				.title {
+					font-size: 22px;
+					display: block;
+					color: #1A1A1A;
+					margin-top: 24px;
+					@include breakpoint(mobile) {
+						font-size: 18px;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+					@include breakpoint(tablet) {
+						width: 65%;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+
+				.policy {
+					font-size: 16px;
+					color: #5E5E5E;
+					@include breakpoint(mobile) {
+						font-size: 14px;
+					}
+
+					span {
+						font-weight: 600;
+						color: #1A1A1A;
+					}
+				}
+
+				.reference {
+					font-size: 14px;
+					color: #CCCCCC;
+				}
+
+				.amount {
+					font-size: 28px;
+					font-weight: 600;
+					margin-top: 24px;
+					color: $felix-color-primary;
+					@include breakpoint(mobile) {
+						margin-top: 14px;
+					}
+				}
+				.actions {
+					margin-top: 22px;
+					@include breakpoint(mobile) {
+						margin-top: 12px;
+						text-align: center;
+					}
+				}
+				.expiring {
+					font-size: 18px;
+					font-weight: 400;
+					text-transform: uppercase;
+					color: #F44336;
+					line-height: 54px;
+				}
+
+				button {
+					font-size: 14px;
+					float: right;
+					margin-left: 15px;
+					letter-spacing: 0px;
+					@include breakpoint(mobile) {
+						width: 100%;
+						float: none;
+						margin: 0 0 15px 0;
+					}
+				}
+			}
+		}
+	}
+
+	//POLICY DETAIL
+	.policy-detail {
+		position: relative;
+
+		@include breakpoint(desktop) {
+			&.main-form {
+				// padding: 20px 40px;
+			}
+		}
+
+		&.profile-form .tabs {
+			margin-bottom: 0px;
+		}
+
+		.close-policy-detail {
+			position: absolute;
+			right: -15px;
+			top: -15px;
+			width: 32px;
+			height: 32px;
+			opacity: 1;
+			background: #FFF;
+			border-radius: 100%;
+			cursor: pointer;
+			box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.16);
+			@include breakpoint(mobile-tablet) {
+				box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+				z-index: 0;
+				top: -18px;
+				right: 5px;
+			}
+			&:hover {
+				opacity: 0.7;	
+			}
+
+			&:before,
+			&:after {
+				position: absolute;
+				left: 15px;
+				top: 6px;
+				content: ' ';
+				height: 21px;
+				width: 2px;
+				background-color: #999;
+				@include breakpoint(mobile) {
+					background-color: #999;	
+					height: 20px;
+					width: 0.06em;
+				}
+			}
+			&:before {
+				transform: rotate(45deg);	
+			}
+			&:after {
+				transform: rotate(-45deg);	
+			}
+		}
+		.body {
+			width: 100%;
+			position: relative;
+		}
+
+		// Policy Overview Tab
+		.policy-overview {
+			.policy-overview-col-1 {
+				width: 70%;
+			}
+			.policy-overview-col-2 {
+				width: 30%;
+			}
+
+			@include breakpoint(tablet) {
+				.policy-overview-col-1 {
+					width: 65%;
+				}
+				.policy-overview-col-2 {
+					width: 35%;
+				}
+			}
+
+			.accordian {
+				
+				.label {
+					display: none;
+					font-size: 16px;
+					font-weight: 600;
+					color: #1A1A1A;
+					text-transform: inherit;
+					background: #F8F8F8;
+					width: 112%;
+					padding: 5px 12px;
+					border: 1px solid #e7e7e7;
+					border-left: none;
+					border-right: none;
+					margin-left: -20px;
+					position: relative;
+					&:after {
+						content: "\f107";
+						font: normal normal normal 14px/1 FontAwesome;
+						top: 12px;
+						right: 4%;
+						position: absolute;
+						color: #ADADAD;
+						font-size: 20px;
+					}
+
+					&.active:after {
+						content: "\f106";
+					}
+				}
+			}
+
+			@include breakpoint(mobile) {
+				.policy-overview-col-1,
+				.policy-overview-col-2 {
+					width: 100%;
+				}
+
+				.accordian {
+					.accordian-label {
+						position: relative;
+					}
+					.label {
+						display: block;
+					}
+					.accordian-details {
+						display: none;
+						padding: 0 20px;
+					}
+				}
+				
+			}
+			.status {
+				text-transform: uppercase;
+				font-size: 16px;
+				margin-top: 30px;
+				&.active {
+					color: #378343;
+				}
+				&.expired {
+					color: #999999;
+				}
+			}
+
+			.title {
+				font-size: 22px;
+				display: block;
+				color: #1A1A1A;
+				margin-top: 24px;
+				@include breakpoint(mobile) {
+					font-size: 18px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+
+			.insured-value {
+				@include breakpoint(mobile) {
+					margin-bottom: 36px;
+				}
+			}
+
+			.policy {
+				margin-top: 48px;
+				font-size: 16px;
+				color: #5E5E5E;
+				position: relative;
+				@include breakpoint(mobile) {
+					font-size: 14px;
+					margin-top: 20px;
+				}
+
+				span {
+					font-weight: 600;
+					color: #1A1A1A;
+				}
+				.logo {
+					position: absolute;
+					padding: 10px;
+					top: -10px;
+					right: 10px;
+					max-width: 180px;
+					height: 70px;
+
+					@include breakpoint(mobile) {
+						position: relative;
+						margin: auto;
+						margin-bottom: 20px;
+					}
+
+					img {
+						max-width: 100%;
+					}
+				}
+
+			}
+
+			.reference {
+				font-size: 14px;
+				color: #CCCCCC;
+			}
+
+			.amount {
+				font-size: 28px;
+				font-weight: 600;
+				margin-top: 24px;
+				color: $felix-color-primary;
+				@include breakpoint(mobile) {
+					margin-top: 14px;
+					margin-bottom: 20px;
+				}
+			}
+			.documents {
+				margin-top: 48px;
+				text-align: left;
+
+				.doc {
+					display: inline-block;
+					text-align: center;
+					width: 120px;
+					margin: 0 20px;
+					cursor: pointer;
+					@include breakpoint(mobile) {
+						margin: 0 10px;
+						margin-bottom: 20px;
+					}
+				}
+				.preview {
+					position: relative;
+					height: 126px;
+					width: 110px;
+					box-shadow: 0px 0px 6px rgba(0,0,0,0.16);
+					margin: auto;
+					margin-bottom: 12px;
+					background: url(../images/icon_pdf.png) no-repeat;
+					background-position: 50%;
+					background-size: 50px;
+
+					.overlay {
+						display: none;
+						content: ' ';
+						top: 0px;
+						left: 0px;
+						position: absolute;
+						width: 100%;
+						height: 100%;
+						background: rgba(0,0,0,0.16) url(../images/icon_download.svg) no-repeat;
+						background-position: 50%;
+						background-size: 40px;
+					}
+
+					&:hover .overlay {
+						display:block;
+					}
+				}
+				.name {
+					font-size: 12px;
+					font-weight: 400;
+					color: #5E5E5E;
+					width: 100%;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				.filesize {
+					font-size: 12px;
+					font-weight: 400;
+					color: #929292;
+				}
+			}
+
+			.actions {
+				margin-top: 22px;
+				@include breakpoint(mobile) {
+					margin-top: 12px;
+					text-align: center;
+				}
+			}
+			.quick-actions {
+				border-left: 1px solid #EDEDED;
+				text-align: center;
+				padding-top: 30px;
+				position: absolute;
+				top: 0px;
+				right: -20px;
+				height: 100%;
+
+				@include breakpoint(mobile) {
+					position: relative;
+					right: 0px;
+					height: auto;
+					border: none;
+				}
+
+				.expiring {
+					font-size: 18px;
+					font-weight: 400;
+					text-transform: uppercase;
+					color: #F44336;
+					line-height: 20px;
+					@include breakpoint(mobile) {
+						margin-bottom: 20px;
+					}
+				}
+				button {
+					font-size: 14px;
+					width: 80%;
+					@include breakpoint(mobile) {
+						width: 100%;
+						float: none;
+						margin: 0 0 15px 0;
+					}
+				}
+
+				.actions {
+					list-style: none;
+					width: 80%;
+					margin: auto;
+					margin-top: 36px;
+					padding: 0px;
+
+					@include breakpoint(mobile) {
+						margin-top: 10px;
+						width: 100%;
+					}
+
+					li {
+						background-position: 0 0;
+						background-size: 26px;
+						background-repeat: no-repeat;
+						margin-bottom: 30px;
+						padding-left: 40px;
+						text-align: left;
+						font-size: 14px;
+						font-weight: 300;
+						color: #5E5E5E;
+
+						span {
+							display: block;
+							font-size: 18px;
+							font-weight: 600;
+							margin-top: 5px;
+						}
+
+						&.roadside {
+							background-image: url(../images/icon_roadside-assistance.svg);
+						}
+						&.call {
+							background-image: url(../images/icon_call.svg);
+						}
+						&.email {
+							background-image: url(../images/icon_email.svg);
+						}
+					}
+				}
+			}
+		}
+
+		// Policy Details Tab
+		.policy-attributes {
+			.attribute-heading {
+				font-size: 18px;
+				font-weight: 600;
+				color: #5E5E5E;
+				margin: 30px 0 20px 0;
+			}
+			.attributes {
+				width: 90%;
+				margin: auto;
+				font-size: 16px;
+				font-weight: 400;
+				color: #5E5E5E;
+
+				.attribute-container {
+					padding: 10px;
+					border-bottom: 1px solid #DDD;
+					position: relative;
+
+					.label {
+						text-align: left;
+						line-height: 24px;
+						font-weight: 400;
+						font-size: 16px;
+						text-transform: none;
+						position: relative;
+
+						&:after {
+							content: "\f107";
+							font: normal normal normal 14px/1 FontAwesome;
+							top: 2px;
+							right: 2%;
+							position: absolute;
+							color: #ADADAD;
+							font-size: 20px;
+						}
+
+						&.active:after {
+							content: "\f106";
+						}
+					}
+				}
+
+				.attribute-detail {
+					display: none;
+					padding: 10px;
+				    background-color: #F9F9F9;
+				    margin-top: 10px;
+				    width: 88%;
+				    @include breakpoint(mobile) {
+				    	width: 100%;
+				    }
+				}
+			}
+		}
+
+		// How to claim and how to renew tabs
+		.policy-claims, .policy-options {
+			padding: 20px 10px;
+
+			h4 {
+				font-size: 18px;
+				font-weight: 600;
+				color: #5E5E5E;
+			}
+		} 
+	}
+
+	.referrals {
+		position: relative;
+		.earnings {
+			text-align: center;
+			color: #404040;
+			font-weight: 300;
+			position: absolute;
+			top: 0px;
+			right: 2%;
+			background: #FFF;
+			box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+			width: 180px;
+			height: 80px;
+			z-index: 1;
+			box-sizing: border-box;
+			padding: 15px;
+
+			@include breakpoint(mobile) {
+				position: relative;
+				width: 100%;
+				margin: 20px 0px;
+				right: auto;
+				z-index: 0;
+			}
+
+			&.main {
+				@include breakpoint(mobile) {
+					display: none;
+				}
+			}
+
+			span {
+				font-size: 30px;
+				font-weight: 600;
+				color: $felix-color-primary;
+				display: block;
+				line-height: 27px;
+			}
+		}
+		.form {
+			padding: 30px;
+			font-weight: 300;
+			text-align: center;
+			line-height: 28px;
+			color: #5E5E5E;
+			@include breakpoint(mobile) {
+				padding: 30px 10%;
+			}
+			h2 {
+				font-size: 22px;
+				font-weight: 600;
+				margin-bottom: 15px;
+				text-align: left;
+			}
+			p {
+				text-align: left;
+			}
+
+			.email {
+				margin: 60px auto;
+				position: relative;
+				width: 90%;
+
+				input {
+					font-size: 14px !important;
+					padding-right: 120px;
+				}
+
+				a {
+					position: absolute;
+					right: 25px;
+					top: 11px;
+					font-weight: 600;
+				}
+
+				@include breakpoint(mobile) {
+					width: 100%;
+					margin: 40px 0;
+					input {
+						padding-right: 30px;
+					}
+					a {
+						right: 10px;
+						font-size: 20px;
+					}
+				}
+			}
+
+			.icons {
+				margin: 12px 0 30px 0;
+				a {
+					margin: 0 15px;
+					font-size: 20px;
+				}
+				@include breakpoint(mobile) {
+					margin-bottom: 20px;
+				}
+			}
+
+			.code {
+			    font-size: 26px;
+			    font-weight: 600;
+			    letter-spacing: 5px;
+			    border-bottom: 2px dashed #5e5e5e;
+				padding: 5px;
+			    width: fit-content;
+			    margin: auto;
+				margin-bottom: 15px;
+			    cursor: pointer;
+			    text-transform: uppercase;
+				transition: background-color 0.3s;
+
+			    &.highlight-temp {
+			    	background-color: #F1F1F1;
+			    }
+			}
+
+			.referred-item {
+				text-align: left;
+				font-weight: 400;
+				position: relative;
+				padding: 8px 16px;
+				padding-right: 20%;
+
+				&:nth-child(even) {
+					background-color: #F1F1F1;
+				}
+
+				.date{
+					position: absolute;
+					top: 20px;
+					right: 15px;
+					font-weight: 600;
+					color: #777;
+				}
+			}
+		}
+
+		.splash {
+			background: url(../images/artworks/img_refer.png) no-repeat;
+			background-size: cover;
+			background-position: center;
+			@include breakpoint(mobile) {
+				height: 130px;
+				background-image: url(../images/artworks/img_refer_mobile.png);
+			}
+
+			&.main {
+				@include breakpoint(mobile) {
+					display: none;
+				}
+			}
+		}
+	}
+	// NAV BAR
+	.mobile-menu-icon {
+		display: none;
+		@include breakpoint(mobile-tablet) {
+			display: block;
+			background: url(../images/icon_menu-open.svg) no-repeat;
+			width: 50px;
+			height: 50px;
+			position: absolute;
+		    top: -62px;
+		    left: 10px;
+		    z-index: 1;
+		}
+	}
+	.nav-overlay {
+		background-color: rgba(0, 0, 0, 0.5);
+	    position: absolute;
+	    display: none;
+	    left: 0;
+	    right: 0;
+	    top: -75px;
+	    width: 100%;
+	    height: calc(100% + 75px);
+	    z-index: 1;
+	    &.active {
+	    	display: block;
+	    }
+	}
+	.navbar {
+		background-color: #FFF;
+		width: 102px;
+		font-size: 15px;
+		border: 1px solid #EDEDED;
+		border-top: none;
+		box-shadow: 1px 1px 1px #EDEDED;
+		padding: 0px;
+		position: fixed;
+		height: 100%;
+		left: 0;
+		top: 88px;
+		z-index: 2;
+		transition: all 0.3s;
+
+		@include breakpoint(mobile-tablet) {
+			top: 0px;
+			width: 70%;
+			max-width: 300px;
+			left: -1000px;
+			box-shadow: none;
+			border: none;
+			&.active {
+				left: 0px;
+			}
+		}
+
+		div.nav-close {
+			width: 40px;
+			height: 40px;
+			margin: 4px;
+			margin-top: 0px;
+			margin-bottom: 0px;
+			cursor: pointer;
+			display: none;
+
+			@include breakpoint(mobile-tablet) {
+				display: block;
+			}
+		}
+
+		div.item {
+			padding: 0px;
+			text-align: center;
+			border-bottom: 1px solid #EDEDED;
+
+			@include breakpoint(mobile-tablet) {
+				text-align: left;
+				border: none;
+				padding: 0px;
+				margin-top: 10px;
+			}
+
+			.nav-icon {
+				color: #5E5E5E;
+				display: block;
+			    width: 100%;
+			    line-height: 14px;
+			    padding-top: 25px;
+    			padding-bottom: 25px;
+    		    border-left: 2px solid #FFF;
+			    border-right: 2px solid #FFF;
+
+			    &.active {
+			    	border-left: 2px solid $felix-color-primary;
+			    }
+
+			    @include breakpoint(mobile-tablet) {
+				    padding: 20px 10px 20px 35%;
+				    position: relative;
+			    }
+
+			    i.icon {
+		    	    width: 40px;
+				    height: 40px;
+				    display: block;
+				    margin: auto;
+				    background-repeat: no-repeat;
+				    background-size: 120%;
+				    background-position: -2px -10px;
+
+				    @include breakpoint(desktop) {
+				    	transition: all 0.2s;
+				    }
+
+				    @include breakpoint(mobile-tablet) {
+				    	background-size: 94%;
+					    background-position: 0 0;
+					    position: absolute;
+					    left: 50px;
+					    top: 8px;
+				    }
+			    }
+
+				&.policies i.icon {
+					background-image: url(../images/icon_my-policies@2x.png);
+				}
+
+				&.refer i.icon {
+					background-image: url(../images/icon_referrals@2x.png);
+				}
+
+				&.profile i.icon {
+					background-image: url(../images/icon_profile@2x.png);
+				}
+
+				&.logout i.icon {
+					background-image: url(../images/icon_logout@2x.png);
+				}
+
+				&:hover,
+				&.active {
+					text-decoration: none;
+					color: $felix-color-primary;
+
+					i.icon {
+						background-position: -2px -58px;
+						@include breakpoint(mobile-tablet) {
+							background-position: 0px -38px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// PASSWORD STRENGTH METER
+
+	$strenght-color-default: #EEEEEE;
+	$strenght-color-very-weak: #EF4438;
+	$strenght-color-weak: #FEC111;
+	$strenght-color-strong: #CEDC38;
+	$strenght-color-very-strong: #8BC249;
+
+	.strength-meter {
+		width: 95%;
+		span {
+			display: inline-block;
+			width: 24%;
+			height: 5px;
+			background-color: $strenght-color-default;
+			border-radius: 3px;
+			transition: background-color .3s;
+		}
+
+		&.very-weak span:nth-child(1) {
+			background-color: $strenght-color-very-weak;
+		}
+		&.weak span {
+			&:nth-child(1),
+			&:nth-child(2) {
+				background-color: $strenght-color-weak;
+			}
+		}
+		&.strong span {
+			background-color: $strenght-color-strong;
+			&:nth-child(4) {
+				background-color: $strenght-color-default;
+			}
+		}
+		&.very-strong span {
+			background-color: $strenght-color-very-strong;
+		}
+	}
+
+	//USER PROFILE FORM
+	.profile-form {
+		background-color: #FFF;
+		box-shadow: 0px 15px 45px rgba(0, 0, 0, 0.16);
+		margin-top: 72px;
+		padding: 20px;
+
+		@include breakpoint(mobile) {
+			margin-top: 0px;
+			box-shadow: none;
+		}
+
+		&.main-form {
+			text-align: left;
+		}
+
+		.tabs {
+			width: 100%;
+			margin: 0;
+			margin-bottom: 40px;
+			border-bottom: 1px solid #EDEDED;
+
+			@include breakpoint(mobile-tablet) {
+				margin-bottom: 25px;
+
+				.options {
+					overflow: scroll;
+					position: relative;
+				}
+				ul {
+					overflow: scroll;
+    				width: max-content;
+				}
+			}
+
+			div {
+				padding: 0;
+			}
+
+			ul, li {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+
+			li {
+				display: inline-block;
+			}
+
+			a {
+				display: block;
+				padding: 10px;
+    			padding-top: 0px;
+    			color: #5E5E5E;
+
+    			&.active, &:hover {
+    				color: $felix-color-primary;
+    				border-bottom: 2px solid $felix-color-primary;
+    				text-decoration: none;
+    			}
+			}
+		}
+
+		.errorlist {
+			width: 100%;
+		    list-style: none;
+		    color: $error-color;
+		    text-align: center;
+		}
+
+		.gender-fields {
+			margin-top: 10px;
+		}
+
+		.male-btn, .female-btn {
+			box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.16);
+			width: 100px;
+			height: 70px;
+			display: inline-block;
+			margin-right: 10px;
+			cursor: pointer;
+			border: 1px solid rgba(0,0,0,0);
+			border-radius: 3px;
+			background-size: 67%;
+		    background-position: 50% 1px;
+		    background-repeat: no-repeat;
+		    transition: all .1s;
+		}
+
+		.male-btn {
+			background-image: url(../images/icon_male@2x.png);
+			@include breakpoint(mobile-tablet) {
+		    	margin-left: -15px;
+		    }
+    		&.active, &:hover {
+    			background-position: 50% -64px;
+    			background-color: #F9FDFF;
+    			border: 1px solid #52A3D5;
+    		}
+		}
+		.female-btn {
+			background-image: url(../images/icon_female@2x.png);
+
+    		&.active, &:hover {
+    			background-position: 50% -64px;
+    			background-color: #FFF9F9;
+    			border: 1px solid #FF9797;
+    		}
+		}
+		.label, label {
+			text-align: right;
+			font-size: 14px;
+			font-weight: 300;
+			color: #5E5E5E;
+			text-transform: uppercase;
+			letter-spacing: 0px;
+			line-height: 65px;
+			padding: 0;
+			margin: 0;
+			@include breakpoint(mobile-tablet) {
+				text-align: left;
+				line-height: 35px;
+				margin-top: 10px;
+			}
+		}
+
+		.user-email {
+			text-align: left;
+			font-weight: 400;
+			line-height: 65px;
+			@include breakpoint(mobile-tablet) {
+				line-height: 35px;
+				padding: 0 0 10px 0;
+			}
+		}
+
+		.password-show-toggle {
+    		top: 15px;
+    		@include breakpoint(mobile) {
+    			width: fit-content;
+    			right: 15px;
+    			left: auto;
+    		}
+		}
+
+		.row {
+			// padding: 10px 0;
+		}
+
+		form {
+			width: 100%;
+			@include breakpoint(mobile-tablet) {
+				width: 80%;
+				margin: auto;
+			}
+		}
+		button {
+			@include breakpoint(mobile) {
+				width: 100%;
+			}
+		}
+	}
+
+	.separator {
+		width: 10px;
+		border-left: 1px solid #DDD;
+		height: -webkit-fill-available;
+		margin-top: -10px;
+		margin-left: -16px;
+	}
+	
+	ul.errors {
+		color: $error-color;
+		background-color: $error-color-v-lighter;
+		width: 80%;
+		margin: 10px auto;
+		padding: 10px;
+		@include breakpoint(mobile) {
+			width: 100%;
+		}
+		ul {
+			padding: 0px;
+		}
+		li {
+			list-style: none;
+			font-size: 12px;
+		}
+	}
+}

@@ -1,0 +1,47 @@
+{% load static %}
+<div id="modal_documents_viewer" class="felix-modal-container document-viewer">
+    <div class="felix-modal">
+        <h1>Documents Viewer</h1>
+
+        <div class="nav left">
+            <i class="ti-arrow-circle-left"></i>
+        </div>
+
+        <div class="preview-container fit-to-container" data-doc-id>
+            <div class="loader">loading. please wait...</div>
+            <img src="" class="hide" />
+            <iframe src="" class="hide"></iframe>
+
+            <div class="zoom-toggle hide">
+                <div title="Click to zoom in" class="zoomin"><i class="ti-zoom-in"></i></div>
+                <div title="Click to zoom out" class="zoomout hide"><i class="ti-zoom-out"></i></div>
+            </div>
+        </div>
+        <div class="nav right">
+            <i class="ti-arrow-circle-right"></i>
+        </div>
+
+        {% comment %}
+            <div class="controls">
+                    <ul>
+                        <li>
+                            <button class="btn btn-outline-primary btn-sm rotate" data-angle="0">
+                                Click to rotate <i class="fa fa-redo"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+        {% endcomment %}
+
+        <form class="attachment_update_form" method="post">
+            <label class="text-muted">Enter file name here:</label>
+            <input type="hidden" name="pk" value="" />
+            <input type="hidden" name="name" value="label" />
+            <input type="text" class="form-control" name="value" />
+            <button type="submit" class="btn btn-primary btn-md">Update</button>
+        </form>
+
+    </div>
+</div>
+
+<button data-felix-modal="modal_documents_viewer" class="hide preview-documents-viewer-trigger"></button>

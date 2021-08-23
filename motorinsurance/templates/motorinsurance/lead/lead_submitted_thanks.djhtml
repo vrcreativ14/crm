@@ -1,0 +1,50 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+
+{% block page_title %}
+    Your quotes are on their way
+{% endblock %}
+
+{% block content %}
+    <div class="sub-container thankyou min-height-800">
+        <div class="inner-small-container">
+            {% if custom_page_content %}
+                {{ custom_page_content }}
+            {% else %}
+                <h1>Great work{% if user_name %} {{ user_name }}{% endif %}. Your quotes are on the way...</h1>
+                <p>Expect an email within the next 2 business hours. And don't worry, we won't bombard you with quotes.
+                    We'll put together 3 or 4 personalised options that we think will be perfect for you.
+                </p>
+                <br />
+
+                {% if request.company.companysettings.phone %}
+                    <hr class="blue-short">
+                    <div class="clear"></div>
+                    <div class="call-us">
+                        In a rush? Give us a ring for extra yalla!
+                        <span class="phone">
+                		<i class="fa fa-phone"></i> {{ request.company.companysettings.phone }}
+                	</span>
+                    </div>
+                    <hr class="grey-tiny">
+                    <div class="clear"></div>
+                {% endif %}
+
+                {% if request.company.companysettings.website %}
+                    <a class="website" href="{{ request.company.companysettings.website }}">Please visit our website for more information</a>
+                {% endif %}
+
+                <p class="note">
+                    {% if request.company.companysettings.company_timings %}
+                        {{ request.company.companysettings.company_timings }}
+                    {% else %}
+                        Our business hours are Sunday to Thursday, 9 am to 6 pm. We do our best to respond as
+                        quickly as possible but enquiries received after 5pm will typically be responded to the next business
+                        day.
+                    {% endif %}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

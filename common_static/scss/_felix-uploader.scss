@@ -1,0 +1,95 @@
+/*********************
+	Felix File Uploader Overrides
+   				********************/
+.felix-file-uploader {
+	.fileuploader {
+		background: none;
+		padding: 0 0 15px 0px;
+
+		.fileuploader-input-caption {
+			color: #6C757D;
+			font-weight: 400;
+			border: 1px solid #CED4DA;
+			border-right: none;
+			margin-right: 0px;
+			border-radius: 4px 0px 0px 4px;
+		}
+		.fileuploader-input-button {
+			padding: 10px 20px;
+			background-color: #F5F3F6;
+			color: #495057;
+			font-weight: 400;
+			border: 1px solid #CED4DA;
+			border-radius: 0px 4px 4px 0px;
+		}
+
+		.fileuploader-items-list {
+			margin: 0;
+			.fileuploader-item {
+				border-bottom: 1px solid #F1F1F1;
+				padding: 10px 2px;
+
+				&:last-child {
+					border: none;
+				}
+			}
+			.column-thumbnail {
+				width: 20px;
+				height: 20px;
+				line-height: 20px;
+				.fileuploader-item-image i {
+					font-weight: 400;
+					font-size: 8px;
+				}
+			}
+			.column-title {
+				padding-left: 27px;
+				padding-right: 50px;
+				line-height: 20px;
+				div {
+					font-weight: 400;
+				}
+				span {
+					display: none;
+				}
+				a {
+					color: $primary;
+				}
+			}
+
+			.column-actions {
+				.fileuploader-action-remove,
+				.fileuploader-action-download {
+					background: none;
+					border: none;
+					margin: 0;
+					margin-right: 5px;
+					width: fit-content;
+					i:after {
+						display: none;
+					}
+					i:before {
+						font-family: 'themify';
+						transform: none;
+						font-style: normal;
+						background: none;
+					}
+				}
+				.fileuploader-action-remove {
+					i:before {
+						content: "\e605";
+						color: $danger;
+					}
+					
+				}
+				.fileuploader-action-download {
+					font-size: 10px;
+					i:before {
+						content: "\e6a7";
+						color: $primary;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,318 @@
+/*********************
+   General Form Styling
+   ********************/
+.main-form  {
+    fieldset {
+        width: 100%;
+        margin: 32px 0 50px 0;
+        display: block;
+        border: 0;
+        padding: 0;
+
+        legend {
+            line-height: 30px;
+            font-size: 24px;
+            margin-bottom: 25px;
+            padding-bottom: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 0;
+            border-bottom: 1px solid #777;
+            width: 100%;
+        }
+    }
+    .asterisk-field {
+        position: relative;
+        &:after {
+            content: '*';
+            color: $felix-color-orange;
+            font-size: 30px;
+            font-weight: 600;
+        }
+    }
+    .label-content {
+        position: relative;
+        max-width: 95%;
+    }
+
+    .asterisk-field-no-content {
+        @include breakpoint(mobile-tablet) {
+            top: 8px !important;
+        }
+        &:after {
+            content: '';
+        }
+    }
+
+    .steps-title {
+        display: none;
+    }
+
+    label {
+        font-weight: 500;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 30px;
+        width: 42%;
+        color: $font-color;
+        position: relative;
+        label {
+            padding: 0;
+            line-height: 0;
+            font-weight: 400;
+        }
+
+        @include breakpoint(mobile-tablet) {
+            font-size: 22px;
+            width: 100%;
+        }
+    }
+
+    input[type=text],
+    input[type=tel],
+    input[type=email],
+    input[type=tel],
+    input[type=password],
+    input[type=number] {
+        background-color: #fff;
+        height: 50px;
+        font-weight: 200;
+        font-size: 20px;
+        border: 1px solid $field-border-color;
+        border-radius: 6px;
+        box-shadow: 0px 0px 2px #BDBDBD;
+        outline: none;
+        width: 350px;
+        padding: 10px;
+        box-sizing: border-box;
+        @include breakpoint(mobile-tablet) {
+            width: 100%;
+        }
+
+        &.error {
+            border: 1px solid $error-color-lighter;
+        }
+
+        &:focus {
+            border: 1px solid $felix-color-primary;
+        }
+    }
+
+    .form-group {
+        box-sizing: border-box;
+        position: relative;
+        margin-bottom: 0px;
+        padding: 80px 0;
+
+        @include breakpoint(mobile-tablet) {
+            width: 100%;
+            padding: 30px 10px;
+
+            &:after {
+                content: "";
+                position: absolute;
+                border-bottom: 3px solid #DDD;
+                width: 80px;
+                left: 0;
+                bottom: 0px;
+            }
+        }
+    }
+
+    .no-border-bottom-on-mobile {
+        @include breakpoint(mobile-tablet) {
+            padding-bottom: 0px;
+            &:after {
+                display: none;
+            }
+        }
+    }
+
+    .form-group.active {
+        background-color: $fieldset-bgcolor;
+        @include breakpoint(mobile-tablet) {
+            background: none;
+        }
+    }
+
+    .error {
+        &.label {
+            color: #BE6764;
+        }
+    }
+
+    .heading-error {
+        color: $error-color;
+        input[type=text],
+        input[type=email],
+        input[type=number] {
+            border: 1px solid $error-color-lighter;
+        }
+
+        em.error {
+            display: inline !important;
+        }
+    }
+
+    em {
+        // display: none !important;
+        position: absolute;
+        font-size: 12px;
+        color: #BE6764;
+        left: 0px;
+        bottom: -30px;
+        @include breakpoint(mobile-tablet) {
+            bottom: -26px;
+        }
+    }
+
+    li.error .number{
+        background-color: $error-color;
+        color: #FFF;
+    }
+
+    .custom-validation-error {
+        bottom: -20px;
+    }
+
+    .validation-error {
+        margin-bottom: -30px !important;
+    }
+
+    .submit-button {
+        @include breakpoint(mobile-tablet) {
+            text-align: center;
+            .btn {
+                width: 90%;
+            }
+        }
+    }
+    .need-help {
+        line-height: 60px;
+        a {
+            color: $font-color;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+    .field {
+        margin-top: 10px;
+        font-weight: 400;
+        .fa-calendar {
+            position: absolute;
+            margin-left: -24px;
+            margin-top: 12px;
+
+            @include breakpoint(mobile-tablet) {
+                right: 35px;
+                top: 55px;
+            }
+        }
+    }
+    .full-width-label {
+        width: 100%;
+    }
+    .indv-field {
+        label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #777;
+            line-height: 15px;
+            position: relative;
+            width: 70%;
+
+            @include breakpoint(mobile) {
+                width: 120%;
+                line-height: 18px;
+            }
+
+            &:hover {
+                color: $felix-color-primary;
+            }
+            .asterisk-field {
+                top: 10px;
+                @include breakpoint(mobile) {
+                    position: absolute;
+                    right: -25px;
+                    top: -2px !important;
+                }
+            }
+        }
+    }
+
+    .field-select-buttons {
+        button {
+            width: 160px;
+            height: 50px;
+            color: #B5B5B5;
+            font-size: 15px;
+            line-height: 18px;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            border: 1px solid #DDD;
+            box-shadow: 0px 0px 4px #DDD;
+            padding: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 0px;
+            text-align: center;
+            outline: none;
+            user-select: none;
+            display: inline-block;
+            @include breakpoint(mobile) {
+                width: 100%;
+                border-radius: 6px;
+                margin-top: 5px;
+            }
+            &:nth-child(even) {
+                margin-right: 5px;
+                @include breakpoint(tablet-only) {
+                    margin-right: 10px;
+                }
+            }
+            &.active {
+                background-color: $felix-color-primary;
+                color: #FFF;
+            }
+            @include breakpoint(desktop) {
+                &:hover {
+                    background-color: $felix-color-primary;
+                    border-color: $felix-color-primary;
+                    color: #FFF;
+                }
+            }
+        }
+    }
+
+    #id_date_of_first_registration, #id_dob {
+        background: #FFF url(../images/calendar-icon.svg) no-repeat right center;
+        background-position: right 10px bottom 12px;
+    }
+
+    ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+        color: #DDD;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+       color: #DDD;
+       opacity:  1;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+       color: #DDD;
+       opacity:  1;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+       color: #DDD;
+    }
+
+    .hide {
+        display: none;
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        margin: 0; 
+    }
+}

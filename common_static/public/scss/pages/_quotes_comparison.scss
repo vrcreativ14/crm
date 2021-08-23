@@ -1,0 +1,409 @@
+/*********************
+   QUOTES Styling
+   ********************/
+.quotes-comparison {
+	.inner-small-container {
+		@include breakpoint(mobile) {
+			width: 100%;
+		}
+		@include breakpoint(tablet-only) {
+			width: 100%;
+		}
+	}
+	padding-bottom: 20px;
+	@include breakpoint(mobile) {
+		padding-bottom: 80px;
+	}
+
+	.steps {
+		width: 100%;
+		[role='tablist'] {
+			width: 970px;
+		}
+	}
+
+	h1 {
+		display: none;
+		color: #4E4E4E;
+		font-size: 26px;
+		font-weight: 600;
+		padding: 40px;
+		padding-top: 50px;
+		@include breakpoint(mobile) {
+			padding: 20px 0;
+			font-size: 23px;
+			text-align: center;
+		}
+	}
+
+	.row {
+		@include breakpoint(mobile) {
+			margin: 0 
+		}
+	}
+
+	.back-string {
+		text-align: center;
+		background-color: #FFF;
+		color: $felix-color-primary;
+		font-size: 14px;
+		font-weight: normal;
+		padding: 20px 0;
+		box-shadow: 0 2px 2px 0 rgba(0,0,0,0.07);
+		i {
+			font-size: 15px;
+			margin-right: 5px;
+		}
+		a {
+			color: $felix-color-primary;
+		}
+		@include breakpoint(desktop) {
+			text-align: left;
+			background: none;
+			box-shadow: none;
+			padding-bottom: 0px;
+			margin-bottom: 0px;
+			margin-left: 40px;
+		}
+	}
+
+	.products-container {
+		width: 100%;
+	    padding: 20px 20px 100px 20px;
+	    overflow-x: scroll;
+	    @include breakpoint(mobile) {
+			padding: 0px;
+		}
+	}
+	.products {
+		width: 100%;
+		display: inline-flex;
+		overflow-x: auto;
+		border: 2px solid transparent;
+		margin-right: 15px;
+		padding: 10px 25px;
+		border-radius: 6px;
+		background-color: #FFF;
+		box-sizing: border-box;
+		box-shadow: 0 0 3px 0 rgba(0,0,0,0.1);
+		@include breakpoint(mobile) {
+			padding: 10px 0px;
+			overflow-x: hidden;
+			border-radius: 0px;
+			margin-right: 0px;
+		}
+		.item {
+			width: 50%;
+			float: left;
+			position: relative;
+			&:last-child {
+				margin-right: 0;
+			}
+			&.active {
+				border: 2px solid #009FAB;
+			}
+
+			.logo-container {
+				max-height: 100px;
+				text-align: center;
+				img {
+					max-width: 100%;
+					max-height: 80px;
+					@include breakpoint(mobile) {
+						max-width: 80%;
+						max-height: 70px;
+					}
+				}
+
+				span.ncd-required:after {
+					content: ' ';
+				    width: 40px;
+				    height: 40px;
+				    background: url(../images/ncd-seal.svg) no-repeat;
+				    position: absolute;
+				    background-position: center center;
+				    top: 50%;
+				    bottom: 0px;
+				}
+			}
+
+			.title {
+				text-align: center;
+				h2 {
+					font-size: 16px;
+					font-weight: 600;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					width: 90%;
+					margin: auto;
+					margin-bottom: 0px;
+				}
+				.price {
+					font-size: 20px;
+					font-weight: 600;
+					color: $felix-color-primary;
+				}
+				.price span.small{
+					font-size: 17px;
+					color: #424242;
+					opacity: 0.5;
+					font-weight: normal;
+				}
+			}
+
+			.included {
+				color: $felix-color-primary;
+			}
+
+			.actions {
+				display: none;
+				text-align: left;
+				padding-left: 15px;
+				@include breakpoint(mobile) {
+					display: none;
+				}
+
+				button {
+					font-size: 13px;
+					letter-spacing: normal;
+					padding: 10px;
+					text-transform: capitalize;
+					margin-right: 10px;
+				}
+			}
+
+			@include breakpoint(mobile) {
+				button {
+					font-size: 13px;
+					letter-spacing: normal;
+					text-transform: capitalize;
+					padding: 10px 20px;
+					margin-left: 15px;
+				}
+			}
+			.attributes-container {
+				.attributes-title {
+					font-size: 18px;
+					font-weight: 00;
+					color: $felix-color-primary;
+					padding: 10px 10px 10px 15px;
+					margin-top: 20px;
+				}
+				a {
+					font-size: 14px;
+					width: 100%;
+					text-align: center;
+					text-decoration: underline;
+					color: $felix-color-primary;
+					display: inline-block;
+					margin-top: 10px;
+				}
+			}
+			.attributes {
+				padding: 10px 15px 10px 50px;
+				border-radius: 3px;
+				font-weight: normal;
+				font-size: 14px;
+				letter-spacing: -1;
+			    flex-direction: column;
+			    justify-content: center;
+			    transition: height ease-in .2s;
+				&:nth-child(even) {
+					background-color: rgba(235,243,243,0.34);
+				}
+				@include breakpoint(mobile) {
+					padding: 10px 15px 10px 15px;
+				}
+			}
+			.attributes.info {
+				padding-right: 50px;
+				position: relative;
+				span.help-icon {
+					position: absolute;
+					top: -12px;
+					right: 7px;
+					cursor: pointer;
+					padding: 20px;
+					&:after {
+						position: absolute;
+						margin: auto;
+						right: 0px;
+						content: "\F2FD";
+						font-size: 18px;
+						font-family: 'mdi';
+						color: $felix-color-primary;
+					}
+				}
+			}
+			.attributes.sub-checkbox {
+				position: relative;
+				padding-left: 50px;
+				@include breakpoint(mobile) {
+					padding-left: 40px;
+				}
+
+				.price {
+					color: $felix-color-primary;
+					@include breakpoint(mobile) {
+    					display: block;
+    				}
+				}
+
+				.checkbox-section {
+					position: relative;
+					top: 0px;
+					left: 0px;
+					span.checkbox {
+						padding-left: 30px;
+						margin-left: -30px;
+					}
+				}
+
+				span.help-icon {
+					top: -22px;
+					right: -42px;
+				}
+			}
+			.checkbox-container{
+				padding: 5px 0px;
+			}
+			.checkbox-section {
+				position: absolute;
+				left: 15px;
+    			top: 12px;
+				label {
+					width: 100%;
+					cursor: pointer;
+				}
+				span.checkbox {
+					margin-left: 0px;
+					display: inline;
+					position: relative;
+				}
+				span.checkbox:before { //checkbox
+					border: 2px solid #009FAB;
+					width: 20px;
+					height: 20px;
+					left: 0px;
+					top: 0px;
+				}
+				span.checkbox:after { //arrow
+					margin-top: 0px;
+					left: 2px;
+					top: 3px;
+				}
+			}
+		}
+	}
+
+	.default-addon {
+		.checkbox {
+			left: 20px !important;
+    		top: 12px !important;
+    		@include breakpoint(mobile) {
+				left: 12px !important;
+    		}
+		}
+	}
+}
+.quotes-comparison-submit-container {
+    padding: 10px 0;
+    background-color: #FFF;
+    box-shadow: 0 2px 24px 0 rgba(0,0,0,0.13);
+	text-align: center;
+	position: fixed;
+	z-index: 2;
+	bottom: 0px;
+	width: 100%;
+	padding: 0px;
+	.inner-small-container {
+		@include breakpoint(mobile) {
+			width: 100%;
+			padding: 10px 0px;
+		}
+		@include breakpoint(tablet-only) {
+			width: 100%;
+		}
+	}
+	.col-xs-6.col-6 {
+		@include breakpoint(mobile) {
+			padding: 0;
+			&.price {
+				font-size: 24px;
+				font-weight: 600;
+				color: #009FAB;
+				text-align: left;
+				padding: 12px 15px;
+			}
+		}
+	}
+	.title {
+		padding: 10px 24px;
+		@include breakpoint(mobile) {
+			padding: 10px 0px;
+		}
+		h2 {
+			font-size: 20px;
+			font-weight: 600;
+			margin-bottom: 0px;
+			@include breakpoint(mobile) {
+				font-size: 14px;
+			}
+		}
+		.price {
+			font-size: 20px;
+			font-weight: 600;
+			color: $felix-color-primary;
+			@include breakpoint(mobile) {
+				font-size: 16px;
+				font-weight: normal;
+			}
+		}
+		.price span.small{
+			font-size: 17px;
+			color: #424242;
+			opacity: 0.5;
+			@include breakpoint(mobile) {
+				font-size: 15px;
+				font-weight: normal;
+			}
+		}
+	}
+	button {
+		text-transform: none;
+		font-size: 18px;
+		padding: 15px 0px;
+		letter-spacing: normal;
+		width: 80%;
+		font-weight: normal;
+		@include breakpoint(mobile) {
+			margin-top: 0px;
+			font-size: 16px;
+			font-weight: normal;
+			width: 90%;
+			margin: 10px 0;
+			white-space: normal;
+			line-height: 20px;
+		}
+	}
+
+	.payment-captured {
+		padding: 20px;
+		color: $felix-color-primary;
+		font-size: 18px;
+		@include breakpoint(mobile) {
+			padding: 0px;
+		}
+		i {
+			display: block;
+			font-size: 40px;
+		}
+	}
+
+	.attribute-title {
+		font-size: 0.8rem;
+		font-weight: normal;
+		display: block;
+	}
+}

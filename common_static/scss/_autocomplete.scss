@@ -1,0 +1,65 @@
+/*
+ Autocomplete overrides
+ */
+
+ .autocomplete-container {
+    position: relative;
+    &.loader {
+        &:after {
+            content: ' ';
+            position: absolute;
+            right: 7px;
+            top: 10px;
+            background: url(../images/preloader2.svg) no-repeat;
+            background-size: 15px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+    &.new {
+        &:before {
+            content: 'new';
+            position: absolute;
+            font-weight: 300;
+            right: 7px;
+            top: 9px;
+            background-color: $primary;
+            color: #FFF;
+            font-size: 11px;
+            padding: 1px 8px 2px 8px;
+            border-radius: 10px;
+        }
+    }
+ }
+
+ul.ui-autocomplete {
+    background: #FFF;
+    max-height: 40vh;
+    overflow-y: auto;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+
+    &.ui-menu .ui-menu-item {
+        border-bottom: 1px dotted #999;
+        padding: 10px;
+        font-size: 11px;
+        color: $muted;
+        span {
+            color: $dark;
+            font-size: 13px;
+            display: block;
+        }
+
+        &.ui-state-focus {
+            background: none;
+            background: #5897FB;
+            color: #FFF;
+            font-weight: normal;
+            border: 0;
+            border-color: #999;
+            margin: 0px;
+            span {
+                color: #FFF;
+            }
+        }
+    }
+}

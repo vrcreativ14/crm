@@ -1,0 +1,58 @@
+//FONTS
+$font-family: 'Source Sans Pro', sans-serif;
+
+// screen width sizes
+$hd-min-width: 9900px;
+$hd-lg-min-width: 1920px;
+$hd-md-min-width: 1600px;
+$hd-sm-min-width: 1366px;
+
+$desktop-max-width: $hd-min-width - 1;
+$desktop-min-width: 1025px;
+
+$tablet-max-width: $desktop-min-width - 1 ;
+$tablet-min-width: 768px;
+
+$mobile-max-width: $tablet-min-width - 1;
+$mobile-min-width: 0px;
+
+//  Page width
+$full_page_width: 1154px;
+$full_page_width_reduced: 820px;
+
+// Banner sizes
+$leaderboard_banner_width: 728px;
+$leaderboard_banner_height: 90px;
+
+
+// base sizes
+$base-font-size: 13px;
+
+// colors
+$color-blue: #2980b9;
+$color-gray: #f5fafd;
+
+// padding & margin
+$padding-xlg: 25px;
+$padding-lg: 15px;
+$padding-sm: 10px;
+$padding-xs: 5px;
+
+$margin-xlg: 25px;
+$margin-lg: 15px;
+$margin-sm: 10px;
+
+// border radius
+$border-radius-sm: 3px;
+$border-radius-md: 5px;
+$border-radius-lg: 8px;
+
+// detail page left side width
+$width-detail-left: 675px;
+$width-detail-right: 370px;
+
+$details-gallery-images-width: 673px;
+$details-gallery-images-height: 507px;
+
+// mobile
+$details-gallery-mobile-images-height: 265px;

@@ -1,0 +1,65 @@
+/*
+ Public Styles Override
+ Nexus Insurance Brokers
+ */
+@import '../vars/vars';
+@import '../mixins/breakpoints';
+@import '../mixins/override_css_mixin';
+
+$primary-color: #D9B200;
+$secondary-color: #167000;
+$tertiary-color: #111111;
+
+$blue_color: #0055c9;
+$maroon_color: #800400;
+$purple_color: #582C83;
+
+$logo_url: '../../../images/logos/nexus-logo.png';
+$car_illustration_image: '../../../images/illustration-check-nexus.svg';
+
+@include override_css_styles(
+    $primary-color,
+    $secondary-color,
+    $tertiary-color,
+    $logo_url,
+    $car_illustration_image
+);
+
+/* Specific Styles comes below */
+header .logo-container {
+    text-align: center !important;
+    width: 100%;
+    a {
+        background-size: 70% !important;
+        height: 52px !important;
+        background-position: 16px 2px;
+        @include breakpoint(mobile) {
+            background-position: 0;
+        }
+    }
+}
+.quotes {
+    .products .item,
+    .felix-modal {
+        .title {
+            h2 {
+                color: $tertiary-color !important;
+            }
+        }
+    }
+}
+.quotes-checkout {
+    .title {
+        h2 {
+            color: $tertiary-color !important;
+        }
+    }
+}
+.quotes-comparison {
+    .products .item .title h2 {
+        color: $tertiary-color !important;
+    }
+    .products .item .attributes.sub-checkbox .price {
+        color: $primary-color;
+    }
+}

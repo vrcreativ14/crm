@@ -1,0 +1,120 @@
+/*
+ Customers
+ */
+.customers {
+    .wrapper .container-fluid { //TEMPORARY
+        // max-width: 1300px;
+    }
+
+    .select2-container--default {
+        .select2-search {
+            padding: 0 4px 4px 4px;
+            .select2-search__field {
+                // padding: 2px;
+                color: inherit;
+                font-size: 12px;
+            }
+        }
+        .select2-results__options li {
+            font-size: 12px;
+        }
+    }
+}
+
+/* Customer Merge modal */
+.customer-merge-form {
+    .content {
+        padding-top: 20px !important;
+    }
+
+    .title {
+        padding: 5px 10px;
+        // margin-bottom: 20px;
+        font-weight: 600; 
+        border-bottom: 1px solid #F1F1F1;
+        min-height: 60px;
+        a {
+            display: block;
+            font-size: 12px;
+            font-weight: normal;
+        }
+    }
+    .field-container {
+        min-height: 80px;
+        display: block;
+        position: relative;
+        padding: 5px 10px;
+
+        label {
+            width: 100%;
+            font-size: 10px !important;
+        }
+
+        .shift-right, .shift-left {
+            position: absolute;
+            cursor: pointer;
+            transition: all ease-in .1s;
+            top: 40%;
+        }
+        .shift-left {
+            left: 20px;
+        }
+        .shift-right {
+            right: 20px;
+        }
+
+        .value {
+            width: 90%;
+        }
+    }
+
+    .column-1,
+    .column-2,
+    .column-3 {
+        .field-container:nth-child(odd) {
+            background: #F9F9F9;
+        }
+    }
+    .column-3 .value {
+        float: right;
+    }
+    .column-2 {
+        .field-container {
+            padding-top: 23px;
+        }
+    }
+    .customer-info {
+        cursor: pointer;
+        &:hover {
+            .shift-right {
+                right: 15px;
+            }
+            .shift-left {
+                left: 15px;
+            }
+        }
+    }
+
+    .disclaimer {
+        width: fit-content;
+        margin: auto;
+        margin-bottom: 10px;
+        label {
+            font-size: 11px !important;
+        }
+
+        &.error {
+            .felix-checkbox-form .control__indicator {
+                border-color: $pink; 
+            }
+        }
+    }
+
+    .btn-merge-customers[disabled] {
+        padding: 0px !important;
+        span {
+            display: inline-block;
+            padding: .375rem 3rem;
+        }
+    }
+}

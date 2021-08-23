@@ -1,0 +1,66 @@
+{% load humanize %}
+{% load motorinsurance %}
+<p>Dear {{ customer_name }},</p>
+
+<p>Thank you for your order, you can find a summary below. Please note that your new insurance policy is <strong>NOT</strong> active yet.</p>
+
+<p>We'll need copies of the following cards in order to have your new policy issued:</p>
+
+<p>
+	<ul>
+		<li>Emirates ID</li>
+		<li>UAE driving license</li>
+		<li>Vehicle registration card</li>
+	</ul>
+</p>
+
+<p>Please <a href="{{ document_upload_link }}">click here</a> to upload scans of these cards (photos taken with your phone's camera are fine too.)</p>
+
+<p>This link will expire on {{ expiry_date }}, so please, upload the documents before that. If, however, you're not able to upload your documents before this date then your order will be automatically cancelled. Just send us an email if this happens and we’ll send you a new link.</p>
+
+<p><strong>Order Summary</strong></p>
+
+<p>
+	<table cellpadding="10" cellspacing="0" border="1">
+		<tr>
+			<td>Quotation reference no.:</td>
+			<td>{{ reference_number }}</td>
+		</tr>
+		<tr>
+			<td>Vehicle:</td>
+			<td>{{ car_name }}</td>
+		</tr>
+		<tr>
+			<td>Policy:</td>
+			<td>{{ product_name }}</td>
+		</tr>
+		<tr>
+			<td>Type:</td>
+			<td>{{ insurance_type }}</td>
+		</tr>
+		<tr>
+			<td>Add-ons:</td>
+			<td>{% for add_on in add_ons %}{{ add_on|replace_with_space:'_' }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+		</tr>
+		<tr>
+			<td>Vehicle Insured Value:</td>
+			<td>{{ companysettings.currency }} {{ sum_insured|intcomma }}</td>
+		</tr>
+		<tr>
+			<td>Policy Deductible:</td>
+			<td>{{ companysettings.currency }} {{ deductible|intcomma }}</td>
+		</tr>
+		<tr>
+			<td>Amount Paid:</td>
+			<td>{{ companysettings.currency }} {{ payment_amount|intcomma }}</td>
+		</tr>
+	</table>
+</p>
+
+<p>Have a question? Just respond to this email and we'll get back to you asap! </p>
+<p>We look forward to receiving your documents and to sending you your new car insurance policy!</p>
+
+<br>
+<p>All the best,</p>
+
+<p>{{ assigned_to }}</p>

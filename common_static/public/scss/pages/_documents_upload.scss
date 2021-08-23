@@ -1,0 +1,330 @@
+/*********************
+   Document Page Styling
+   ********************/
+#document-upload {
+    .steps {
+        width: 100%;
+        [role='tablist'] {
+            width: 970px;
+        }
+        @include breakpoint(mobile) {
+            [role='tablist'] {
+                width: 100%;
+            }
+        }
+    }
+    h1 {
+        color: $felix-color-turquoise;
+        font-size: 26px;
+        font-weight: 600;
+        text-align: left;
+        width: 90%;
+        margin: 40px 0px 60px 0;
+        margin-bottom: 100px;
+        position: relative;
+
+        @include breakpoint(mobile-tablet) {
+            width: 100%;
+            font-size: 24px;
+            margin: 50px 0px 25px 0;
+            &:after {
+                display: none;
+            }
+        }
+
+        p {
+            color: #B6B6B6;
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: 500;
+            line-height: 24px;
+        }
+    }
+
+    h1.thankyou-heading {
+        margin-bottom: 50px;
+    }
+
+    h1.down-arrow {
+        &:after {
+            font-family: 'themify';
+            content: "\e64b";
+            font-size: 30px;
+            width: 30px;
+            height: 20px;
+            position: absolute;
+            bottom: -35px;
+            left: 0px;
+        }
+    }
+
+    .home-button {
+        height: 38px;
+        width: 100px;
+        border-radius: 100px;
+        background-color: $felix-color-primary;
+        color: #FFF;
+        font-size: 14px;
+        padding: 10px 35px;
+        font-weight: normal;
+        &:hover {
+            background-color: $felix-color-primary-darker;
+            text-decoration: none;
+        }
+    }
+
+    .blue-line {
+        height: 1px;
+        border-bottom: 3px solid $felix-color-turquoise;
+        width: 23%;
+        position: absolute;
+        left: -26%;
+        top: 15px;
+    }
+    .summary-container {
+        margin: auto;
+        position: relative;
+        max-width: 800px;
+        margin-top: 50px;
+        @include breakpoint(mobile-tablet) {
+            margin: 0;
+        }
+    }
+
+    .info-box {
+        position: relative;
+        margin-bottom: 40px;
+        @include breakpoint(mobile-tablet) {
+            margin-bottom: 0;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: $felix-color-turquoise;
+            padding: 0 25px;
+            @include breakpoint(mobile-tablet) {
+                width: 100%;
+                padding: 25px 25px 5px 25px;
+            }
+        }
+        
+        .info {
+            width: 100%;
+            background-color: #FFF;
+            min-height: 10px;
+            margin: 0px 0;
+            padding: 10px 20px;;
+            border-radius: 4px;
+            box-shadow: 1px 1px 1px #EDEDED;
+            .item {
+                margin: 20px;
+                padding-left: 40px;
+                font-weight: 600;
+                height: 20px;
+                position: relative;
+                line-height: 16px;
+                i {
+                    position: absolute;
+                    left: 0;
+                    top: -2px;
+                    color: $felix-color-primary;
+                    font-size: 22px;
+                    font-weight: bold;
+                }
+            }
+            .help-icon {
+                margin-left: 5px;
+                font-weight: 600;
+                font-size: 16px;
+                display: inline-block;
+                cursor: pointer;
+            }
+        }
+
+    }
+
+    .action-buttons {
+        margin-top: 50px;
+        background-color: #FFF;
+        box-shadow: 0 2px 6px 0 rgba(0,0,0,0.1);
+        padding: 10px 0;
+        box-sizing: border-box;
+        text-align: left; 
+        @include breakpoint(mobile-tablet) {
+            background-color: transparent;
+            margin-top: 0px;
+            text-align: left;
+            padding-bottom: 10px
+        }
+        .link {
+            color: #D5D5D5;
+            font-weight: 600;
+            font-size: 16px;
+            a {
+                color: $felix-color-primary;
+                display: block;
+            }
+        }
+        .btn-primary{
+            margin-right: 20px;
+            &:after {
+                content: "\f054";
+                font: normal normal normal 14px/1 FontAwesome;
+                margin-left: 10px;
+            }
+        }
+        .already-submitted {
+            font-size: 18px;
+            text-transform: normal;
+            padding: 10px;
+            color: #555;
+            text-align: center;
+            i {
+                font-size: 50px;
+                display: block;
+                color: green;
+                margin-bottom: 10px; 
+            }
+            a {
+                color: $felix-color-primary;
+            }
+        }
+    }
+
+    .info-tip {
+        background: url(../images/info-tip-icon.svg) no-repeat;
+        width: 18px;
+        height: 18px;
+        top: 5px;
+    }
+
+    .add-file {
+        margin-left: -15px;
+        text-transform: capitalize;
+         @include breakpoint(mobile) {
+            font-size: 13px;
+        }
+    }
+    .save-later {
+        display: none;
+        color: $felix-color-primary;
+        text-transform: initial;
+        background-color: rgba(0,159,171,0.1);
+        &:hover {
+            background-color: rgba(0,159,171,0.2);  
+        }
+        @include breakpoint(mobile) {
+            font-size: 13px;
+        }
+    }
+    .save-later.show {
+        display: inline-block;
+    }
+    .save-later-message {
+        display: none;
+        position: absolute;
+        width: 100%;
+        padding: 5px;
+        text-align: center;
+        margin-top: 5px;
+        @include breakpoint(mobile) {
+            margin-top: -5px;
+        }
+    }
+    .fileuploader-theme-onebutton {
+        background: #FFF;
+        padding: 0 15px;
+        .fileuploader-input {
+            display: none;
+        }
+        .fileuploader-item {
+            background-color: #F7F7F7;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-bottom: 0px;
+            i {
+                font-size: 12px;
+                color: #FFF;
+            }
+            .progress-bar2 span {
+                right: 10px;
+            }
+            .column-actions {
+                right: 0;
+                top: 25%;
+                text-align: right; 
+                i {
+                    display: none;
+                    color: #FFF;
+                    font-size: 16px;
+                    line-height: 12px;
+                }
+                a {
+                    display: none;
+                    width: initial;
+                    color: #FFF;
+                    background-color: $felix-color-primary;
+                    line-height: 10px;
+                    padding: 10px 15px;
+                    text-transform: capitalize;
+                    font-size: 14px;
+                    border: 0px;
+                    height: 34px;
+                    margin: 0;
+                    margin-right: 10px;
+                    border-radius: 300px;
+                    line-height: 12px;
+                    width: auto;
+
+                    &:hover {
+                        background-color: $felix-color-primary-darker;
+                    }
+                }
+
+                @include breakpoint(mobile) {
+                    a {
+                        padding: 10px;
+                    }
+                    span {
+                        display: none;
+                    }
+                    i {
+                        display: block;
+                    }
+                }
+
+                a.fileuploader-action-remove {
+                    background-color: #FFF;
+                    color: $error-color;
+                    border: 0px;
+                    &:hover {
+                        background-color: #F1F1F1;
+                    }
+                    @include breakpoint(mobile) {
+                        width: 34px;
+                        i:before, i:after {
+                            top: 8px;
+                            left: 16px;
+                            height: 15px;
+                        }
+                    }
+                }
+            }
+        }
+        .fileuploader-item.upload-successful {
+            a {
+                display: inline-block;
+            }
+        }
+        .fileuploader-item.upload-failed {
+            background-color: $error-color-v-lighter;
+            color: #FFF;
+        }
+    }
+
+    .fileuploader-container.completed {
+        a.fileuploader-action-remove {
+            // display: none;
+        }
+    }
+}

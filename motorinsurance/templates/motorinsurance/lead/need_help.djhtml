@@ -1,0 +1,12 @@
+{% load static %}
+{% comment %}
+<div class="row">
+    <div class="col-6 col-sm-6 need-help">
+        <a tabindex="1000">Need Help?</a>
+    </div>
+    <div class="col-6 col-sm-6">
+        <a tabindex="1000" target="_blank" href='javascript:' class="btn drift-open-chat btn-contact-tooltip">Contact
+            Us!</a>
+    </div>
+</div>
+{% endcomment %}

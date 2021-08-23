@@ -1,0 +1,27 @@
+/* ==============
+  Felix Charts
+===================*/
+.chart-container {
+	position: relative;
+    h4 {
+        margin-bottom: 0px;
+    }
+
+    .preloader {
+    	display: block;
+    	position: absolute;
+    	font-size: 3rem;
+    	margin: auto;
+    	left: 0;
+    	right: 0;
+    	top: 45%;
+    	z-index: 1;
+    }
+
+    .description {
+    	padding: 10px 10px 15px 10px;
+    	text-align: center;
+    	font-size: 13px;
+    	display: none;
+    }
+}

@@ -1,0 +1,107 @@
+{% extends 'accounts/settings_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Company Settings - CRM & E-Commerce{% endblock %}
+
+{% block settings_content %}
+    <div class="row justify-content-md-center p-t-60">
+        <div class="col-lg-8">
+            <div class="card m-b-20">
+                <form name="company_settings_form" id="company_settings_form" method="post"
+                      validate enctype="multipart/form-data" action=""
+                      data-module-name='Settings'>
+                    {% csrf_token %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">CRM & E-Commerce</h4>
+                    <hr/>
+
+                    <div class="row m-20 m-t-50 m-b-60 justify-content-md-center">
+                        <div class="col-lg-10">
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Auto-Expire Quotes
+                                        <span class="help-icon"
+                                              title="If the quotes you send out have a limited validity period, for example 30 days, then set that here. When your client opens a quote link that has expired they'll still be able to see their options but they won't be able to place an order."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="input-group">
+                                        <input
+                                            type="number"
+                                            name="quote_expiry_days"
+                                            id="id_quote_expiry_days"
+                                            class="form-control" min="0"
+                                            {% if settings_form.quote_expiry_days.value %}
+                                            value="{{ settings_form.quote_expiry_days.value }}"
+                                            {% else %}
+                                            value="30"
+                                            {% endif %}
+                                        />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Auto-Lose Deals
+                                        <span class="help-icon"
+                                              title="Instead of keeping quotes open indefinitely you can set up Felix to automatically lose these deals after a certain number of days of inactivity. Leave it blank to disable."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="input-group">
+                                        <input
+                                            type="number"
+                                            name="auto_close_quoted_deals_in_days"
+                                            id="id_auto_close_quoted_deals_in_days"
+                                            class="form-control" min="0"
+                                            {% if settings_form.auto_close_quoted_deals_in_days.value %}
+                                            value="{{ settings_form.auto_close_quoted_deals_in_days.value }}"
+                                            {% else %}
+                                            value="0"
+                                            {% endif %}
+                                        />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                    </div>
+                                    {{ settings_form.auto_close_quoted_deals_in_days.errors }}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-12">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Online Motor Insurance Application Form URL:
+                                    </label>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="copy-link-container wide profile">
+                                        <input id="id_lead_form_url" name="lead_form_url" type="text" readonly class="form-control" value="{{ lead_form_url }}" />
+                                        <ul class="controls">
+                                            <li>
+                                                <a title="Click to copy" onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="id_lead_form_url" class="font-14"><i class="ti-files"></i></a>
+                                            </li>
+                                            <li>
+                                                <a title="Click to open" href="{{ lead_form_url }}" target="_blank" class="m-l-5 font-14"><i class="ti-new-window"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <button type="submit" class="update-profile float-right m-r-15 m-b-15 btn btn-md btn-primary">
+                        <span>Save</span>
+                        <div class="ball-spinner"></div>
+                    </button>
+                </form>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+{% endblock %}

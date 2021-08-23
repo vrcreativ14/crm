@@ -1,0 +1,119 @@
+/*
+ User Profile
+ */
+.user-profile {
+	padding-top: 50px;
+	.bootstrap-filestyle {
+		display: inherit;
+	}
+}
+.user-profile, .company-agents {
+	padding-top: 50px;
+	.header-bg {
+		position: fixed;
+		width: 100%;
+		z-index: 2;
+		top: 0px;
+	}
+}
+
+.invite-users-button {
+	color: #FFF !important;
+}
+
+// PASSWORD STRENGTH METER
+$strenght-color-default: #EEEEEE;
+$strenght-color-very-weak: #EF4438;
+$strenght-color-weak: #FEC111;
+$strenght-color-strong: #CEDC38;
+$strenght-color-very-strong: #8BC249;
+
+.strength-meter {
+	width: 100%;
+	text-align: center;
+	span {
+		display: inline-block;
+		width: 24%;
+		height: 5px;
+		background-color: $strenght-color-default;
+		border-radius: 3px;
+		transition: background-color .3s;
+	}
+
+	&.very-weak span:nth-child(1) {
+		background-color: $strenght-color-very-weak;
+	}
+	&.weak span {
+		&:nth-child(1),
+		&:nth-child(2) {
+			background-color: $strenght-color-weak;
+		}
+	}
+	&.strong span {
+		background-color: $strenght-color-strong;
+		&:nth-child(4) {
+			background-color: $strenght-color-default;
+		}
+	}
+	&.very-strong span {
+		background-color: $strenght-color-very-strong;
+	}
+}
+
+.profile {
+	.sidebar {
+		position: fixed;
+		top: 25px;
+		left: 0;
+		width: 290px;
+		height: 100vh;
+		display: block;
+		background-color: #FFF;
+		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+		padding-top: 50px;
+		z-index: 1;
+
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+
+			li {
+				padding: 10px;
+				position: relative;
+				.parent-icon {
+					position: absolute;
+					top: 15px;
+    				right: 15px;
+    				display: inline-block;
+    				width: 50px;
+    				&:before {
+    					float: right;
+    				}
+    				&.open:before {
+    					content: "\e64b";
+    				}
+				}
+				a {
+					color: inherit;
+					font-size: 13px;
+
+					&:hover, &.current {
+						color: $primary;
+					}
+
+					a.has-childs &:after {
+						content: '>';
+					}
+				}
+
+				ul {
+					margin-top: 7px;
+					li {
+						padding-left: 20px;
+					}
+				}
+			}
+		}
+	}
+}

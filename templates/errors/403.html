@@ -1,0 +1,13 @@
+{% extends 'error_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}403 - Forbidden{% endblock %}
+
+{% block content %}
+<div class="error-container error-403">
+    <div class="bg"></div>
+    <div class="title">Permission Error</div>
+    <div class="message">You do not have permission to access this page. Please talk to your account administrator to get access.</div>
+</div>  
+{% endblock %}
+

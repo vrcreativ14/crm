@@ -1,0 +1,101 @@
+{% load static %}
+{% load humanize %}
+<div class="housekeeping-overview deal-process">
+	{% if not has_policy %}
+    	<p class="empty-area">Here, you need to go through a checklist to confirm if you have completed the necessary due-diligence to mark as a won deal</p>
+    {% else %}
+	    <div class="policy-summary form hide">
+	    	<!-- Policy Form -->
+			{% include 'motorinsurance/deal/components/deal_policy_form.djhtml'%}
+	    </div>
+	    <div class="policy-summary preview">
+		    <div class="heading m-b-5">Policy Summary <a href="#" class="edit-policy font-12 fw-400 m-l-10">Edit Policy</a></div>
+
+			<p>Your policy was created and sent {{ deal.policy.created_on|naturaltime }}. Make sure you complete all your tasks before you mark the deal as Won.</p>
+			<div class="products-preview">
+				<div class="row no-hover">
+					<div class="product-logo-container col-lg-3 col-md-2 m-l-10">
+						<span class="spacer"></span>
+						{% if deal.get_order %}
+						<img src="{{ deal.get_order.selected_product.product.get_logo }}">
+						{% else %}
+						<img src="{{ deal.policy.product.get_logo }}">
+						{% endif %}
+					</div>
+					<div class="details col-lg-2 col-md-3 col-sm-8 p-t-17">
+						<div class="text-muted font-12 m-b-5">Policy start date</div>
+						<div class="font-14 c-bgrey">{{ deal.policy.policy_start_date|date:'M d, Y' }}</div>
+					</div>
+					<div class="details col-lg-2 col-md-3 col-sm-8 p-t-17">
+						<div class="text-muted font-12 m-b-5">Policy expiry date</div>
+						<div class="font-14 c-bgrey">{{ deal.policy.policy_expiry_date|date:'M d, Y' }}</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-12 p-t-17">
+						<div class="text-muted font-12 m-b-5">Policy number</div>
+						<div class="font-14 c-bgrey">{{ deal.policy.reference_number }}</div>
+					</div>
+					<div class="col-lg-2 col-md-3 col-sm-12 p-t-17">
+						<div class="text-muted font-12 m-b-5">Invoice number</div>
+						<div class="font-14 c-bgrey">{% if deal.policy.invoice_number %}{{ deal.policy.invoice_number }}{% else %}-{% endif %}</div>
+					</div>
+
+					{% if deal.policy %}
+					<div class="col-lg-2 col-md-3 col-sm-12 p-t-12">
+						<div class="text-muted font-12 m-b-5">&nbsp;</div>
+						<a href="javascript:" data-felix-modal="modal_view_policy" onclick="__POLICY._getPolicyDetail({{ deal.policy.pk }})">
+							<i class="font-18 ti-new-window"></i> View Policy
+						</a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+
+			<div class="m-b-30">&nbsp;</div>
+
+			<!-- Housekeeping Checklist -->
+			{% if deal.stage == 'housekeeping'%}
+			<div class="housekeeping-checklist">
+				<div class="heading">Verification of Tasks</div>
+
+				<div class="row justify-content-md-center m-t-40">
+					<div class="col col-lg-7 col-md-10 col-sm-12">
+
+						<label for="hk_chk_eid" class="felix-checkbox-form"> I confirm that I have collected the necessary documents from the customer including their Emirates ID, driving licence, passport copy and car registration card
+	                    	<input id="hk_chk_eid" type="checkbox" class="housekeeping-checkboxes" />
+	                    	<div class="control__indicator"></div>
+	                    </label>
+
+	                    <label for="hk_chk_customer" class="felix-checkbox-form"> I confirm that I validated the information of the customer to prepare the quote
+	                    	<input id="hk_chk_customer" type="checkbox" class="housekeeping-checkboxes" />
+	                    	<div class="control__indicator"></div>
+	                    </label>
+
+	                    <label for="hk_chk_payment" class="felix-checkbox-form"> I confirm that the payment for the quote has been received from the customer
+	                    	<input id="hk_chk_payment" type="checkbox" class="housekeeping-checkboxes" />
+	                    	<div class="control__indicator"></div>
+	                    </label>
+
+	                    <label for="hk_chk_docs" class="felix-checkbox-form"> I confirm that I have uploaded all the documents to this deal
+	                    	<input id="hk_chk_docs" type="checkbox" class="housekeeping-checkboxes" />
+	                    	<div class="control__indicator"></div>
+	                    </label>
+
+	                    <label for="hk_chk_policy" class="felix-checkbox-form"> I confirm that I have recorded the policy number, policy start date and the policy document to this deal
+	                    	<input id="hk_chk_policy" type="checkbox" class="housekeeping-checkboxes" />
+	                    	<div class="control__indicator"></div>
+	                    </label>
+					</div>
+				</div>
+
+				<hr class="m-t-50 m-b-25" />
+
+				<button disabled="disabled" class="btn-housekeeping float-right btn btn-success btn-md btn-wide-deal m-l-10">Mark as Won</button>
+			</div>
+			{% endif %}
+		</div>
+	{% endif %}
+</div>
+{% if deal.policy %}
+	{% include 'motorinsurance/deal/components/deal_policy_modal.djhtml' %}
+	{% include 'handlebars/policy_modal.html' %}
+{% endif %}

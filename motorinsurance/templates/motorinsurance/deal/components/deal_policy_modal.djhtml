@@ -1,0 +1,14 @@
+{% load humanize %}
+{% load motorinsurance %}
+<div id="modal_view_policy" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>Policy Details</h1>
+
+        <div class="content squeeze-top info-container">
+        </div>
+
+        <div class="button-container">
+            <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md float-right">Close</a>
+        </div>
+    </div>
+</div>

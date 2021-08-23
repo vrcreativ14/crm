@@ -1,0 +1,53 @@
+{% load static %}
+
+{% with form=form %}
+    {% include 'motorinsurance/auto_quote_product_forms/generic_form.djhtml' %}
+{% endwith %}
+
+<script type="text/javascript">
+    $('#auto_quote_form').not('#auto_quote_insurer').off('change', 'select');
+    $('#auto_quote_form').not('#auto_quote_insurer').on('change', 'select', function() {
+        let form = '#auto_quote_form';
+        let params = $(form).serialize();
+        let id = this.id;
+        let elem_to_populate = false;
+        let level = false;
+        let deal_id = $('.deal-container').data('id');
+
+        if(this.id == 'id_make') {
+            level = 'model';
+            elem_to_populate = form + ' #id_model';
+        } else if(this.id == 'id_model' || this.id == 'id_body_type') {
+            level = 'trim';
+            elem_to_populate = form + ' #id_trim';
+        } else if(this.id == 'id_trim') {
+            level = 'engine_size';
+            elem_to_populate = form + ' #id_engine_size';
+        } else if(this.id == 'id_engine_size') {
+            level = 'transmission';
+            elem_to_populate = form + ' #id_transmission';
+        } else if(this.id == 'id_transmission') {
+            level = 'region';
+            elem_to_populate = form + ' #id_region';
+        }
+
+        if(!level || !elem_to_populate) return;
+
+        if(level == 'trim') {
+            if(!$(form + ' #id_model').val() || !$(form + ' #id_body_type').val())
+                return;
+        }
+
+        Utilities.Form.updateSearchableSelectOptions(elem_to_populate, [], 'Select option...');
+        $(elem_to_populate).prop('disabled', true).trigger('chosen:updated');
+
+        let endpoint = DjangoUrls['motorinsurance:auto-quote-tokio-marine-mmt-tree']() + '?' + params + '&level=' + level + '&deal_id=' + deal_id;
+
+        $.get(endpoint, function(data) {
+            Utilities.Form.updateSearchableSelectOptions(elem_to_populate, data['response'], 'Select option...');
+            $(elem_to_populate).prop('disabled', false).trigger('chosen:updated');
+            if(!data['response'] && data['message'])
+                Utilities.Notify.error(data['message'], 'API Error');
+        });
+    });
+</script>

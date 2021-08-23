@@ -1,0 +1,26 @@
+{% load static %}
+
+
+<div class="deal-overview deal-process display">
+    {% if not deal.quote %}
+        <div class="new-deal display">
+            <div class="heading m-b-5">Create a new quote</div>
+            <p>Use the Quoting Engine or add products manually.</p>
+
+            <div class="m-t-50 m-b-50 align-center">
+                <button class="hide btn-generate-new-quote btn btn-primary btn-wide-deal">Add Product(s) Manually</button>
+
+                {% if companysettings.auto_quote_allowed %}
+                <button data-felix-modal="modal_auto_quote_form" class="hide m-l-10 auto-quote-cta btn btn-outline-primary btn-wide-deal">Launch Quoting Engine</button>
+                {% endif %}
+
+                <button class="show-insurer-modal btn btn-primary btn-wide-deal">Create Quote</button>
+            </div>
+        </div>
+        
+        {% include 'motorinsurance/deal/components/deal_quote_form.djhtml' %}
+    {% endif %}
+
+    {% include 'motorinsurance/deal/components/insurers_list_modal.djhtml' %}
+    
+</div>

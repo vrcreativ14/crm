@@ -1,0 +1,211 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load permission_tags %}
+
+{% block page_title %}Motor Insurance Deals{% endblock %}
+{% block body_class %}motor-deals{% endblock %}
+{% block current_nav %}deals{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Motor Insurance Deals</h1>
+            <div class="float-right deals-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+            <button type="button" data-felix-modal="modal_create_deal" class="create-record btn btn-primary btn-md btn-list-create" onclick="__DEALS._resetDealForm()">
+                Create New
+            </button>
+
+            {% include 'motorinsurance/deal/components/new_deal_form.djhtml' %}
+            <span class="felix-table-action-buttons">
+                {% if is_admin %}
+                <button type="button" class="delete-record btn btn-md btn-outline-primary">
+                    Delete
+                </button>
+                {% endif %}
+                <button type="button" class="close-deal btn btn-md btn-outline-primary">
+                    Lose Deal
+                </button>
+            </span>
+            <div class="clear"></div>
+            <div class="table-filters">
+                <form action="{% url 'motorinsurance:deals' %}" method="get">
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="stage" id="id_stage" value="{{ stage }}" />
+
+                    <div class="quick-filters">
+                        <span class="title">Quick Filters:</span>
+                        <span class="buttons stages">
+                            <button data-field="id_stage" data-type="" type="button" class="{% if stage == '' %}active {% endif %} btn btn-white">All Open <span></span></button>
+                            <button data-field="id_stage" data-type="new" type="button" class="{% if stage == 'new' %}active {% endif %}btn btn-white">New Deals <span></span></button>
+                            <button data-field="id_stage" data-type="quote" type="button" class="{% if stage == 'quote' %}active {% endif %}btn btn-white">Quotes <span></span></button>
+                            <button data-field="id_stage" data-type="order" type="button" class="{% if stage == 'order' %}active {% endif %}btn btn-white">Orders <span></span></button>
+                            <button data-field="id_stage" data-type="housekeeping" type="button" class="{% if stage == 'housekeeping' %}active {% endif %}btn btn-white">Housekeeping <span></span></button>
+                            <button data-field="id_stage" data-type="won" type="button" class="{% if stage == 'won' %}active {% endif %}btn btn-white">Won <span></span></button>
+                            <button data-field="id_stage" data-type="lost" type="button" class="{% if stage == 'lost' %}active {% endif %}btn btn-white">Lost <span></span></button>
+                        </span>
+
+                        <span class="{% if is_producer %}hide{% endif %}">
+                            {{ search_form.assigned_to }}
+                        </span>
+                        <span class="hide">
+                            {{ search_form.producer }}
+                        </span>
+                    </div>
+                    <div class="table-filters float-right">
+                        <div class="filter-trigger">
+                            <i class="ti-filter"></i> <span class="hide badge badge-info badge-pill noti-icon-badge filter-count">0</span>
+                        </div>
+                        {% if user|can:'export_motor_deals' %}
+                        <div class="options-table float-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-settings"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item export" data-url="{% url 'motorinsurance:deal-export' %}" href="javascript:">
+                                    <i class="ti-export m-r-7"></i> Export to CSV
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="sorting-table float-right hide">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-arrows-vertical"></i><i class="ti-align-left"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item {% if request.GET.sort_by == 'created_on_asc'%}active{% endif %}" data-val="created_on_asc" href="javascript:">
+                                    Created On (Asc.)
+                                </a>
+                                <a class="dropdown-item {% if not request.GET.sort_by %}active{% endif %}" data-val="" href="javascript:">
+                                    Created On (Desc.)
+                                </a>
+                                <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_asc'%}active{% endif %}" data-val="updated_on_asc" href="javascript:">
+                                    Updated On (Asc.)
+                                </a>
+                                <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_desc'%}active{% endif %}" data-val="updated_on_desc" href="javascript:">
+                                    Updated On (Desc.)
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="sort-by-field hide">
+                            {{ search_form.sort_by }}
+                        </div>
+
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+
+                        <div class="search-popup deals">
+                            <div class="title">Filters</div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_after.label }}</label>
+                                    {{ search_form.created_on_after }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_before.label }}</label>
+                                    {{ search_form.created_on_before }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Deleted</label>
+                                    {{ search_form.deleted }}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <a href="javascript:" class="search-clear">Clear</a>
+                                <div class="float-right">
+                                    <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                    <button type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="row ">
+            <div class="col-2 quick-filters m-t-0 important hide">
+                <div class="title m-b-10">Filters</div>
+                <div class="sub-title">Stage</div>
+                <ul class="stage"></ul>
+                <div class="sub-title">Status</div>
+                <ul class="status"></ul>
+                <div class="sub-title">User</div>
+                <ul class="user"></ul>
+            </div>
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table data-update-callback="__DEALS._updateTableAttributes" class="table no-footer felix-table opacity" cellspacing="0" width="100%"
+                    data-index="{{ algolia_env }}_motor_deals_{{ company.pk }}"
+                    data-securedapikey="{{ algolia_secured_search_api_key }}"
+                    data-mode='index'
+                    data-name='deals'
+                    >
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="felix-checkbox parent">
+                                        <input class="select-record-all" type="checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th>Stage</th>
+                                <th>Status</th>
+                                <th data-name="cached_car_name">
+                                    Vehicle
+                                </th>
+                                <th data-name="customer__name">
+                                    Customer
+                                </th>
+                                <th>Premium ({{ companysettings.get_currency_display }})</th>
+                                <th data-name="vehicle_insured_value">
+                                    Sum Insured ({{ companysettings.get_currency_display }})
+                                </th>
+                                <th data-name="assigned_to__first_name">
+                                    User
+                                </th>
+                                <th data-name="producer__first_name">
+                                    Referrer
+                                </th>
+                                <th data-name="created_on" class="sortable {% if default_sort_by == 'created_on_desc'%}desc{% endif %}{% if default_sort_by == 'created_on_asc'%}asc{% endif %}">
+                                    Created On
+                                </th>
+                                <th data-name="updated_on" class="sortable  {% if default_sort_by == 'updated_on_desc'%}desc{% endif %}{% if default_sort_by == 'updated_on_asc'%}asc{% endif %}">
+                                    Updated On
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body"></tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center class="pagination-container">
+                        <ul class="pagination hide"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/deals_list.html' %}
+    {% include 'handlebars/pagination.html' %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+{% endblock %}

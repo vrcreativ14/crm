@@ -1,0 +1,29 @@
+{% load static %}
+
+{% with form=form %}
+    {% include 'motorinsurance/auto_quote_product_forms/generic_form.djhtml' %}
+{% endwith %}
+
+<script type="text/javascript">
+    var oman_vehicles_data = false;
+    var autoquote_form = $('#modal_auto_quote_form');
+    var make_id = '#modal_auto_quote_form #id_make';
+    var model_id = '#modal_auto_quote_form #id_model';
+
+    $(document).ready(function() {
+        var loader = autoquote_form.find('.content');
+        var endpoint = DjangoUrls['motorinsurance:auto-quote-dat-mmt-tree']();
+
+        $(make_id).change(function() {
+            Utilities.Form.updateSearchableSelectOptions(model_id, [], 'Select model');
+
+            $(model_id).prop('disabled', true).trigger('chosen:updated');
+
+            $.get(endpoint, {'make_id': $(this).val()}, function(data) {
+                Utilities.Form.updateSearchableSelectOptions(model_id, data['response'], 'Select Model');
+                $(model_id).prop('disabled', false).trigger('chosen:updated');
+            });
+        });
+
+    });
+</script>

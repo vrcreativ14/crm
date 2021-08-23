@@ -1,0 +1,96 @@
+{% extends 'accounts/settings_base.djhtml' %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}Users{% endblock %}
+{% block body_class %}company-agents{% endblock %}
+
+{% block settings_content %}
+
+    <div class="row justify-content-md-center p-t-60">
+        <div class="col-lg-8">
+            <div class="card m-b-20">
+                <div class="row">
+                    <div class="col col-12">
+                        <h4 class="header-title m-l-15 m-t-15 m-b-0">
+                            {{ workspace|title }} Insurance Workspace Users
+                        </h4>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row ml-2">
+                    <div class="col col-6">
+                       <select name="agent_list" id="id_agent_list">
+                            <option>Add your existing users to this workspace</option>
+                            {% for agent in remaining_users %}
+                                <option data-url="{% url "accounts:settings-workspace-users-add-edit" pk=agent.user.pk workspace=workspace_shortcode %}" value="{{ agent.user.pk }}">{{ agent.user.get_full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col col-6 text-right p-2">
+                        <small class="table_counts mr-4">{{ workspace_users.count }} records found</small>
+                    </div>
+                </div>
+                
+                {% if workspace_users %}
+                    <table class="table felix-table" cellspacing="0" width="90%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body">
+                            {% for agent in workspace_users %}
+                                <tr
+                                    id="tr_{{ agent.pk }}"
+                                    {% if agent.user_id == request.user.pk %}
+                                        data-url="{% url 'accounts:profile' %}"
+                                    {% else%}
+                                        data-url="{% url 'accounts:agent-edit' pk=agent.pk %}"
+                                    {% endif %}
+                                    >
+                                    <td class="pl-2">
+                                        {{ agent.user.get_full_name }}
+                                        <span class="text-muted"><br />{{ agent.user.username }}</span>
+                                    </td>
+                                    <td class="capitalize">
+                                        {{ agent.user.userprofile.get_assigned_role }}
+                                    </td>
+                                    <td class="link">
+                                        <a class="remove-agent" href="#" data-id="{{ agent.user.pk }}" data-url="{% url "accounts:settings-workspace-users-add-edit" pk=agent.user.pk workspace=workspace_shortcode %}">Remove</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <center>
+                        <p class="font-16 m-60 p-b-60">You do not have any user.</p>
+                    </center>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript">
+    $('#id_agent_list').change(function() {
+        $.get($('#id_agent_list option[value='+$(this).val()+']').data('url'), function(res) {
+            if(res.success)
+                window.location.reload()
+        });
+    });
+    $('.remove-agent').click(function() {
+        if(window.confirm("Are you sure you want to remove this user from the workspace?")) {
+            $.get($(this).data('url'), function(res) {
+                if(res.success)
+                    window.location.reload()
+            });
+        }
+    });
+    </script>
+{% endblock extra_js %}

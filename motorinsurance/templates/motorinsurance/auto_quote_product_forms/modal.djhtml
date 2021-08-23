@@ -1,0 +1,56 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+<div id="modal_auto_quote_form" class="felix-modal-container info-container">
+    <div class="felix-modal insurers">
+        <h1>
+            <a class="font-14 show-insurer-modal" href="javascript:" data-modal-close ><i class="ti-angle-left"></i> Choose Insurer</a>
+        </h1>
+        <div class="content squeeze-top">
+            {% if auto_quotable_insurers %}
+            <h2 class="capitalize"></h2>
+            <ul class="error"></ul>
+            <div class="products m-t-30">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form name="auto-quote-form" id="auto_quote_form" onsubmit="return false;">
+                            <div class="form-group hide">
+                                <div class="label m-b-5">Select an insurer *</div>
+                                <select name="auto_quote_insurer" class="auto-quote-insurer-field" required="" id="id_auto_quote_insurer">
+                                    <option value="" selected="selected">---------</option>
+                                    {% for insurer in auto_quotable_insurers %}
+                                        <option value="{{ insurer.pk }}">
+                                            {{ insurer.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="auto-quote-form-container"></div>
+                        </form>
+                    </div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-5">
+                        <div class="response"></div>
+                        <button type="button" class="hide add-selected-quoted-products btn btn-success btn-sm full-width">Add Selected Products</button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+                <center class="font-15 m-t-40">
+                    You don't have any product to auto quote.<br />
+                    Please contact support for more details.
+                </center>
+            {% endif %}
+        </div>
+        {% if auto_quotable_insurers %}
+        <div class="button-container">
+            <div class="float-left m-t-5">
+                <a data-modal-close class="font-13 underline add-another-product" href="javascript:">Add products manually</a>
+            </div>
+            <a data-modal-close tabindex="2" href="javascript:" class="m-l-10 btn btn-outline-secondary btn-md float-right">Close</a>
+            <button id="calculate-premiums" type="button" tabindex="1" class="get-auto-quotes btn btn-primary btn-md float-right">Calculate Premiums</button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% include 'handlebars/autoquoted_product_list.html' %}

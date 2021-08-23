@@ -1,0 +1,46 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+
+{% block page_title %}
+    Thank you. We've got your details.
+{% endblock %}
+
+{% block content %}
+    <div class="sub-container thankyou min-height-800">
+        <div class="inner-small-container">
+            <h1>Thank you for your submission.</h1>
+            <p>We will send you a copy shortly.<br>
+
+            {% if request.company.companysettings.phone %}
+                <hr class="blue-short">
+                <div class="clear"></div>
+                <div class="call-us">
+                    In a hurry? Give us a ring for immediate assistance!
+                    <span class="phone">
+                    <i class="fa fa-phone"></i> {{ request.company.companysettings.phone }}
+                </span>
+                </div>
+                <hr class="grey-tiny">
+                <div class="clear"></div>
+            {% endif %}
+
+            {% if request.company.companysettings.website %}
+                <a class="website" href="{{ request.company.companysettings.website }}">Please visit our website for more information</a>
+            {% endif %}
+
+            <p class="note">
+                {% if request.company.companysettings.company_timings %}
+                    {{ request.company.companysettings.company_timings }}
+                {% else %}
+                    Our business hours are Sunday to Thursday, 9 am to 6 pm. We do our best to respond as
+                    quickly as possible but enquiries received after 5pm will typically be responded to the next business
+                    day.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript">
+    document.cookie = `__felix_cf_s_url=;Max-Age=0; path=/;`;
+    </script>
+
+{% endblock %}

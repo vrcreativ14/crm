@@ -1,0 +1,238 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load permission_tags %}
+
+{% block page_title %}People{% endblock %}
+{% block body_class %}customers{% endblock %}
+{% block current_nav %}customers{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">People</h1>
+            <button type="button" data-felix-modal="modal_create_customer" class="create-record btn btn-primary btn-md btn-list-create">
+                Create New
+            </button>
+
+            <div id="modal_create_customer" class="felix-modal-container">
+                <div class="felix-modal">
+                    <h1>New Customer</h1>
+
+                    <form action="{% url 'customers:new' %}" name="customer_form" id="customer_form" method="post" validate
+                          data-module-name="Customer">
+                        {% csrf_token %}
+                        <div class="content squeeze">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label class="text-muted">Full Name *</label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        {{ customer_form.name }}
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label class="text-muted">Email</label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        {{ customer_form.email }}
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label class="text-muted">Phone</label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        {{ customer_form.phone }}
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label class="text-muted">Gender</label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        {{ customer_form.gender }}
+                                    </div>
+                                </div>
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <label class="text-muted">Nationality</label>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        {{ customer_form.nationality }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-container">
+                            <a data-modal-close href="javascript:" class="btn btn-outline-secondary  btn-md">Close</a>
+                            <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                                <span>Save</span>
+                                <div class="ball-spinner"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <span class="felix-table-action-buttons">
+                {% comment %}
+                    <a href="javascript:" class="open-record btn btn-md btn-outline-primary">
+                        Open
+                    </a>
+                {% endcomment %}
+                {% if is_admin %}
+                <a href="javascript:" class="delete-record btn btn-md btn-outline-primary">
+                    Delete
+                </a>
+                {% endif %}
+                <a href="javascript:" data-felix-modal="modal_merge_customer" class="merge-record btn btn-md btn-outline-primary">
+                    Merge
+                </a>
+            </span>
+
+            <div class="table-filters">
+                <form action="{% url 'customers:customers' %}" method="get">
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <div class="filter-trigger">
+                        <i class="ti-filter"></i> <span class="hide badge badge-info badge-pill noti-icon-badge filter-count">0</span>
+                    </div>
+
+                    {% if user|can:'export_customers' %}
+                    <div class="options-table float-right">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           href="#"
+                           role="button"
+                           aria-haspopup="false" aria-expanded="false">
+                            <i class="ti-settings"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item export" data-url="{% url 'customers:export' %}" href="javascript:">
+                                <i class="ti-export m-r-7"></i> Export to CSV
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="sorting-table float-right hide">
+                        <a class="dropdown-toggle" data-toggle="dropdown"
+                           href="#"
+                           role="button"
+                           aria-haspopup="false" aria-expanded="false">
+                            <i class="ti-arrows-vertical"></i><i class="ti-align-left"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item {% if request.GET.sort_by == 'created_on_asc'%}active{% endif %}" data-val="created_on_asc" href="javascript:">
+                                Created On (Asc.)
+                            </a>
+                            <a class="dropdown-item {% if not request.GET.sort_by %}active{% endif %}" data-val="" href="javascript:">
+                                Created On (Desc.)
+                            </a>
+                            <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_asc'%}active{% endif %}" data-val="updated_on_asc" href="javascript:">
+                                Updated On (Asc.)
+                            </a>
+                            <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_desc'%}active{% endif %}" data-val="updated_on_desc" href="javascript:">
+                                Updated On (Desc.)
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="sort-by-field hide">
+                        {{ search_form.sort_by }}
+                    </div>
+                    <div class="open-search-field">
+                        <span class="cross"><i class="ti-close"></i></span>
+                        {{ search_form.search_term }}
+                    </div>
+
+                    <div class="search-popup">
+                        <div class="title">Filters</div>
+                        <div class="row">
+                            
+                            <div class="col-lg-6">
+                                <label>{{ search_form.created_on_after.label }}</label>
+                                {{ search_form.created_on_after }}
+                            </div>
+                            <div class="col-lg-6">
+                                <label>{{ search_form.created_on_before.label }}</label>
+                                {{ search_form.created_on_before }}
+                            </div>
+                            <div class="col-lg-6">
+                                <label>{{ search_form.status.label }}</label>
+                                {{ search_form.status }}
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <a href="javascript:" class="search-clear">Clear</a>
+                            <div class="float-right">
+                                <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                <button type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="row">
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table class="table no-footer felix-table opacity" cellspacing="0" width="100%" data-index="{{ algolia_env }}_customers_{{ company.pk }}" data-mode='index'>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="felix-checkbox parent">
+                                        <input class="select-record-all" type="checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th data-name="name">
+                                    Name
+                                </th>
+                                <th data-name="email">
+                                    Email
+                                </th>
+                                <th data-name="phone">
+                                    Phone
+                                </th>
+                                <th data-name="nationality">
+                                    Nationality
+                                </th>
+                                <th data-name="created_on" class="sortable {% if default_sort_by == 'created_on_desc'%}desc{% endif %}{% if default_sort_by == 'created_on_asc'%}asc{% endif %}">
+                                    Created On
+                                </th>
+                                <th data-name="updated_on" class="sortable  {% if default_sort_by == 'updated_on_desc'%}desc{% endif %}{% if default_sort_by == 'updated_on_asc'%}asc{% endif %}">
+                                    Updated On
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body"></tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center class="pagination-container">
+                        <ul class="pagination hide"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/customers_list.html' %}
+    {% include 'handlebars/pagination.html' %}
+    {% include 'customers/components/customer_merge_form_modal.djhtml' %}
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+{% endblock %}

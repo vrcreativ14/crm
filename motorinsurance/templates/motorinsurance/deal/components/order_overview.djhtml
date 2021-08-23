@@ -1,0 +1,94 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+<div class="order-overview deal-process">
+	{% if not has_order %}
+	    <p class="empty-area">Here, you process the payment for the selected product, upload necessary documents, and prepare the policy for the deal</p>
+	{% else %}
+
+		<div class="order-summary create-order hide">
+	    	<div class="heading m-b-5">Update Order</div>
+			<p>Your order was created {{ deal.get_order.created_on|naturaltime }}. You can update your order and resend it to your customer</p>
+			{% include 'motorinsurance/deal/components/deal_order_form.djhtml'%}
+		</div>
+		<div class="order-summary preview">
+		    <div class="heading m-b-5">Order Summary {% if modification_allowed %}<a href="#" class="edit-order font-12 fw-400 m-l-10">Edit Order</a>{% endif %}</div>
+			<p>The order was created. You need to prepare the policy and send it to the customer.</p>
+
+			<div class="products-preview">
+				<div class="row no-hover">
+					<div class="product-logo-container col-lg-2 col-md-3 m-l-10">
+						<span class="spacer"></span>
+						<img src="{{ deal.get_order.selected_product.product.get_logo }}">
+					</div>
+					<div class="details col-lg-6 col-md-6 col-sm-8">
+						<div class="heading light">{{ deal.get_order.selected_product.product.name }}</div>
+						<div class="text-muted font-12">Sum Insured: {{ companysettings.get_currency_display }} {{ deal.vehicle_insured_value|intcomma }}</div>
+						<div class="text-muted font-12">Insurer Quote Reference: {% if deal.get_order.selected_product.insurer_quote_reference %} {{ deal.get_order.selected_product.insurer_quote_reference }}{% else %}-{% endif %}</div>
+						<ul class="icons">
+							<li><i class="{% if deal.get_order.selected_product.agency_repair %}ti-check yes{% else %}ti-close no{% endif %}"></i> Agency </li>
+							<li><i class="{% if deal.get_order.selected_product.ncd_required %}ti-check yes{% else %}ti-close no{% endif %}"></i> NCD Required </li>
+						</ul>
+
+						{% if deal.get_order.selected_product.default_add_ons %}
+							<span class="add-ons-preview-label font-10 c-vgrey">Default add-ons: </span> 
+							{% for addon in deal.get_order.selected_product.default_add_ons %}
+								<span title="default add-on" class="badge badge-default badge-font-light m-t-10">{{ addon|capfirst|replace_with_space:'_' }}</span>
+							{% endfor %}
+							<br />
+						{% endif %}
+						{% if deal.get_order.selected_add_ons %}
+							<span class="add-ons-preview-label font-10 c-vgrey">Paid add-ons: </span> 
+							{% for addon in deal.get_order.selected_add_ons %}
+								<span title="default add-on" class="badge badge-default badge-font-light m-t-10">{{ addon|capfirst|replace_with_space:'_' }}</span>
+							{% endfor %}
+
+						{% endif %}
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-12">
+						<div class="float-right">
+							<div class="c-vlgrey font-13 t-center">Total Premium:</div>
+							<div class="c-bgrey font-23 t-center">{{ companysettings.get_currency_display }} {{ deal.get_order.payment_amount|intcomma }}</div>
+							<div class="m-t-10 order-status-display">
+								<a class="{{ deal.get_order.get_status_display|slugify }} nav-link dropdown-toggle arrow-none nav-user" data-toggle="dropdown"
+				                   href="javascript:"
+				                   role="button"
+				                   aria-haspopup="false" aria-expanded="false">
+				                    {{ deal.get_order.get_status_display }}
+				                </a>
+								<div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+				                    <a data-value="paid" class="dropdown-item" href="javascript:">Paid</a>
+				                    <a data-value="unpaid" class="dropdown-item" href="javascript:">Unpaid</a>
+				                </div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<br><br>
+				<div class="copy-link-container">
+					<span class="link-label">Document upload link</span>
+					<div class="link">
+						<input id="input_doc_url" readonly="readonly" type="text" value="{{ absolute_document_upload_url }}">
+					</div>
+					<div class="float-right">
+                        <div class="copy felix_tooltip">
+                            <span class="tooltiptext">Click to copy</span>
+                            <a onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="input_doc_url" class="font-12"><i class="ti-files"></i></a>
+                        </div>
+                        <div class="open felix_tooltip">
+                            <span class="tooltiptext">Click to open</span>
+                            <a href="{{ absolute_document_upload_url }}" target="_blank" class="m-l-5 float-right"><i class="ti-new-window"></i></a>
+                        </div>
+                    </div>
+				</div>
+			</div>
+
+			<div class="m-b-50">&nbsp;</div>
+			{% if not deal.policy %}
+			<!-- Policy Form -->
+			{% include 'motorinsurance/deal/components/deal_policy_form.djhtml'%}
+			{% endif %}
+		</div>
+	{% endif %}
+</div>

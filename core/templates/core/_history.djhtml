@@ -1,0 +1,23 @@
+{% if history %}
+    <ul class="trail note-trail">
+        {% for item in history %}
+            <li class="two-liner {% if item.type == 'email' %}email{% else %}history{% endif %}">
+                <div class="label">
+                    {{ item.content|safe }}
+                    {% if item.file %}
+                         <a target="_blank" href="{{ item.file }}">View File</a>
+                    {% endif %}
+                </div>
+                <div class="text-muted">
+                    {{ item.date }} {% if item.user %}by {{ item.user.username|title }}{% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <ul class="trail note-trail hide"></ul>
+    <br><br>
+    <div class="small-note note-trail">
+        No history for this deal.
+    </div>
+{% endif %}

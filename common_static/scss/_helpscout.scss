@@ -1,0 +1,40 @@
+/*
+ Helpscout related styles
+ */
+ #modal_helpscout {
+ 	a.helpscout_url {
+		float: right;
+		margin: 10px;
+		position: absolute;
+		right: 0;
+		top: 0;
+ 	}
+
+	.helpscout-conversation {
+		margin-bottom: 50px; 
+		.title {
+			border-bottom: 1px solid #DDD;
+			padding-bottom: 10px;
+			background-color: #EEE;
+			padding: 2px 10px;
+		}
+	    .email-body {
+	        padding: 10px;
+	        margin: 10px 0;
+	        max-width: 100%;
+	        overflow-x: auto;
+
+	        img {
+	        	max-width: 90%;
+	        }
+	    }
+
+	    hr {
+	    	// width: 50%;
+	    	display: none;
+	    	text-align: center;
+	    	margin: 50px auto;
+	    	border-top: 1px solid #DDD;
+	    }
+	}
+}

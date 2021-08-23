@@ -1,0 +1,109 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Dashboard{% endblock %}
+{% block current_nav %}dashboard{% endblock %}
+
+{% block page_header %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <h4 class="page-title"><i class="mdi mdi-view-dashboard"></i> Dashboard</h4>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container squeeze">
+        <div class="row m-b-20 justify-content-end">
+            <div class="col-4">
+                Filter by user:
+                <select id="users">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user.pk }}" {% if selected_user_id == user.pk %}selected{% endif %}>{{ user.get_full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Motor Deals Created</h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="bar"
+                        data-endpoint="{% url 'motorinsurance:dashboard-deals-created' %}"
+                        data-params="{{ params }}"
+                        data-label="Motor Deals Created"></canvas>
+                    <div class="description">Sum of all the new deals created in timeframe</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Motor Orders Created</h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="bar"
+                        data-endpoint="{% url 'motorinsurance:dashboard-orders-created' %}"
+                        data-params="{{ params }}"
+                        data-label="Motor Orders Created"></canvas>
+                    <div class="description">Sum of all the new motor orders in timeframe</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Orders</h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="line"
+                        data-endpoint="{% url 'motorinsurance:dashboard-orders-premium' %}"
+                        data-params="{{ params }}"
+                        data-tooltip_prefix=" {{ companysettings.get_currency_display }}"
+                        data-label="Total Premium"></canvas>
+                    <div class="description">Sum of all the order premiums</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Sales Conversion Rate <span class="help-icon" title="The sales conversion rate is calculated using two numbers. We take the number of new deals created in a specific month, and then the number of orders created from those deals. We divide the number of orders by the number of new deals to calculate the sale conversion rate."></span></h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="line"
+                        data-fill="false"
+                        data-tooltip_prefix="%"
+                        data-endpoint="{% url 'motorinsurance:dashboard-sales-conversion-rate' %}"
+                        data-params="{{ params }}"
+                        data-label="Conversion Rate"></canvas>
+                    <div class="description">No. of Orders Created / No. of Deals Created</div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        $('#users').change(function() {
+            let url = "{% url 'accounts:dashboard' %}";
+            if($(this).val())
+                url = url + '?user=' + $(this).val();
+
+            window.location = url;
+        });
+        </script>
+        <!-- end row -->
+    </div> <!-- end container -->
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "plugins/chartjs/chart.js" %}"></script>
+{% endblock %}

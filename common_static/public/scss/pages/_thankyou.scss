@@ -1,0 +1,178 @@
+/*********************
+   Thankyou Styling
+   ********************/
+.thankyou {
+	@include breakpoint(mobile-tablet) {
+		text-align: center;
+	}
+	h1 {
+		font-size: 26px;
+		font-weight: 700;
+		color: $felix-color-primary;
+		margin-top: 100px;
+		@include breakpoint(mobile-tablet) {
+			font-weight: 600;
+			font-size: 24px;
+			margin-top: 40px;
+		}
+
+	}
+	p {
+		font-weight: 600;
+		font-size: 22px;
+		color: #B5B5B5;
+		margin: 20px 0;
+
+		@include breakpoint(mobile-tablet) {
+			font-weight: 500;
+			font-size: 20px;
+		}
+	}
+	.icon {
+		height: 125px;
+		width: 300px;
+		margin: 40px 0;
+		border-bottom: 3px solid #C3C3C3;
+		@include breakpoint(mobile-tablet) {
+			width: 100%;
+			margin: 0px 0 40px 0; 
+		}
+
+		.image {
+			position: absolute;
+			top: 10px;
+			@include breakpoint(mobile-tablet) {
+				left: 0;
+				right: 0;
+				margin: auto;
+				width: 120px;
+				top: 20px;
+			}
+		}
+	}
+	hr.blue-short {
+		border: none;
+		border-top: 3px solid $felix-color-primary;
+		width: 75px;
+		float: left;
+		@include breakpoint(mobile-tablet) {
+			float: none;
+			width: 50%;
+		}
+	}
+
+	hr.grey-tiny {
+		border: none;
+		border-top: 3px solid #B5B5B5;
+		width: 17px;
+		float: left;
+		@include breakpoint(mobile-tablet) {
+			border-top: 3px solid $felix-color-primary;
+			width: 75px;
+			float: none;
+		}
+	}
+
+	.call-us {
+		color: #505050;
+		font-weight: 700;
+		font-size: 22px;
+		margin: 10px 0;
+		@include breakpoint(mobile-tal) {
+			margin-top: 40px;
+		}
+		.phone {
+			color: $felix-color-primary;
+			margin-left: 20px;
+			@include breakpoint(mobile-tablet) {
+				display: block;
+				background-position-x: 27%;
+				margin: 0;
+			}
+		}
+	}
+	.note {
+		display: block;
+		font-size: 16px;
+		color: #B5B5B5;
+		width: 70%;
+		margin-top: 50px;
+		@include breakpoint(mobile-tablet) {
+			margin-top: 40px;
+			width: 100%;
+			font-weight: 500;
+		}
+	}
+	.meet-felix-team {
+		color: #FFF !important;
+		text-transform: inherit;
+		font-weight: 600;
+		margin: 20px 0px 0px 0px;
+	}
+
+	.website {
+		font-size: 16px;
+		color: $felix-color-primary;
+		margin-top: 50px;
+		display: inline-block;
+		border-bottom: 1px dotted;
+		&:hover {
+			text-decoration: none;
+			border-bottom: 1px dashed;
+		}
+
+		@include breakpoint(mobile) {
+			margin-top: 30px;
+			font-weight: 500;
+			border: none;
+			text-decoration: underline;
+			&:hover {
+				text-decoration: underline;
+				border-bottom: none;
+			}
+		}
+	}
+}
+
+.justify-content-center.failed {
+	text-align: center;
+	h1 {
+		font-size: 22px;
+	}
+
+	i {
+		font-size: 72px;
+		color: #d9534f;
+		margin: 20px 0;
+	}
+}
+
+.justify-content-center.thankyou {
+	text-align: center;
+	min-height: 500px;
+	h1 {
+		font-size: 24px;
+		font-weight: 400;
+		color: $font-color; 
+
+	}
+
+	i {
+		font-size: 72px;
+		color: green;
+		margin: 20px 0;
+	}
+
+	p {
+		font-size: 18px;
+		color: $font-color;
+		font-weight: 400;
+	}
+}
+
+.min-height-800 {
+	min-height: 800px;
+	@include breakpoint(mobile-tablet) {
+		min-height: auto;
+	}
+}

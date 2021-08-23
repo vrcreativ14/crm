@@ -1,0 +1,29 @@
+{% load static %}
+<div id="modal_add_note" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>New Note</h1>
+        <form id="note_form" method="post" action="{{ post_url }}">
+            {% csrf_token %}
+            <div class="content has-bg note">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="">Note Content *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea placeholder="Enter note content here" class="form-control modal-textarea" name="content" id="id_content" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide-md btn-md">
+                    <span>Save Note</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
