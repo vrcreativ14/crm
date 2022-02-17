@@ -1,0 +1,309 @@
+{% load static %}
+<div id="modal_create_deal" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>New Deal</h1>
+        <form action="{% url 'mortgage:new-deals' %}" name="deal_form" id="deal_form" method="post" data-module-name="Deal" novalidate onsubmit="deal_form_validaion(event,this)">
+            {% csrf_token %}
+            <div class="content squeeze">
+                <div class="form-group">
+                    {% if not customer %}
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="autocomplete-container">
+                                <input
+                                    type="text"
+                                    data-url="{% url 'customers:customers-search' %}" 
+                                    data-target="id_customer"
+                                    class="autocomplete-field form-control" 
+                                    id="id_customer_name" 
+                                    name="customer_name" autocomplete="off" />
+                            </div>
+                            <input type="hidden" name="customer" id="id_customer" />
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if customer %}
+                    <input type="hidden" name="customer" id="id_customer" value={{customer.pk}} />
+                    <input type="hidden" name="customer_name" id="name_customer" value={{customer.name}} />
+                    <input type="hidden" name="source" id="source_customer" value="people_page" />
+                    {% endif %}
+                    <br>
+                    <div class="row if-customer" id="customer_email_show" id="customer_email">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer Email *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.customer_email }}
+                        </div>
+                    </div>
+                    <br class="if-customer">
+                    <div class="row if-customer" id="customer_phone_show" id="customer_phone">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer Phone *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.customer_phone }}
+                        </div>
+                    </div>
+                    <br class="if-customer">
+                    <div class="row ">
+                        <div class="col-lg-3 p-0">
+                            <label class=""> Deal Stage *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.stage }}
+
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Deal Type</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.deal_type }}
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Status *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.status }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Property Price (AED)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.property_price }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Down Payment (AED) </label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.down_payment }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Expat</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.expat }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Tenure (Months)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.tenure }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Referrer</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.referrer }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                    <span>Save</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal_create_mortgage_deal" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>New Deal</h1>
+
+        <form action="{% url 'mortgage:new-deals' %}" name="deal_form" id="mortgage_deal_form" method="post" data-module-name="Deal" novalidate>
+            {% csrf_token %}
+            <div class="content squeeze">
+                <div class="form-group">
+                    <input type="hidden" name="customer" id="id_customer" value={{customer.pk}} />
+                    <input type="hidden" name="customer_name" id="name_customer" value={{customer.name}} />
+                    <input type="hidden" name="source" id="source_customer" value="people_page" />
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="autocomplete-container">
+                                <input
+                                    type="text"
+                                    data-url="{% url 'customers:customers-search' %}" 
+                                    data-target="id_customer"
+                                    class="autocomplete-field form-control" 
+                                    id="id_customer_name" 
+                                    name="customer_name" autocomplete="off" />
+                            </div>
+                            <input type="hidden" name="customer" id="id_customer" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row if-customer" id="customer_email_show" id="customer_email">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer Email *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.customer_email }}
+                        </div>
+                    </div>
+                    <br class="if-customer">
+                    <div class="row if-customer" id="customer_phone_show" id="customer_phone">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer Phone *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.customer_phone }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class=""> Deal Stage *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.stage }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Deal Type</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.deal_type }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Status *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.status }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Property Price (AED)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.property_price }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Down Payment (AED)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.down_payment }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Expat</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.expat }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Tenure (Months)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.tenure }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Referrer</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ mortgage_deal_form.referrer }}
+                                <span class='mortgage-deal-form-error'>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                    <span>Save</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% block extrajs %}
+<script>
+
+var el = document.querySelector('input[name="property_price"]');
+    el.addEventListener('keyup', function (event) {
+    if (event.which >= 37 && event.which <= 40) return;
+      this.value = this.value.replace(/\D/g, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        });
+
+var elt = document.querySelector('input[name="down_payment"]');
+elt.addEventListener('keyup', function (event) {
+    if (event.which >= 37 && event.which <= 40) return;
+      this.value = this.value.replace(/\D/g, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        });
+
+    $('#id_customer_name').change( function(){
+        if ($('#id_customer').val() == "" ){
+            $(".if-customer").show()
+        }
+    })
+</script>
+{% endblock %}

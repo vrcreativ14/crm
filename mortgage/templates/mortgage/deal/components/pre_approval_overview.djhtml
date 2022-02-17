@@ -1,0 +1,65 @@
+{% extends "mortgage/deal/components/stage_form.html" %}
+{% load static %}
+{% load humanize %}
+{% load mortgage %}
+{% block head %}
+{% block extra_css %}
+<style>
+/* New CSS */
+.mortgage-quote-details .table img{
+    height: 50px;
+    width: auto;
+}
+.mortgage-quote-details .table tr td{
+    text-align: right;
+}
+</style>
+{% endblock %}
+<div class="mortgage-quote-details deal-overview deal-process pre-approval display">
+
+    <div class="row mb-4">
+        <div class="col-4 text-left">
+            <div class="heading text-capitalize">Sub stages</div>
+            <ul class="sub-stages deal-stages-breadcrumb mt-4">
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Waiting for Pre-Approval Documents" key="Waiting for Pre Approval Documments" stage="preApproval" stage_number="2" %}
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Sent to Bank for Approval" key="Sent to Bank for Approval" stage="preApproval" stage_number="2" %}
+                <li class="d-none"></li>
+            </ul>
+        </div>
+        <div class="col-8">
+            {% include 'mortgage/deal/components/quick_customer_link.djhtml' %}
+        </div>
+    </div>
+
+    <div class="text-left">
+        <div class="sub-stages-content pre-approval-doc-content" {% if deal.current_sub_stage.sub_stage != 'Waiting for Pre Approval Documments' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8">
+                    <p>Waiting for the client to upload the pre-approval documents</p>
+                    <button type="button" class="mt-4 ml-0 btn-nexus btn-nexus-blue" onclick="deal_sub_tages_processor('pre-approval-bank-content')">Next</button>
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-stages-content pre-approval-bank-content" {% if deal.current_sub_stage.sub_stage != 'Sent to Bank for Approval' and deal.stage == 'preApproval' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8">
+                    <p>Once the pre-approval documents have been received from the bank, send to the client and move to the valuation stage.</p>
+                    {% block button %}
+                        {% if deal.stage == "preApproval" %}
+                            <button type="submit" class="ml-0 btn-nexus btn-nexus-blue">Next</button>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

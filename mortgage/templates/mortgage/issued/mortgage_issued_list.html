@@ -1,0 +1,308 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}Mortgage Issued{% endblock %}
+{% block body_class %}Issued{% endblock %}
+{% block current_nav %}Issued{% endblock %}
+
+{% block content %}
+     <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Issued</h1>
+            <button type="button" data-felix-modal="modal_create_issued" class="d-none create-record btn btn-primary btn-md btn-list-create">
+                Create New
+            </button>
+            <div class="float-right policies-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+            {% include 'mortgage/issued/new_issued_form.djhtml' %}
+            <span class="felix-table-action-buttons"></span>
+            <div class="clear"></div>
+
+       <div class="table-filters" >
+                <form method="get">
+                   <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="sort_by" id="id_sort_by" value="{{ sort_by }}" />
+                    <input type="hidden" name="expiry" id="id_expiry" value="{{ expiry }}" />
+                    <input type="hidden" name="is_filtered" id="is_filter_applied" value="0" />
+
+                   <div class="quick-filters">
+                       <!-- <span class="title">Quick Filters:</span> -->
+                       <!-- <button data-field="id_expiry" data-type="all" type="button" class="{% if expiry == '' or expiry == 'all' %}active {% endif %} btn btn-white">All</button>
+                        <button data-field="id_expiry" data-type="active" type="button" class="{% if expiry == 'active' %}active {% endif %}btn btn-white">Active</button>
+                        <button data-field="id_expiry" data-type="expired" type="button" class="{% if expiry == 'expired' %}active {% endif %}btn btn-white">Expired</button> -->
+                    </div>
+
+                    <div class="table-filters">
+                        <span class="title" style="float: left;margin-right: 5px;">Quick Filter:</span>
+                        <div class="filter-trigger">
+                            <i class="ti-filter"></i> <span class="hide badge badge-info badge-pill noti-icon-badge filter-count">0</span>
+                        </div>
+                        {% comment %} {% if is_admin %} {% endcomment %}
+                        <div class="options-table float-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-settings"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" id="export-issued-csv" href="javascript:">
+                                    <i class="ti-export m-r-7"></i> Export to CSV
+                                </a>
+                                {% comment %} <a class="dropdown-item import" href="#" data-felix-modal="modal_policy_import">
+                                    <i class="ti-import m-r-7"></i> Import from CSV
+                                </a> {% endcomment %}
+                            </div> 
+                        </div>
+                        {% comment %} {% endif %} {% endcomment %}
+                        <!-- <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div> -->
+                        <!-- <span class="title">Quick Filters:</span> -->
+                      <div class="search-popup" style="padding:20px;">
+                            <div class="title">Filters</div>
+                            <div class="row">
+                                <!-- <div class="col-lg-6">
+                                    <label>{{ search_form.products.label }}</label>
+                                    {{ search_form.products }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.status.label }}</label>
+                                    {{ search_form.status }}
+                                </div> -->
+                               <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_after.label }}</label>
+                                    {{ search_form.created_on_after }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_before.label }}</label>
+                                    {{ search_form.created_on_before }}
+                                </div>
+                            </div>
+                            <div class="" style="margin-top: 15px;">
+                                <a href="javascript:" class="search-clear">Clear</a>
+                                <div class="float-right">
+                                    <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                    <button id="filter-issued-deals" type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table class='table no-footer felix-table dataTable'
+                        data-name='issued'>
+                        <thead>
+                            <tr>
+                                {# <th data-name="stage" class="p-l-15">Stage</th>#}
+                                <th data-name="issued__status" class="p-l-15">Status</th>
+                                <th data-name="bank" class="">Bank</th>
+                                <th data-name="bank_reference_number" class="">Bank Reference Number</th>
+                                <th data-name="loan_amount" class="">Loan Amount</th>
+                                <th data-name="property_price" class="">Property Price</th>
+                                <th data-name="tenure" class="">Tenure (Months)</th>
+                                <th data-name="ltv" class="">LTV(%)</th>
+                                <th data-name="owner_name" class="">Customer</th>
+{#                                <th data-name="draft" class="">Draft</th>#}
+                                {% comment %} <th data-name="property_price" class="">Property Price</th> {% endcomment %}
+{#                                <th data-name="sum_insured" class="">Sum Insured</th>#}
+                                <th
+                                    data-name="issue_start_date"
+                                    class="sortable {% if sort_by == '' or sort_by == 'issue_start_date'%}desc{% endif %}{% if sort_by == 'issue_start_date'%}asc{% endif %}">
+                                    Created On
+                                </th>
+                                <th>Updated On</th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body">
+                        {% for issued in issued_lists %}
+                            <tr>
+                                {#<td class="capitalize">{{ issued.stage }}</td>#}
+                                <td class="capitalize">{{ issued.status }}</td>
+                                <td>
+                                    {% comment %} {% if issued.mortgage_quote_deals.bank.last %}
+                                        {{ issued.mortgage_quote_deals.bank.last }}
+                                    {% else %}
+                                        -
+                                    {% endif %} {% endcomment %}
+                                    {% if issued.deal_bank.bank %}
+                                        {{ issued.deal_bank.bank.name }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ issued.deal_bank.bank_reference_number }}</td>
+                                <td>{{ issued.deal_issued.loan_amount | intcomma }}</td>
+                                <td>{{ issued.deal_issued.property_price | intcomma }}</td>
+                                <td>{{ issued.deal_issued.tenure }}</td>
+                                <td> {% if issued.deal_issued.l_tv %} 
+                                    {{ issued.deal_issued.l_tv }}
+                                    {% endif %}
+                                </td>
+                                <td class="capitalize">{{ issued.customer.name }}</td>
+                                {% comment %} <td class="capitalize">{{ issued.property_price | intcomma }}</td> {% endcomment %}
+                                <td>{{ issued.created_date }}</td>
+                                <td>{{ issued.updated_on }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center class="pagination-container">
+                        <ul class="pagination hide"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/pagination.html' %}
+{#    {% include 'handlebars/policies_list.html' %}#}
+    
+{#    {% include 'handlebars/policy_modal.html' %}#}
+
+{#    {% include 'motorinsurance/deal/components/deal_policy_modal.djhtml' %}#}
+{#    {% include 'motorinsurance/deal/components/policy_import_modal.djhtml' %}#}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+     $(document).ready( function () {
+
+        document.querySelector('#export-issued-csv').addEventListener('click', function(){
+            console.log('export')
+            let is_filtered = document.querySelector('#is_filter_applied').value
+            let created_on_after = is_filtered == '1' ? document.getElementById('id_created_on_after').value : ''
+            let created_on_before = is_filtered == '1' ? document.getElementById('id_created_on_before').value : ''
+            let sort_by = document.getElementById('id_sort_by').value
+            window.location.href = `/mortgage/issued/export/?created_on_before=${created_on_before}&created_on_after=${created_on_after}&sort_by=${sort_by}`
+        })
+
+        const sendSearchRequest = function(){
+            debugger
+        document.querySelector('.felix-table').classList.add('opacity') 
+        let is_filtered = document.querySelector('#is_filter_applied').value
+        let created_on_after = is_filtered == '1' ? document.getElementById('id_created_on_after').value : ''
+        let created_on_before = is_filtered == '1' ? document.getElementById('id_created_on_before').value : ''
+        let sort_by = document.getElementById('id_sort_by').value
+
+            $.ajax({
+         type: "GET",
+         url: `/mortgage/issued/filter/?created_on_before=${created_on_before}&created_on_after=${created_on_after}&sort_by=${sort_by}`,        
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         success: function(result){
+             console.log(result);
+             let issued_table = document.querySelector('.felix-table-body')
+             issued_table.innerHTML = ''
+             let bank_name = ''
+             let bank_reference_number = ''
+             let loan_amount = ''
+             let property_price = ''
+             let tenure = ''
+             let ltv = ''
+             for(let i = 0; i < result.length; i++) {                 
+                 let obj = result[i];
+                 let row = issued_table.insertRow(0)
+                 let cell1 = row.insertCell(0);
+                 cell1.innerHTML = result[i]['status']
+                 let cell2 = row.insertCell(1);
+                 
+                 if(result[i]['order'].length > 0){
+                    if(result[i]['order'][0]['bank'])
+                        bank_name = result[i]['order'][0]['bank']
+                    if(result[i]['order'][0]['bank_reference_number'])
+                        bank_reference_number = result[i]['order'][0]['bank_reference_number']
+                 }
+                 cell2.innerHTML = bank_name
+                 let cell3 = row.insertCell(2);
+                 cell3.innerHTML = bank_reference_number
+
+                 if(result[i]['issued'].length > 0){
+                    if(result[i]['issued'][0]['property_price'])
+                        property_price = result[i]['issued'][0]['property_price']
+                    if(result[i]['issued'][0]['loan_amount'])
+                        loan_amount = result[i]['issued'][0]['loan_amount']
+                    if(result[i]['issued'][0]['tenure'])
+                        tenure = result[i]['issued'][0]['tenure']
+                    if(result[i]['issued'][0]['l_tv'])
+                        ltv = result[i]['issued'][0]['l_tv'] == 'None' ? '' : result[i]['issued'][0]['l_tv']
+                 }
+
+                 let cell4 = row.insertCell(3);
+                 cell4.innerHTML = loan_amount
+
+                 let cell5 = row.insertCell(4);
+                 cell5.innerHTML = property_price
+
+                 let cell6 = row.insertCell(5);
+                 cell6.innerHTML = tenure
+
+                 let cell7 = row.insertCell(6);
+                 cell7.innerHTML = ltv
+
+                 let cell8 = row.insertCell(7);
+                 cell8.innerHTML = result[i]['customer']
+
+                 let cell9 = row.insertCell(8);
+                 cell9.innerHTML = result[i]['created_date']
+
+                 let cell10 = row.insertCell(9);
+                 cell10.innerHTML = result[i]['updated_on']
+                 bank_name = ''
+                 bank_reference_number = ''
+                 loan_amount = ''
+                 property_price = ''
+                 tenure = ''
+                 ltv = ''
+                 console.log(obj);
+                                 
+            }
+            document.querySelector('table.felix-table').classList.remove('opacity')
+            },
+            error:function(errors){
+                document.querySelector('table.felix-table').classList.remove('opacity')
+                console.log(error)
+                Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+            }
+        });
+        }
+
+        
+        document.querySelector('.sortable').addEventListener('click', function(){            
+            let is_asc = document.querySelector('.sortable').classList.contains('asc')
+            let is_desc = document.querySelector('.sortable').classList.contains('desc')
+            if (is_asc)
+            document.getElementById('id_sort_by').value = 'asc'
+            else
+            document.getElementById('id_sort_by').value = 'desc'
+            sendSearchRequest()
+        })
+
+        
+        document.querySelector('#filter-issued-deals').addEventListener('click', function(){
+                
+        document.querySelector('#is_filter_applied').value = '1'
+        sendSearchRequest()   
+    })
+
+     });
+</script>
+{#    <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>#}
+{#    <script type="text/javascript">#}
+{#    var __current_timestamp = {{current_timestamp}};#}
+{#    </script>#}
+{% endblock %}

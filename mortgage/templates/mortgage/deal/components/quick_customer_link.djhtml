@@ -1,0 +1,41 @@
+{% load static %}
+<div class="copy-link-container float-right">
+    <span class="link-label text-capitalize">{{deal.stage}} Link</span>
+    {% if deal.stage != "preApprovala" and deal.stage != "valuationa" %}
+    <div class="link">
+        <input id="input_quote_url2" readonly="readonly" type="text" value="{{request.get_host}}/mortgage-quote/{{deal.mortgage_quote_deals.reference_number}}/{{deal.pk}}/">
+    </div>
+    <div class="float-right">
+        <div class="copy felix_tooltip">
+            <span class="tooltiptext">Click to copy</span>
+            <a onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="input_quote_url2"><i class="ti-files"></i></a>
+        </div>
+        <div class="open felix_tooltip">
+            <span class="tooltiptext">Click to open</span>
+            <a href="/mortgage-quote/{{deal.mortgage_quote_deals.reference_number}}/{{deal.pk}}/" target="_blank" class="m-l-5 float-right"><i class="ti-new-window"></i></a>
+        </div>
+        <div class="open felix_tooltip d-none">
+            <span class="tooltiptext">Download PDF</span>
+            <a href="{{request.get_host}}/mortgage-quote/{{deal.pk}}/" target="_blank" class="m-l-5 float-right"><i class="ti-download"></i></a>
+        </div>
+    </div>
+    {% else %}
+    <div class="link">
+        <input id="input_quote_url2" readonly="readonly" type="text" value="{{request.get_host}}/mortgage-quote/{{deal.mortgage_quote_deals.reference_number}}/{{deal.pk}}/{{deal.stage}}/{{quote_info.bank_pk}}/">
+    </div>
+    <div class="float-right">
+        <div class="copy felix_tooltip">
+            <span class="tooltiptext">Click to copy</span>
+            <a onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="input_quote_url2"><i class="ti-files"></i></a>
+        </div>
+        <div class="open felix_tooltip">
+            <span class="tooltiptext">Click to open</span>
+            <a href="/mortgage-quote/{{deal.mortgage_quote_deals.reference_number}}/{{deal.pk}}/{{deal.stage}}/{{quote_info.bank_pk}}/" target="_blank" class="m-l-5 float-right"><i class="ti-new-window"></i></a>
+        </div>
+        <div class="open felix_tooltip d-none">
+            <span class="tooltiptext">Download PDF</span>
+            <a href="{{request.get_host}}/mortgage-quote/{{deal.pk}}/" target="_blank" class="m-l-5 float-right"><i class="ti-download"></i></a>
+        </div>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,301 @@
+{% load static %}
+{% load humanize %}
+{% if 'bank_pk' in quote_info %}
+ <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#bank-more-details-{{quote_info.bank_pk}}">
+    Launch demo modal
+    </button>
+    <!-- Modal -->
+    <div class="bank-details modal fade" id="bank-more-details-{{quote_info.bank_pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header d-block p-0 border-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="d-flex w-100 align-items-center">
+                        <div class="w-50"><img src="{{ quote_info.bank_logo }}" width="150"/></div>
+                        <div class="w-50 heading text-right">{{ quote_info.bank_name }} {{quote_info.eibor_duration}} Eibor</div>
+                    </div>
+                </div>
+               <div class="row">
+                    <div class="col-6">
+                        <div class="bg-wheat-nexus">
+                            <div class="heading mb-4">Property:</div>
+                            <div class="d-flex">
+                                <p>Property Price</p>
+                                <p><strong>{{deal.property_price| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Mortgage Amount</p>
+                                <p><strong>{{deal.loan_amount| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Down Payment</p>
+                                <p><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Interest Rate</p>
+                                <p><strong>{{ quote_info.interest_rate| intcomma }}% + {{quote_info.eibor_duration}} Eibor</strong></p>
+                            </div>
+                            {% comment %} <div class="d-flex">
+                                <p>Loan Amount</p>
+                                <p><strong>{{ quote_info.loan| intcomma }} AED</strong></p>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Bank Details and Fees:</div>
+                            <div class="d-flex">
+                                <p>Post introduction rate</p>
+                                <p><strong>{{ quote_info.post_introduction_rate| intcomma }}% + {{quote_info.eibor_post_duration}} Eibor</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Property valuation fee</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.poverty_valuation_fee name='poverty_valuation_fee' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Bank Processing Fee</p>
+                                <p><strong>{{ quote_info.bank_processing_fee| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Life Insurance (Monthly)</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.life_insurance_monthly name='life_insurance_monthly' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Property Insurance (Annually)</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.property_insurance_yearly name='property_insurance_yearly' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row pt-4">
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Government Fees:</div>
+                            <div class="d-flex">
+                                <p>Trustee Center Fee</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.trustee_center_fee_vat name='trustee_center_fee_vat' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Land Dep. Property Registration</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.land_dep_property_registration name='land_dep_property_registration' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Land Dep. Mortgage Registration</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.land_dep_mortgage_registration name='land_dep_mortgage_registration' %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Total Paid Over {{deal.tenure}} Months:</div>
+                            <div class="d-flex">
+                                <p>Monthly Repayment</p>
+                                <p><strong>{{ quote_info.monthly_repayment| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Early Settlement</p>
+                                <p><strong>{{ quote_info.full_settlement_percentage| intcomma }} % max {{ quote_info.full_settlement_max_value| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Free Partial Payment/Year</p>
+                                <p><strong>Upto {{ quote_info.free_partial_payment_per_year| intcomma }} %</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row pt-4">
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Monthly Repayments:</div>
+                            <div class="d-flex">
+                                <p>Monthly Repayments Extra Financing {{deal.tenure}} Months</p>
+                                <p><strong>{{ quote_info.monthly_repayment_extra_financing| intcomma }} AED</strong></p>
+                            </div>
+                            {% comment %} <div class="d-flex">
+                                <p>Monthly Repayments {{deal.tenure}} Months (After the Fix Period)</p>
+                                <p><strong>{{ quote_info.monthly_repayment_after__years_after_the_fix_period| intcomma }} AED</strong></p>
+                            </div> {% endcomment %}
+                            {% comment %} {% if quote_info.total_monthly_repayment_with_extra_financing %}
+                                <div class="d-flex">
+                                    <p>Total Monthly Repayments With Extra Financing {{deal.tenure}} Months (After the Fix Period)</p>
+                                    <p><strong>{{ quote_info.total_monthly_repayment_with_extra_financing| intcomma }} AED</strong></p>
+                                </div>
+                            {% endif %} {% endcomment %}
+                            {% if quote_info.mortgage_emi %}
+                                <div class="d-flex">
+                                    <p>Mortgage EMI</p>
+                                    <p><strong>{{ quote_info.mortgage_emi| intcomma }} AED</strong></p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Real Estate Fee:</div>
+                            <div class="d-flex">
+                                <p>Real Estate Fee 2%</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.real_estate_fee_vat name='real_estate_fee_vat' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+
+{% elif 'data' in quote_info %}
+    {% for x in quote_info.data.quote_details %}
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#bank-more-details-{{x.bank_pk}}">
+    Launch demo modal
+    </button>
+    <!-- Modal -->
+    <div class="bank-details modal fade" id="bank-more-details-{{x.bank_pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="modal-header d-block p-0 border-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="d-flex w-100 align-items-center">
+                        <div class="w-50"><img src="{{ x.bank_logo }}" width="150"/></div>
+                        <div class="w-50 heading text-right">{{ x.bank_name }} {{x.eibor_duration}} Eibor</div>
+                    </div>
+                </div>
+               <div class="row">
+                    <div class="col-6">
+                        <div class="bg-wheat-nexus">
+                            <div class="heading mb-4">Property:</div>
+                            <div class="d-flex">
+                                <p>Property Price</p>
+                                <p><strong>{{deal.property_price| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Mortgage Amount</p>
+                                <p><strong>{{deal.loan_amount| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Down Payment</p>
+                                <p><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Interest Rate</p>
+                                <p><strong>{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</strong></p>
+                            </div>
+                            {% comment %} <div class="d-flex">
+                                <p>Loan Amount</p>
+                                <p><strong>{{ x.loan| intcomma }} AED</strong></p>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Bank Details and Fees:</div>
+                            <div class="d-flex">
+                                <p>Post introduction rate</p>
+                                <p><strong>{{ x.post_introduction_rate| intcomma }}% + {{x.eibor_post_duration}} Eibor</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Property valuation fee</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.poverty_valuation_fee name='poverty_valuation_fee' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Bank Processing Fee</p>
+                                <p><strong>{{ x.bank_processing_fee| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Life Insurance (Monthly)</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.life_insurance_monthly name='life_insurance_monthly' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Property Insurance (Annually)</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.property_insurance_yearly name='property_insurance_yearly' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row pt-4">
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Government Fees:</div>
+                            <div class="d-flex">
+                                <p>Trustee Center Fee</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.trustee_center_fee_vat name='trustee_center_fee_vat' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Land Dep. Property Registration</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                            </div>
+                            <div class="d-flex">
+                                <p>Land Dep. Mortgage Registration</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.land_dep_mortgage_registration name='land_dep_mortgage_registration' %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Total Paid Over {{deal.tenure}} Months:</div>
+                            <div class="d-flex">
+                                <p>Monthly Repayment</p>
+                                <p><strong>{{ x.monthly_repayment| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Early Settlement</p>
+                                <p><strong>{{ x.full_settlement_percentage| intcomma }} % max {{ x.full_settlement_max_value| intcomma }} AED</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Free Partial Payment/Year</p>
+                                <p><strong>Upto {{ x.free_partial_payment_per_year| intcomma }} %</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row pt-4">
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Monthly Repayments:</div>
+                            <div class="d-flex">
+                                <p>Monthly Repayments Extra Financing {{deal.tenure}} Months</p>
+                                <p><strong>{{ x.monthly_repayment_extra_financing| intcomma }} AED</strong></p>
+                            </div>
+                            {% comment %} <div class="d-flex">
+                                <p>Monthly Repayments {{deal.tenure}} Months (After the Fix Period)</p>
+                                <p><strong>{{ x.monthly_repayment_after__years_after_the_fix_period| intcomma }} AED</strong></p>
+                            </div> {% endcomment %}
+                            {% comment %} {% if quote_info.total_monthly_repayment_with_extra_financing%}
+                                <div class="d-flex">
+                                    <p>Total Monthly Repayments With Extra Financing {{deal.tenure}} Months (After the Fix Period)</p>
+                                    <p><strong>{{ quote_info.total_monthly_repayment_with_extra_financing| intcomma }} AED</strong></p>
+                                </div>
+                            {% endif %} {% endcomment %}
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-light-grey-nexus">
+                            <div class="heading mb-4">Real Estate Fee:</div>
+                            <div class="d-flex">
+                                <p>Real Estate Fee 2%</p>
+                                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,57 @@
+{% load mortgage %}
+{% load humanize %}
+<style>
+    .pre-approval img {
+        width: 120px;
+        height: auto;
+        margin:15px;
+        padding-bottom:15px;
+    }
+
+    .stage-content-element{
+        -webkit-border-radius:5px;
+        -moz-border-radius:5px;
+        margin:15px;
+        justify-content: center;
+        text-justify: auto;
+    }
+    .stage-content-element .row{
+        margin-left:auto;
+        margin-right:auto;
+    }
+    .p{
+        font-weight: bold  !important;
+    }
+</style>
+<div>
+    <div class="deal-overview pre-approval display">
+        <div class="row">
+            <div class="col">
+                <img class="card-img-top" src="{{order.bank.logo.url }}" alt="{{order.bank.name }}">
+                <div class="card-body p-0">
+                    <h5 class="card-text">{{ order.bank.name }}</h5>
+                </div>
+            </div>
+            <div class="col stage-content-element border" >
+                <p class="row "> Property Price (AED) </p>
+                <p class="row"> {{ order.deal.property_price}} </p>
+            </div>
+            <div class="col stage-content-element border" >
+                <p class="row"> Loan Amount (AED) </p>
+                <p class="row"> {{ order.deal.loan_amount}} </p>
+            </div>
+            <div class="col stage-content-element border" >
+                <p class="row"> Down Payment (AED) </p>
+                <p class="row"> {{ order.deal.down_payment }} </p>
+            </div>
+            <div class="col stage-content-element border" >
+                <p class="row"> Interest Rate </p>
+                <p class="row"> {{ rate }} </p>
+            </div>
+            <div class="col stage-content-element border" >
+                <p class="row"> Monthly Repayment </p>
+                <p class="row"> {{ monthly_repayment }} </p>
+            </div>
+        </div>
+    </div>
+</div>

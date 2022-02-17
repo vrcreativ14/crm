@@ -1,0 +1,317 @@
+{% load static %}
+{% load humanize %}
+<ul class="ml-0 pl-0">
+    <table class="table show-selected-bank-table">
+        <tbody>
+            {% if 'bank_pk' in quote_info %}
+                <tr>
+                    <th><strong>Selected Bank</strong></th>
+                    <td class="col-td-{{quote_info.bank_pk}}">
+                    <img src="{{ quote_info.bank_logo }}" width="210px" height="40px">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Monthly Repayment</th>
+                    <td>{{ quote_info.monthly_repayment| intcomma }} AED</td>
+                </tr>
+
+                <tr class="background-blue">
+                    <th>Interest Rate</th>
+                    <td>{{ quote_info.interest_rate| intcomma }}% + {{quote_info.eibor_duration}} Eibor</td>
+                </tr>
+                <tr>
+                    <th>Post introduction rate (after the fix period)</th>
+                    <td>{{ quote_info.post_introduction_rate| intcomma }}% + {{quote_info.eibor_post_duration}} Eibor</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Poverty valuation fee</th>
+                    <td>{{ quote_info.poverty_valuation_fee| intcomma }} AED</td>
+                </tr>
+
+                <tr>
+                    <th>Bank Processing Fee</th>
+                    <td>{{ quote_info.bank_processing_fee| intcomma }} AED</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Life Insurance (Monthly)</th>
+                    <td>{{ quote_info.life_insurance_monthly| intcomma }} AED</td>
+                </tr>
+                <tr>
+                    <th>Property Insurance (Annually)</th>
+                    <td>{{ quote_info.property_insurance_yearly| intcomma }} AED</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Trustee Center Fee </th>
+                    <td>{{ quote_info.trustee_center_fee_vat| intcomma }} AED</td>
+                </tr>
+                <tr>
+                    <th>Land Dep. Property Registration</th>
+                    <td>{{ quote_info.land_dep_property_registration| intcomma }} AED</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Land Dep. Mortgage Registration</th>
+                    <td>{{ quote_info.land_dep_mortgage_registration| intcomma }} AED</td>
+                </tr>
+                <tr>
+                    <th>Real Estate Fee 2% </th>
+                    <td>{{ quote_info.real_estate_fee_vat| intcomma }} AED</td>
+                </tr>
+
+                <tr class="background-blue">
+                    <th>Total downpayment (Including all expenses and fees)</th>
+                    <td>{{ quote_info.total_down_payment| intcomma }} AED</td>
+                </tr>
+                <tr>
+                    <th>Extra financing (For DLD and Real Estate)</th>
+                    <td>{{ quote_info.extra_financing| intcomma }} AED</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Net Downpayment</th>
+                    <td>{{ quote_info.net_down_payment| intcomma }} AED</td>
+                </tr>
+
+                {% comment %} <tr>
+                    <th>Loan Amount</th>
+                    <td>{{ quote_info.loan| intcomma }} AED</td>
+                </tr> {% endcomment %}
+                <tr class="background-blue">
+                    <th>Monthly Repayment {{deal.tenure}} Months (Main Amount)</th>
+                    <td>{{ quote_info.monthly_repayment_after__years_main_amount| intcomma }} AED</td>
+                </tr>
+                <tr>
+                    <th>Monthly Repayment {{deal.tenure}} Months Extra Financing</th>
+                    <td>{{ quote_info.monthly_repayment_extra_financing| intcomma }} AED</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Monthly Repayment {{deal.tenure}} Months (After The Fix Period)</th>
+                    <td>{{ quote_info.monthly_repayment_after__years_after_the_fix_period| intcomma }} AED</td>
+                </tr>
+                
+                <tr>
+                    <th>Early Settlement</th>
+                    <td>{{ quote_info.full_settlement_percentage| intcomma }} % max {{ quote_info.full_settlement_max_value| intcomma }} AED</td>
+                </tr>
+                <tr class="background-blue">
+                    <th>Free Partial Payment/Year</th>
+                    <td>Upto {{ quote_info.free_partial_payment_per_year| intcomma }} % </td>
+                </tr>
+
+        {% elif 'data' in quote_info %}
+
+            <tr>
+                <th><strong>Select Bank</strong></th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="text-center col-td-{{x.bank_pk}}">
+                    <img src="{{ x.bank_logo }}" width="210px" height="40px" alt="BANK">
+                    <p class="name mt-1">{{ x.bank_name }} {{ x.eibor_duration}} Eibor</p>
+                </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th></th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                    <div class="d-flex justify-content-center idle-action">
+                        {% if quote_info.data.quote_details|length > 1 %}
+                        <form method="POST" class="new-bank-interest-form" action="{% url 'mortgage:quotes' %}">
+                            <input class="form-control" type="hidden" name="deals" value="{{deal.pk}}">
+                            {% for xxx in quote_info.data.quote_details %}
+                                {% if x.bank_pk != xxx.bank_pk %}
+                                    <input type="hidden" name="banks" value="{{xxx.bank_pk}}"/>
+                                {% endif %}
+                            {% endfor %}
+                            <input type="hidden" class="send-email" name="send_email" value="false" />
+                            <input type="hidden" name="remove" value="true" />
+                            <input class="btn-nexus btn-nexus-grey" type="submit" value="Remove">
+                        </form>
+                        {% endif %}
+                        <button class="btn-nexus btn-nexus-golden trigger-select-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})">Select</button>
+                    </div>
+                    <div class="d-flex justify-content-center active-action">
+                        <button class="btn-nexus btn-nexus-grey ml-0 trigger-select-bank" onclick="unselect_mortgage_bank({{x.bank_pk}})">Unselect</button>
+                    </div>
+                </td>
+                {% endfor %}
+            </tr>
+            
+            <tr>
+                <th><strong>Property Price</strong></th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}"><strong>{{deal.property_price| intcomma }} AED</strong></td>
+                {% endfor %}
+            </tr>
+
+            <tr class="background-blue">
+                <th><strong>Mortgage Amount</strong></th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}"><strong>{{deal.loan_amount| intcomma }} AED</strong></td>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                <th><strong>Down Payment</strong></th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}"><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></td>
+                {% endfor %}
+            </tr>
+
+            <tr class="background-blue">
+                <th>Interest Rate</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Post introduction rate</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                    {{ x.post_introduction_rate| intcomma }}% + {{x.eibor_post_duration}} Eibor
+                </td>
+                {% endfor %}
+            </tr>
+            <tr class="background-blue">
+                <th>Property valuation fee</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.poverty_valuation_fee name='poverty_valuation_fee' %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <tr>
+                <th>Monthly Repayment</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.monthly_repayment| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+
+            <tr class="background-blue">
+                <th>Bank Processing Fee</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.bank_processing_fee| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Life Insurance (Monthly)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.life_insurance_monthly name='life_insurance_monthly' %}
+                </td>
+                {% endfor %}
+            </tr>
+            <tr class="background-blue">
+                <th>Property Insurance (Annually)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.property_insurance_yearly name='property_insurance_yearly' %}
+                </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Trustee Center Fee </th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.trustee_center_fee_vat name='trustee_center_fee_vat' %}
+                </td>
+                {% endfor %}
+            </tr>
+            <tr class="background-blue">
+                <th>Land Dep. Property Registration</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Land Dep. Mortgage Registration</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.land_dep_mortgage_registration| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            <tr class="background-blue">
+                <th>Real Estate Fee</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' %}
+                </td>
+                {% endfor %}
+            </tr>
+
+            <tr class="background-blue d-none">
+                <th>Total downpayment (Including all expenses and fees)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.total_down_payment| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            <tr class=" d-none">
+                <th>Extra financing (For DLD and Real Estate)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.extra_financing| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            <tr class="background-blue d-none">
+                <th>Net Downpayment</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.net_down_payment| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+
+            {% comment %} <tr>
+                <th>Loan Amount</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.loan| intcomma }} AED</td>
+                {% endfor %}
+            </tr> {% endcomment %}
+            <tr class="background-blue d-none">
+                <th>Monthly Repayment {{deal.tenure}} Months (Main Amount)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.monthly_repayment_after__years_main_amount| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            <tr class=" d-none">
+                <th>Monthly Repayment {{deal.tenure}} Months (Extra Financing)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.monthly_repayment_extra_financing| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            
+            <tr class="background-blue d-none">
+                <th>Monthly Repayment {{deal.tenure}} Months (After The Fix Period)</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.monthly_repayment_after__years_after_the_fix_period| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            
+            <tr class="background-blue">
+                <th>Early Settlement</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.full_settlement_percentage| intcomma }} % 
+                    max {{ x.full_settlement_max_value| intcomma }} AED</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Free Partial Payment/Year</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">Upto {{ x.free_partial_payment_per_year| intcomma }} % </td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th></th> 
+                {% for x in quote_info.data.quote_details %}
+                    <td class="col-td-{{x.bank_pk}}">
+                        <input data-bank="{{x.bank_pk}}" class="d-none" type="checkbox" id="new-bank-rate-{{x.bank_pk}}" value="{{x.bank_pk}}">
+                        <label for="new-bank-rate-{{x.bank_pk}}" data-bank-id="{{x.bank_pk}}" data-image="{{ x.bank_logo }}" class="d-none ml-0 new-bank-rate quote-select-bank btn-nexus btn-nexus-dark-grey">Add different rate</label>
+                        <div class="d-flex justify-content-center idle-action">
+                        <button class="btn-nexus btn-nexus-golden trigger-select-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})">Select</button>
+                        </div>
+                        <div class="d-flex justify-content-center active-action">
+                        <button class="btn-nexus btn-nexus-grey ml-0 trigger-select-bank" onclick="unselect_mortgage_bank({{x.bank_pk}})">Unselect</button>
+                        </div>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</ul>

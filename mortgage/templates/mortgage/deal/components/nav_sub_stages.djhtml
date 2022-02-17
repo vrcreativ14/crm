@@ -1,0 +1,64 @@
+{% load static %}
+{% load mortgage_sub_stage %}
+
+<div class="stages-status-indication row align-items-center">
+    <div class="col-6">Bank Confirmed<br/><a class="text-nexus-blue modal-trigger" data-toggle="modal" data-target="#bank-more-details-{{ quote_info.bank_pk }}">more details</a></div>
+    <div class="col-4 text-center"><img class="w-100" src="{{ quote_info.bank_logo }}"/><br /><p class="pt-1 pb-0 mb-0">{{ quote_info.bank_name }} {{ quote_info.eibor_duration}} Eibor</p></div>
+    <div class="col-2 text-right text-success"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Pre-Approval Documents Received</div>
+    <div class="col-2 text-right {% if deal_stage_number > 1 and deal.current_sub_stage.sub_stage != 'Waiting for Pre Approval Documments' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Pre-Approval Sent to Bank</div>
+    <div class="col-2 text-right {% if deal_stage_number > 1 and deal.current_sub_stage.sub_stage != 'Waiting for Pre Approval Documments' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Mortgage Pre-Approval</div>
+    <div class="col-2 text-right {% if deal_stage_number > 2 and deal.current_sub_stage.sub_stage != 'Sent to Bank for Approval' or deal_stage_number > 2 %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+
+{% if deal_stage_number > 2 %}
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Valuation Documents Received</div>
+    <div class="col-2 text-right {% if deal_stage_number > 2 and deal.current_sub_stage.sub_stage != 'Waiting for Valuation Documents' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Valuation Documents Sent to Bank</div>
+    <div class="col-2 text-right {% if deal_stage_number > 3 and deal.current_sub_stage.sub_stage != 'Sent to Bank for Approval' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+{% endif %}
+
+{% if deal_stage_number > 3 %}
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">FOL Requested from Bank</div>
+    <div class="col-2 text-right {% if deal_stage_number > 3 and deal.current_sub_stage.sub_stage != 'FOL Requested From Bank' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">FOL Signed</div>
+    <div class="col-2 text-right {% if deal_stage_number > 4 and deal.current_sub_stage.sub_stage != 'FOL signed' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+{% endif %}
+
+{% if deal_stage_number > 5 %}
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Loan Disbursal</div>
+    <div class="col-2 text-right {% if deal_stage_number > 5 %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+{% endif %}
+
+{% if deal_stage_number > 6 %}
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Settlement</div>
+    <div class="col-2 text-right {% if deal_stage_number > 6 and deal.current_sub_stage.sub_stage != 'Settlement' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Property Transfer</div>
+    <div class="col-2 text-right {% if deal_stage_number > 6 and deal.current_sub_stage.sub_stage != 'Property Transfer' and deal.current_sub_stage.sub_stage != 'Settlement' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+<div class="stages-status-indication row align-items-center">
+    <div class="col-10">Payment</div>
+    <div class="col-2 text-right {% if deal_stage_number > 7 and deal.current_sub_stage.sub_stage != 'Payment' %}text-success{% else %}text-muted{% endif %}"><i class="fa fa-check-circle" aria-hidden="true"></i></div>
+</div>
+{% endif %}

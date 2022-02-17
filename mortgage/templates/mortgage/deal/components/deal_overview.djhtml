@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="mortgage-quote-details deal-overview deal-process display">
+    {% if not quote %}
+        <div class="w-100 m-auto text-center">
+            <button class="show-bank-modal btn-nexus btn-nexus-golden btn-lg">Create Quote</button>
+        </div>
+    {% endif %}
+    {% include 'mortgage/deal/components/deal_quote_form.djhtml' %}
+    {% if deal.stage == 'new'  %}
+    {% else %}
+    {% include 'mortgage/deal/components/stage_form.html' %}
+    {% endif %}
+    {% include 'mortgage/deal/components/bank_list_modal.djhtml' %}
+
+</div>

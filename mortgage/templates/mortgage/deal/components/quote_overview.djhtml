@@ -1,0 +1,28 @@
+{% load static %}
+{% load humanize %}
+
+<div class="quote-overview deal-process">
+	{% include 'motorinsurance/deal/components/deal_quote_extend_expiry.djhtml'%}
+
+	{% if not has_quote %}
+    	<p class="empty-area">Here, you can select a product and calculate the total premium after you generate a new quote</p>
+    {% else %}
+	    <div class="quote-summary quote-preview">
+	    	{% include 'motorinsurance/deal/components/deal_quote_preview.djhtml'%}
+		</div>
+
+	    <div class="quote-summary quote-form {% if has_quote %}hide{% endif %}">
+	    	{% include 'motorinsurance/deal/components/deal_quote_form.djhtml'%}
+	    </div>
+
+	    {% if not deal.get_order %}
+		<div class="quote-summary create-order hide">
+		    <div class="heading m-b-5">Create an Order</div>
+			<p>Select a product for the customer and prepare the quote to move to the Order stage</p>
+			{% include 'motorinsurance/deal/components/deal_order_form.djhtml'%}
+		</div>
+		{% endif %}
+	{% endif %}
+
+	{% include 'motorinsurance/deal/components/insurers_list_modal.djhtml' %}
+</div>

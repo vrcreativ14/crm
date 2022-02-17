@@ -1,0 +1,11 @@
+{% extends 'base.djhtml' %}
+
+{% block content %}
+<ul>
+{% for x in data %}
+<li>
+{{x.name}}-{{x.email}}
+</li>
+{% endfor %}
+</ul>
+{% endblock %}

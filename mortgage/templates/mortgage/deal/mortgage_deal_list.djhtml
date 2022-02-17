@@ -1,0 +1,743 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load permission_tags %}
+
+{% block page_title %}Mortgage Deals{% endblock %}
+{% block body_class %}mortgage-deals{% endblock %}
+{% block current_nav %}deals{% endblock %}
+{% block extra_css %}
+<link href="//cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+<style>
+    .felix-table-container{
+        overflow: auto !important;
+    }
+    .felix-table-container th{
+        white-space: normal !important;
+    }
+    .dataTables_filter,.quick-filters .stages input{
+        display:none;
+    }
+    .quick-filters .stages label{
+        color: #343A40;
+    }
+    .quick-filters .stages label.active{
+        border-color: #2f8ee0;
+    }
+    .quick-filters .stages label.disabled{
+        opacity: 0.2;
+    }
+    .dataTables_paginate{
+        text-align: center;
+    }
+    .dataTables_paginate a{
+        display: inline-block;
+        position: relative;
+        padding: .5rem .75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+    }
+    .dataTables_paginate .paginate_button.current,.dataTables_paginate a:hover{
+        background-color: #2f8ee0;
+        border-color: #2f8ee0;
+        color: white;
+    }
+    .quick-filters label span{
+        font-size: 9px;
+        margin-top: -10px;
+        background-color: #F2F2F2;
+        padding: 0px 2px;
+        border-radius: 2px;
+    }
+    .select-drop-down:after{
+        content: "\e64b";
+        font-family: 'themify';
+        font-size: 8px;
+        margin-left: 4px;
+        border-bottom: 1px solid #FFF;
+        display: inline-block;
+    }
+    .d-none-custom{
+        display:none;
+    }
+    .felix-table td{
+        vertical-align: middle !important;
+    }
+    td .d-none-custom{
+        display:block;
+    }
+    .input-row .btn-action{
+        display:none;
+    }
+    .dataTables_length label{
+        width: 150px;
+        display: flex;
+        align-items: center;
+    }
+    .dataTables_length label select{
+        margin: 0 0.5rem;
+    }
+    .felix-table{
+        border-radius: 0.5rem;
+        overflow: hidden;
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+    }
+    .felix-table td,.felix-table th{
+        text-align:left !important;
+        color: #4B4B4B !important;
+    }
+    .felix-table th{
+        cursor: pointer;
+    }
+    .felix-table th img{
+        margin-top: -0.25rem;
+        margin-left: 0.25rem;
+    }
+    .felix-table td img{
+        max-width: 100px;
+        height: auto;
+    }
+    #DataTables_Table_0_length{
+        display:block;
+    }
+    .felix-table tbody tr:nth-of-type(odd){
+        background: transparent !important;
+    }
+    .table-hover tbody tr:hover, .felix-table tbody tr:nth-of-type(even){
+        background: #FCFCFC !important;
+    }
+    #DataTables_Table_0_info{
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    .quick-filters{
+        background:#EFEFEF;
+        display: flex;
+        align-items: center;
+        padding: 0 0.5rem;
+    }
+    .quick-filters span > *{
+        margin-top: 0.25rem;
+        margin-bottom:0.25rem;
+    }
+    .mortgage-deals .quick-filters .user-filter .chosen-container{
+        height: 29px;
+        margin-left: 0 !important;
+        width: 150px !important;
+    }
+    .user-filter .chosen-container .chosen-single{
+        height: 29px;
+        padding-top: 3px;
+        padding-bottom: 0;
+        margin-top: 0;
+        border: unset !important;
+    }
+    .wrapper .table-filters .open-search-field input[type=text]{
+        height: 29px;
+        width: 217px;
+        border: unset;
+        border-radius: 4px;
+        background-color: #FFFFFF;
+        padding: 0 10px 0 30px;
+        color: #868E96;
+        font-size: 12px;
+    }
+    .wrapper .table-filters .open-search-field:after{
+        top: 5px;
+        left: 8px;
+    }
+    
+    .shadow-4{
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        border-radius: 0.5rem !important;
+        overflow: hidden;
+    }
+    #DataTables_Table_0_length{
+        display: none;
+    }
+    .quick-filters .date-ranger{
+        background: white;
+        display: flex;
+        margin: 0.25rem;
+        padding: 0 0.5rem;
+        border-radius: 0.25rem;
+    }
+    .quick-filters .date-ranger input{
+        border: unset;
+        font-size: 0.8rem;
+    }
+    .table-filters form{
+        width: 1830px;
+    }
+    .test{
+        color: red;
+    }
+    .mortgage-deals.mortgage .wrapper{
+        overflow: auto;
+    }
+    .mortgage-deals.mortgage .wrapper .mortgage-list{
+        width: 1900px;
+        max-width: unset;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="mortgage-list container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Mortgage Deals</h1>
+            <div class="float-right deals-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+            <button type="button" data-felix-modal="modal_create_deal"
+                    class="create-record btn btn-primary btn-md btn-list-create" onclick="create_mortgage_deals()">
+                Create New
+            </button>
+
+            {% include 'mortgage/deal/components/mortgage_new_deal_form.djhtml' %}
+            <span class="felix-table-action-buttons">
+                {% if is_admin %}
+                <form id="delete_mortgage_deal_list" class="d-inline" action="" method="" onsubmit="delete_mortgage_deal(event)">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-record-mortgage btn btn-md btn-outline-primary">
+                        Delete
+                    </button>
+                </form>
+                {% endif %}
+                <button type="button" class="close-deal btn btn-md btn-outline-primary">
+                    Mark as Lost
+                </button>
+            </span>
+            <div class="clear"></div>
+            <div class="table-filters mb-0">
+                <form action="{% url 'mortgage:deals' %}" method="get">
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="stage" id="id_stage" value="{{ stage }}" />
+
+                    <div class="quick-filters mt-2 mb-2">
+                        <span class="title"><span>Quick Filters:</span></span>
+                        <span class="date-ranger">
+                            <img src="{% static 'icons/calenders.svg' %}" />
+                            <input type="text" name="daterange" value="{% now "m/d/Y" %} - {% now "m/d/Y" %}" />
+                            <input id="max-date" type="hidden" value=""/>
+                            <input id="min-date" type="hidden" value=""/>
+                        </span>
+                        <span class="buttons stages">
+                            <label for="open" class="btn-sm btn btn-white">
+                                All Open
+                                <span class="all-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="open" type="radio" name="mortgage-deals-filter" value="all"/>
+
+                            <label for="new" class="btn-sm btn btn-white">
+                                New
+                                <span class="new-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="new" type="radio" name="mortgage-deals-filter" value="new"/>
+
+                            <label for="quote" class="btn-sm btn btn-white">
+                                Quote
+                                <span class="quote-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="quote" type="radio" name="mortgage-deals-filter" value="quote"/>
+
+                            <label for="preApproval" class="btn-sm btn btn-white">
+                                Pre Approval
+                                <span class="pre-approval-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="preApproval" type="radio" name="mortgage-deals-filter" value="Pre Approval"/>
+
+                            <label for="valuation" class="btn-sm btn btn-white">
+                                Valuation
+                                <span class="valuation-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="valuation" type="radio" name="mortgage-deals-filter" value="valuation"/>
+                            
+                            <label for="final-offer" class="btn-sm btn btn-white">
+                                Final Offer
+                                <span class="offer-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="final-offer" type="radio" name="mortgage-deals-filter" value="offer"/>
+
+                            <label for="settlement" class="btn-sm btn btn-white d-none">
+                                Settlement
+                                <span class="settlement-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="settlement" type="radio" name="mortgage-deals-filter" value="settlement"/>
+
+                            <label for="loanDisbursal" class="btn-sm btn btn-white">
+                                Loan Disbursal
+                                <span class="loan-disbursal-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="loanDisbursal" type="radio" name="mortgage-deals-filter" value="Loan Disbursal"/>
+
+                            <label for="property-transfer" class="btn-sm btn btn-white">
+                                Under Process
+                                <span class="under-process-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="property-transfer" type="radio" name="mortgage-deals-filter" value="Under Process"/>
+
+                            <label for="won" class="btn-sm btn btn-white">
+                                Won
+                                <span class="won-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="won" type="radio" name="mortgage-deals-filter" value="won"/>
+                            
+                            <label for="lost" class="btn-sm btn btn-white">
+                                Lost
+                                <span class="lost-count"></span>
+                            </label>
+                            <input class="quick-filter-radio" id="lost" type="radio" name="mortgage-deals-filter" value="lost"/>
+                        </span>
+                        {% if user|can:'search_mortgage_deals' %}
+                        <span class="user-filter pl-1">
+                            <select name="assigned_to" id="id_assigned_to">
+                                <option value="" selected="">Select user to filter/All users</option>
+                                <option value="Unassigned">All Unassigned</option>
+                                {% for user in users %}
+                                <option value="referrer-{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="table-filters float-right pt-1 mt-2 mb-2" style="min-width:405px;">
+                        <div class="filter-trigger d-none">
+                            <i class="ti-filter"></i> <span class="hide badge badge-info badge-pill noti-icon-badge filter-count">0</span>
+                        </div>
+                        {% if user|can:'export_motor_deals' %}
+                        <div class="options-table float-right d-none">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-settings"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item export" data-url="{% url 'motorinsurance:deal-export' %}" href="javascript:">
+                                    <i class="ti-export m-r-7"></i> Export CSV
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="sorting-table float-right hide">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-arrows-vertical"></i><i class="ti-align-left"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item {% if request.GET.sort_by == 'created_on_asc'%}active{% endif %}" data-val="created_on_asc" href="javascript:">
+                                    Created On (Asc.)
+                                </a>
+                                <a class="dropdown-item {% if not request.GET.sort_by %}active{% endif %}" data-val="" href="javascript:">
+                                    Created On (Desc.)
+                                </a>
+                                <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_asc'%}active{% endif %}" data-val="updated_on_asc" href="javascript:">
+                                    Updated On (Asc.)
+                                </a>
+                                <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_desc'%}active{% endif %}" data-val="updated_on_desc" href="javascript:">
+                                    Updated On (Desc.)
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="sort-by-field hide">
+                            {{ search_form.sort_by }}
+                        </div>
+                        <button class="btn-sm btn btn-white text-dark float-right ml-2 shadow-4"><i class="ti-export m-r-7"></i> Export to CSV </button>
+                        <div class="open-search-field shadow-4">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+
+                        <div class="search-popup deals">
+                            <div class="title">Filters</div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_after.label }}</label>
+                                    {{ search_form.created_on_after }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_before.label }}</label>
+                                    {{ search_form.created_on_before }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Deleted</label>
+                                    {{ search_form.deleted }}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <a href="javascript:" class="search-clear">Clear</a>
+                                <div class="float-right">
+                                    <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                    <button type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="row m-0 pb-5">
+            <div class="col-2 quick-filters m-t-0 important hide">
+                <div class="title m-b-10">Filters</div>
+                <div class="sub-title">Stage</div>
+                <ul class="stage"></ul>
+                <div class="sub-title">Status</div>
+                <ul class="status"></ul>
+                <div class="sub-title">User</div>
+                <ul class="user"></ul>
+            </div>
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table class="mt-3 table table-hover table-striped no-footer felix-table opacity" data-mode="index" data-name="deals">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="felix-checkbox parent">
+                                        <input class="select-record-all" type="checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th class="text-left">Stage <img src="{% static 'icons/sort_arrows.svg' %}" /></th>
+                                <th data-name="created_on">
+                                    Created On <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="customer__name">
+                                    Customer <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="cached_bank_name">
+                                    Bank <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="property_price">
+                                    Property Price <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="loan_amount">
+                                    Down Payment <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="loan_amount">
+                                    Loan Amount <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="tenure">
+                                    Tenure <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="user">
+                                    User <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th data-name="producer__first_name">
+                                    Referrer <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                                <th class="text-right" data-name="updated_on">
+                                    Updated On <img src="{% static 'icons/sort_arrows.svg' %}" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body">
+                            {% include 'handlebars/mortgage_deals_list.html' %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center class="pagination-container">
+                        <ul class="pagination hide"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/pagination.html' %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+    <script>
+        var filtered = [];
+        $(document).ready( function () {
+            $('.prevent-default').on('click',function(e){
+                e.stopPropagation();
+            });
+            $('.felix-table').removeClass('opacity');
+
+            //$.fn.dataTable.moment('MMMM. DD, YYYY');
+
+            var table = $('.felix-table').DataTable();
+
+            $('#id_search_term').on('change keyup',function(){
+                $('#id_assigned_to').val('');
+                $('#id_assigned_to_chosen .chosen-single span').html('Select user to filter/All users');
+                $('.quick-filters label').removeClass('active');
+                filtered = []
+                table.search($(this).val()).draw();
+            });
+
+            $.fn.dataTable.ext.search.push(
+                function( settings, searchData, index, rowData, counter ) {
+                    if (!filtered.length || filtered.includes(searchData[1])) {
+                         return true;
+                    }
+                    return false;
+                }
+            );
+
+            $('.quick-filter-radio').on('change', function() {
+                $('#id_assigned_to').val('');
+                $('#id_assigned_to_chosen .chosen-single span').html('Select user to filter/All users');
+                $('.quick-filters label').removeClass('active');
+                $(this).prev().addClass('active');
+                var val = $(this).val();
+                var checked = $(this).prop('checked');
+                var index = filtered.indexOf( val );
+                $('#min-date').val(0)
+                table.search('').draw()
+                $('#id_search_term').val('')
+
+                filtered = []
+                if(val=='all'){
+                    filtered = []
+                }else{
+                    filtered = [val]
+                }
+                table.draw();
+            });
+
+
+            $('#id_assigned_to').on('change', function() {
+                var val = $(this).val();
+                filtered = []
+                table.search(val).draw();
+            });
+
+
+
+            table.on( 'draw', function () {
+                $('.deals-total-amount').html('('+table.page.info().recordsDisplay+' deals)');
+                prepare_display_property_price(table.page.info(),table);
+            });
+
+            $('.deals-total-amount').html('('+table.rows({search:'applied'}).nodes().length+' deals)');
+            $('.deals-total-amount').removeClass('hide');
+            prepare_display_property_price(table.page.info(),table);
+
+            const stages = ['open', 'new', 'quote', 'pre Approval', 'valuation', 'offer', 'settlement', 'loan Disbursal','under process',  'won', 'lost'];
+
+            setTimeout(function(){
+                stages.forEach(element => {
+                    if(element=='open'){
+                        return $('.all-count').html(table.rows().count())
+                    }
+                    let count = 0;
+                    table.rows({order:'index', search:'applied'}).data().map((row, index) => {
+                        if(row[1].toLowerCase()==element.toLowerCase()){
+                            count++;
+                        }
+                    });
+                    const elementClassName = (element.toLowerCase()).replace(" ","-");
+                    if(count==0){
+                        return $('.'+elementClassName+'-count').parent().addClass('disabled');
+                    }
+                    $('.'+elementClassName+'-count').html(count);
+                });
+            },500);
+
+            $('#modal_create_deal .price-input').on('focus',function(){
+                if ($(this).val() == '') {
+                    return
+                }
+                let num = $(this).val();
+                num = num.replace(/[, ]+/g, "").trim();
+                $(this).val(parseFloat(num));
+            });
+
+            $('#modal_create_deal .price-input').on('focusout',function(){
+                var value = $(this).val()
+                if(!value.includes('.')){
+                    $(this).val(accounting.formatNumber(value, 0, ',', '.'));
+                }
+            });
+
+            /* Custom filtering function which will search data in column four between two values */
+            $.fn.dataTable.ext.search.push(
+                function( settings, data, dataIndex ) {
+                    var min = parseInt($('#min-date').val());
+                    var max = parseInt($('#max-date').val());
+                    var age = parseFloat( data[2] ) || 0; // use data for the age column
+
+                    if(min < 0){
+                        return true;
+                    }
+
+                    filtered = []
+            
+                    if ( ( isNaN( min ) && isNaN( max ) ) ||
+                        ( isNaN( min ) && age <= max ) ||
+                        ( min <= age   && isNaN( max ) ) ||
+                        ( min <= age   && age <= max ) )
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                //console.log("A new date selection was made: " + start.format('YYYYMMDD') + ' to ' + end.format('YYYYMMDD'));
+                $('#min-date').val(start.format('YYYYMMDD'));
+                $('#max-date').val(end.format('YYYYMMDD'));
+                table.draw();
+            });
+        } );
+
+
+        function prepare_display_property_price(table_page,table){
+            var total_property_price = 0;
+            table.rows({order:'index', search:'applied'}).data().map((row, index) => {
+                    var property_price = row[5];
+                    property_price = property_price['@data-sort'];
+                    total_property_price = parseFloat(total_property_price) + parseFloat(property_price);
+                    total_property_price = (total_property_price).toFixed(2)
+            });
+            total_property_price = parseFloat(total_property_price).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+            const deals = $('.deals-total-amount').html();
+            $('.deals-total-amount').html('Dhs '+total_property_price+' '+deals);
+        }
+
+
+
+       function show_edit_option(id,obj){
+            $('.input-row .btn-action').hide();
+            $(obj).next().show();
+       }
+
+       function close_action(obj){
+            $('.input-row .btn-action').hide();
+       }
+
+       function update_mortgage_deal(id,type,obj){
+        setTimeout(function(){
+            let value = ''; 
+            let name = ''; 
+            if(type=='input'){
+                value = $(obj).parent().parent().find('input').val();
+                name = $(obj).parent().parent().find('input').attr('data-name');
+            }else{
+                value = $(obj).val();
+                name = $(obj).attr('data-name');
+            }
+            
+            let url = "{%url 'mortgage:update-deal-field' pk=1111111111111111111 %}";
+            url = url.replace('1111111111111111111', id);
+
+            var form = new FormData();
+            form.append('name', name);
+            form.append('value', value);
+
+            var settings = {
+              "url": url,
+              "method": "POST",
+              "timeout": 0,
+              "headers": {
+                "X-Requested-With": "XMLHttpRequest"
+              },
+              "processData": false,
+              "mimeType": "multipart/form-data",
+              "contentType": false,
+              "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+              close_action(obj);
+            });
+        }, 200);
+       }
+
+        function create_mortgage_deals(){
+            $("#modal_create_deal select").each(function( index, value ) {
+                $(this).find('option:first').attr('selected','true');
+                var self = this
+                setTimeout(function(){
+                    $(self).prop('selectedIndex', 0);
+                    $(self).next().find('.chosen-default span').html($(self).find('option:first').text());
+                }, 200);
+            });
+            return __DEALS._resetDealForm()
+        }
+    
+        $(".stage-selected").change( function(el){
+        $.ajax({
+            method: "POST",
+            url: "{% url 'mortgage:update-status' %}",
+            dataType: "json",
+            data:{
+                status : el.target.value,
+                deal : this.dataset.deal,
+            },
+            success: function(response){
+                Utilities.Notify.success(response.message, 'Success');
+                setTimeout(function(){ location.reload(); }, 2000);
+            },
+            error: function(errors){
+                Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+            }
+        })
+        })
+
+
+        function deal_form_validaion(event,e){
+            //event.preventDefault();
+            $('.price-input').each(function (index, value) {
+                let num = $(this).val();
+                num = num.replace(/[, ]+/g, "").trim();
+                num = num.replace(/[% ]+/g, "").trim();
+                num = parseFloat(num).toFixed(0)
+                $(this).val(num);
+            });
+
+            // and when you done:
+            //e.submit();
+        }
+
+        function delete_mortgage_deal(event){
+            event.preventDefault();
+            var data = {};
+            data['csrfmiddlewaretoken'] = $('#delete_mortgage_deal_list input').val()
+            data['deals'] = []
+            $(".select-record").each(function( index, value ) {
+                if($(this).prop("checked") == true){
+                    data['deals'].push($(this).val())
+                }
+            });
+            $.ajax({
+                method: "POST",
+                url: "{% url "mortgage:delete-deals" %}",
+                dataType: "json",
+                data:data,
+                success: function(response){
+                    Utilities.Notify.success(response.message, 'Success');
+                    //setTimeout(function(){ location.reload(); }, 2000);
+                },
+                error: function(errors){
+                    Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+                }
+            })
+        }
+        
+    </script>
+{% endblock %}

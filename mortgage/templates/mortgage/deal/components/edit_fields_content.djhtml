@@ -1,0 +1,39 @@
+{% load humanize %}
+<div>
+    {% if table %}
+        <span class="static-display">
+            {{ value | intcomma }} AED 
+        </span>
+        <span class="editable-bank-rate float-right d-none">Edit</span>
+    {% else %}
+        <span class="editable-bank-rate-modal float-left d-none">Edit</span>
+        <span class="static-display">
+            <strong>{{ value | intcomma }} AED</strong> 
+        </span>
+    {% endif %}
+    <span class="input-field-display d-none">
+        <span class="editable-container editable-inline">
+            <div>
+                <div class="editableform-loading" style="display: none;"></div>
+                <form class="form-inline editableform" action="/mortgage/banks/update-field/" style="" method="post">
+                    <div class="control-group form-group">
+                        <div>
+                            <div class="editable-input" style="position: relative;">
+                            <input type="text" name="field-value" class="form-control input-sm" value="{{ value }}" style="padding-right: 24px;">
+                            <span class="editable-clear-x" style=""></span>
+                        </div>
+                        <div class="editable-buttons">
+                            <button type="submit" class="btn btn-success editable-submit btn-sm"><i class="ti-check"></i></button>
+                            <button type="button" class="btn btn-danger editable-cancel editable-bank-rate-close-modal btn-sm"><i class="ti-close"></i></button>
+                        </div>
+                    </div>
+                    <div class="editable-error-block help-block" style="display: none;"></div>
+                    </div>
+                    <input type="hidden" name="field-name" value="{{ name }}" />
+                    <input type="hidden" name="bank-id" value="{{ deal_bank_id }}" />
+                    <input type="hidden" name="deal-id" value="{{ deal_id }}" />
+                </form>
+            </div>
+        </span>
+    </span>
+</div>

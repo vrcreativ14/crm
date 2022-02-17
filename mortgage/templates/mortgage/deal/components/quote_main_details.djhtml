@@ -1,0 +1,47 @@
+{% load static %}
+{% load humanize %}
+<div class="container deals-main-info mb-4">
+    <div class="row">
+        <div 
+        {% if deal.stage == "quote" %}
+        class="col-md-3 col-6"
+        {% else %}
+        class="col-md-4 col-6"
+        {% endif %}>
+            <div class="shadow-2-strong d-none">
+                <p><strong>{{deal.property_price| intcomma }} Dhs</strong></p>
+                <p><small>Property Price</small></p>
+            </div>
+        </div>
+        <div 
+        {% if deal.stage == "quote" %}
+        class="col-md-3 col-6"
+        {% else %}
+        class="col-md-4 col-6"
+        {% endif %}>
+            <div class="shadow-2-strong d-none">
+                <p><strong>{{deal.loan_amount| intcomma }} Dhs</strong></p>
+                <p><small>Mortgage Amount</small></p>
+            </div>
+        </div>
+        <div 
+        {% if deal.stage == "quote" %}
+        class="col-md-3 col-6"
+        {% else %}
+        class="col-md-4 col-6"
+        {% endif %}>
+            <div class="shadow-2-strong d-none">
+                <p><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} Dhs</strong></p>
+                <p><small>Down Payment</small></p>
+            </div>
+        </div>
+        {% if deal.stage == "quote" %}
+        <div class="col-md-3 col-6">
+            <div class="shadow-2-strong show-bank-modal" style="max-width: 150px;">
+                <p><strong><img height="25" src="{% static 'images/add-button.png' %}" alt=""/></strong></p>
+                <p><small>Add bank</small></p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>

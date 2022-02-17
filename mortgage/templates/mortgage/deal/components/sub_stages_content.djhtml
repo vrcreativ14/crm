@@ -1,0 +1,53 @@
+{% load static %}
+{% load mortgage_sub_stage %}
+{% load humanize %}
+
+{% if deal.stage == 'quote' and stage_number|intcomma == deal_stage_number|intcomma %}
+    {% if deal.current_sub_stage.sub_stage == 'Select Bank' %}
+        {% setsubstages "" as action %}
+    {% else %}
+        {% setsubstages "completed" as action %}
+    {% endif %}
+{% endif %}
+
+{% if deal.stage == 'preApproval' and stage_number|intcomma == deal_stage_number|intcomma %}
+    {% if deal.current_sub_stage.sub_stage == 'Waiting for Pre Approval Documments' %}
+        {% setsubstages "" as action %}
+    {% else %}
+        {% setsubstages "completed" as action %}
+    {% endif %}
+{% endif %}
+
+{% if deal.stage == 'valuation' and stage_number|intcomma == deal_stage_number|intcomma %}
+    {% if deal.current_sub_stage.sub_stage == 'Waiting for Valuation Documents' %}
+        {% setsubstages "" as action %}
+    {% else %}
+        {% setsubstages "completed" as action %}
+    {% endif %}
+{% endif %}
+
+{% if deal.stage == 'offer' and stage_number|intcomma == deal_stage_number|intcomma %}
+    {% if deal.current_sub_stage.sub_stage == 'FOL Requested From Bank' %}
+        {% setsubstages "" as action %}
+    {% else %}
+        {% setsubstages "completed" as action %}
+    {% endif %}
+{% endif %}
+
+{% if deal.stage == 'propertyTransfer' %}
+    {% if deal.current_sub_stage.sub_stage == 'Settlement' %}
+        {% setsubstages "" as action %}
+    {% elif deal.current_sub_stage.sub_stage == 'Property Transfer' %}
+        {% if key == 'Settlement' %}
+            {% setsubstages "completed" as action %}
+        {% else %}
+            {% setsubstages "" as action %}
+        {% endif %}
+    {% else %}
+        {% setsubstages "completed" as action %}
+    {% endif %}
+{% endif %}
+
+<li data-stage="{{key}}" class="trigger-sub-stages-tab{% if deal.current_sub_stage.sub_stage == key and stage_number|intcomma == deal_stage_number|intcomma %} selected current{% elif stage_number|intcomma < deal_stage_number|intcomma %} completed{% else %} {{action}}{% endif %}">
+    <a>{{name}}</a>
+</li>
