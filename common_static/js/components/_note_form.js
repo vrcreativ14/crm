@@ -33,10 +33,17 @@ var __NOTE;
                             _note_form.find('[data-modal-close]').click();
 
                             var note = '<div class="label">Note created</div>';
-                                note += '<div class="note">' + response.note.content + '</div>';
+                                if('note_pk' in response.note){
+                                    note += '<div class="note note-id-'+response.note.note_pk+'">' + response.note.content + '</div>';
+                                }else{
+                                    note += '<div class="note">' + response.note.content + '</div>';
+                                }
                                 note += '<div class="text-muted">' + response.note.created_on + ' ';
                                 note += 'by ' + response.note.added_by;
                                 note += '</div>';
+                                if('note_pk' in response.note){
+                                    note += '<div><button id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="btn btn-sm btn-danger"> Delete </button> <button data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="btn btn-info-container btn-primary btn-sm" onclick="editMortgageNote(this)">Edit Note</button></div>'
+                                }
 
                             _this._prependNoteInTrail(note);
                         } else {

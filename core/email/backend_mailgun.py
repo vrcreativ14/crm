@@ -27,10 +27,10 @@ class Mailgun:
         api_endpoint = self.get_api_endpoint()
 
         logger.debug('''Sending email using Mailgun.
-API Endpoint: {}
-From: {}
-To: {}
-Subject: {}'''.format(api_endpoint, from_address, to_address, subject))
+            API Endpoint: {}
+            From: {}
+            To: {}
+            Subject: {}'''.format(api_endpoint, from_address, to_address, subject))
         files = []
 
         if attachments:

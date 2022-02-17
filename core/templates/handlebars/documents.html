@@ -3,7 +3,9 @@
 <script id="documents-template" type="text/x-handlebars-template">
 
 <h5 class="mt-4">
-	{{ records.title }} Documents 
+	{{#if records.entity }}
+	{{ records.title }}
+	{{/if}}
 	{{#ifCond records.title "Customer"}}
 		<span class="help-icon" title="These are documents that are linked to this customer. If you need to copy documents from deals to this customer then you can do that below."></span>
 	{{/ifCond}}
@@ -49,7 +51,11 @@
 		<center class="text-muted w-100 font-12">No document found.</center>
 	{{/if}}
 </div>
-<h5 class="mt-5">Related Documents <span class="help-icon" title="These are related documents that are linked to this customer or to this customer's other deals. You can copy any related document to this deal if you need to."></span></h5>
+<h5 class="mt-5">
+	{{#if records.entity }}
+	{{ else }}
+	Related Documents 
+	<span class="help-icon" title="These are related documents that are linked to this customer or to this customer's other deals. You can copy any related document to this deal if you need to."></span></h5>
 <div class="row files-container squeeze">
     {{#if records.related_documents }}
 	    <div class="row files">
@@ -94,5 +100,6 @@
 		<center class="text-muted w-100 font-12">No document found.</center>
 	{{/if}}
 </div>
+{{/if}}
 </script>
 {% endverbatim %}

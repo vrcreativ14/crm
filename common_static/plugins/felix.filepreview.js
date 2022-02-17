@@ -26,9 +26,14 @@
 		element.on('mouseover' + namespace, opts.eventSelector, function(e) {
 			var f = $(this).data(opts.dataKey).split('/').pop().replace(/\#(.*?)$/, '').replace(/\?(.*?)$/, '');
 			var x = f.split('.').pop().toLowerCase();
-			var p = $('<p>').attr('id', opts.overlayId).css('position', 'absolute')
-				.css('display', 'none');
-				if($.inArray(x, ['jpg', 'png', 'gif', 'jpeg', 'bmp']) > -1)
+			var p = $('<p>').attr('id', opts.overlayId).css('position', 'absolute').css('display', 'none');
+
+				if(($(this).data(opts.dataKey).toLowerCase()).includes(".jpg") ||
+				($(this).data(opts.dataKey).toLowerCase()).includes(".png") ||
+				($(this).data(opts.dataKey).toLowerCase()).includes(".gif") ||
+				($(this).data(opts.dataKey).toLowerCase()).includes(".jpeg") ||
+				($(this).data(opts.dataKey).toLowerCase()).includes(".bmp") ||
+				 $.inArray(x, ['jpg', 'png', 'gif', 'jpeg', 'bmp']) > -1)
 					p.append($('<img>').attr('src', $(this).data(opts.dataKey)));
 				else
 					p.append($('<div class="no-preview"><i class="ti-layout-placeholder"></i>No preview available</div>'));

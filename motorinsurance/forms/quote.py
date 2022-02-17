@@ -51,12 +51,13 @@ class MotorInsuranceQuotedProductForm(forms.ModelForm):
     )
 
     sale_price = MoneyField(
-        widget=forms.TextInput(attrs={'class': 'form-control auto-format-money-field'})
+        widget=forms.TextInput(attrs={'class': 'form-control auto-format-money-field'}),
+        required=True
     )
 
     deductible = MoneyField(
         widget=forms.TextInput(attrs={'class': 'form-control auto-format-money-field'}),
-        required=False
+        required=True
     )
 
     insured_car_value = MoneyField(

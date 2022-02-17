@@ -20,8 +20,13 @@
   }
 
   .card {
-      box-shadow: 1px 4px 45px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 4px 45px 0 rgba(0, 0, 0, 0.1);
   }
+}
+
+.login {
+  background: radial-gradient(at 50% -20%, #1967a9, #0a1832) fixed;;
+  color: #FFFFFF;
 }
 
 .user-thumb {

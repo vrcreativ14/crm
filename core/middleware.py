@@ -1,7 +1,10 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect, JsonResponse
-
+from django.http.response import HttpResponseBadRequest
+from django.contrib.auth.models import User
+from django.urls import reverse, resolve
 from accounts.models import Company
+from django.shortcuts import redirect
 
 
 class AjaxRedirectMiddleware:
@@ -29,6 +32,67 @@ class CompanyMiddleware:
     def __call__(self, request):
         request.company = Company.objects.get(pk=settings.COMPANY_ID)
 
+        return self.get_response(request)
+
+class WorkSpaceMiddleware:
+    """WorkSpaceMiddleware will manage access control for workspaces"""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if isinstance(request.user, User):
+            user = request.user._wrapped
+            if not user.is_superuser:
+                if hasattr(user, 'userprofile'):
+                        spaces = user.userprofile.allowed_workspaces
+                        requested_app = resolve(request.path).app_names
+                        if requested_app:
+                            requested_app = requested_app[0] 
+                        if requested_app == 'accounts':
+                            if resolve(request.path).url_name == "dashboard":
+                                deal = False
+                                if user.userprofile.has_producer_role():
+                                    deal = True
+                                if request.GET.get('entity') == "mortgage":
+                                    if "MG" in spaces:
+                                        ...
+                                    if deal:
+                                        return redirect(reverse('mortgage:deals'))
+                                    # else:
+                                    #     return HttpResponseBadRequest(f'''
+                                    #     You are not allowed to view this page.
+                                    #     <a href={reverse('accounts:dashboard')}> Click to go back </a>''', status=403)
+                                else:
+                                    if not "MT" in spaces:
+                                        return redirect(reverse('accounts:dashboard')+"?entity=mortgage")
+                                    if deal:
+                                        return redirect(reverse('motorinsurance:deals'))
+                            elif resolve(request.path).url_name == "profile":
+                                if request.GET.get('entity') == "mortgage":
+                                    if "MG" in spaces:
+                                        ...
+                                    else:
+                                        return HttpResponseBadRequest(f'''
+                                        You are not allowed to view this page.
+                                        <a href={reverse('accounts:dashboard')}> Click to go back </a>''', status=403)
+                                else:
+                                    if not "MT" in spaces:
+                                        return HttpResponseBadRequest(f'''You are not allowed to view this page
+                                        <a href={reverse('accounts:dashboard')}?entity=mortgage> Click to go back </a>''', status=403)
+
+                        if requested_app == 'motorinsurance':
+                            if not "MT" in spaces:
+                                return redirect(reverse('mortgage:deals'))
+
+                        elif requested_app == 'mortgage':
+                            if not "MG" in spaces:
+                                return redirect(reverse('motorinsurance:deals'))
+                else:
+                    "You are not allowed to view this page. Contact administrator"
+            else:
+                if not hasattr(user, 'userprofile'):
+                    "You are not allowed to view this page. Contact administrator"
         return self.get_response(request)
 
 

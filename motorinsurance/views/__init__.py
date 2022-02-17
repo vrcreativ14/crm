@@ -89,3 +89,6 @@ from .dashboard import MotorDealsCreatedCountView
 from .dashboard import MotorOrdersCreatedCountView
 from .dashboard import MotorOrdersTotalPremiumView
 from .dashboard import MotorSalesConversionRateView
+
+from .deal.new_deal import *
+

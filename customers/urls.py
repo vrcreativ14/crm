@@ -40,5 +40,6 @@ urlpatterns = [
     path('attachment/<int:pk>/delete/', csrf_exempt(CustomerDeleteAttachmentView.as_view()), name='delete-attachment'),
 
     path('<int:pk>/delete/', CustomersDeleteView.as_view(), name='delete-customer'),
+    path("<int:pk>/<str:entity>/", CustomersEditView.as_view(), name="edit-entity"),
     path('merge/<int:pk1>/<int:pk2>/', CustomersMergeView.as_view(), name='merge-customers'),
 ]

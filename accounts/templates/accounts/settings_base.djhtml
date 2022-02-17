@@ -11,13 +11,13 @@
             <div class="search"></div>
             <ul>
                 <li>
-                    <a class="{% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'profile-password' %}current{% endif %}" href="{% url 'accounts:profile' %}">
+                    <a class="{% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'profile-password' %}current{% endif %}" href="{% url 'accounts:profile' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                         <i class="ti-id-badge hide"></i>&nbsp;&nbsp;Your Profile
                     </a>
                 </li>
                 {% if user|can:'list_users' %}
                 <li>
-                    <a class="{% if request.resolver_match.url_name == 'agents' or request.resolver_match.url_name == 'agent-edit' or request.resolver_match.url_name == 'agent-new' or request.resolver_match.url_name == 'agent-invites' %}current{% endif %}" href="{% url 'accounts:agents' %}">
+                    <a class="{% if request.resolver_match.url_name == 'agents' or request.resolver_match.url_name == 'agent-edit' or request.resolver_match.url_name == 'agent-new' or request.resolver_match.url_name == 'agent-invites' %}current{% endif %}" href="{% url 'accounts:agents' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                         <i class="ti-user hide"></i>&nbsp;&nbsp;Users
                     </a>
                 </li>
@@ -32,12 +32,12 @@
 
                     <ul class="{% if request.resolver_match.url_name == 'settings' or request.resolver_match.url_name == 'settings-notifications' or request.resolver_match.url_name == 'settings-integrations' %}{% else %}hide{% endif %}">
                         <li>
-                            <a class="{% if request.resolver_match.url_name == 'settings' %}current{% endif %}" href="{% url 'accounts:settings' %}">
+                            <a class="{% if request.resolver_match.url_name == 'settings' %}current{% endif %}" href="{% url 'accounts:settings' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                                 Account
                             </a>
                         </li>
                         <li>
-                            <a class="{% if request.resolver_match.url_name == 'settings-integrations' %}current{% endif %}" href="{% url 'accounts:settings-integrations' %}">
+                            <a class="{% if request.resolver_match.url_name == 'settings-integrations' %}current{% endif %}" href="{% url 'accounts:settings-integrations' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                                 Integrations
                             </a>
                         </li>
@@ -45,9 +45,10 @@
                     </ul>
                 </li>
                 {% endif %}
-
+                {% for space in request.user.userprofile.allowed_workspaces %}
+                    {% if space == "MT" %}
                 <li>
-                    <a class="parent-li has-childs {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}" href="javascript:">
+                    <a class="parent-li has-childs {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}" href="javascript:">
                         <i class="ti-settings hide"></i>&nbsp;&nbsp;Motor Insurance Workspace Settings
 
                         <i class="ti-angle-right parent-icon {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}open{% endif %}"></i>
@@ -55,28 +56,55 @@
 
                     <ul class="{% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}{% else %}hide{% endif %}">
                         <li>
-                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-users' and workspace_shortcode == 'mt' %}current{% endif %}" href="{% url 'accounts:settings-workspace-users' workspace="mt" %}">
+                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-users' and workspace_shortcode == 'mt' %}current{% endif %}" 
+                            href="{% url 'accounts:settings-workspace-users' workspace='mt' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                                 Workspace Users
                             </a>
                         </li>
                         <li>
-                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-motor-crm' %}current{% endif %}" href="{% url 'accounts:settings-workspace-motor-crm' %}">
+                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-motor-crm' %}current{% endif %}" 
+                            href="{% url 'accounts:settings-workspace-motor-crm' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                                 CRM & E-Commerce
                             </a>
                         </li>
                         <li>
-                            <a class="{% if request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}" href="{% url 'accounts:settings-motor-workspace-notifications' %}">
+                            <a class="{% if request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}" href="{% url 'accounts:settings-motor-workspace-notifications' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                                 Notifications & Email
                             </a>
                         </li>
                         <li>
-                            <a class="{% if workspace_shortcode == 'mt' and request.resolver_match.url_name == 'settings-email-templates' %}current{% endif %}" href="{% url 'accounts:settings-email-templates' workspace='mt' %}">
+                            <a class="{% if workspace_shortcode == 'mt' and request.resolver_match.url_name == 'settings-email-templates' %}current{% endif %}" href="{% url 'accounts:settings-email-templates' workspace='mt' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
                                 Email Templates
                             </a>
                         </li>
                     </ul>
                 </li>
-
+                {% endif %}
+                {% endfor %}
+                {% for space in request.user.userprofile.allowed_workspaces %}
+                {% if space == "MG" %}
+                <li>
+                    <a class="parent-li has-childs {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}current{% endif %}" href="javascript:">
+                        <i class="ti-settings hide"></i>&nbsp;&nbsp;Mortgage Workspace Settings
+                        
+                        <i class="ti-angle-right parent-icon {% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}open{% endif %}"></i>
+                    </a>
+                    
+                    <ul class="{% if workspace_shortcode == 'mt' or request.resolver_match.url_name == 'settings-workspace-motor-crm' or request.resolver_match.url_name == 'settings-motor-workspace-notifications' %}{% else %}hide{% endif %}">
+                        <li>
+                            <a class="{% if request.resolver_match.url_name == 'settings-workspace-users' and workspace_shortcode == 'mt' %}current{% endif %}" href="{% url 'accounts:settings-workspace-users' workspace='mt' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}" >
+                                Workspace Users
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{% if workspace_shortcode == 'mg' and request.resolver_match.url_name == 'settings-email-templates' %}current{% endif %}" href="{% url 'accounts:settings-email-templates' workspace='mg' %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}">
+                                Email Templates
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+                {% endfor %}
             </ul>
         </div>
         {% endif %}

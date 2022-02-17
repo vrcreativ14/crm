@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
         CompanySettings.objects.create(
             company=company,
-            displayed_name='Felix Broker',
+            displayed_name='InsureNex Broker',
             email='admin@felix.insure',
             currency='AED'
         )

@@ -1,5 +1,6 @@
 import logging
-
+from django.utils.dateparse import parse_datetime
+from datetime import date
 from rolepermissions.mixins import HasPermissionsMixin
 from django.core.paginator import Paginator
 from django.contrib.auth import login, authenticate
@@ -14,6 +15,7 @@ from django.urls import reverse
 from django.forms import formset_factory
 from django.views.generic import TemplateView, FormView, View, UpdateView, DetailView
 from rolepermissions.roles import clear_roles, assign_role
+from accounts.serializers import UserProfileSerializer
 
 from felix.constants import ITEMS_PER_PAGE
 
@@ -24,6 +26,10 @@ from accounts.forms import ProfileForm, AgentForm, PasswordChange, InvitationFor
 from accounts.models import UserProfile, Invitation
 
 from core.intercom import Intercom
+from django.db.models import Q
+from rest_framework.generics import ListAPIView
+from accounts.pagination import UserPagination
+from collections import OrderedDict
 
 logger = logging.getLogger('api.typeform')
 
@@ -34,18 +40,31 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data()
-
         params = ''
 
         user_id = self.request.GET.get('user') or None
-
         if user_id:
             params = 'user={}'.format(self.request.GET['user'])
 
         ctx['users'] = User.objects.filter(userprofile__company=self.request.company).order_by('first_name')
         ctx['selected_user_id'] = int(user_id) if user_id else None
-        ctx['params'] = params
-
+        ctx['entity'] = self.request.GET.get('entity')
+        if self.request.GET.get('entity') == "mortgage":
+            self.request.session["selected_product_line"] = "mortgage"
+            ctx['params'] = self.request.get_full_path().replace(self.request.path,'').replace('?','')
+            ctx['filtertype'] = self.request.GET.get('filtertype')
+            if self.request.GET.get('start_date'):
+                if parse_datetime(self.request.GET.get('start_date')):
+                    ctx['start_date'] = parse_datetime(self.request.GET.get('start_date')).date().strftime("%m/%d/%Y") 
+                    ctx['show_date'] = True
+            if self.request.GET.get('end_date'): 
+                if parse_datetime(self.request.GET.get('end_date')):
+                    ctx['end_date'] = parse_datetime(self.request.GET.get('end_date')).date().strftime("%m/%d/%Y")
+                    ctx['show_date'] = True
+        else:
+            self.request.session["selected_product_line"] = "motorinsurance"
+            ctx['params'] = params
+        ctx['entity_switch'] = True
         return ctx
 
 
@@ -63,6 +82,8 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             'profile_form': ProfileForm(instance=profile),
             'profile': profile
         }
+        if request.GET.get('entity') == "mortgage":
+            ctx['entity'] = "mortgage"
 
         log_user_activity(self.request.user, self.request.path)
 
@@ -113,6 +134,67 @@ class ProfilePasswordChangeView(LoginRequiredMixin, TemplateView):
 class LockView(TemplateView):
     template_name = "accounts/lock.djhtml"
 
+class SearchResultAgentView(LoginRequiredMixin, HasPermissionsMixin,ListAPIView):
+        #required_permission = 'list_users'
+        default_order_by = 'user__first_name'
+        page_size = 30
+        pagination_class = UserPagination
+        serializer_class = UserProfileSerializer
+        permission_classes = []
+        def get_queryset(self):
+            qs = UserProfile.objects.filter(company=self.request.company, user__is_active=True).order_by(self.default_order_by)
+            return qs
+        
+        def get_paginated_response(self, data, page,paginator):
+            return JsonResponse(OrderedDict([
+            ('count', paginator.page.count),
+            ('current', page),
+            ('next', paginator.get_next_link()),
+            ('previous', paginator.get_previous_link()),        
+            ('results', data)
+        ]))
+
+        def get_page(self, **kwargs):
+            
+            if 'agents' in kwargs:
+                agents = kwargs.get('agents')
+                paginator = Paginator(agents, per_page=ITEMS_PER_PAGE)
+            else:
+                agents = self.get_queryset()
+                paginator = Paginator(agents, per_page=ITEMS_PER_PAGE)
+
+            return paginator.get_page(self.request.GET.get('page', 1))
+
+        def search_user(self,key, filters):            
+            qs_name = UserProfile.objects.none()
+            qs_email = UserProfile.objects.none()
+            qs_producer = UserProfile.objects.none()
+            if 'name' in filters:
+                qs_name = UserProfile.objects.filter((Q(user__first_name__icontains = key) | Q(user__last_name__contains = key)),company=self.request.company,user__is_active=True).order_by(self.default_order_by)
+            if 'email' in filters:
+                qs_email = UserProfile.objects.filter(user__email__icontains = key,company=self.request.company,user__is_active=True).order_by(self.default_order_by)
+            if 'producer' in filters:                                     
+                qs = UserProfile.objects.all()
+                for user in qs:
+                    if user.get_assigned_role() == 'producer':
+                        qs_producer.union(user)
+
+            qs1 = (qs_name | qs_email).distinct()
+            return qs1
+
+        def get(self, request, *args, **kwargs):            
+            search_key = self.request.GET.get('search_key')
+            filters = self.request.GET.get('filters')
+            page = self.request.GET.get('page', 1)            
+            if search_key:
+                qs = self.search_user(search_key, filters)
+            else:
+                qs = self.get_queryset()
+            paginator = UserPagination()
+            search_result = paginator.paginate_queryset(qs, request)
+            user_serializer = UserProfileSerializer(search_result, many=True)            
+            
+            return paginator.get_paginated_response(user_serializer.data)            
 
 class AgentView(LoginRequiredMixin, HasPermissionsMixin, TemplateView):
     template_name = "accounts/agents.djhtml"
@@ -138,6 +220,8 @@ class AgentView(LoginRequiredMixin, HasPermissionsMixin, TemplateView):
         ctx['agents'] = self.get_page()
 
         ctx['all_agents'] = qs
+        if self.request.GET.get('entity') == "mortgage":
+            ctx['entity'] = "mortgage"
 
         log_user_activity(self.request.user, self.request.path)
 
@@ -299,6 +383,8 @@ class AgentEditView(LoginRequiredMixin, HasPermissionsMixin, UpdateView):
 
         ctx['agent'] = agent
         ctx['post_url'] = reverse('accounts:agent-edit', args=(agent.pk,))
+        if self.request.GET.get('entity') == 'mortgage':
+            ctx['entity'] = "mortgage"
 
         ctx['all_agents'] = UserProfile.objects.filter(company=self.request.company, user__is_active=True).order_by('user__first_name').exclude(user=agent.user)
 

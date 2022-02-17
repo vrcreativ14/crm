@@ -1,0 +1,15 @@
+.git
+.gitignore
+
+**/.DS_Store
+**/__pycache__
+media/
+db.sqlite3
+static/
+
+**/node_modules
+.idea
+
+**/npm-debug.log
+
+log/

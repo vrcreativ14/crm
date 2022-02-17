@@ -1,0 +1,754 @@
+{% extends 'motor_base.djhtml' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	{% block content %}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+			<link rel="icon" href="{% static 'images/icon.png' %}" sizes="518x518"  type="image/x-icon"/>
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+	<title>Nexus</title>
+	<style type="text/css">
+	:root {
+    --ward: #dfb76c;}
+
+      h1{
+      font-family: 'Montserrat-Bold' ;
+      font-size: 30px;
+    }
+    h2{
+      font-family: 'Montserrat-SemiBold' ;
+      font-size: 22px;
+    }
+    .back-btn a,label{
+    	 font-family: 'Montserrat-SemiBold' ;
+      font-size: 16px;
+    }
+    input{
+    	font-family: 'Montserrat-Regular' ;
+      font-size: 13px;
+    }
+    p{
+      font-family: 'Montserrat-Regular' ;
+      font-size: 17.5px;
+    }
+    button{
+      font-family: 'Montserrat-Medium' ;
+      font-size: 15px;
+    }
+
+    .form-body p{
+    	font-family: 'Montserrat-Regular' ;
+      color: #737374;
+      padding: 11px;
+    }
+		.header{
+			padding: 20px 30px;
+			border-bottom: 2px solid #ebebeb;
+		}
+		.logo img{
+			width: 42%;
+			display: block;
+			margin: auto;
+		}
+		.num{
+			text-align: center;
+		}
+		.num p{
+			
+			font-family: Roboto;
+			color: #8191a5;
+			margin-bottom: 0rem !important;
+		}
+		.num a{
+			
+			color: #dbae58;
+			font-weight: bold;
+			font-size: 26px;
+		}
+		.num a:hover{
+			text-decoration: none;
+		}
+		.form-body{
+			background-color: #f5f5f5;
+			background-image: url(images/background.png);
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+		
+
+		}
+		.form-body{
+			padding: 40px 0px;
+		}
+		
+		
+		.logo-car p{
+			padding: 0px !important;
+			text-align: center;
+		}
+		.progress-row img{
+			display: block;
+			margin: auto;
+
+		}
+		.progress-row .col-md-1,.progress-row .col-md-4,.progress-row ,.col-1,.col-10,.col-lg-4{
+			padding: 0px !important;
+		}
+		.col-md-12{
+			padding: 5px !important;
+		}
+progress {
+  border-radius: 0px; 
+  width: 100%;
+  height: 8px;
+}
+progress::-webkit-progress-bar {
+  background-color: #c5c5c5;
+}
+progress::-webkit-progress-value {
+  background-color: #dfb76c;
+  
+}
+::-moz-progress-value {
+  background-color: #dfb76c !important;
+  
+}
+.select-body{
+	margin-top: 2rem;
+	padding: 2rem 3rem 2rem 3rem;
+	background-color: #fff;
+	color: #000 !important;
+	border-radius: 15px;
+
+}
+
+button{
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+	border: 1px solid #f3f3f3;
+    box-shadow: 5px 4px 3px 0px #f3f3f3;
+	width: 350px;
+	margin-top: 1rem;
+	text-align: left;
+}
+button:hover{
+	background-color: #dfb76c;
+	border-radius: 10px;
+	border: 1px solid #dfb76c;
+	margin-top: 1rem;
+	color: #fff;
+}
+button:hover img{
+	filter:brightness(500%);
+}
+button span{
+	padding: 0px 15px;
+	font-weight: 500;
+}
+input:focus,button:focus{
+	outline: none;
+}
+.person{
+	width: 30%;
+}
+.car{
+	width: 70%;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #c5c5c5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dfb76c;
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #dfb76c;
+  border-radius: 8px;
+}
+/*34 - css */
+input[type=text]{
+	width: 250px;
+    border: 1px solid #fff;
+    background: #fff;
+    color: #737374;
+    border: 1px solid #f6f6f6;
+    box-shadow: 5px 5px 3px #f6f6f6;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+input[type=checkbox]{
+	width: 15px;
+	accent-color: #dfb76c;
+    
+}
+.lista-item{
+	margin-top: 0.5rem;
+	height: 245px;
+	overflow-y: scroll;
+}
+ul{
+
+	list-style-type: none;
+	padding-inline-start: 0px !important;
+	background-color: #f6f6f6;
+
+}
+li input[type=button]{
+	width: 100%;
+	text-align: left;
+	font-weight: 400;
+	padding: 5px 5px 5px 20px;
+	background-color: #f6f6f6;
+	border: none;
+	border-bottom: 1px solid #ebebeb;
+}
+li input[type=button]:hover{
+	background-color: #dfb76c;
+	color: #fff;
+}
+.detail{
+  padding-left: 0;
+    text-align: right;
+    padding-right: 0;
+  color: #363636;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  font-family:'Montserrat-Medium' ;
+}
+.type{font-size: 15px;font-family:'Montserrat-Bold'} 
+.normel{font-size: 15px;font-family:'Montserrat-Regular';font-weight: 100!important;}
+.check{
+	padding-top: 1rem;
+}
+.back-btn{padding: 10px 95px!important;}
+.back-btn a{
+	color: #000;
+	font-size: 18px;
+	font-weight: 500;
+}
+.back-btn a:hover{
+text-decoration: none;
+color: #dfb76c;
+}
+.car-detail{
+padding: 10px 0rem 15px 2rem!important;
+}
+.car-detail img{
+	width: 90%;
+}
+.check .container {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  padding-left: 35px;
+  font-size: 16px;
+  font-weight: 500;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input[type=checkbox] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input[type=checkbox] ~ .checkmark {
+  background-color: #f6f6f6;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input[type=checkbox]:checked ~ .checkmark {
+  background-color: #dfb76c;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input[type=checkbox]:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 8px;
+  top: 3px;
+  width: 8px;
+  height: 13px;
+  border: solid #dfb76c;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.logo-car{
+	height: 300px;
+	overflow-y: scroll;
+	margin-top: 1rem;
+}
+.logo-car::-webkit-scrollbar {
+  width: 3px!important;
+}
+.logo-car img{
+
+	width: 60%;
+	display: block;
+	margin: auto;
+}
+.img-car{
+	height:100px ;
+	padding: 30px 0;
+	background-color: #f6f6f6;
+}
+.card-body{
+	font-size: 13px;
+	font-weight: 500;
+	color: #000 !important;
+		background-color: #f6f6f6;
+
+
+}
+.card-body p{
+	color: #000 !important;
+font-family: 'Montserrat-Bold' ;
+font-size: 13px;}
+	.card{
+		border: none !important;
+		margin-bottom: 1rem;
+	}
+	.card-body{
+		padding: 0px 0px 10px 0px !important;
+	}
+@media (max-width: 1200px) {
+	input[type=text]{
+	width: 250px;}
+}
+@media (max-width: 991px) {
+	.car-detail img {
+    width: 100%;
+}
+	.none{
+		display: none;
+	}
+	.header {
+    padding: 20px 5px;
+  }
+  .logo img{
+  	width: 40%;
+  	margin: 0;
+  }
+  .num{
+  	padding-top: 0.7rem;
+  	text-align: right;
+  }
+  .num a {
+  	font-size: 18px;
+}
+.num p {
+    font-size: 12px;
+    font-weight: 500;}
+	.d-md-block{
+		display: none;
+	}
+}
+@media(max-width:1000px) and (min-width:768px){
+  .back-btn{padding: 10px 60px!important;}  
+}
+@media(max-width:515px){
+  .back-btn{padding: 10px 0px!important;}
+}
+@media (max-width: 768px) {
+	p{
+		font-size: 14.5px;
+	}
+	.select-body h2{
+		font-size: 16px;
+	}
+	.form-body h1 {
+		font-size: 1.2rem !important;
+}
+.detail{
+	font-size: 12px;
+}
+	.logo-car{
+	height: 200px;
+	overflow-y: scroll;
+	margin-top: 1rem;
+}
+.logo-car::-webkit-scrollbar {
+  width: 3px!important;
+}
+	.img-car{
+	height:70px ;
+	padding: 30px 0;
+	background-color: #f6f6f6;
+}
+.logo-car p{
+			font-size: 11px;
+		}
+	.none{
+		display: none;
+	}
+	.header {
+    padding: 20px 5px;
+  }
+  .logo img{
+  	width: 40%;
+  	margin: 0;
+  }
+  .num{
+  	padding-top: 0.7rem;
+  	text-align: right;
+  }
+  .num a {
+  	font-size: 18px;
+}
+.num p {
+    font-size: 12px;
+    font-weight: 500;}
+	.d-md-block{
+		display: none;
+	}
+	input[type=text] {
+    width: 200px;}
+	
+li input[type=button]{
+	font-size: 14px;
+}
+.num{
+	margin-top: 0rem;
+	}
+.form-body p {
+    color: #737374;
+    padding: 10px ;}
+ .person{
+	width: 66%;
+}
+.car{
+	padding-top: 8px;
+	width:120%;
+}
+.select-body {
+  padding: 2rem 1.5rem 8rem 1rem}
+  .car-detail{
+padding: 10px 0rem 15px 0rem!important;
+}
+}
+
+@media (max-width: 500px) {
+	
+  .logo img{
+  	width: 70%;
+  	margin: 0;
+  }}
+
+@media (max-width: 360px) {
+	button{
+	
+	width: 300px;
+}
+button span{
+	    padding: 0px 0px;
+
+	font-size: 15px;
+}
+}
+@media(max-width:991px){
+  .detail,.type,.normel{
+    font-size: 12px!important;
+  }
+}
+@media(max-width:991px) and (min-width:515px){
+  .car-detail img{width: 50%!important;padding-top: 5px!important;}
+}
+
+	</style>
+
+
+</head>
+<body>
+	<!--header section-->
+	<section class="header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-4 col-6 logo">
+					<img src="{% static 'images/nexus-logo.png' %}" alt="Nexus Logo">
+				</div>
+				<div class="col-lg-4 col-6 none">
+					
+				</div>
+				<div class="col-lg-4 col-6 num">
+					
+						<p>Need some help? Call Us</p>
+						<p><a href="tel:+97142378294">+971 4 237 8294</a></p>
+					
+					
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!--end of header section-->
+	<!--form section-->
+	<section class="form-body">
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<div class="col-md-10 col-10">
+					<!--text row-->
+					<div class="row">
+						<center>
+							<h1>Find the most competitive car insurance quote in the UAE</h1>
+							<p>We are offering up to 20% off on some deals. Complete this short 2 minute form so we can email you the most competitive quotes.</p>
+						</center>
+					</div>
+					<!--end of text row-->
+					<!--progress row-->
+					<div class="row progress-row d-flex justify-content-center" >
+						<div class="col-1">
+							<img src="{% static 'images/car.png' %}" alt="car" class="car">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="30" max="100"> 30% </progress>
+
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/person.png' %}" alt="person" class="person">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="0" max="100"> 0% </progress>
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/file.png' %}" class="person" alt="file">
+
+						</div>
+					</div>
+					<!--end of progress row-->
+					<!--start of first section -->
+					<div class="row select-body car-detail">
+<div class="col-lg-1 col-md-1 col-1 detail">							<img src="{% static 'images/car.png' %}" >
+						</div>
+<div class="col-lg-10 col-md-10 col-9">							
+							<span class="detail">Car Details: <span class="type">Type:</span> <span class="normel"> Renewal, </span><span class="type">Car Make:</span><span class="normel"> Honda,City,2009</span></span>
+						</div>
+<div class="col-lg-1 col-md-1 col-2 text-right">							<a href="" style="color: #000"><i class="fa fa-pencil" aria-hidden="true" style="font-size: 12px;"></i></a>
+						</div>
+					</div>
+					<!--end of first section-->
+					<!--select row-->
+					<div class="row select-body">
+						<div class="col-md-12 col-12">
+							<h2>Select your car make?</h2>
+
+						</div>
+							<div class="col-lg-4 col-md-6  col-12">
+									<input type="text" name="" placeholder="Select or search here">
+								</select>
+							</div>
+							<div class="col-lg-6 col-md-6 col-12 check">
+								<label class="container " style="margin-top: 1rem;">Can't find your car?
+							  <input type="checkbox" >
+							  <span class="checkmark"></span>
+							</label>
+
+							</div>
+							<div class="row logo-car">																																																		
+								
+							<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 20px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKALFRMO.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Alfa Romeo</p>
+									  </div>
+									</div>
+									
+								</div>
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 25px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKASTMRTN.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Aston Martin</p>
+									  </div>
+									</div>
+									
+								</div>
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 20px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKAUDI.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Audi</p>
+									  </div>
+									</div>
+									
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car"style="padding: 12px 0px 3px 0px;
+">
+									  <img class="card-img-middle" src="{% static 'images/logos/MKBMW.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">BMW</p>
+									  </div>
+									</div>
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 40px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKFRD.png' %}" alt="Card image cap"></div>
+
+									  <div class="card-body">
+									    <p class="card-text">Ford</p>
+									  </div>
+									</div>
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 40px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKHND.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Honda</p>
+									  </div>
+									</div>
+								</div>
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 40px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKHYND.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Hyundai</p>
+									  </div>
+									</div>
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 20px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKLXS.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Lexius</p>
+									  </div>
+									</div>
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 10px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKMTSBSH.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">MITSUBISHI</p>
+									  </div>
+									</div>
+									
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 25px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKNSSN.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Nissan</p>
+									  </div>
+									</div>
+									
+								</div>																								
+								
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 10px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKBENZ.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Mercedes</p>
+									  </div>
+									</div>									
+								</div>
+
+								<div class="col-md-2 col-4">
+									<div class="card" style="width: 100%"><div class="img-car" style="padding: 10px 0px 0px 0px;
+">
+									  <img class="card-img-top" src="{% static 'images/logos/MKTYT.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Toyota</p>
+									  </div>
+									</div>									
+								</div>
+								
+								
+							</div>
+							
+								
+							
+							
+							<div class="col-12 second-q">
+								<form action="/motor-insurance/motor-step5/">
+								<button class="next-btn">Next</button>
+							</form>
+							</div>
+					</div>
+
+					<!--end of select row-->
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12 back-btn">
+						<p><a href="/motor-insurance/motor-step3/">Go Back <img src="{% static 'images/back.png' %}" width="18px"></a></p>
+					</div>
+			</div>
+
+		</div>
+		
+		
+	</section>
+
+	<!--end of form section-->
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+</html>

@@ -2,6 +2,7 @@
 import dateutil
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
+from mortgage.models import Deal as mortgagedeals
 
 from felix.constants import GENDER_CHOICES, EMIRATES_LIST
 
@@ -15,7 +16,6 @@ class Timeline:
         cls.model_name = obj._meta.model_name.title()
 
         history = list()
-
         for item in trail.change_history:
             if item['type'] == 'create':
                 content = '{} created'.format(cls.model_name)
@@ -35,12 +35,25 @@ class Timeline:
                 })
             elif item['type'] == 'email':
                 message = cls.get_file_message(item['message'])
-                history.append({
+                msg = message[0]
+                email_pk = None
+                try:
+                    if isinstance(obj, mortgagedeals):
+                        sub = message[0].split("emailpk")
+                        msg = sub[0].strip()
+                        email_pk = sub[1].strip()
+                except:
+                    pass
+                data = {
                     'type': 'email',
-                    'content': message[0],
+                    'content': msg,
                     'user': item['user'],
                     'date': cls.formatted_date(item['timestamp'])
-                })
+                }
+                if email_pk:
+                    data['email_pk'] = email_pk
+                history.append(data)
+
             elif item['type'] == 'edit':
                 for k, v in item['changes'].items():
                     field_name = k.replace('_', ' ').title()

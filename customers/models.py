@@ -14,6 +14,7 @@ from felix.constants import COUNTRIES
 from felix.constants import FIELD_LENGTHS, GENDER_CHOICES, MARITAL_STATUS_LIST
 
 from motorinsurance.models import Deal as MotorDeals, Policy
+from mortgage.models import Deal as MortgageDeals
 
 
 class Customer(AuditTrailMixin, models.Model):
@@ -50,13 +51,18 @@ class Customer(AuditTrailMixin, models.Model):
     def __str__(self):
         return "{} - {}".format(self.name, self.email)
 
-    def save(self, *args, **kwargs):
+    def save(self, entity=None, *args, **kwargs):
         super(Customer, self).save(*args, **kwargs)
-
+        self.entity = entity
+        if hasattr( self, 'customer_mortgage_profiles'):
+            self.entity = "Mortgage"
         Algolia().upsert_customer_record(self)
 
     def get_motor_deals(self):
         return MotorDeals.objects.filter(customer=self)
+
+    def get_mortgage_deals(self):
+        return MortgageDeals.objects.filter(customer=self)
 
     def get_whatsapp_formatted_number(self):
         return ''.join([n for n in self.phone if n.isdigit()])
@@ -64,9 +70,15 @@ class Customer(AuditTrailMixin, models.Model):
     def get_non_deleted_deals(self):
         return self.get_motor_deals().exclude(is_deleted=True).order_by('-created_on')
 
+    def get_non_deleted_mortgage_deals(self):
+        return self.get_mortgage_deals().exclude(status="deleted").order_by('-created_date')
+
     def get_open_deals(self):
         return self.get_motor_deals().filter(is_deleted=False).exclude(
             stage__in=[MotorDeals.STAGE_WON, MotorDeals.STAGE_LOST]).order_by('-created_on')
+
+    def get_mortgage_open_deals(self):
+        return self.get_mortgage_deals().exclude(status='deleted').order_by('-created_date')
 
     def get_initials(self):
         return get_initials_from_the_name(self.name or self.email)

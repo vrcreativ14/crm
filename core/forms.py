@@ -38,9 +38,12 @@ class TaskForm(forms.ModelForm):
 
     def __init__(self, **kwargs):
         self.company = kwargs.pop('company')
+        create_task = kwargs.pop('create_task', None)
+        model = kwargs.pop('model', None)
         super(TaskForm, self).__init__(**kwargs)
-
         self.fields['assigned_to'].queryset = User.objects.filter(userprofile__company=self.company, is_active=True)
+        if create_task:
+            self.fields['deal'] = forms.ModelChoiceField(queryset=model.objects.all())
 
     class Meta:
         model = Task
@@ -82,7 +85,6 @@ class TaskSearchAndOrderingForm(forms.Form):
         company = kwargs.pop('company')
 
         super().__init__(**kwargs)
-
         self.fields['assigned_to'].queryset = User.objects.filter(userprofile__company=company)
         self.fields['deal'].queryset = Deal.objects.filter(company=company)
         self.fields['assigned_to'].choices = [('', 'Select user to filter'), ('unassigned', 'All Unassigned')] + list(

@@ -3,9 +3,9 @@
   Menu
 ===================*/
 
-body {
-  padding-bottom: 65px;
-}
+//body {
+//  padding-bottom: 65px;
+//}
 
 .wrapper {
   margin-top: 30px;
@@ -52,6 +52,11 @@ body {
   // padding-bottom: 60px;
   box-shadow: 1px 0 14px 0 rgba(0, 0, 0, 0.5);
   width: 100%;
+}
+
+.switch-navbar {
+  background: #FFF;
+  border-radius: 4px;
 }
 
 
@@ -210,7 +215,7 @@ body {
       & > a {
         display: block;
         color: rgba($white, 0.9);
-        font-size: 13px;
+        font-size: 16px;
         -webkit-transition: all .5s ease;
         transition: all .5s ease;
         line-height: 20px;
@@ -228,7 +233,7 @@ body {
         }
 
         i {
-          font-size: 13px;
+          font-size: 16px;
           margin-right: 5px;
           text-align: center;
           -webkit-transition: all .5s ease;

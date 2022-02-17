@@ -16,8 +16,9 @@ from accounts.views import InvitationsView
 from accounts.views import LockView
 from accounts.views import ProfilePasswordChangeView
 from accounts.views import ProfileView
+from accounts.views import SearchResultAgentView
 from accounts.views.settings import *
-
+from django.views.decorators.csrf import csrf_exempt
 app_name = 'accounts'
 
 urlpatterns = [
@@ -35,6 +36,7 @@ urlpatterns = [
     path('lock/', LockView.as_view(), name='lock'),
     path('profile/', ProfileView.as_view(), name='profile'),
     path('users/', AgentView.as_view(), name='agents'),
+    path('users/search/', SearchResultAgentView.as_view(), name='search-agents'),
     path('users/add/', AgentAddView.as_view(), name='agent-new'),
     path('users/invite/', InvitationsView.as_view(), name='agent-invites'),
     re_path('users/invite/cancel/(?P<pk>.+)/', InvitationCancelView.as_view(), name='agent-invite-cancel'),
@@ -49,12 +51,12 @@ urlpatterns = [
     # path('settings/notifications/', SettingsNotificationsView.as_view(), name='settings-notifications'),
     path('settings/integrations/', SettingsIntegrationsView.as_view(), name='settings-integrations'),
 
-    re_path(
-        'settings/(?P<workspace>(mt))/email-templates/(?P<type>.+)/',
+    path(
+        'settings/<str:workspace>/email-templates/<str:type>/',
         SettingsEmailTemplatesDetailView.as_view(), name='settings-email-templates-detail'),
 
-    re_path(
-        'settings/(?P<workspace>(mt))/email-templates/',
+    path(
+        'settings/<str:workspace>/email-templates/',
         SettingsEmailTemplatesListView.as_view(), name='settings-email-templates'),
 
     path('settings/mt/notifications/',

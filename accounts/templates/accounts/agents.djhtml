@@ -9,6 +9,8 @@
 {% block settings_content %}
 
     <div class="row justify-content-md-center p-t-60">
+        <input type="hidden" name="user_value" id="user_value" value="{{ request.user.pk }}" />
+        <input type="hidden" name="entity_value" id="entity_value" value="{{ entity }}" />
         <div class="col-lg-9">
             <div class="card m-b-20">
                 <div class="row">
@@ -25,6 +27,57 @@
                 <hr />
 
                 {% if agents %}
+                <div class="row">
+                    <div class="col-lg-1">                        
+                        <div class="options-table float-right" style="align-self: center;">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false" style="align-self: center;">
+                               <i class="ti-filter"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" style="padding:20px;">                                
+                                    <div class="dropdown-item form-check">
+                                        <input id="search_name_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'name' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                        <label class="form-check-label">Filter by name</label>
+                                    </div>                                                                         
+                                    <div class="dropdown-item form-check">
+                                        <input id="search_email_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'email' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                        <label class="form-check-label">Filter by Email</label>
+                                    </div>       
+                                    <!-- <div class="dropdown-item form-check">
+                                        <label class="form-check-label">Filter by Role</label>
+                                        <div>
+                                            <input id="search_role_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                            <label class="form-check-label">Producer</label>
+                                        </div>
+                                        <div>
+                                            <input id="search_role_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                            <label class="form-check-label">Regular User</label>
+                                        </div>
+                                        <div>
+                                            <input id="search_role_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                            <label class="form-check-label">Admin User</label>
+                                        </div>
+                                    </div>-->
+                                    <button type="button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Apply</button>                                                                                                                                                              
+                            </div>
+                        </div>
+                    </div>
+                 
+                    <div class="col-lg-3">    
+                        <div class="table-filters">                                            
+                        <div class="input-group open-search-field">                            
+                            <input name="search_term" id="id-search-user" style="padding-left: 25px;" type="text" class="form-control" placeholder="Search User by name or email" {% if search_key %} value={{search_key}} {% endif %} />
+                            
+                        </div>   
+                    </div>                    
+                        
+                    </div>
+                    <!-- <div class="col-lg-1">
+                        <button id="search-button" type="button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Search</button>    
+                    </div> -->                    
+                </div>                
                     <small class="table_counts">{{ agents.paginator.count }} records found</small>
                     <table class="table felix-table" cellspacing="0" width="90%">
                         <thead>
@@ -35,7 +88,7 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody class="felix-table-body">
+                        <tbody class="felix-table-body" id="id-felix-table-body">
                             {% for agent in agents %}
                                 <tr
                                     id="tr_{{ agent.pk }}"
@@ -56,9 +109,10 @@
                                     <td class="link">
                                         <a class="text-primary" href="{% if agent.user_id == request.user.pk %}
                                             {% url 'accounts:profile' %}
-                                        {% else%}
-                                            {% url 'accounts:agent-edit' pk=agent.pk %}
-                                        {% endif %}">Edit</a> | <a data-id="{{ agent.pk }}" data-status-url="{% url 'accounts:agent-deals-and-delete' pk=agent.pk %}" class="remove-agent text-danger link" href="javascript:void(0)">Delete</a>
+                                        {% else %}
+                                            {% url 'accounts:agent-edit' pk=agent.pk %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}
+                                        {% endif %}">Edit</a> | <a data-id="{{ agent.pk }}" data-status-url="{% url 'accounts:agent-deals-and-delete' pk=agent.pk %}{% if entity == 'mortgage'%}?entity=mortgage{% endif %}" 
+                                        class="remove-agent text-danger link" href="javascript:void(0)">Delete</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -83,14 +137,131 @@
                     </div>
                     {% endif %}
                 {% else %}
+                {% if search_key %}
+                <center>
+                    <p class="font-16 m-60 p-b-60">No user record found for <i>{{search_key}}</i>. <a href="{% url 'accounts:agents' %}">Go Back to Users List</a> </p>
+                </center>
+                {% else %}
                     <center>
                         <p class="font-16 m-60 p-b-60">You do not have any user. Please <a href="{% url 'accounts:agent-new' %}" class="">click here</a> to add one.</p>
                     </center>
+                {% endif %}
                 {% endif %}
             </div>
         </div>
     </div>
 
     {% include "accounts/agent_remove_modal.djhtml" %}
+<script>
 
+document.addEventListener('click',function(e){
+    
+    if(e.target && e.target.className == 'page-link search-result'){          
+          let url = e.target.id
+          SendRequest(url)
+     }
+ });
+
+    function SendRequest(url){
+        document.querySelector('table.felix-table').classList.add('opacity')        
+        let table_body = document.querySelector('#id-felix-table-body')
+        $.ajax({
+         type: "GET",
+         url: url,        
+         contentType: "application/json; charset=utf-8",
+         dataType: "json",
+         success: function(data){             
+             let res = data['results'];
+             let len = res.length;
+             let count = data['count']
+             let loop = data["total_pages"];
+             let current_page = data["current"]
+             let pagination_list = '' //document.querySelector('.pagination')
+             let table_content = ''
+             let workspace = ''
+             let role = '' //document.querySelector('.pagination')
+             let u = document.getElementById('user_value').value
+             let entity = document.getElementById('entity_value').value
+             let edit_url = ''
+             let delete_url = ''
+             document.querySelector('.table_counts').innerHTML = `${count} records found`
+             for(let j=0; j < len; j++){
+
+                if (u == res[j]['id']){
+                    edit_url = `/accounts/profile/`                                           
+                }
+                    
+                else{
+                    if (entity == 'mortgage'){
+                        edit_url = `users/edit/${res[j]['id']}/?entity=mortgage`                        
+                    }
+                    else{
+                        edit_url = `users/edit/${res[j]['id']}/`                        
+                    }
+                }
+                if (entity == 'mortgage'){                        
+                        delete_url = `users/deals/${res[j]['id']}/?entity=mortgage`
+                    }
+                    else{                        
+                        delete_url = `users/deals/${res[j]['id']}/`
+                    }
+
+                table_content += `<tr id='tr_${res[j]['id']}' data-url='${edit_url}'><td>`
+                table_content += `${res[j]['user']['first_name']} ${res[j]['user']['last_name']}<div class="text-muted font-12">${res[j]['user']['username']}</div></td>`
+                workspace = `${res[j]['allowed_workspaces']}`
+                role = `${res[j]['role']}`
+                table_content += `<td>${workspace.length}</td>`
+                if (role && role != 'null')
+                    table_content+= `<td class="capitalize">${role}</td>`                    
+                else
+                    table_content += '<td class="capitalize">None</td>'
+                
+                
+                
+                table_content+= `<td>
+                    <a class="text-primary" href='${edit_url}'>Edit</a> | <a data-id='${res[j]['id']}' data-status-url='${delete_url}' class="remove-agent text-danger link" href="javascript:void(0)">Delete</a>
+                    </td></tr>`
+             }
+             //table_content += '</tr>'
+             let url = ''
+             for(let i=1; i <= loop; i++){
+                 if(i == current_page)
+                    pagination_list += `<li class="page-item active"><a href="javascript:" class="page-link active">${current_page}</a></li>`
+                 else {
+                    url = GetUrl(i)                    
+                    pagination_list += `<li class="page-item"><a id="${url}" class="page-link search-result">${i}</a></li>`
+                 }
+             }
+             document.querySelector('.pagination').innerHTML = pagination_list
+             table_body.innerHTML = table_content
+             document.querySelector('table.felix-table').classList.remove('opacity')
+            },
+        error:function(errors){
+            document.querySelector('table.felix-table').classList.remove('opacity')
+            console.log(errors)
+            Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+        }
+        });
+    }
+    
+    document.querySelector('#id-search-user').addEventListener('input', function(){        
+        let url = GetUrl()  
+        SendRequest(url)        
+    })
+    
+    function GetUrl(pageNum){
+        let key = document.querySelector('#id-search-user').value
+        let filters = ''
+        if (document.getElementById('search_name_checkbox').checked)
+            filters += 'name,'
+        if (document.getElementById('search_email_checkbox').checked)
+            filters += 'email,'
+        let url = ''
+        if (pageNum)
+            url = `/accounts/users/search/?search_key=${key}&filters=${filters}&page=${pageNum}`
+        else
+            url = `/accounts/users/search/?search_key=${key}&filters=${filters}`
+        return url.toString()
+    }
+</script>
 {% endblock %}

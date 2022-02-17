@@ -18,6 +18,7 @@ from core.email.backend_sendgrid import Sendgrid
 from core.email.exceptions import EmailSendingException
 from core.utils import clean_and_validate_email_addresses
 from felix.constants import INVITATION_EXPIRE_DAYS
+from felix.settings import POSTMARK_TOKEN
 
 
 class Emailer:
@@ -29,7 +30,7 @@ class Emailer:
         if settings.DEBUG:
             return Console()
 
-        if self.company_settings.postmark_api_key:
+        if POSTMARK_TOKEN:
             return Postmark(self.company_settings)
         else:
             return Mailgun(self.company_settings)
@@ -191,7 +192,7 @@ class Emailer:
                 )
             }
 
-            subject = 'Your Felix Tasks Reminder for {}'.format(
+            subject = 'Your InsureNex Tasks Reminder for {}'.format(
                 datetime.datetime.today().strftime('%A, %d %B %Y'))
 
             text_template = get_template('email/cron_tasks_summary.html')
@@ -216,7 +217,7 @@ class Emailer:
                 )
             }
 
-            subject = 'Join {} on Felix'.format(self.company.name)
+            subject = 'Join {} on InsureNex'.format(self.company.name)
 
             text_template = get_template('email/invitation_email.html')
             content = text_template.render(ctx)
@@ -390,7 +391,7 @@ class Emailer:
         bcc_emails = ''
         documents = ''
         subject = '{} submitted by user'.format(form.title)
-        email_body = f'<p>Hi,</p><p>A new submission has been made for the form "{form.title}".</p><p>Thanks,<br>Team Felix</p>'
+        email_body = f'<p>Hi,</p><p>A new submission has been made for the form "{form.title}".</p><p>Thanks,<br>Team InsureNex</p>'
 
         to_email = self.company.workspacemotorsettings.email
         from_email = f'{self.company_settings.company.name} <{self.company.workspacemotorsettings.email}>'
@@ -416,7 +417,7 @@ class Emailer:
         cc_emails = []
         documents = ''
         subject = 'Thankyou for submitting {} on {}'.format(form.title, self.company.name)
-        email_body = f'<p>Hi {signer_name},</p><p>Thank you for submitting {form.title}. We\'ve received your details and attached is the copy for your reference.</p><p>Thanks,<br>Team Felix</p>'
+        email_body = f'<p>Hi {signer_name},</p><p>Thank you for submitting {form.title}. We\'ve received your details and attached is the copy for your reference.</p><p>Thanks,<br>Team InsureNex</p>'
 
         cc_emails.append(self.company.workspacemotorsettings.email)
         from_email = f'{self.company_settings.company.name} <{self.company.workspacemotorsettings.email}>'

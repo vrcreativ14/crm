@@ -5,8 +5,7 @@ Django settings for felix project.
 import os
 
 import environ
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,6 +88,8 @@ INSTALLED_APPS = [
     'motorinsurance',
 
     'auto_quoter',
+    'mortgage',
+    'mortgagequote',
 ]
 
 MIDDLEWARE = [
@@ -103,6 +104,8 @@ MIDDLEWARE = [
     'core.middleware.AjaxRedirectMiddleware',
     'core.middleware.CompanyMiddleware',
     'core.middleware.RemoteAddressMiddleware',
+    'core.middleware.WorkSpaceMiddleware',
+
 ]
 
 REST_FRAMEWORK = {
@@ -253,8 +256,10 @@ EMAIL_CONFIGURATION = {
     }
 }
 
+POSTMARK_TOKEN = env('POSTMARK_TOKEN')
+
 ANYMAIL = {
-    "POSTMARK_SERVER_TOKEN": env('POSTMARK_TOKEN'),
+    "POSTMARK_SERVER_TOKEN": POSTMARK_TOKEN,
 }
 
 EMAIL_BACKEND = 'anymail.backends.postmark.EmailBackend'
@@ -327,7 +332,9 @@ ENVIRONMENT = env('ENVIRONMENT_NAME')
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-
+if not DEBUG:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 if not DEBUG:
     sentry_sdk.init(
         environment=env('ENVIRONMENT_NAME'),

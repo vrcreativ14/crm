@@ -301,6 +301,13 @@ class UserProfile(AuditTrailMixin, models.Model):
             })
         )
 
+    def get_mortgage_lead_form_url(self):
+
+        return "https://{}{}".format(
+            'nexusmortgagebrokers.com/nmb/',
+            f'?email={self.user.email}&source={self.user.first_name}_{self.user.last_name}'
+        )
+
     def get_normalized_whatsapp_number(self):
         if self.whatsapp_widget_for_ecommerce and is_valid_number(self.phone):
             return normalize_phone_number(self.phone)

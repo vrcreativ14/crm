@@ -1,0 +1,16 @@
+.idea
+__pycache__/
+venv/
+.DS_Store
+.env
+node_modules
+log/
+bin/
+lib/
+include/
+site-packages/
+insurers/
+media/
+mortgage/
+motorinsurance_shared/
+accounts/

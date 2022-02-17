@@ -52,10 +52,11 @@ class Command(BaseCommand):
         customers_index = self.algolia.get_index(customers_index_name)
         customers_index.set_settings({
             'searchableAttributes': [
-                'name', 'email', 'phone', 'nationality', 'phone_number_suffixes'
+                'name', 'email', 'phone', 'entity','nationality', 'phone_number_suffixes'
             ],
             'attributesForFaceting': [
                 'searchable(status)',
+                'searchable(entity)',
             ],
             'ranking': [
                 'desc(created_on)'

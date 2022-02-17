@@ -27,7 +27,7 @@
                                     <label class="font-12 fw-300 c-vlgrey">
                                         Help Scout Client Id
                                         <span class="help-icon"
-                                              title="The client id for your Help Scout integration. Contact Felix support for details on how to set this up."></span>
+                                              title="The client id for your Help Scout integration. Contact InsureNex support for details on how to set this up."></span>
                                     </label>
                                 </div>
                                 <div class="col-lg-8">
@@ -39,7 +39,7 @@
                                     <label class="font-12 fw-300 c-vlgrey">
                                         Help Scout Client Secret
                                         <span class="help-icon"
-                                              title="The client secret for your Help Scout integration. Contact Felix support for details on how to set this up."></span>
+                                              title="The client secret for your Help Scout integration. Contact InsureNex support for details on how to set this up."></span>
                                     </label>
                                 </div>
                                 <div class="col-lg-8">
@@ -51,7 +51,7 @@
                                     <label class="font-12 fw-300 c-vlgrey">
                                         Help Scout Mailbox Id
                                         <span class="help-icon"
-                                              title="The mailbox id for your Help Scout integration. Contact Felix support for details on how to set this up."></span>
+                                              title="The mailbox id for your Help Scout integration. Contact InsureNex support for details on how to set this up."></span>
                                     </label>
                                 </div>
                                 <div class="col-lg-8">

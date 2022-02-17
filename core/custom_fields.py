@@ -16,6 +16,11 @@ class MoneyField(forms.DecimalField):
     def clean(self, value):
         try:
             value = float(value.replace(',', ''))
+            if not value:
+                value = '0.00'
+            elif value == "":
+                value = '0.00'
+            
             return super().clean(value)
         except (ValueError, TypeError):
             raise ValidationError('Invalid value')

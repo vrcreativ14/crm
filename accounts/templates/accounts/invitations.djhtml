@@ -30,7 +30,7 @@
             </div>
             <div class="card m-b-20">
                 <div class="row">
-                    <div class="col col-8"><h4 class="header-title m-l-15 m-t-15 m-b-0">Invite people to <strong>Felix</strong></h4></div>
+                    <div class="col col-8"><h4 class="header-title m-l-15 m-t-15 m-b-0">Invite people to <strong>InsureNex</strong></h4></div>
                     <div class="col col-4">
                         <div class="add-new">
                             <a href="{% url 'accounts:agent-new' %}" class="btn btn-outline-primary btn-sm">Or create manually</a>

@@ -1,5 +1,5 @@
 var gulp         = require('gulp');
-var sass         = require('gulp-sass');
+var sass         = require('gulp-sass')(require('sass'));
 var concat       = require('gulp-concat');
 var browsersync  = require('browser-sync').create();
 var webserver    = require('gulp-webserver');
@@ -46,58 +46,13 @@ var path_for_distribution = '../../common_static/dist';
 var path_for_overrided_sass_files = '../../common_static/public/scss/override/*.scss';
 
 // Custom JS for each page
-var path_for_custom_js_files = '../../common_static/js/components/*.js';
+var path_for_custom_js_files = [
+  '../../common_static/js/components/*.js',
+  '../../common_static/js/components/mortgage/*.js',
 
-// Compile SASS to CSS
-gulp.task('sass', ['minifycss'], function(){
-  return gulp.src(path_for_sass_files)
-    .pipe(sass()) // Using gulp-sass
-    .pipe(gulp.dest('../../common_static/css'));
-});
+];
 
-gulp.task('sass_public', ['minifycss_public'], function() {
-  return gulp.src(path_for_public_sass_files)
-    // .pipe(debug({title: 'before:'}))
-    .pipe(sass()) // Using gulp-sass
-    // .pipe(debug({title: 'after:'}))
-    .pipe(gulp.dest('../../common_static/public/css'))
-    .pipe(print());
-});
-
-gulp.task('sass_public_override', function() {
-  return gulp.src(path_for_public_sass_files)
-    .pipe(sass()) // Using gulp-sass
-    .pipe(gulp.dest('../../common_static/public/css'))
-    .pipe(print());
-});
-
-gulp.task('browsersync', function() { 
-  browsersync.init({
-    proxy: "localhost:8002",
-  });
-});
-
-// Watch JS/Sass files
-gulp.task('watch', function(done) {
-  gulp.watch(path_for_sass_files, ['sass']);
-  gulp.watch(path_for_public_sass_files, ['sass_public']);
-  gulp.watch(path_for_overrided_sass_files, ['sass_public_override']);
-  gulp.watch(paths_for_js_files, ['minifyjs']);
-  gulp.watch(path_for_custom_js_files, ['minifycustomjs']);
-  gulp.watch(paths_for_public_js_files, ['minifyjs_public']);
-  done();
-});
-
-gulp.task('webserver', function() {
-  gulp.src('app')
-    .pipe(webserver({
-      livereload: true,
-      directoryListing: true,
-      open: true
-    }));
-});
-
-gulp.task('minifycss', function() {
+gulp.task('minifycss', async function() {
   var file_name = "style.min.css";
 
   if (process.argv[3] == '-p') {
@@ -117,7 +72,7 @@ gulp.task('minifycss', function() {
   }
 });
 
-gulp.task('minifycss_public', function() {
+gulp.task('minifycss_public', async function() {
   var file_name = "style.public.min.css";
   if (process.argv[3] == '-p') {
     return gulp.src(paths_for_public_css_files)
@@ -136,7 +91,7 @@ gulp.task('minifycss_public', function() {
   }
 });
 
-gulp.task('minifyjs', function() {
+gulp.task('minifyjs', async function() {
   var file_name = "scripts.min.js";
 
   if (process.argv[3] == '-p') {
@@ -148,7 +103,7 @@ gulp.task('minifyjs', function() {
   }
 });
 
-gulp.task('minifycustomjs', function() {
+gulp.task('minifycustomjs', async function() {
   var file_name = "app.js";
 
   if (process.argv[3] == '-p') {
@@ -160,7 +115,7 @@ gulp.task('minifycustomjs', function() {
   }
 });
 
-gulp.task('minifyjs_public', function() {
+gulp.task('minifyjs_public', async function() {
   var file_name = "scripts.public.min.js";
 
   if (process.argv[3] == '-p') {
@@ -172,7 +127,56 @@ gulp.task('minifyjs_public', function() {
   }
 });
 
-gulp.task('build', ['minifycss', 'minifycss_public', 'minifyjs', 'minifycustomjs', 'minifyjs_public']);
-gulp.task('default', ['sass', 'sass_public', 'sass_public_override', 'build', 'browsersync', 'watch']);
+// Compile SASS to CSS
+gulp.task('sass', gulp.series('minifycss', function(){
+  return gulp.src(path_for_sass_files)
+    .pipe(sass()) // Using gulp-sass
+    .pipe(gulp.dest('../../common_static/css'));
+}));
 
-gulp.task('crm', ['sass', 'sass_public', 'build', 'browsersync', 'watch']);
+gulp.task('sass_public', gulp.series('minifycss_public', function() {
+  return gulp.src(path_for_public_sass_files)
+    // .pipe(debug({title: 'before:'}))
+    .pipe(sass()) // Using gulp-sass
+    // .pipe(debug({title: 'after:'}))
+    .pipe(gulp.dest('../../common_static/public/css'))
+    .pipe(print());
+}));
+
+gulp.task('sass_public_override', async function() {
+  return gulp.src(path_for_public_sass_files)
+    .pipe(sass()) // Using gulp-sass
+    .pipe(gulp.dest('../../common_static/public/css'))
+    .pipe(print());
+});
+
+gulp.task('browsersync', async function() {
+  browsersync.init({
+    proxy: "localhost:8002",
+  });
+});
+
+// Watch JS/Sass files
+gulp.task('watch', function(done) {
+  gulp.watch(path_for_sass_files, gulp.series('sass'));
+  gulp.watch(path_for_public_sass_files, gulp.series('sass_public'));
+  gulp.watch(path_for_overrided_sass_files, gulp.series('sass_public_override'));
+  gulp.watch(paths_for_js_files, gulp.series('minifyjs'));
+  gulp.watch(path_for_custom_js_files, gulp.series('minifycustomjs'));
+  gulp.watch(paths_for_public_js_files, gulp.series('minifyjs_public'));
+  done();
+});
+
+gulp.task('webserver', async function() {
+  gulp.src('app')
+    .pipe(webserver({
+      livereload: true,
+      directoryListing: true,
+      open: true
+    }));
+});
+
+gulp.task('build', gulp.series('minifycss', 'minifycss_public', 'minifyjs', 'minifycustomjs', 'minifyjs_public'));
+gulp.task('default', gulp.series('sass', 'sass_public', 'sass_public_override', 'build', 'browsersync', 'watch'));
+
+gulp.task('crm', gulp.series('sass', 'sass_public', 'build', 'browsersync', 'watch'));

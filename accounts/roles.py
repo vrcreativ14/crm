@@ -41,6 +41,12 @@ permissions = {
     'update_tasks': True,
     'export_tasks': True,
 
+    #Mortgage Tasks
+    'list_mortgage_tasks': True,
+    'create_mortgage_tasks': True,
+    'update_mortgage_tasks': True,
+    'export_mortgage_tasks': True,
+
     # Users/Agents
     'list_users': True,
     'create_users': True,
@@ -48,7 +54,16 @@ permissions = {
 
     # Company Specific
     'company_settings': True,
-    'company_dashboard': True,
+    'company_dashboard': True, 
+
+    # Bank
+    'create_banks': True,
+    'delete_banks': True,
+    'edit_banks' : True,
+    'update_mortgage_deals': True,
+    "list_mortgage_banks":True,
+    "list_mortgage_issued":True,
+    "search_mortgage_deals":True,
 }
 
 user_not_allowed_to = {
@@ -65,8 +80,27 @@ user_not_allowed_to = {
     'create_users': False,
     'update_users': False,
 
+    # Tasks
+    'list_tasks': True,
+    'create_tasks': True,
+    'update_tasks': True,
+    'export_tasks': True,
+
+    #Mortgage Tasks
+    'list_mortgage_tasks': True,
+    'create_mortgage_tasks': True,
+    'update_mortgage_tasks': True,
+    'export_mortgage_tasks': True,
+
     # Company Specific
     'company_settings': False,
+    'company_dashboard': True, 
+
+    #banks
+    'create_banks': True,
+    'delete_banks': True,
+    'edit_banks' : True,
+    "search_mortgage_deals":True,
 }
 
 producer_not_allowed_to = {
@@ -93,6 +127,17 @@ producer_not_allowed_to = {
     # Company Specific
     'company_settings': False,
     'company_dashboard': False,
+
+    # Bank
+    'create_banks': False,
+    'delete_banks': False,
+    'edit_banks' : False,
+    "search_mortgage_deals":False,
+
+    #issued
+    'list_mortgage_issued':False,
+    'search_mortgage_issued': False,
+
 }
 
 

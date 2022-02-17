@@ -1382,3 +1382,5 @@ class DealCopyAttachmentView(DealEditBaseView, CompanyAttributesMixin, DetailVie
             return JsonResponse({'success': False, 'message': 'Attachment does not exist.'})
 
         return JsonResponse({'success': True})
+
+

@@ -12,7 +12,7 @@ from accounts.forms import CompanySettingsAccountForm, CompanySettingsMotorCRMFo
 from accounts.forms import CompanySettingsIntegrationsForm
 from accounts.forms import CompanySettingsNotificationsMotorForm
 from accounts.models import UserProfile
-from core.email.constants import MOTORINSURANCE_EMAIL_SUBJECTS
+from core.email.constants import MOTORINSURANCE_EMAIL_SUBJECTS, MORTGAGE_EMAIL_SUBJECTS
 from core.utils import log_user_activity
 from felix.constants import WORKSPACES
 
@@ -31,7 +31,8 @@ class SettingsBaseView(LoginRequiredMixin, HasPermissionsMixin, FormView):
             'companysettings': company_settings,
             'settings_form': self.form_class(instance=company_settings),
         }
-
+        if request.GET.get('entity') == "mortgage":
+            ctx['entity'] = "mortgage"
         log_user_activity(request.user, self.request.path)
 
         return render(request, self.template_name, ctx)
@@ -76,6 +77,8 @@ class SettingsMotorCRMView(SettingsBaseView):
                 reverse("motorinsurance:lead-form")
             )
         }
+        if self.request.GET.get('entity') == "mortgage":
+            ctx['entity'] = 'mortgage'
 
         log_user_activity(request.user, self.request.path)
 
@@ -105,6 +108,8 @@ class SettingsNotificationsMotorView(SettingsBaseView):
         ctx = super().get_context_data(**kwargs)
         ctx['company'] = self.request.company
         ctx['workspace_shortcode'] = 'mt'
+        if self.request.GET.get('entity') == "mortgage":
+            ctx['entity'] = 'mortgage'
 
         return ctx
 
@@ -155,6 +160,8 @@ class SettingsEmailTemplatesListView(LoginRequiredMixin, HasPermissionsMixin, Te
         ctx = super().get_context_data(**kwargs)
         ctx['company'] = self.request.company
         ctx['workspace_shortcode'] = kwargs['workspace']
+        if self.request.GET.get('entity') == "mortgage":
+            ctx['entity'] = 'mortgage'
 
         return ctx
 
@@ -165,6 +172,10 @@ class SettingsEmailTemplatesDetailView(LoginRequiredMixin, HasPermissionsMixin, 
     def get(self, request, *args, **kwargs):
         template_type = kwargs['type']
         cs = self.request.company.companysettings
+
+        title = ''
+        subject = ''
+        body = ''
 
         # All Motor Insurance Email Templates
         if template_type == 'motor_lead':
@@ -187,6 +198,43 @@ class SettingsEmailTemplatesDetailView(LoginRequiredMixin, HasPermissionsMixin, 
             title = 'Motor Insurance Policy Issued Template'
             subject = cs.motor_email_subject_policy_issued or MOTORINSURANCE_EMAIL_SUBJECTS['POLICY_ISSUED']
             body = cs.motor_email_content_policy_issued or self.get_rendered_template('email/motor_insurance_policy_issued.html')
+        elif template_type == 'mortgage_lead':
+            title = 'Mortgage New Deal Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['NEW_DEAL']
+            body = self.get_rendered_template('email/mortgage_lead_received.html')
+        elif template_type == 'mortgage_quote_new':
+            title = 'Mortgage New Deal Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['QUOTE_NEW']
+            body = self.get_rendered_template('email/mortgage_quote_generated.html')
+        elif template_type == 'mortgage_preapproval':
+            title = 'Mortgage Pre Approval Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['PRE_APPROVAL']
+            body = self.get_rendered_template('email/mortgage_pre_approval.html')
+        elif template_type == 'mortgage_valuation_new':
+            title = 'Mortgage New Valuation Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['VALUATION_NEW']
+            body = self.get_rendered_template('email/mortgage_valuation_generated.html')
+        elif template_type == 'mortgage_valuation_updated':
+            title = 'Mortgage Valuation Update Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['VALUATION_UPDATED']
+            body = self.get_rendered_template('email/mortgage_valuation_updated.html')
+        elif template_type == 'mortgage_offer':
+            title = 'Mortgage Offer Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['OFFER']
+            body = self.get_rendered_template('email/mortgage_offer_generated.html')
+        elif template_type == 'mortgage_settlement':
+            title = 'Mortgage Settlement Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['SETTLEMENT']
+            body = self.get_rendered_template('email/mortgage_settlement_generated.html')
+        elif template_type == 'mortgage_loan_disbursal':
+            title = 'Mortgage Loan Disbursal Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['LOAN_DISBURSAL']
+            body = self.get_rendered_template('email/mortgage_loan_disbursal.html')
+        elif template_type == 'mortgage_property_transfer':
+            title = 'Mortgage Property Transfer Template'
+            subject = MORTGAGE_EMAIL_SUBJECTS['PROPERTY_TRANSFER']
+            body = self.get_rendered_template('email/mortgage_property_transfer.html')
+
 
         return JsonResponse({'title': title, 'subject': subject, 'body': body}, safe=False)
 
@@ -213,6 +261,8 @@ class SettingsWorkspaceUsersView(LoginRequiredMixin, HasPermissionsMixin, Templa
 
         ctx['workspace'] = workspaces[workspace_shortcode]
         ctx['workspace_shortcode'] = workspace_shortcode.lower()
+        if self.request.GET.get('entity') == "mortgage":
+            ctx['entity'] = 'mortgage'
 
         company_users = UserProfile.objects.filter(company=self.request.company, user__is_active=True)
 

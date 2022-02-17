@@ -50,7 +50,9 @@ class AddNoteView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
         return JsonResponse({
             'success': True,
             'note': {
+                'note_pk': note.pk,
                 'content': note.content,
+                'pk': note.pk,
                 'created_on': datetime.datetime.now().strftime("%B %d, %Y %I:%M %p"),
                 'added_by': note.added_by.get_full_name(),
                 'user_url': reverse('accounts:agent-edit', kwargs={'pk': note.added_by.pk})
@@ -205,7 +207,7 @@ class DeleteAttachmentView(LoginRequiredMixin, PermissionRequiredMixin, SingleOb
 class AddEditTaskView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     permission_required = None
     form_class = TaskForm
-    model = None
+    model = Task
     attached_model = None
 
     def get_form_kwargs(self):

@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView, View, DetailView, UpdateView
 from rolepermissions.mixins import HasPermissionsMixin
-
+from django.apps import apps
 from core.forms import TaskForm, TaskSearchAndOrderingForm
 from core.mixins import AjaxListViewMixin, CompanyAttributesMixin
 from core.models import Task
@@ -29,7 +29,9 @@ class TaskBaseView(LoginRequiredMixin, CompanyAttributesMixin,
     default_filter = 'todo'
 
     def get_queryset(self):
-        qs = Task.objects.filter(is_deleted=False)
+        ContentType = apps.get_model("contenttypes", "ContentType")
+        content_type = ContentType.objects.get(app_label="motorinsurance", model="deal")
+        qs = Task.objects.filter(content_type=content_type, is_deleted=False)
         so_form = self.get_search_and_ordering_form()
 
         if so_form.is_valid():
@@ -94,7 +96,6 @@ class TaskBaseView(LoginRequiredMixin, CompanyAttributesMixin,
 
     def serialize_object_list(self, records):
         company_agents = self.get_company_agents_list()
-
         return [{
             'pk': record.pk,
             'title': record.title,

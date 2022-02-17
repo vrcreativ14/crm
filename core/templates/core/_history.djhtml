@@ -1,7 +1,16 @@
+<style>
+.email-edit{
+background:grey;
+cursor: pointer;
+}
+
+</style>
+
 {% if history %}
-    <ul class="trail note-trail">
+    <ul class="trail note-trail ">
         {% for item in history %}
-            <li class="two-liner {% if item.type == 'email' %}email{% else %}history{% endif %}">
+            <li class="two-liner {% if item.type == 'email' %}email{% else %}history{% endif %} {% if item.type == 'email' %}email-edit{% endif %}"
+            {% if item.type == 'email' %}data-emailpk="{{item.email_pk}}"{% endif %}>
                 <div class="label">
                     {{ item.content|safe }}
                     {% if item.file %}
@@ -21,3 +30,25 @@
         No history for this deal.
     </div>
 {% endif %}
+<script>
+$('.email-edit').click( function(){
+    $('#modal_send_custom_email_history').show()
+    var url = "{% url 'mortgage:processed_emails' pk=111111111111111111 %}"
+    url = url.replace("111111111111111111", this.dataset.emailpk)
+    $.get(url, function( data ) {
+        $('#custom_email_form_history').attr('action', url)
+        $('#custom_email_form_history input[id="id_email"').val(data.content.to_address)
+        $('#custom_email_form_history input[id="id_bcc_emails"').val(data.content.bcc_addresses.join())
+        $('#custom_email_form_history input[id="id_cc_emails"').val(data.content.bcc_addresses.join())
+        $('#custom_email_form_history input[id="id_subject"').val(data.content.subject)
+        $('#custom_email_form_history textarea').val(data.content.html)
+        $('#custom_email_form_history #id_from_email').text(data.content.from)
+        $('#custom_email_form_history #id_reply_to').text(data.content.reply_to)
+        $.each(data.content.stages, function(key, value) {   
+        $('#custom_email_form_history select')
+                .append("<option value="+ key+">"+ value +"</option>")
+        });
+        $('#custom_email_form_history select').val(data.content.current_stage)
+        });
+    });
+</script>

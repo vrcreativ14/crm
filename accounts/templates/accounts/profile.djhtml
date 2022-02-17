@@ -106,7 +106,7 @@
                             <div class="row m-t-30">
                                 <div class="col-lg-4">
                                     <label class="font-12 fw-300 c-vlgrey">
-                                        Your Personal Link
+                                        Your Personal Motor Link
                                         <span class="help-icon" title="This is your personal motor insurance application form link. Anyone that applies for motor insurance using this link will automatically be assigned to you."></span>
                                     </label>
                                 </div>
@@ -124,6 +124,31 @@
                                     </div>
                                 </div>
                             </div>
+                            {% for allowed_space in userprofile.allowed_workspaces %}
+                            {% if allowed_space == 'MG' %}
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Your Personal Mortgage Link
+                                        <span class="help-icon" title="This is your personal mortgage application form link. Anyone that applies for mortgage using this link will automatically be assigned to you."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="copy-link-container profile">
+                                        <input id="id_mortgage_lead_form_url" name="mortgage_lead_form_url" type="text" readonly class="form-control" value="{{ userprofile.get_mortgage_lead_form_url }}" />
+                                        <ul class="controls">
+                                            <li>
+                                                <a title="Click to copy" onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="id_mortgage_lead_form_url" class="font-14"><i class="ti-files"></i></a>
+                                            </li>
+                                            <li>
+                                                <a title="Click to open" href="{{ userprofile.get_mortgage_lead_form_url }}" target="_blank" class="m-l-5 font-14"><i class="ti-new-window"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
 
                             <div class="row m-t-30">
                                 <div class="col-lg-4">

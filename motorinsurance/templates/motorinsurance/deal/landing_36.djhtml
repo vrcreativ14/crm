@@ -1,0 +1,662 @@
+{% extends 'motor_base.djhtml' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	{% block content %}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+		     
+			 <link rel="icon" href="{% static 'images/icon.png' %}" sizes="518x518"  type="image/x-icon"/>
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+	<title>Nexus</title>
+	<style type="text/css">
+	:root {
+    --ward: #dfb76c;}
+
+		.header{
+			padding: 20px 30px;
+			border-bottom: 2px solid #ebebeb;
+		}
+		.logo img{
+			width: 42%;
+			display: block;
+			margin: auto;
+		}
+		.num{
+			text-align: center;
+		}
+		.num p{
+			
+			font-family: Roboto;
+			color: #8191a5;
+			margin-bottom: 0rem !important;
+		}
+		.num a{
+			
+			color: #dbae58;
+			font-weight: bold;
+			font-size: 26px;
+		}
+		.num a:hover{
+			text-decoration: none;
+		}
+		.form-body{
+			background-color: #f5f5f5;
+			background-image: url(images/background.png);
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+		
+
+		}
+		.form-body{
+			padding: 40px 10px;
+		}
+			h1{
+      font-family: 'Montserrat-Bold' ;
+      font-size: 30px;
+    }
+    h2{
+      font-family: 'Montserrat-SemiBold' ;
+      font-size: 22px;
+    }
+    p{
+      font-family: 'Montserrat-Regular' ;
+      font-size: 17.5px;
+    }
+     .back-btn a,label{
+    	 font-family: 'Montserrat-SemiBold' ;
+      font-size: 16px;
+    }
+    button{
+      font-family: 'Montserrat-Medium' ;
+      font-size: 15px;
+    }
+    input{
+    	font-family: 'Montserrat-Regular' ;
+      font-size: 13px;
+    }
+    
+    .form-body p{
+      color: #737374;
+      padding: 7px;
+    }
+		.progress-row img{
+			display: block;
+			margin: auto;
+
+		}
+		.progress-row .col-md-1,.progress-row .col-md-4,.progress-row, .col-1,.col-lg-3,.col-lg-2,.col-10{
+			padding: 0px !important;
+		}
+		.col-lg-2{
+			padding: 5px !important;
+		}
+progress {
+  border-radius: 0px; 
+  width: 100%;
+  height: 8px;
+}
+progress::-webkit-progress-bar {
+  background-color: #c5c5c5;
+}
+progress::-webkit-progress-value {
+  background-color: #dfb76c;
+  
+}
+::-moz-progress-value {
+  background-color: #dfb76c !important;
+  
+}
+.select-body{
+	margin-top: 2rem;
+	padding: 2rem 0rem 8rem 2rem;
+	background-color: #fff;
+	color: #000 !important;
+	border-radius: 15px;
+
+}
+
+button{
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+	border: 1px solid #f3f3f3;
+    box-shadow: 5px 4px 3px 0px #f3f3f3;
+	width: 350px;
+	margin-top: 1rem;
+	text-align: left;
+}
+button:hover{
+	background-color: #dfb76c;
+	border-radius: 10px;
+	border: 1px solid #dfb76c;
+	margin-top: 1rem;
+	color: #fff;
+}
+button:hover img{
+	filter:brightness(500%);
+}
+button span{
+	padding: 0px 15px;
+	font-weight: 500;
+}
+input:focus,button:focus{
+	outline: none;
+}
+.person{
+	width: 30%;
+}
+.car{
+	width: 70%;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #c5c5c5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dfb76c;
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #dfb76c;
+  border-radius: 8px;
+}
+/*34 - css */
+input[type=text]{
+	width: 280px;
+    border: 1px solid #fff;
+    background: #f6f6f6;
+    color: #737374;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+input[type=checkbox]{
+	width: 15px;
+	accent-color: #dfb76c;
+    
+}
+.lista-item{
+	margin-top: 0.5rem;
+	height: 245px;
+	overflow-y: scroll;
+}
+ul{
+
+	list-style-type: none;
+	padding-inline-start: 0px !important;
+	background-color: #f6f6f6;
+
+}
+.tooltip-1 {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 200px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: 3rem;
+  font-size: 14px;
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip-1:hover .tooltiptext-1 {
+  visibility: visible;
+}
+
+li input[type=button]{
+	width: 100%;
+	text-align: left;
+	font-weight: 400;
+	padding: 5px 5px 5px 20px;
+	background-color: #f6f6f6;
+	border: none;
+	border-bottom: 1px solid #ebebeb;
+}
+li input[type=button]:hover{
+	background-color: #dfb76c;
+	color: #fff;
+}
+.detail{
+  padding-left: 0;
+    text-align: right;
+    padding-right: 0;
+  color: #363636;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  font-family:'Montserrat-Medium' ;
+}
+.type{font-size: 15px;font-family:'Montserrat-Bold'} 
+.normel{font-size: 15px;font-family:'Montserrat-Regular';font-weight: 100!important;}
+.check{
+	padding-top: 1.8rem;
+}.back-btn{padding: 10px 95px!important;}
+.back-btn a{
+	color: #000;
+	font-size: 18px;
+	font-weight: 500;
+}
+.back-btn a:hover{
+text-decoration: none;
+color: #dfb76c;
+}
+.car-detail{
+padding: 10px 0rem 15px 2rem!important;
+}
+.car-detail img{
+	width: 90%;
+}
+/* 37 css*/
+.price{
+	margin-top: 1rem;
+	width: 280px;
+	padding: 10px 30px;
+	text-align: center;
+	background-color: #f6f6f6;
+	color: #000 !important;
+	font-weight: bold;
+	font-size: 17px;
+}
+.currency{
+font-weight: 400;
+font-size: 11px;
+padding-bottom: 2rem;
+}
+.logo-car img{
+	width: 30%;
+	display: block;
+	margin: auto;
+}
+.card{
+		border: none !important;
+		margin-top: 1rem;
+		box-shadow: 5px 5px 5px #f7f7f7;
+	}
+	.card-body{
+		padding: 0 !important;
+	}
+	.card-body p{
+	color: #000 !important;
+font-family: 'Montserrat-Bold' ;
+font-size: 13px;}
+	.card-body p{
+
+		text-align: 	center	;
+		padding: 10px !important;
+	}
+	.card-body{
+	font-size: 11px;
+	font-weight: 500;
+	color: #000 !important;
+
+}
+.card-body p{
+	color: #000 !important;}
+
+@media (max-width: 1200px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: 2rem;
+ }
+	input[type=text]{
+	width: 250px;}
+}
+@media(max-width:1000px) and (min-width:768px){
+  .back-btn{padding: 10px 60px!important;}  
+}
+@media(max-width:515px){
+  .back-btn{padding: 10px 0px!important;}
+}
+@media (max-width: 991px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -9rem;
+  bottom: -8rem;
+ }
+	
+}
+@media (max-width: 768px) {
+	p{
+    font-size: 11.5px;
+  }
+  .select-body h2{
+    font-size: 16px;
+  }
+	.detail{padding-left: 7px;
+	color: #363636;
+    font-size: 13px;}
+    .form-body h1 {
+    font-size: 1.3rem !important;}
+	.first-line{
+		margin-top: 4rem;
+	}
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 450px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -16rem;
+ bottom: -4rem;}
+  .price{
+	margin-top: 4.5rem;
+}
+	.none{
+		display: none;
+	}
+	.header {
+    padding: 20px 5px;
+  }
+  .logo img{
+  	width: 40%;
+  	margin: 0;
+  }
+  .num{
+  	padding-top: 0.7rem;
+  	text-align: right;
+  }
+  .num a {
+  	font-size: 18px;
+}
+.num p {
+    font-size: 12px;
+    font-weight: 500;}
+	.d-md-block{
+		display: none;
+	}
+	input[type=text] {
+    width: 200px;}
+	
+li input[type=button]{
+	font-size: 14px;
+}
+
+.num{
+	margin-top: 0rem;
+	}
+.form-body p {
+    color: #737374;
+    padding: 10px ;}
+ .person{
+	width: 66%;
+}
+.car{
+	padding-top: 8px;
+	width:120%;
+}
+.select-body {
+  padding: 2rem 0rem 10rem 0rem;}
+  .car-detail{
+padding: 10px 0rem 15px 0rem!important;
+}
+.car-detail img {
+    width: 100%;
+}}
+@media (max-width: 513px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 400px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -11rem;
+ bottom: -4.5rem;}
+.select-body h2 {
+    font-size: 1rem;
+}}
+@media (max-width: 470px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 380px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -13rem;
+ bottom: -4.5rem;}
+.select-body h2 {
+    font-size: 1rem;
+}}
+@media (max-width: 425px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 300px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  font-size: 12px;
+  left: -18rem;
+ bottom: -4.3rem;}
+.select-body h2 {
+    font-size: 1rem;
+}}
+@media (max-width: 406px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 300px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  font-size: 12px;
+  left: -16rem;
+ bottom: -4.2rem;}
+.select-body h2 {
+    font-size: 0.8rem;
+}}
+@media (max-width: 335px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 280px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  font-size: 12px;
+  left: -14rem;
+ bottom: -4.2rem;}
+.select-body h2 {
+    font-size: 0.7rem;
+}}
+
+@media (max-width: 500px) {
+	
+  .logo img{
+  	width: 70%;
+  	margin: 0;
+  }}
+
+@media (max-width: 360px) {
+	button{
+	
+	width: 300px;
+}
+button span{
+	    padding: 0px 0px;
+
+	font-size: 15px;
+}
+}
+@media(max-width:991px){
+  .detail,.type,.normel{
+    font-size: 12px!important;
+  }
+}
+@media(max-width:991px) and (min-width:515px){
+  .car-detail img{width: 50%!important;padding-top: 5px!important;}
+}
+
+	</style>
+
+
+</head>
+<body>
+	<!--header section-->
+	<section class="header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-4 col-6 logo">
+					<img src="{% static 'images/nexus-logo.png' %}" alt="Nexus Logo">
+				</div>
+				<div class="col-lg-4 col-6 none">
+					
+				</div>
+				<div class="col-lg-4 col-6 num">
+					
+						<p>Need some help? Call Us</p>
+						<p><a href="tel:+97142378294">+971 4 237 8294</a></p>
+					
+					
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!--end of header section-->
+	<!--form section-->
+	<section class="form-body">
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<div class="col-md-10 col-12">
+					<!--text row-->
+					<div class="row">
+						<center>
+							<h1>Find the most competitive car insurance quote in the UAE</h1>
+							<p>We are offering up to 20% off on some deals. Complete this short 2 minute form so we can email you the most competitive quotes.</p>
+						</center>
+					</div>
+					<!--end of text row-->
+					<!--progress row-->
+					<div class="row progress-row d-flex justify-content-center" >
+						<div class="col-1">
+							<img src="{% static 'images/car.png' %}" alt="car" class="car">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="50" max="100"> 50% </progress>
+
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/person.png' %}" alt="person" class="person">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="0" max="100"> 0% </progress>
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/file.png' %}" class="person" alt="file">
+
+						</div>
+					</div>
+					<!--end of progress row-->
+						<!--start of first section -->
+						<div class="row select-body car-detail">
+<div class="col-lg-1 col-md-1 col-1 detail">							<img src="{% static 'images/car.png' %}" >
+						</div>
+<div class="col-lg-10 col-md-10 col-9">							
+							<span class="detail">Car Details: <span class="type">Type:</span> <span class="normel"> Renewal,</span><span class="type">Car Make:</span><span class="normel"> Honda,City,2009,</span><span class="type"></span><span class="type">Insurance Type:</span><span class="normel"> 
+							TPL</span></span>
+						</div>
+<div class="col-lg-1 col-md-1 col-2 text-right">							<a href="" style="color: #000"><i class="fa fa-pencil" aria-hidden="true" style="font-size: 12px;"></i></a>
+						</div>
+					</div>
+					<!--end of first section-->
+					<!--select row-->
+					<div class="row select-body">
+						<div class="col-12">
+							<h2>What is your current insurance type? <span class="tooltip-1"><img alt="svgImg" width="20px" style="padding: 0px 0px 5px 3px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iNjQiIGhlaWdodD0iNjQiCnZpZXdCb3g9IjAgMCAxNzIgMTcyIgpzdHlsZT0iIGZpbGw6IzAwMDAwMDsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIGZvbnQtZmFtaWx5PSJub25lIiBmb250LXdlaWdodD0ibm9uZSIgZm9udC1zaXplPSJub25lIiB0ZXh0LWFuY2hvcj0ibm9uZSIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0wLDE3MnYtMTcyaDE3MnYxNzJ6IiBmaWxsPSJub25lIj48L3BhdGg+PGc+PHBhdGggZD0iTTE2OS4zNDYwOSw4NmMwLC00Ni4wMjM0NCAtMzcuMzIyNjYsLTgzLjM0NjA5IC04My4zNDYwOSwtODMuMzQ2MDljLTQ2LjAyMzQ0LDAgLTgzLjM0NjA5LDM3LjMyMjY2IC04My4zNDYwOSw4My4zNDYwOWMwLDQ2LjAyMzQ0IDM3LjMyMjY2LDgzLjM0NjA5IDgzLjM0NjA5LDgzLjM0NjA5YzQ2LjAyMzQ0LDAgODMuMzQ2MDksLTM3LjMyMjY2IDgzLjM0NjA5LC04My4zNDYwOXoiIGZpbGw9IiMyNjgwZWIiPjwvcGF0aD48cGF0aCBkPSJNMTA4LjU3NSwxMjMuNDU3MDNjLTAuNDcwMzEsLTAuNjcxODcgLTEuMzQzNzUsLTAuOTQwNjIgLTIuMTE2NDEsLTAuNTcxMDljLTguMjY0MDYsMy44OTY4OCAtMTcuNjM2NzIsOC4wMjg5MSAtMTkuNDg0MzcsOC4zOTg0NGMtMC4wMzM1OSwtMC4wMzM1OSAtMC4xMzQzNywtMC4xMDA3OCAtMC4yMDE1NiwtMC4yMzUxNmMtMC4yMzUxNiwtMC4zMzU5NCAtMC4zNjk1MywtMC43NzI2NiAtMC4zNjk1MywtMS4zNDM3NWMwLC00LjY2OTUzIDMuNTI3MzQsLTE4Ljg3OTY5IDEwLjQ4MTI1LC00Mi4yMjczNGM1Ljg3ODkxLC0xOS42MTg3NSA2LjU1MDc4LC0yMy42ODM1OSA2LjU1MDc4LC0yNS4wMjczNGMwLC0yLjA4MjgxIC0wLjgwNjI1LC0zLjgyOTY5IC0yLjMxNzk3LC01LjA3MjY2Yy0xLjQ0NDUzLC0xLjE3NTc4IC0zLjQyNjU2LC0xLjc4MDQ3IC01Ljk0NjA5LC0xLjc4MDQ3Yy00LjE5OTIyLDAgLTkuMDM2NzIsMS41Nzg5MSAtMTQuODE0ODQsNC44NzEwOWMtNS42MTAxNiwzLjE1NzgxIC0xMS44OTIxOSw4LjUzMjgxIC0xOC42MTA5NCwxNS45NTcwM2MtMC41Mzc1LDAuNTcxMDkgLTAuNTcxMDksMS40NDQ1MyAtMC4xMzQzNywyLjA4MjgxYzAuNDM2NzIsMC42MzgyOCAxLjI3NjU2LDAuODczNDQgMi4wMTU2MywwLjYwNDY5YzIuMzUxNTYsLTAuOTc0MjIgMTQuMjQzNzUsLTUuODQ1MzEgMTUuOTkwNjMsLTYuOTIwMzFjMS40MTA5NCwtMC44NzM0NCAyLjY1MzkxLC0xLjM0Mzc1IDMuNjYxNzIsLTEuMzQzNzVjMC4wMzM1OSwwIDAuMDY3MTksMCAwLjEwMDc4LDBjMCwwLjA2NzE5IDAuMDMzNTksMC4xNjc5NyAwLjAzMzU5LDAuMzAyMzRjMCwxLjAwNzgxIC0wLjIwMTU2LDIuMjUwNzggLTAuNjM4MjgsMy41OTQ1M2MtMTAuMTExNzIsMzIuNzg3NSAtMTUuMDUsNTIuOTEwMTYgLTE1LjA1LDYxLjQ3NjU2YzAsMy4wMjM0NCAwLjgzOTg0LDUuNDQyMTkgMi40ODU5NCw3LjIyMjY2YzEuNjc5NjksMS44MTQwNiAzLjk2NDA2LDIuNzIxMDkgNi43NTIzNCwyLjcyMTA5YzIuOTg5ODQsMCA2LjYxNzk3LC0xLjI0Mjk3IDExLjExOTUzLC0zLjgyOTY5YzQuMzMzNTksLTIuNDg1OTQgMTAuOTg1MTYsLTcuOTYxNzIgMjAuMjkwNjIsLTE2LjY5NjA5YzAuNTcxMDksLTAuNjA0NjkgMC42NzE4OCwtMS41MTE3MiAwLjIwMTU2LC0yLjE4MzU5ek0xMDguMjM5MDYsMjguNDIwMzFjLTEuNjQ2MDksLTEuNjc5NjkgLTMuNzYyNSwtMi41NTMxMiAtNi4yODIwMywtMi41NTMxMmMtMy4xMjQyMiwwIC01Ljg3ODkxLDEuMjQyOTcgLTguMTI5NjksMy42OTUzMWMtMi4yMTcxOSwyLjQxODc1IC0zLjMyNTc4LDUuMzQxNDEgLTMuMzI1NzgsOC43Njc5N2MwLDIuNjg3NSAwLjgzOTg0LDQuOTM4MjggMi40NTIzNCw2LjY1MTU2YzEuNjQ2MDksMS43NDY4OCAzLjcyODkxLDIuNjIwMzEgNi4yMTQ4NCwyLjYyMDMxYzMuMDIzNDQsMCA1LjcxMDk0LC0xLjMxMDE2IDguMDYyNSwtMy44OTY4N2MyLjMxNzk3LC0yLjU1MzEzIDMuNDkzNzUsLTUuNTA5MzggMy40OTM3NSwtOC44Njg3NWMwLC0yLjU4NjcyIC0wLjgzOTg0LC00LjczNjcyIC0yLjQ4NTk0LC02LjQxNjQxeiIgZmlsbD0iI2ZmZmZmZiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+"/>
+								<span class="tooltiptext-1"><span style="color: #dfb76c;font-family: 'Montserrat-Bold' ;font-size: 12px;">Why do we ask this?</span><br><span style="font-family: 'Montserrat-Regular' ;font-size: 12px;" >This information will help us prepare more relevant options for you.</span></span></span></h2>
+
+						</div>
+							<div class="col-xl-3 col-lg-2  col-6 first-line">
+									
+									<div class="card logo-car" style="width: 100%"><div class="img-car">
+									  <img class="card-img-middle" src="{% static 'images/Page-1.png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Third Party Liability</p>
+									  </div>
+									</div>
+								</div>
+								<div class="col-xl-3 col-lg-2  col-6 first-line">
+									
+									<div class="card logo-car" style="width: 100%"><div class="img-car">
+									  <img class="card-img-middle" src="{% static 'images/car-insurance (1).png' %}" alt="Card image cap"></div>
+									  <div class="card-body">
+									    <p class="card-text">Comprehensive</p>
+									  </div>
+									</div>
+								</div>
+							
+							
+								
+									<div class="col-12 second-q">
+										<form action="/motor-insurance/motor-step8/">
+										<button class="next-btn">Next</button>
+									</form>
+									</div>
+								
+							
+							
+					</div>
+					<!--end of select row-->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 back-btn">
+						<p><a href="/motor-insurance/motor-step6/">Go Back <img src="{% static 'images/back.png' %}" width="18px"></a></p>
+					</div>
+			</div>
+
+		</div>
+		
+		
+	</section>
+
+	<!--end of form section-->
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+</html>

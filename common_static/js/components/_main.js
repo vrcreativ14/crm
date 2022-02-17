@@ -188,6 +188,19 @@ var __FELIX__;
                     $(this).removeClass('new');
                     $('#' + $(this).data('target')).val(ui.item.id);
 
+                    if($('body').hasClass('mortgage-deals') || ($('body').hasClass('customers') && $('body').hasClass('mortgage'))){
+                        let result = ui.item.desc.trim();
+                        result = result.replace(/\s/g, "");
+                        result = result.split("|");
+                        const email = result[0].replace("E:", "");
+                        const tel = result[1].replace("T:", "");
+                        $('#id_customer_email').val(email)
+                        $('#id_customer_phone').val(tel)
+
+                        $('#modal_create_mortgage_deal #id_customer_email').val(email)
+                        $('#modal_create_mortgage_deal #id_customer_phone').val(tel)
+                    }
+
                     return false;
                 },
                 response: function(event, ui) {
@@ -230,7 +243,11 @@ var __FELIX__;
 
             _info_container.on('click', '.toggle-deal-processes', function() {
                 $(this).toggleClass('show-div');
-                $('.deal-processes').slideToggle(100);
+                if ($('body').hasClass('mortgage-deals')){
+                    $('.mortgage-deal-processes').slideToggle(100);
+                } else {
+                    $('.deal-processes').slideToggle(100);
+                }
             });
         },
 
@@ -260,7 +277,11 @@ var __FELIX__;
             if(!$('.auto-format-money-field').length) return;
             // Restrict to numbers comma and dot only
             $('body').on('input', '.auto-format-money-field',function() {
-                var value = $(this).val().replace(/[^0-9.,]*/g, '');
+                var value = $(this).val()
+                if($('body').hasClass('mortgage-deals')){
+                    return $(this).val(accounting.formatNumber(value, 0, ',', '.'));
+                }
+                value = value.replace(/[^0-9.,]*/g, '');
                 value = value.replace(/\.{2,}/g, '.');
                 value = value.replace(/\.,/g, ',');
                 value = value.replace(/\,\./g, ',');
@@ -272,13 +293,21 @@ var __FELIX__;
             // Form money field after user has done typing
             $('body').on('blur', '.auto-format-money-field', function(event) {
                 $(this).val(function(index, value) {
-                    return accounting.formatNumber($(this).val(), 2, ',', '.');
+                    if($(this).val()!=''){
+                        if($('body').hasClass('mortgage-deals')){
+                            return accounting.formatNumber($(this).val(), 0, ',', '.');
+                        }else{
+                            return accounting.formatNumber($(this).val(), 2, ',', '.');
+                        }
+                    }
                 });
             });
             // Form money field on focus to convert it back to integer
             $('body').on('focus', '.auto-format-money-field', function(event) {
                 $(this).val(function(index, value) {
-                    return accounting.unformat($(this).val());
+                    if($(this).val()!=''){
+                        return accounting.unformat($(this).val());
+                    }
                 });
             });
             // Format all money fields on page load

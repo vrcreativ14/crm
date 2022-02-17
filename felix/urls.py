@@ -8,7 +8,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic.base import RedirectView
 
 from felix.error_url_handlers import *
-from felix.views import HealthCheckView
+from felix.views import HealthCheckView, ProductURLResolver
 from felix.admin import global_admin
 
 
@@ -20,6 +20,9 @@ urlpatterns = [
 
     path('accounts/', include('accounts.urls')),
     path('people/', include('customers.urls')),
+
+    path('mortgage/', include('mortgage.urls')),
+    path('mortgage-quote/', include('mortgagequote.urls')),
     path('motor-insurance/', include('motorinsurance.urls')),
 
     path('core/', include('core.urls', namespace='core')),
@@ -28,6 +31,8 @@ urlpatterns = [
     path('r/<str:short_id>/', get_redirect, name="short-url"),
 
     path('tinymce/', include('tinymce.urls')),
+
+    path('entity/', ProductURLResolver.as_view(), name='entity'),
 ]
 
 if settings.DEBUG:

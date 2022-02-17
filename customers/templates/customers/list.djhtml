@@ -9,6 +9,8 @@
 {% block current_nav %}customers{% endblock %}
 
 {% block content %}
+
+
     <div class="container-fluid">
         <div class="pre-wrapper squeeze">
             <h1 class="title">People</h1>
@@ -157,7 +159,7 @@
                     <div class="search-popup">
                         <div class="title">Filters</div>
                         <div class="row">
-                            
+
                             <div class="col-lg-6">
                                 <label>{{ search_form.created_on_after.label }}</label>
                                 {{ search_form.created_on_after }}
@@ -185,7 +187,7 @@
         <div class="clear"></div>
         <div class="row">
             <div class="col-12">
-                <div class="felix-table-container">
+                <div class="felix-table-container" style="overflow:visible">
                     <table class="table no-footer felix-table opacity" cellspacing="0" width="100%" data-index="{{ algolia_env }}_customers_{{ company.pk }}" data-mode='index'>
                         <thead>
                             <tr>
@@ -200,6 +202,15 @@
                                 </th>
                                 <th data-name="email">
                                     Email
+                                </th>
+                                <th data-name="entity">
+                                    <div style="max-width: max-content; padding: 0mm;">
+                                    <select class="entity-options" id="customer_entity_type" onchange="__ALGOLIA._get_search_from_algolia.call(this)" style="padding-top: 10px;">
+                                        <option  selected value="all"> --Entity Type--</option>
+                                        <option value="motor"> Motor-Insurance</option>
+                                        <option value="mortgage">Mortgage</option>
+                                    </select>
+                                </div>
                                 </th>
                                 <th data-name="phone">
                                     Phone
@@ -235,4 +246,49 @@
 
 {% block extra_js %}
     <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+
+    <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+                if (sParameterName[0] === sParam) {
+                    return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+            return false;
+        };
+        var entity = getUrlParameter('entity');
+        $('document').ready(function(){
+            if(entity){
+                setTimeout(function(){
+                    $("tr").each(function( index ) {
+                      const url = $(this).attr('data-url');
+                      $(this).removeAttr('data-url');
+                      $(this).attr('data-custom-url',url);
+                    });
+                },200);
+                setTimeout(function(){
+                    $("tr").on('click',function(e){
+                        if ($(e.target).closest('tr').find('th').length){
+                        }
+                        else{
+                            e.preventDefault();
+                            const data_url = $(this).attr('data-custom-url');
+                            window.location.href = '{{ request.scheme }}://{{ request.META.HTTP_HOST }}'+data_url+'mortgage/';
+                        }
+
+                    })
+                },500);
+            }
+        });
+        $('document').ready(function(){
+            $('td.link').on('click',function(e){
+                e.preventDefault();
+            });
+        });
+    </script>
 {% endblock %}

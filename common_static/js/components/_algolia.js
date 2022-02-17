@@ -117,6 +117,13 @@ var usersFacetFilter = [];
             facet_filters.push('status:' + (status?status:'active'));
             facet_filters_second_set.push('status:' + (status?status:'active'));
 
+            if ($("#customer_entity_type").val() == "mortgage"){
+                    filters = 'entity:"mortgage"'
+                }
+            if ($("#customer_entity_type").val() == "motor"){
+                    filters = 'NOT  entity:"Mortgage"'
+                }
+
             return [{
                 indexName: index_name,
                 query: _filters_open_search_field.val(),

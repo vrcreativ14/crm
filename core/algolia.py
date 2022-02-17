@@ -185,7 +185,7 @@ class Algolia:
             'phone_number_suffixes': self.get_possible_suffixes(customer.phone),
 
             'status': customer.status,
-
+            'entity': customer.entity,
             'created_on': localtime(customer.created_on),
             'updated_on': localtime(customer.updated_on),
 
@@ -193,8 +193,9 @@ class Algolia:
             'updated_on_display': localtime(customer.updated_on).strftime('%b %d, %Y'),
         })
 
-        for deal in customer.get_motor_deals():
-            self.upsert_motor_deal_record(deal)
+        if not customer.entity == "Mortgage":
+            for deal in customer.get_motor_deals():
+                self.upsert_motor_deal_record(deal)
 
     def get_possible_suffixes(self, string):
         suffixes = list()

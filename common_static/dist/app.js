@@ -212,6 +212,13 @@ var usersFacetFilter = [];
             facet_filters.push('status:' + (status?status:'active'));
             facet_filters_second_set.push('status:' + (status?status:'active'));
 
+            if ($("#customer_entity_type").val() == "mortgage"){
+                    filters = 'entity:"mortgage"'
+                }
+            if ($("#customer_entity_type").val() == "motor"){
+                    filters = 'NOT  entity:"Mortgage"'
+                }
+
             return [{
                 indexName: index_name,
                 query: _filters_open_search_field.val(),
@@ -344,6 +351,12 @@ var __AMPLITUDE;
 
         event: function(name) {
             events = {
+                'mortgage_deal_created': 'mortgage deal created',
+                'mortgage_deal_won': 'mortgage deal won',
+                'mortgage_quote_created': 'mortgage quote created',
+                'mortgage_quote_email_sent': 'mortgage quote email sent',
+                'mortgage_product_quoted': 'mortgage product quoted',
+
                 'motor_deal_created': 'motor deal created',
                 'motor_deal_won': 'motor deal won',
                 'motor_quote_created': 'motor quote created',
@@ -631,356 +644,6 @@ var __CUSTOMERS;
             __CUSTOMERS.init();
     });
 
-})();
-
-/*
-    Company Settings
-*/
-;
-'Use Strict';
-
-var __DEALFORMS;
-;(function() {
-    var SELECTORS = {
-    };
-
-    var _this = '';
-
-    var _deal_id = $('.deal-container').data('id');
-    var _deal_stage_container = $('.deal-processes');
-
-    var _show_loader_class = 'show-loader';
-
-    __DEALFORMS =
-    {
-        init: function()
-        {
-            _this = this;
-
-            _this._initForms();
-
-            _deal_stage_container.on('click', '#order_form .product', function(event) {
-                var product_id = $(this).data('id');
-                var quoted_product_id = $(this).data('qpid');
-                var premium = $(this).data('premium');
-                var sale_price = $(this).data('sale-price');
-                var product_add_ons = $(this).data('add-ons');
-                var default_add_ons = $(this).data('default-add-ons');
-
-                $(this).siblings().addClass('disable').removeClass('selected');
-                $(this).addClass('selected').removeClass('disable');
-
-                $('.base_premium').html(accounting.format(premium, 2));
-                $('.sale_price').html(accounting.format(sale_price, 2));
-                $('#id_selected_product').val(quoted_product_id).change();
-
-                var html = '<span class="c-vlgray font-10 nothing-available">No default add ons</span>';
-                if(default_add_ons.length) {
-                    html = '';
-                    $.each(default_add_ons, function() {
-                        html += '<span data-key="'+this+'" class="badge badge-default badge-font-light m-t-10 m-r-10">' +this.replace(new RegExp('_' , 'g'), ' ')+ '</span>';
-                    });
-                }
-
-                $('#order_form .default-add-ons').html(html);
-
-                var html = '<span class="c-vlgray font-10 nothing-available">Nothing available</span>';
-                if(product_add_ons && product_add_ons.length) {
-                    html = '';
-                    $.each(product_add_ons, function() {
-                        if(default_add_ons.indexOf(Object.keys(this)[0]) < 0)
-                            html += '<span data-key="'+Object.keys(this)[0]+'" data-price="'+this[Object.keys(this)[0]].price+'" class="badge badge-default badge-font-light m-t-10 m-r-10">' +this[Object.keys(this)[0]].label+ '</span>';
-                    });
-                }
-                $('#order_form .addons').html(html);
-
-                _this._updateTotal();
-            });
-
-            _deal_stage_container.on('change', '#order_form #id_discount', function() {
-                _this._updateTotal();
-            });
-            _deal_stage_container.on('click', '#order_form .addons .badge', function() {
-                $(this).toggleClass('active');
-                _this._updateTotal();
-            });
-
-            _deal_stage_container.on('click', '.quote-summary .product-preview', function() {
-                $('.prepare-order').click();
-                $('#order_form .product[data-qpid='+$(this).data('qpid')+']').click();
-            });
-
-            _deal_stage_container.on('click', '.prepare-order', function() {
-                $('.quote-summary.quote-preview').addClass('hide');
-                $('.quote-summary.create-order').removeClass('hide');
-
-                __FELIX__._loadLibs();
-                _this._initForms();
-            });
-            _deal_stage_container.on('click', '.cancel-order', function() {
-                if($('.quote-summary').length && $('.quote-summary').is(':visible')) {
-                    $('.quote-summary.quote-preview').removeClass('hide');
-                    $('.quote-summary.create-order').addClass('hide');
-                }
-                if($('.order-summary').length && $('.order-summary').is(':visible')) {
-                    $('.order-summary.preview').removeClass('hide');
-                    $('.order-summary.create-order').addClass('hide');
-                }
-            });
-
-            _deal_stage_container.on('click', '.submit-order', function(){
-                $(this).addClass('show-loader');
-                $('#order_form #id_send_email').val('');
-                $('#order_form').submit();
-            });
-
-            _deal_stage_container.on('click', '.submit-send-order', function(){
-                $(this).addClass('show-loader');
-                $('#order_form #id_send_email').val('1');
-
-                $.get(DjangoUrls[`${__app_name}:get-deal-json`](_deal_id), function(response) {
-                    if(response.customer.email == '') {
-                        $('[data-felix-modal="modal_edit_customer_email"]').click();
-                        $('.submit-send-order').removeClass('show-loader');
-                    } else {
-                        $('#order_form').submit();
-                    }
-                });
-            });
-
-            _deal_stage_container.on('change', '#id_selected_product', function(){
-                __DEALS._getQuotedProductAddons($(this).val(), $('#id_selected_add_ons'));
-            });
-            _deal_stage_container.on('change', '#id_is_void', function() {
-                $('button.submit-send-order').prop('disabled', $(this).is(':checked'));
-            });
-
-            _deal_stage_container.on('click', '.edit-order', function() {
-                $('.order-summary.preview').addClass('hide');
-                $('.order-summary.create-order').removeClass('hide');
-
-                __FELIX__._loadLibs();
-                _this._loadProductAndAddons();
-                _this._initForms();
-            });
-
-            _deal_stage_container.on('click', '.edit-policy', function() {
-                $('.policy-summary.preview').addClass('hide');
-                $('.policy-summary.form').removeClass('hide');
-
-                __FELIX__._loadLibs();
-                _this._initForms();
-            });
-
-            _deal_stage_container.on('click', '.cancel-policy', function() {
-                $('.policy-summary.preview').removeClass('hide');
-                $('.policy-summary.form').addClass('hide');
-            });
-
-            _deal_stage_container.on('click', '.edit-quote', function() {
-                $('.quote-summary.quote-preview').addClass('hide');
-                $('.quote-summary.quote-form').removeClass('hide');
-
-                __QUOTES._getQuotedProducts();
-                __FELIX__._loadLibs();
-                _this._initForms();
-            });
-
-            _deal_stage_container.on('click', '.cancel-quote', function() {
-                $('.quote-summary.quote-preview').removeClass('hide');
-                $('.quote-summary.quote-form').addClass('hide');
-            });
-
-            _deal_stage_container.on('click', '.order-status-display .dropdown-menu a', function() {
-                var value = $(this).data('value');
-                $.post(
-                    DjangoUrls['motorinsurance:update-deal-field']($('.deal-container').data('id'), 'order'),
-                    {'pk': $('.deal-container').data('id'), 'name': 'status', 'value': value},
-                function(response) {
-                    if(response.success) {
-                        $('.order-status-display a.nav-link')
-                            .removeClass('paid')
-                            .removeClass('unpaid')
-                            .addClass(value)
-                            .html(value);
-
-                        $.get(DjangoUrls['motorinsurance:deal-current-stage'](_deal_id), function(response) {
-                            __DEALS._updateTags(response.tags);
-                        });
-                    } else {
-                        Utilities.Notify.error('Some error occurred. Please try again later.', 'Error');
-                    }
-                });
-            });
-        },
-
-        _initForms: function() {
-            if($('#order_form').length) {
-                $('#order_form').ajaxForm({
-                    beforeSubmit: Utilities.Form.beforeSubmit,
-                    success: function(response, status, xhr, form) {
-                        Utilities.Form.onSuccess(response, status, xhr, form);
-
-                        if(response.success) {
-                            $('.cancel-order').click();
-
-                            if(response.creating) {
-                                $.get(DjangoUrls[`${__app_name}:get-deal-json`](_deal_id), function(r) {
-                                    __AMPLITUDE.logEvent(
-                                        __AMPLITUDE.event('motor_order_created'),
-                                        {
-                                            'source': 'manual',
-
-                                            'deal_id': _deal_id,
-                                            'deal_type': r.deal.deal_type,
-                                            'deal_created_date': r.deal.created_on,
-                                            'vehicle_model_year': r.deal.vehicle_year,
-                                            'vehicle_model': r.deal.vehicle_model,
-                                            'vehicle_body_type': r.deal.vehicle_body_type,
-                                            'vehicle make': r.deal.vehicle_make,
-
-                                            'views': r.quote.views,
-
-                                            'product': r.order.product,
-                                            'cover': r.order.product_cover,
-                                            'insurer': r.order.product_insurer,
-                                            'premium': r.order.payment_amount,
-                                            'discounted_premium': r.order.discounted_premium,
-                                            'repair_type': r.order.repair_type,
-                                            'vehicle_sum_insured': r.order.sum_insured,
-
-                                            'client_nationality': r.customer.nationality,
-                                            'client_gender': r.customer.gender,
-                                            'client_age': r.customer.age
-                                        });
-                                });
-                            }
-
-                            if($('#order_form #id_send_email').val()) {
-                                __DEALS._triggerCustomEmailModal('order_confirmation');
-                            }
-
-                            __DEALS._loadDealStage();
-
-                            if('note_content' in response) {
-                                var note_content = response.note_content;
-                                    note_content += '<div class="text-muted">' + response.note_created_on + '</div>';
-
-                                __NOTE._prependNoteInTrail(note_content);
-                            }
-                        }
-                        $('.' + _show_loader_class).removeClass(_show_loader_class);
-                    },
-                    error: Utilities.Form.onFailure
-                });
-            }
-            if($('#policy_form').length) {
-                $('#policy_form').ajaxForm({
-                    beforeSubmit: Utilities.Form.beforeSubmit,
-                    success: function(response, status, xhr, form) {
-                        Utilities.Form.onSuccess(response, status, xhr, form);
-
-                        if(response.success) {
-                            $('.cancel-policy').click();
-
-                            if(response.creating) {
-                                $.get(DjangoUrls[`${__app_name}:get-deal-json`](_deal_id), function(r) {
-                                    __AMPLITUDE.logEvent(
-                                        __AMPLITUDE.event('motor_policy_saved'), {
-                                            'deal_id': _deal_id,
-                                            'deal_created_date': r.deal.created_on,
-
-                                            'repair_type': r.order.repair_type,
-                                            'insurer': r.order.product_insurer,
-                                            'cover': r.order.product_cover,
-                                            'product': r.order.product,
-                                            'premium': r.order.payment_amount,
-
-                                            'vehicle_model_year': r.deal.vehicle_year,
-                                            'vehicle make': r.deal.vehicle_make,
-                                            'vehicle_model': r.deal.vehicle_model,
-                                            'vehicle_body_type': r.deal.vehicle_body_type,
-                                            'vehicle_sum_insured': r.order.sum_insured,
-
-                                            'client_nationality': r.customer.nationality,
-                                            'client_gender': r.customer.gender,
-                                            'client_age': r.customer.age
-                                        }
-                                    );
-                                });
-                            }
-
-                            if($('#policy_form #id_send_email').val()) {
-                                __DEALS._triggerCustomEmailModal('policy_issued');
-                            }
-                            __DEALS._loadDealStage();
-                        }
-                        $('.' + _show_loader_class).removeClass(_show_loader_class);
-                    },
-                    error: Utilities.Form.onFailure
-                });
-            }
-
-            if($('#quote_form').length) {
-                $('#quote_form').ajaxForm({
-                    beforeSubmit: Utilities.Form.beforeSubmit,
-                    success: Utilities.Form.onSuccess,
-                    error: Utilities.Form.onFailure
-                });
-            }
-        },
-
-        _updateTotal: function() {
-            var order_form = $('#order_form');
-            var product_id = order_form.find('.product.selected').data('id');
-            var product = window.products_data[product_id];
-            var premium = order_form.find('.product.selected').data('sale-price');
-            if(premium === undefined) premium = 0;
-            var total = premium - $('#id_discount').val();
-            var selected_addons = [];
-            var addons_price = 0;
-            order_form.find('.badge.active').each(function() {
-                selected_addons.push(this.dataset.key);
-
-                if(this.dataset.key == 'pab_passenger') {
-                    addons_price += (parseFloat(this.dataset.price) * parseFloat(order_form.data('number-of-passengers')));
-                } else {
-                    addons_price += parseFloat(this.dataset.price);
-                }
-            });
-
-            total += addons_price;
-
-            order_form.find('.paid_addons').html(accounting.format(addons_price, 2));
-            order_form.find('#id_selected_add_ons').val(selected_addons).change();
-
-            if(total < 0) total = 0;
-
-            $('#id_payment_amount').val(total);
-            $('.order_total').html(accounting.format(total, 2));
-        },
-
-        _loadProductAndAddons: function() {
-            var order_form = $('#order_form');
-            if(order_form.data('selected-product')) {
-                $('#id_selected_product').change();
-                var id = order_form.data('selected-product');
-                order_form.find('.product[data-id='+id+']').click();
-            }
-            setTimeout(function() {
-                if(order_form.data('selected-addons')) {
-                    var addons = order_form.data('selected-addons');
-                    $.each(addons, function() {
-                        order_form.find('.badge[data-key='+this+']').click();
-                    });
-                }
-            }, 1000);
-        }
-    };
-
-    jQuery(function() {
-        __DEALFORMS.init();
-    });
 })();
 
 /* DEALS */
@@ -2077,122 +1740,353 @@ var __DEALS;
     });
 })();
 
-/*** Felix File Uploader ***/
-;'Use Strict';
-var __DOCUMENT_UPLOADER;
+/*
+    Company Settings
+*/
+;
+'Use Strict';
 
+var __DEALFORMS;
 ;(function() {
+    var SELECTORS = {
+    };
+
     var _this = '';
 
-    __DOCUMENT_UPLOADER =
+    var _deal_id = $('.deal-container').data('id');
+    var _deal_stage_container = $('.deal-processes');
+
+    var _show_loader_class = 'show-loader';
+
+    __DEALFORMS =
     {
-        // Onload
         init: function()
         {
             _this = this;
-            $('.add-documents').click(function() {
-                $('[href="#tab_documents"]').click();
-                $('#document_upload').click();
+
+            _this._initForms();
+
+            _deal_stage_container.on('click', '#order_form .product', function(event) {
+                var product_id = $(this).data('id');
+                var quoted_product_id = $(this).data('qpid');
+                var premium = $(this).data('premium');
+                var sale_price = $(this).data('sale-price');
+                var product_add_ons = $(this).data('add-ons');
+                var default_add_ons = $(this).data('default-add-ons');
+
+                $(this).siblings().addClass('disable').removeClass('selected');
+                $(this).addClass('selected').removeClass('disable');
+
+                $('.base_premium').html(accounting.format(premium, 2));
+                $('.sale_price').html(accounting.format(sale_price, 2));
+                $('#id_selected_product').val(quoted_product_id).change();
+
+                var html = '<span class="c-vlgray font-10 nothing-available">No default add ons</span>';
+                if(default_add_ons.length) {
+                    html = '';
+                    $.each(default_add_ons, function() {
+                        html += '<span data-key="'+this+'" class="badge badge-default badge-font-light m-t-10 m-r-10">' +this.replace(new RegExp('_' , 'g'), ' ')+ '</span>';
+                    });
+                }
+
+                $('#order_form .default-add-ons').html(html);
+
+                var html = '<span class="c-vlgray font-10 nothing-available">Nothing available</span>';
+                if(product_add_ons && product_add_ons.length) {
+                    html = '';
+                    $.each(product_add_ons, function() {
+                        if(default_add_ons.indexOf(Object.keys(this)[0]) < 0)
+                            html += '<span data-key="'+Object.keys(this)[0]+'" data-price="'+this[Object.keys(this)[0]].price+'" class="badge badge-default badge-font-light m-t-10 m-r-10">' +this[Object.keys(this)[0]].label+ '</span>';
+                    });
+                }
+                $('#order_form .addons').html(html);
+
+                _this._updateTotal();
             });
 
-            // enable fileuploader plugin
-            if($('#document_upload').length) {
-                $('#document_upload').fileuploader({
-                    changeInput: '<div class="fileuploader-input">' +
-                                      '<div class="fileuploader-input-inner">' +
-                                          '<div class="fileuploader-main-icon"></div>' +
-                                          '<h3 class="fileuploader-input-caption"><span>${captions.feedback}</span></h3>' +
-                                          '<p>${captions.or}</p>' +
-                                          '<div class="fileuploader-input-button"><span>${captions.button}</span></div>' +
-                                      '</div>' +
-                                  '</div>',
-                    theme: 'dragdrop',
-                    upload: {
-                        url: $('#document_upload').data('url'),
-                        data: null,
-                        type: 'POST',
-                        enctype: 'multipart/form-data',
-                        start: true,
-                        synchron: true,
-                        beforeSend: function() {
-                            $('.progress-bar').removeClass('error').removeClass('success');
-                        },
-                        onSuccess: function(result, item) {
-                            // if success
-                            if (result && result.success) {
-                                // $('.files-container').prepend(
-                                //     '<div class="files col col-lg-6 highlight-temp">' +
-                                //         '<a href="'+ result.file.url +'" target="_blank">' +
-                                //             '<div class="file-icon '+ result.file.extension +'"></div>'+
-                                //         '</a>' +
-                                //         '<div class="file-info">' +
-                                //             '<a data-id=' + result.file.pk + ' href="'+ result.file.url +'" target="_blank" data-preview-image="'+ result.file.url +'"' + 
-                                //                'class="text-editable attachment-field"' +
-                                //                'data-class="form-control-sm"' +
-                                //                'data-name="label"' +
-                                //                'data-toggle="manual"' +
-                                //                'data-value="' + result.file.label + '"' +
-                                //                'data-title="' + result.file.label + '"' +
-                                //                'data-pk="' + result.file.pk + '"' +
-                                //                'data-url="' + DjangoUrls['core:update-attachment'](result.file.pk) + '"' +
-                                //             '>' + result.file.label + '</a>' +
-                                //             '<a class="edit-file" href="javascript:"><i class="ti-pencil"></i></a>' +
-                                //             '<div class="dates text-muted">' + result.file.created_on + ' by ' + result.file.added_by + '</div>' +
-                                //         '</div>' +
-                                //     '</div>'
-                                // );
-                                if(typeof __DOCUMENTS_SECTION != undefined) {
-                                    __DOCUMENTS_SECTION._loadDocuments();
-                                }
-                                if(typeof __DOCUMENTS_VIEWER != undefined) {
-                                    __DOCUMENTS_VIEWER._update_attachments_obj(result.file);
-                                }
-                            } else {
-                                $('.progress-bar').addClass('error').removeClass('success');
-                                Utilities.Notify.error('Error occurred while uploading ' + item.name, 'Error');
+            _deal_stage_container.on('change', '#order_form #id_discount', function() {
+                _this._updateTotal();
+            });
+            _deal_stage_container.on('click', '#order_form .addons .badge', function() {
+                $(this).toggleClass('active');
+                _this._updateTotal();
+            });
+
+            _deal_stage_container.on('click', '.quote-summary .product-preview', function() {
+                $('.prepare-order').click();
+                $('#order_form .product[data-qpid='+$(this).data('qpid')+']').click();
+            });
+
+            _deal_stage_container.on('click', '.prepare-order', function() {
+                $('.quote-summary.quote-preview').addClass('hide');
+                $('.quote-summary.create-order').removeClass('hide');
+
+                __FELIX__._loadLibs();
+                _this._initForms();
+            });
+            _deal_stage_container.on('click', '.cancel-order', function() {
+                if($('.quote-summary').length && $('.quote-summary').is(':visible')) {
+                    $('.quote-summary.quote-preview').removeClass('hide');
+                    $('.quote-summary.create-order').addClass('hide');
+                }
+                if($('.order-summary').length && $('.order-summary').is(':visible')) {
+                    $('.order-summary.preview').removeClass('hide');
+                    $('.order-summary.create-order').addClass('hide');
+                }
+            });
+
+            _deal_stage_container.on('click', '.submit-order', function(){
+                $(this).addClass('show-loader');
+                $('#order_form #id_send_email').val('');
+                $('#order_form').submit();
+            });
+
+            _deal_stage_container.on('click', '.submit-send-order', function(){
+                $(this).addClass('show-loader');
+                $('#order_form #id_send_email').val('1');
+
+                $.get(DjangoUrls[`${__app_name}:get-deal-json`](_deal_id), function(response) {
+                    if(response.customer.email == '') {
+                        $('[data-felix-modal="modal_edit_customer_email"]').click();
+                        $('.submit-send-order').removeClass('show-loader');
+                    } else {
+                        $('#order_form').submit();
+                    }
+                });
+            });
+
+            _deal_stage_container.on('change', '#id_selected_product', function(){
+                __DEALS._getQuotedProductAddons($(this).val(), $('#id_selected_add_ons'));
+            });
+            _deal_stage_container.on('change', '#id_is_void', function() {
+                $('button.submit-send-order').prop('disabled', $(this).is(':checked'));
+            });
+
+            _deal_stage_container.on('click', '.edit-order', function() {
+                $('.order-summary.preview').addClass('hide');
+                $('.order-summary.create-order').removeClass('hide');
+
+                __FELIX__._loadLibs();
+                _this._loadProductAndAddons();
+                _this._initForms();
+            });
+
+            _deal_stage_container.on('click', '.edit-policy', function() {
+                $('.policy-summary.preview').addClass('hide');
+                $('.policy-summary.form').removeClass('hide');
+
+                __FELIX__._loadLibs();
+                _this._initForms();
+            });
+
+            _deal_stage_container.on('click', '.cancel-policy', function() {
+                $('.policy-summary.preview').removeClass('hide');
+                $('.policy-summary.form').addClass('hide');
+            });
+
+            _deal_stage_container.on('click', '.edit-quote', function() {
+                $('.quote-summary.quote-preview').addClass('hide');
+                $('.quote-summary.quote-form').removeClass('hide');
+
+                __QUOTES._getQuotedProducts();
+                __FELIX__._loadLibs();
+                _this._initForms();
+            });
+
+            _deal_stage_container.on('click', '.cancel-quote', function() {
+                $('.quote-summary.quote-preview').removeClass('hide');
+                $('.quote-summary.quote-form').addClass('hide');
+            });
+
+            _deal_stage_container.on('click', '.order-status-display .dropdown-menu a', function() {
+                var value = $(this).data('value');
+                $.post(
+                    DjangoUrls['motorinsurance:update-deal-field']($('.deal-container').data('id'), 'order'),
+                    {'pk': $('.deal-container').data('id'), 'name': 'status', 'value': value},
+                function(response) {
+                    if(response.success) {
+                        $('.order-status-display a.nav-link')
+                            .removeClass('paid')
+                            .removeClass('unpaid')
+                            .addClass(value)
+                            .html(value);
+
+                        $.get(DjangoUrls['motorinsurance:deal-current-stage'](_deal_id), function(response) {
+                            __DEALS._updateTags(response.tags);
+                        });
+                    } else {
+                        Utilities.Notify.error('Some error occurred. Please try again later.', 'Error');
+                    }
+                });
+            });
+        },
+
+        _initForms: function() {
+            if($('#order_form').length) {
+                $('#order_form').ajaxForm({
+                    beforeSubmit: Utilities.Form.beforeSubmit,
+                    success: function(response, status, xhr, form) {
+                        Utilities.Form.onSuccess(response, status, xhr, form);
+
+                        if(response.success) {
+                            $('.cancel-order').click();
+
+                            if(response.creating) {
+                                $.get(DjangoUrls[`${__app_name}:get-deal-json`](_deal_id), function(r) {
+                                    __AMPLITUDE.logEvent(
+                                        __AMPLITUDE.event('motor_order_created'),
+                                        {
+                                            'source': 'manual',
+
+                                            'deal_id': _deal_id,
+                                            'deal_type': r.deal.deal_type,
+                                            'deal_created_date': r.deal.created_on,
+                                            'vehicle_model_year': r.deal.vehicle_year,
+                                            'vehicle_model': r.deal.vehicle_model,
+                                            'vehicle_body_type': r.deal.vehicle_body_type,
+                                            'vehicle make': r.deal.vehicle_make,
+
+                                            'views': r.quote.views,
+
+                                            'product': r.order.product,
+                                            'cover': r.order.product_cover,
+                                            'insurer': r.order.product_insurer,
+                                            'premium': r.order.payment_amount,
+                                            'discounted_premium': r.order.discounted_premium,
+                                            'repair_type': r.order.repair_type,
+                                            'vehicle_sum_insured': r.order.sum_insured,
+
+                                            'client_nationality': r.customer.nationality,
+                                            'client_gender': r.customer.gender,
+                                            'client_age': r.customer.age
+                                        });
+                                });
                             }
 
-                            setTimeout(function() {
-                                $('.progress-bar').fadeOut(400);
-                                __XEDITABLE.init();
-                            }, 1000);
+                            if($('#order_form #id_send_email').val()) {
+                                __DEALS._triggerCustomEmailModal('order_confirmation');
+                            }
 
-                        },
-                        onError: function(item) {
-                            var progressBar = $('.progress-bar');
-                            if(progressBar.length) {
-                                $('.progress-bar').removeClass('success').addClass('error');
+                            __DEALS._loadDealStage();
+
+                            if('note_content' in response) {
+                                var note_content = response.note_content;
+                                    note_content += '<div class="text-muted">' + response.note_created_on + '</div>';
+
+                                __NOTE._prependNoteInTrail(note_content);
                             }
-                        },
-                        onProgress: function(data, item) {
-                            var progressBar = $('.progress-bar');
-                            if(progressBar.length > 0) {
-                                progressBar.removeClass('error').removeClass('success');
-                                progressBar.show();
-                                progressBar.width(data.percentage + "%");
-                                progressBar.find('span').html(item.name);
+                        }
+                        $('.' + _show_loader_class).removeClass(_show_loader_class);
+                    },
+                    error: Utilities.Form.onFailure
+                });
+            }
+            if($('#policy_form').length) {
+                $('#policy_form').ajaxForm({
+                    beforeSubmit: Utilities.Form.beforeSubmit,
+                    success: function(response, status, xhr, form) {
+                        Utilities.Form.onSuccess(response, status, xhr, form);
+
+                        if(response.success) {
+                            $('.cancel-policy').click();
+
+                            if(response.creating) {
+                                $.get(DjangoUrls[`${__app_name}:get-deal-json`](_deal_id), function(r) {
+                                    __AMPLITUDE.logEvent(
+                                        __AMPLITUDE.event('motor_policy_saved'), {
+                                            'deal_id': _deal_id,
+                                            'deal_created_date': r.deal.created_on,
+
+                                            'repair_type': r.order.repair_type,
+                                            'insurer': r.order.product_insurer,
+                                            'cover': r.order.product_cover,
+                                            'product': r.order.product,
+                                            'premium': r.order.payment_amount,
+
+                                            'vehicle_model_year': r.deal.vehicle_year,
+                                            'vehicle make': r.deal.vehicle_make,
+                                            'vehicle_model': r.deal.vehicle_model,
+                                            'vehicle_body_type': r.deal.vehicle_body_type,
+                                            'vehicle_sum_insured': r.order.sum_insured,
+
+                                            'client_nationality': r.customer.nationality,
+                                            'client_gender': r.customer.gender,
+                                            'client_age': r.customer.age
+                                        }
+                                    );
+                                });
                             }
-                        },
-                        onComplete: function() {
-                            $('.progress-bar').removeClass('error').removeClass('success');
-                            $('.progress-bar span').html('');
-                            $('[name=fileuploader-list-file]').val('');
-                        },
+
+                            if($('#policy_form #id_send_email').val()) {
+                                __DEALS._triggerCustomEmailModal('policy_issued');
+                            }
+                            __DEALS._loadDealStage();
+                        }
+                        $('.' + _show_loader_class).removeClass(_show_loader_class);
                     },
-                    captions: {
-                        feedback: 'Drag files here or click to upload',
-                        feedback2: 'Drag files here or click to upload',
-                        drop: 'Drag files here or click to upload',
-                        or: ' ',
-                        button: ' ',
-                    },
+                    error: Utilities.Form.onFailure
+                });
+            }
+
+            if($('#quote_form').length) {
+                $('#quote_form').ajaxForm({
+                    beforeSubmit: Utilities.Form.beforeSubmit,
+                    success: Utilities.Form.onSuccess,
+                    error: Utilities.Form.onFailure
                 });
             }
         },
+
+        _updateTotal: function() {
+            var order_form = $('#order_form');
+            var product_id = order_form.find('.product.selected').data('id');
+            var product = window.products_data[product_id];
+            var premium = order_form.find('.product.selected').data('sale-price');
+            if(premium === undefined) premium = 0;
+            var total = premium - $('#id_discount').val();
+            var selected_addons = [];
+            var addons_price = 0;
+            order_form.find('.badge.active').each(function() {
+                selected_addons.push(this.dataset.key);
+
+                if(this.dataset.key == 'pab_passenger') {
+                    addons_price += (parseFloat(this.dataset.price) * parseFloat(order_form.data('number-of-passengers')));
+                } else {
+                    addons_price += parseFloat(this.dataset.price);
+                }
+            });
+
+            total += addons_price;
+
+            order_form.find('.paid_addons').html(accounting.format(addons_price, 2));
+            order_form.find('#id_selected_add_ons').val(selected_addons).change();
+
+            if(total < 0) total = 0;
+
+            $('#id_payment_amount').val(total);
+            $('.order_total').html(accounting.format(total, 2));
+        },
+
+        _loadProductAndAddons: function() {
+            var order_form = $('#order_form');
+            if(order_form.data('selected-product')) {
+                $('#id_selected_product').change();
+                var id = order_form.data('selected-product');
+                order_form.find('.product[data-id='+id+']').click();
+            }
+            setTimeout(function() {
+                if(order_form.data('selected-addons')) {
+                    var addons = order_form.data('selected-addons');
+                    $.each(addons, function() {
+                        order_form.find('.badge[data-key='+this+']').click();
+                    });
+                }
+            }, 1000);
+        }
     };
 
     jQuery(function() {
-        __DOCUMENT_UPLOADER.init();
+        __DEALFORMS.init();
     });
 })();
 
@@ -2514,6 +2408,125 @@ var __DOCUMENTS_VIEWER;
     jQuery(function() {
         if($('#modal_documents_viewer').length)
             __DOCUMENTS_VIEWER.init();
+    });
+})();
+
+/*** Felix File Uploader ***/
+;'Use Strict';
+var __DOCUMENT_UPLOADER;
+
+;(function() {
+    var _this = '';
+
+    __DOCUMENT_UPLOADER =
+    {
+        // Onload
+        init: function()
+        {
+            _this = this;
+            $('.add-documents').click(function() {
+                $('[href="#tab_documents"]').click();
+                $('#document_upload').click();
+            });
+
+            // enable fileuploader plugin
+            if($('#document_upload').length) {
+                $('#document_upload').fileuploader({
+                    changeInput: '<div class="fileuploader-input">' +
+                                      '<div class="fileuploader-input-inner">' +
+                                          '<div class="fileuploader-main-icon"></div>' +
+                                          '<h3 class="fileuploader-input-caption"><span>${captions.feedback}</span></h3>' +
+                                          '<p>${captions.or}</p>' +
+                                          '<div class="fileuploader-input-button"><span>${captions.button}</span></div>' +
+                                      '</div>' +
+                                  '</div>',
+                    theme: 'dragdrop',
+                    upload: {
+                        url: $('#document_upload').data('url'),
+                        data: null,
+                        type: 'POST',
+                        enctype: 'multipart/form-data',
+                        start: true,
+                        synchron: true,
+                        beforeSend: function() {
+                            $('.progress-bar').removeClass('error').removeClass('success');
+                        },
+                        onSuccess: function(result, item) {
+                            // if success
+                            if (result && result.success) {
+                                // $('.files-container').prepend(
+                                //     '<div class="files col col-lg-6 highlight-temp">' +
+                                //         '<a href="'+ result.file.url +'" target="_blank">' +
+                                //             '<div class="file-icon '+ result.file.extension +'"></div>'+
+                                //         '</a>' +
+                                //         '<div class="file-info">' +
+                                //             '<a data-id=' + result.file.pk + ' href="'+ result.file.url +'" target="_blank" data-preview-image="'+ result.file.url +'"' + 
+                                //                'class="text-editable attachment-field"' +
+                                //                'data-class="form-control-sm"' +
+                                //                'data-name="label"' +
+                                //                'data-toggle="manual"' +
+                                //                'data-value="' + result.file.label + '"' +
+                                //                'data-title="' + result.file.label + '"' +
+                                //                'data-pk="' + result.file.pk + '"' +
+                                //                'data-url="' + DjangoUrls['core:update-attachment'](result.file.pk) + '"' +
+                                //             '>' + result.file.label + '</a>' +
+                                //             '<a class="edit-file" href="javascript:"><i class="ti-pencil"></i></a>' +
+                                //             '<div class="dates text-muted">' + result.file.created_on + ' by ' + result.file.added_by + '</div>' +
+                                //         '</div>' +
+                                //     '</div>'
+                                // );
+                                if(typeof __DOCUMENTS_SECTION != undefined) {
+                                    __DOCUMENTS_SECTION._loadDocuments();
+                                }
+                                if(typeof __DOCUMENTS_VIEWER != undefined) {
+                                    __DOCUMENTS_VIEWER._update_attachments_obj(result.file);
+                                }
+                            } else {
+                                $('.progress-bar').addClass('error').removeClass('success');
+                                Utilities.Notify.error('Error occurred while uploading ' + item.name, 'Error');
+                            }
+
+                            setTimeout(function() {
+                                $('.progress-bar').fadeOut(400);
+                                __XEDITABLE.init();
+                            }, 1000);
+
+                        },
+                        onError: function(item) {
+                            var progressBar = $('.progress-bar');
+                            if(progressBar.length) {
+                                $('.progress-bar').removeClass('success').addClass('error');
+                            }
+                        },
+                        onProgress: function(data, item) {
+                            var progressBar = $('.progress-bar');
+                            if(progressBar.length > 0) {
+                                progressBar.removeClass('error').removeClass('success');
+                                progressBar.show();
+                                progressBar.width(data.percentage + "%");
+                                progressBar.find('span').html(item.name);
+                            }
+                        },
+                        onComplete: function() {
+                            $('.progress-bar').removeClass('error').removeClass('success');
+                            $('.progress-bar span').html('');
+                            $('[name=fileuploader-list-file]').val('');
+                        },
+                    },
+                    captions: {
+                        feedback: 'Drag files here or click to upload',
+                        feedback2: 'Drag files here or click to upload',
+                        drop: 'Drag files here or click to upload',
+                        or: ' ',
+                        button: ' ',
+                    },
+                });
+            }
+        },
+    };
+
+    jQuery(function() {
+        __DOCUMENT_UPLOADER.init();
     });
 })();
 
@@ -3427,6 +3440,19 @@ var __FELIX__;
                     $(this).removeClass('new');
                     $('#' + $(this).data('target')).val(ui.item.id);
 
+                    if($('body').hasClass('mortgage-deals') || ($('body').hasClass('customers') && $('body').hasClass('mortgage'))){
+                        let result = ui.item.desc.trim();
+                        result = result.replace(/\s/g, "");
+                        result = result.split("|");
+                        const email = result[0].replace("E:", "");
+                        const tel = result[1].replace("T:", "");
+                        $('#id_customer_email').val(email)
+                        $('#id_customer_phone').val(tel)
+
+                        $('#modal_create_mortgage_deal #id_customer_email').val(email)
+                        $('#modal_create_mortgage_deal #id_customer_phone').val(tel)
+                    }
+
                     return false;
                 },
                 response: function(event, ui) {
@@ -3469,7 +3495,11 @@ var __FELIX__;
 
             _info_container.on('click', '.toggle-deal-processes', function() {
                 $(this).toggleClass('show-div');
-                $('.deal-processes').slideToggle(100);
+                if ($('body').hasClass('mortgage-deals')){
+                    $('.mortgage-deal-processes').slideToggle(100);
+                } else {
+                    $('.deal-processes').slideToggle(100);
+                }
             });
         },
 
@@ -3499,7 +3529,11 @@ var __FELIX__;
             if(!$('.auto-format-money-field').length) return;
             // Restrict to numbers comma and dot only
             $('body').on('input', '.auto-format-money-field',function() {
-                var value = $(this).val().replace(/[^0-9.,]*/g, '');
+                var value = $(this).val()
+                if($('body').hasClass('mortgage-deals')){
+                    return $(this).val(accounting.formatNumber(value, 0, ',', '.'));
+                }
+                value = value.replace(/[^0-9.,]*/g, '');
                 value = value.replace(/\.{2,}/g, '.');
                 value = value.replace(/\.,/g, ',');
                 value = value.replace(/\,\./g, ',');
@@ -3511,13 +3545,21 @@ var __FELIX__;
             // Form money field after user has done typing
             $('body').on('blur', '.auto-format-money-field', function(event) {
                 $(this).val(function(index, value) {
-                    return accounting.formatNumber($(this).val(), 2, ',', '.');
+                    if($(this).val()!=''){
+                        if($('body').hasClass('mortgage-deals')){
+                            return accounting.formatNumber($(this).val(), 0, ',', '.');
+                        }else{
+                            return accounting.formatNumber($(this).val(), 2, ',', '.');
+                        }
+                    }
                 });
             });
             // Form money field on focus to convert it back to integer
             $('body').on('focus', '.auto-format-money-field', function(event) {
                 $(this).val(function(index, value) {
-                    return accounting.unformat($(this).val());
+                    if($(this).val()!=''){
+                        return accounting.unformat($(this).val());
+                    }
                 });
             });
             // Format all money fields on page load
@@ -3672,10 +3714,17 @@ var __NOTE;
                             _note_form.find('[data-modal-close]').click();
 
                             var note = '<div class="label">Note created</div>';
-                                note += '<div class="note">' + response.note.content + '</div>';
+                                if('note_pk' in response.note){
+                                    note += '<div class="note note-id-'+response.note.note_pk+'">' + response.note.content + '</div>';
+                                }else{
+                                    note += '<div class="note">' + response.note.content + '</div>';
+                                }
                                 note += '<div class="text-muted">' + response.note.created_on + ' ';
                                 note += 'by ' + response.note.added_by;
                                 note += '</div>';
+                                if('note_pk' in response.note){
+                                    note += '<div><button id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="btn btn-sm btn-danger"> Delete </button> <button data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="btn btn-info-container btn-primary btn-sm" onclick="editMortgageNote(this)">Edit Note</button></div>'
+                                }
 
                             _this._prependNoteInTrail(note);
                         } else {
@@ -4326,10 +4375,13 @@ var __QUOTES;
                 var product = window.products_data[$('#id_product').val()];
                 var premium = $('#id_premium').val();
                 var sale_price = $('#id_sale_price').val();
-
+                var deductible = $('#id_deductible').val();
                 if(!accounting.unformat(sale_price))
                     sale_price = premium;
-
+                if(deductible === ""){
+                    document.querySelector('#id_deductible').value = parseFloat("0").toFixed(2)
+                    deductible = parseFloat("0").toFixed(2)
+                }
                 var data = {
                     'product_id': $('#id_product').val(),
                     'product_name': product.name,
@@ -4338,7 +4390,7 @@ var __QUOTES;
                     'default_add_ons': $('#id_default_add_ons').val() || [],
                     'agency_repair': $('#id_agency_repair').is(':enabled:checked'),
                     'ncd_required': $('#id_ncd_required').is(':enabled:checked'),
-                    'deductible': $('#id_deductible').val(),
+                    'deductible': deductible,
                     'deductible_extras': $('#id_deductible_extras').val(),
                     'insurer_quote_reference': $('#id_insurer_quote_reference').val(),
                     'premium': premium,
@@ -5241,5 +5293,592 @@ var __XEDITABLE;
 
     jQuery(function() {
         __XEDITABLE.init();
+    });
+})();
+
+
+/* BANKS */
+'Use Strict';
+
+var __BANKS;
+;(function() {
+    __BANKS = {
+        _deleteBank: function(element)
+        {
+            var element = element
+            $.ajax({
+                url: element.dataset.deleteUrl+"?bank="+ element.dataset.bank,
+                method: 'DELETE',
+                headers: {
+                    "X-CSRFToken":element.previousElementSibling.value
+               },
+                success: function( data ) {
+                    element.closest('tr').remove()
+                    // alert(data.message)
+                },
+                error: function(data){
+                    debugger
+
+                }
+            });
+        }
+    }
+}
+)();
+/* DEALS */
+;
+'Use Strict';
+
+var __MORTGAGE_DEALS;
+;(function() {
+
+    var _this   = '';
+    var _table  = $('#deals-table');
+    var _form   = $('#deal_form');
+    var _filter_form   = $('#deals-search');
+    var _clear_product_selection = $('.clear-product-selection');
+    var _show_payments = $('.show-payments');
+    var _deal_id = $('.deal-container').data('id');
+    var _deal_status = $('.deal-container').data('status');
+    var _deal_stages_breadcrumb = $('.deal-stages-breadcrumb');
+    var _deal_stage_container = $('.mortgage-deal-processes');
+    var _deal_open_or_lost_btn = $('.open-lost-deal');
+
+    __MORTGAGE_DEALS =
+    {
+        init: function()
+        {
+            _this = this;
+
+            _this._loadMortgageProducts();
+            _this._dealStatusInline();
+            _this._addNewDealForm();
+            _this._dealStagesToggle();
+            _this._dealProcessTriggers();
+            _this._openLostDealTriggers();
+            _this._triggerCustomEmailForm();
+            _this._loadHistory();
+
+            _show_payments.click(function() {
+                _this._scrollAndOpenPaymentsTab();
+            });
+
+            $("#search-clear").on("click", function () {
+                window.location.href = $("#deals-search").data("reset-url");
+            });
+
+            var filter_count = Utilities.Form.addFilterCount(_filter_form);
+            if(filter_count) {
+                $('.filter-count').html(filter_count).removeClass('hide');
+            }
+
+            $('body.mortgage-deals').on('click', '.duplicate-deal', function() {
+                _this._duplicateDeal();
+            });
+
+            if(_clear_product_selection.length) {
+                _clear_product_selection.click(function() {
+                    var url = $(this).data('url');
+                    if(window.confirm('Are you sure you want to clear the selected product?')) {
+                        $.get(url, function(response) {
+                            if(response.success) {
+                                Utilities.Notify.success('Product selection removed successfully', 'Success');
+                                window.location.href = window.location.href;
+                            } else {
+                                Utilities.Notify.error(response.message, 'Error');
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Load deal stage on load
+            if(_deal_stage_container.length)
+                _this._loadMortgageDealStage();
+
+            $("#deal_email_field_form").ajaxForm({
+                beforeSubmit: Utilities.Form.beforeSubmit,
+                success: function(response, status, xhr, form) {
+                    form.find('button[type=submit]').removeClass('loader');
+
+                    if(response.success) {
+                       $('.save-and-send:visible').click();
+                       $('[data-modal-close]:visible').click();
+                       $('a.text-editable[data-name=email]').editable('destroy');
+                       $('a.text-editable[data-name=email]').html(response.data.value);
+
+                       __XEDITABLE.init();
+                    }
+                },
+                error: Utilities.Form.onFailure
+            });
+
+            // Email modal Template DD change event
+            $('.deal-container').on('change', '#custom_email_type', function() {
+                if($('body').hasClass('mortgage-deals')) {
+                    _this._triggerCustomEmailMortgageModal($(this).val());
+                }
+            });
+        },
+
+        _loadMortgageProducts: function() {
+            if(_deal_id) {
+                $.get(DjangoUrls['mortgage:deal-all-products'](_deal_id), function(res) {
+                    window.products_data = res
+                });
+            }
+        },
+
+        _loadStageWarning: function() {
+            setTimeout(function() {
+                $('.stage-warning').click(function() {
+                    alertify
+                        .okBtn("Dismiss")
+                        .cancelBtn("Cancel")
+                        .confirm("Some deal information has changed since you last saved your quotes. This might affect the premiums quoted. Consider reviewing  your quotes before proceeding.", function (ev) {
+                            $.get(
+                                DjangoUrls['mortgage:deal-remove-warning'](_deal_id),
+                                function(response) {
+                                    if(response.success)
+                                       $('.stage-warning').addClass('hide'); 
+                            });
+                        });
+                });
+            }, 2000);
+        },
+
+        _loadHistory: function() {
+            if(!_deal_id || !$('#mortgage_tab_history').length) return;
+
+            $.get(DjangoUrls['mortgage:deal-history'](_deal_id), function(response) {
+                $('#mortgage_tab_history').html(response);
+            });
+        },
+
+        _resetMortgageDealForm: function(event) {
+            Utilities.Form.removeErrors('#deal_form');
+            $('#deal_form .autocomplete-container').removeClass('new');
+            $('#deal_form #id_customer').val('');
+            $('#deal_form input[type=text]').val('');
+            $('#deal_form select').val('');
+            $('#deal_form select').trigger('chosen:updated');
+            $('#deal_form #id_number_of_passengers').val('');
+        },
+
+        _setCustomerInDealForm: function(customer_id, customer_name) {
+            $('#deal_form #id_customer').val(customer_id);
+            $('#deal_form #id_customer_name').val(customer_name);
+        },
+
+        _triggerCustomEmailForm: function() {
+            $('#modal_send_custom_email .send-email').click(function(event) {
+                var form = $('#custom_email_form');
+                var email_type = form.find('#email_type').val();
+
+                // Validations
+                form.find('.error').remove();
+                if(form.find('#id_email').val() == '') {
+                    form.find('#id_email').after('<span class="error">This field is required</span>');
+                    return;
+                }
+                if(form.find('#id_subject').val() == '') {
+                    form.find('#id_subject').after('<span class="error">This field is required</span>');
+                    return;
+                }
+
+                form.find('button.send-email').addClass('loader');
+
+                $.post(
+                    DjangoUrls['mortgage:deal-email-content'](_deal_id, email_type),
+                    $('#custom_email_form').serialize(),
+                    function(response) {
+                        form.find('button.send-email').removeClass('loader');
+                        if(response.success) {
+                            Utilities.Notify.success('Email sent successfully.', 'Success');
+                            $('#modal_send_custom_email').hide();
+
+                            if(response.email_type == 'new_quote' || response.email_type == 'quote_updated') {
+                                __AMPLITUDE.logEvent(
+                                    __AMPLITUDE.event('mortgage_quote_email_sent'), {
+                                        'deal_id': _deal_id
+                                    }
+                                );
+                            }
+
+                            _this._loadHistory();
+
+                        } else {
+                            Utilities.Notify.error('Please check all the required fields and try again.', 'Error');
+                            Utilities.Form.addErrors($('#custom_email_form'), response.errors);
+                        }
+                    }
+                );
+            });
+        },
+
+        _triggerCustomEmailMortgageModal: function(email_type) {
+            var url = DjangoUrls['mortgage:deal-email-content'](_deal_id, email_type);
+            $('#custom_email_form').css({'opacity': '.7'});
+
+            $.get(url, function(response) {
+                var form = $('#custom_email_form');
+                $('#custom_email_form').css({'opacity': '1'});
+                $('[data-felix-modal="modal_send_custom_email"]').click();
+
+                form.find('#email_type').val(email_type);
+                form.find('#id_email').val(response.to);
+                form.find('#id_from_email').html(response.from);
+                form.find('#id_reply_to').html(response.reply_to);
+                // form.find('#id_cc_emails').val(response.cc_emails);
+                // form.find('#id_bcc_emails').val(response.bcc_emails);
+                form.find('#id_subject').val(response.subject);
+                form.find('#id_content').trumbowyg($.trumbowyg.config);
+                form.find('#id_content').trumbowyg('html', response.content);
+
+                form.find('#custom_email_type option').remove();
+
+                $.each(response.allowed_templates, function(k, v) {
+                    var selected = k==response.email_type?'selected':'';
+                    form.find('#custom_email_type').append(
+                        `<option ${selected} value="${k}">${v}</option>`
+                    );
+                });
+                $('#custom_email_type').trigger('chosen:updated');
+
+                form.find('.email_type_display').html(
+                    response.allowed_templates[response.email_type]
+                );
+
+                if('sms_content' in response && response.sms_content) {
+
+                    form.find('.show-when-sms').removeClass('hide');
+                    form.find('#id_sms_content').val(response.sms_content);
+
+                    form.find('#id_send_sms').change(function() {
+                        form.find('.sms_container').addRemoveClass(!$(this).is(':checked'), 'hide');
+                    });
+
+                    $('textarea[maxlength]').maxlength({
+                        alwaysShow: true,
+                        warningClass: "badge badge-info",
+                        limitReachedClass: "badge badge-warning"
+                    });
+                } else {
+                    form.find('.show-when-sms').addClass('hide');
+                    form.find('#id_sms_content').val('');
+                    form.find('#send_sms').prop('checked', false);
+                }
+
+                // if('attachments' in response && response.attachments.length) {
+                //     form.find('.attachments').removeClass('hide');
+                //     form.find('.attachments ul li').remove();
+                //     $.each(response.attachments, function() {
+                //         form.find('.attachments ul').append(
+                //             '<li><a href="' + this.url + '" target="_blank">' + this.name + '</a></li>'
+                //         );
+                //     });
+                // } else {
+                //     form.find('.attachments').addClass('hide');
+                // }
+            });
+        },
+
+        _openLostDealTriggers: function() {
+            _deal_open_or_lost_btn.click(function() {
+                if(_deal_open_or_lost_btn.hasClass('re-open')) {
+                    if(window.confirm('Are you sure you want to Re-Open this deal?')) {
+                        $.get(DjangoUrls['mortgage:deal-reopen'](_deal_id), function(response) {
+                            if(response.success) {
+                                _this._loadMortgageDealStage();
+                            }
+                        });
+                    }
+                } else {
+                    if(window.confirm('Are you sure you want to mark this deal as a "LOST" deal?')) {
+                        $.get(DjangoUrls['mortgage:deal-mark-as-lost'](_deal_id), function(response) {
+                            if(response.success) {
+                                _this._loadMortgageDealStage();
+                            }
+                        });
+                    }
+                }
+            });
+        },
+
+        _updateTags: function(tags) {
+            // Updating Tags
+            if(tags) {
+                var tags_html = '';
+                $.each(tags, function() {
+                    tags_html += '<span class="m-t-15 m-r-4 badge badge-default badge-font-light badge-'+Utilities.General.slugify(this)+'">'+this+'</span>';
+                });
+
+                $('.deal-statuses').html(tags_html);
+            }
+        },
+
+        _refreshStagesBar: function(stage) {
+            var status = $('.deal-container').data('status');
+            var stages = ['new', 'quote', 'preApproval', 'valuation', 'offer', 'settlement', 'loanDisbursal', 'propertyTransfer', 'closed'];
+
+            $.get(DjangoUrls['mortgage:deal-current-stage'](_deal_id), function(response) {
+                if(response)
+                   status =  response.stage;
+
+                if(stage === undefined || !stage)
+                    stage = status;
+
+                _this._updateTags(response.tags);
+
+                _deal_stages_breadcrumb.find('li').removeClass('current completed lost won');
+
+                // Checking for lost/won deal
+                if(status == 'lost' || status == 'won' ) {
+                    _deal_stages_breadcrumb.find('li').addClass(status);
+
+                    _deal_open_or_lost_btn
+                        .html('Reopen')
+                        .removeClass('mark-as-lost btn-outline-danger hide')
+                        .addClass('re-open btn-outline-dark');
+
+                    return;
+                } else {
+                    _deal_open_or_lost_btn
+                        .html('Mark as Lost')
+                        .addClass('mark-as-lost btn-outline-danger')
+                        .removeClass('re-open btn-outline-dark hide');
+                }
+                _deal_stages_breadcrumb.find('li[data-id='+ stage +']').addClass('selected');
+                $.each(stages, function() {
+                    if(this == status) {
+                        _deal_stages_breadcrumb.find('li[data-id='+ this +']').addClass('current');
+                        return false;
+                    } else {
+                        _deal_stages_breadcrumb.find('li[data-id='+ this +']').addClass('completed');
+                    }
+                });
+
+                _this._loadHistory();
+            });
+        },
+
+        _loadMortgageDealStage: function(stage) {
+            if(_deal_id) {
+
+                if(stage === undefined)
+                    stage = '';
+
+                if($('body').hasClass('mortgage-deals')) {
+                    $.get(DjangoUrls['mortgage:get-deal-stage'](_deal_id) + '?stage=' + stage, function(response) {
+                        _deal_stage_container.html(response);
+
+                        __FELIX__._loadLibs();
+                        __DEALFORMS._initForms();
+                    });
+                    _this._refreshStagesBar(stage);
+                    _this._loadStageWarning();
+                }
+            }
+        },
+
+        _getCustomerFromQueryParams: function() {
+            var params = Utilities.General.getUrlVars();
+
+            if('customer_id' in params && params['customer_id']) {
+                return params['customer_id'];
+            }
+
+            return false;
+        },
+
+        _scrollAndOpenPaymentsTab: function() {
+            var elem = $('a[href="#tab_payments"]');
+            
+            $([document.documentElement, document.body]).animate({
+                scrollTop: elem.offset().top
+            }, 100);
+            elem.click();
+        },
+
+        _dealStatusInline: function() {
+            $('.deal-inline-update-field').editable({
+                emptytext: $(this).data('emptytext')?$(this).data('emptytext'):'-',
+                mode: 'inline',
+                inputclass: 'form-control-sm',
+                url: $(this).data('url'),
+                emptyclass: 'empty',
+                source: $(this).data('options')?$.parseJSON($(this).data('options')):[],
+                display: function (value, sourceData) {
+                    var elem = $.grep(sourceData, function (o) {
+                        return o.value == value;
+                    });
+
+                    if (elem.length) {
+                        $(this).text(elem[0].text);
+                    } else {
+                        $(this).empty();
+                    }
+                },
+                error: function(response) {
+                    return response.responseJSON.message;
+                },
+                success: function(response, newValue) {
+                    if(response.success) {
+                        Utilities.Notify.success(response.message, 'Success');
+                    } else {
+                        Utilities.Notify.error(response.message, 'Error');
+                        return false;
+                    }
+                }
+            }).on('shown', function(e, editable){
+                editable.input.$input.chosen();
+            });
+        },
+
+        _loadQuotePreview: function() {
+            $.get(DjangoUrls['mortgage:deal-quote-preview'](_deal_id), function(response) {
+                $('.quote-preview').html(response);
+            });
+        },
+
+        _updateTableAttributes: function(data) {
+            $('.deals-total-amount').html(data.total_deals_display);
+            //re-init inline form defintion
+            _this._dealStatusInline();
+        },
+
+        ////// DEAL Stages and Processes methods
+        _addNewDealForm: function() {
+            $("#deal_form").ajaxForm({
+                beforeSubmit: Utilities.Form.beforeSubmit,
+                success: function(response, status, xhr, form) {
+                    if(response.success) {
+                        $.get(DjangoUrls[`${__app_name}:get-deal-json`](response.deal_id), function(r) {
+                            __AMPLITUDE.logEvent(__AMPLITUDE.event('mortgage_deal_created'), {
+                                'source': 'manual',
+
+                                'deal_id': r.deal.id,
+
+                                'client_nationality': r.customer.nationality,
+                                'client_gender': r.customer.gender,
+                                'client_age': r.customer.age,
+
+                                'deal_type': 'new'
+                            });
+                        });
+                    }
+
+                    Utilities.Form.onSuccess(response, status, xhr, form);
+                },
+                error: Utilities.Form.onFailure
+            });
+        },
+
+        _dealProcessTriggers: function() {
+            _deal_stage_container.on('click', '.btn-cancel-generate-new-quote', function(){
+                if($('.deal-overview .deal-form .products-preview .products .row').length) {
+                    $('.deal-form .products-preview').removeClass('hide');
+                    $('.deal-form .form').addClass('hide');
+                } else if($('.quote-overview .deal-form .products-preview .products .row').length){
+                    $('.deal-form .products-preview').removeClass('hide');
+                    $('.deal-form .form').addClass('hide');
+                } else {
+                    $('.deal-overview .new-deal').addClass('display');
+                    $('.deal-overview .deal-form').removeClass('display');    
+                }
+            });
+
+            $('body').on('click', '.insurer-block-container', function() {
+                $('.auto-quote-insurer-field').val($(this).data('id')).change();
+                $('#modal_auto_quote_form h2').html($(this).data('name'));
+
+                $('#id_product option').addClass('hide').trigger('chosen:updated');
+                $('#id_product option[data-insurer-id=' + $(this).data('id') + ']').removeClass('hide').trigger('chosen:updated');
+            });
+
+            $("#mortgage_deal_form").submit(function (e) {
+            e.preventDefault();
+            var form = $("#mortgage_deal_form");
+            var url = form.attr('action');
+            $('.mortgage-deal-form-error').html('')
+            $.ajax({
+                    beforeSubmit: Utilities.Form.beforeSubmit,
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(),
+                    success: function(data)
+                    {
+                        if (data.success){
+                            location = data.redirect_url
+                        }
+                        else{
+                            $('.mortgage-deal-form-error').html('')
+                            var form_el = $("#mortgage_deal_form")[0].getElementsByTagName('input');
+                            var form_el_select = $("#mortgage_deal_form")[0].getElementsByTagName('select');
+                            for (var key in data.errors)
+                            {
+                                for (let i = 0; i < form_el.length; i++) {
+                                if (form_el[i].name == key){
+                                    form_el[i].parentElement.getElementsByTagName('span')[0].innerText = data.errors[key][0]
+                                }
+                              }
+                              for (let i = 0; i < form_el_select.length; i++) {
+                                if (form_el_select[i].name == key){
+                                    form_el_select[i].parentElement.getElementsByTagName('span')[0].innerText = data.errors[key][0]
+
+                                }
+                              }
+                            }
+                            debugger
+                            if (data.errors.__all__){
+                                form_el.property_price.parentElement.getElementsByTagName('span')[0].innerText = data.errors.__all__[0]
+                            }
+                        }
+                    }
+                });
+                return false;
+            });
+        },
+
+        _dealStagesToggle: function() {
+            if(_deal_stages_breadcrumb.length) {
+                _deal_stages_breadcrumb.find('li').click(function() {
+                    if(!$(this).data('item') || $('.' + $(this).data('item')).is(':visible')) return;
+                    _this._loadMortgageDealStage($(this).data('id'));
+                    _deal_stages_breadcrumb.find('li').removeClass('selected');
+                    $(this).addClass('selected');
+                });
+            }
+        },
+
+        _setDealsQuoteOutdated: function() {
+            var quote_stage_container = $('.deal-stages-breadcrumb [data-id="quote"]');
+
+            if(!quote_stage_container.length) return;
+
+            if(quote_stage_container.hasClass('selected') || quote_stage_container.hasClass('current') || quote_stage_container.hasClass('completed')) {
+                $('.stage-warning').removeClass('hide');
+                __MORTGAGE_DEALS._loadStageWarning();
+            }
+        },
+
+        _duplicateDeal: function() {
+            if(_deal_id) {
+                if(window.confirm('Are you sure you want to duplicate this deal?')) {
+                    $.get(DjangoUrls['mortgage:deal-duplicate'](_deal_id), function(response) {
+                        if(response.success) {
+                            window.location = response.redirect_url;
+                        } else {
+                            Utilities.Notify.error('Something went wrong. Please contact support.', 'Error');
+                        }
+                    });
+                }
+            }
+        }
+    };
+
+    jQuery(function() {
+        if($('body').hasClass('mortgage-deals'))
+            __MORTGAGE_DEALS.init();
     });
 })();

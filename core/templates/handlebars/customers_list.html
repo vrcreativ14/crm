@@ -3,7 +3,7 @@
 {{#each records}}
 <tr
     id="tr_{{ this.objectID }}"
-    data-url="{{{ felixUrl 'customers:edit' this.objectID}}}"
+    data-url="{{{ felixUrl 'customers:edit' this.objectID }}}"
     data-url-delete="{{{ felixUrl 'customers:delete-customer' this.objectID}}}"
     >
     <td class="link">
@@ -12,8 +12,9 @@
             <span class="checkmark"></span>
         </label>
     </td>
-    <td class="capitalize">{{ this.name }}</td>
+    <td class="capitalize">{{ this.name }} </td>
     <td>{{#if this.email}}{{ this.email }}{{else}}-{{/if}}</td>
+    <td class="capitalize">{{#if this.entity}}{{ this.entity }}{{else}}-{{/if}}</td>
     <td>{{#if this.phone}}{{ this.phone }}{{else}}-{{/if}}</td>
     <td class="capitalize">{{#if this.nationality}}{{ this.nationality }}{{else}}-{{/if}}</td>
     <td class="capitalize">{{ this.created_on_display }}</td>

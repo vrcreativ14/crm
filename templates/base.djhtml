@@ -17,15 +17,20 @@
 
     <!-- APP CSS -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="{% static 'dist/style.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="{% static "js/jquery-3.6.0.min.js" %}"></script>
     <script src="{% static "js/jquery-migrate-3.3.2.min.js" %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <!-- JS variables populated from backend code -->
     <script>
         var __app_name = '{{ request.session.selected_product_line }}';
 
-        if(!__app_name)__app_name = 'motorinsurance';
+        if(!__app_name) __app_name = 'motorinsurance';
 
         var app_config = {
             ALGOLIA_APP_ID: "{{ algolia_app_id }}",
@@ -69,7 +74,7 @@
                 <!-- Logo container-->
                 <div class="logo">
                     <a href="/" class="felix">
-                        <img src="{% static 'images/nexus-logo.svg' %}" alt="" class="logo-large"/>
+                        <img src="{% static 'images/logos/insure-nex-logo.png' %}" alt="" class="logo-large"/>
                     </a>
                 </div>
                 <!-- End Logo container-->
@@ -80,7 +85,11 @@
                         <div class="container-fluid">
                             <div id="navigation">
                                 <!-- Navigation Menu-->
+                                {% if entity == 'mortgage' %}
+                                {% include 'topmenus/mortgage.djhtml' %}
+                                {% else %}
                                 {% include 'topmenus/motorinsurance.djhtml' %}
+                                {% endif %}
                                 <!-- End navigation menu -->
                             </div> <!-- end #navigation -->
                         </div> <!-- end container -->
@@ -88,6 +97,39 @@
 
                     <div class="menu-extras topbar-custom">
                         <ul class="list-inline float-right mb-0">
+                            <li class="list-inline-item dropdown notification-list switch-navbar" selected='Select Entity'>
+                                <select onchange="entitySelect.call(this)">
+                                    {% if request.user.is_superuser %}
+                                    >
+                                    <option value="motor"> Motor Insurance-Deals </option>
+                                    <option value="mortgage"
+                                    {% if entity == 'mortgage' %}
+                                    selected
+                                    {% endif%}
+                                    >
+                                Mortgage-Deals </option>
+
+                                    {% else %}
+                                    {% for space in request.user.userprofile.allowed_workspaces  %}
+                                    {% if space == "MT" %}
+                                    <option value="motor"> Motor Insurance-Deals </option>
+                                    {% endif %}
+                                    {% if space == "MG" %}
+                                    <option value="mortgage"
+                                        {% if entity == 'mortgage' %}
+                                        selected
+                                        {% endif%}
+                                    >
+                                    Mortgage-Deals </option>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </li>
+                            <li class="list-inline-item dropdown notification-list">
+                                <a href="mailto:digitalmarketing@nexusadvice.com" target="_blank"
+                                   class="top-nav-updates nav-link dropdown-toggle arrow-none nav-user">Support</a>
+                            </li>
                             <li class="list-inline-item dropdown notification-list">
                                 <a class="nav-link dropdown-toggle arrow-none nav-user" data-toggle="dropdown"
                                    href="#"
@@ -104,17 +146,17 @@
                                     <span class=""> <i class="ti-angle-down font-10"></i> </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                                    <a class="dropdown-item" href="{% url 'accounts:profile' %}{% if entity == 'mortgage' %}?entity=mortgage{% endif %}">
                                         <i class="ti-id-badge text-muted"></i> Profile
                                     </a>
 
                                     {% if user|can:'list_users' %}
-                                        <a class="dropdown-item" href="{% url 'accounts:agents' %}">
+                                        <a class="dropdown-item" href="{% url 'accounts:agents' %}{% if entity == 'mortgage' %}?entity=mortgage{% endif %}">
                                             <i class="ti-user text-muted"></i> Users
                                         </a>
                                     {% endif %}
                                     {% if user|can:'company_settings' %}
-                                        <a class="dropdown-item" href="{% url 'accounts:settings' %}">
+                                        <a class="dropdown-item" href="{% url 'accounts:settings' %}{% if entity == 'mortgage' %}?entity=mortgage{% endif %}">
                                             <i class="ti-settings text-muted"></i> Settings
                                         </a>
                                     {% endif %}
@@ -371,6 +413,33 @@
         })();
     </script>
 {% endif %}
+
+<script>
+
+    function entitySelect()
+    {
+        base_url = window.location.pathname
+        params = window.location.search
+        if (this.value == 'mortgage'){
+            base_url = window.location.href
+        }
+        $.ajax(
+        {
+        type:"GET",
+        url: "{% url 'entity' %}",
+        data:{
+            base_url: base_url,
+            entity: this.value,
+            params: params
+        },
+        success: function( data )
+        {
+            location = data.url
+        }
+     })
+    }
+</script>
+
 
 {% comment %}
   *** Common Third party CSS.

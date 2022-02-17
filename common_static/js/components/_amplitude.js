@@ -11,6 +11,12 @@ var __AMPLITUDE;
 
         event: function(name) {
             events = {
+                'mortgage_deal_created': 'mortgage deal created',
+                'mortgage_deal_won': 'mortgage deal won',
+                'mortgage_quote_created': 'mortgage quote created',
+                'mortgage_quote_email_sent': 'mortgage quote email sent',
+                'mortgage_product_quoted': 'mortgage product quoted',
+
                 'motor_deal_created': 'motor deal created',
                 'motor_deal_won': 'motor deal won',
                 'motor_quote_created': 'motor quote created',

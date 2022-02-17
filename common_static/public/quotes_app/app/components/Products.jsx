@@ -118,7 +118,7 @@ module.exports = createReactClass({
                             </div>
 
                             <div className="attributes car-value">
-                                <span>Vehicle Insured Value:  <Currency/ > {product.insured_car_value}</span>
+                                <span>Vehicle Insured Value:  <Currency /> {product.insured_car_value}</span>
                             </div>
 
                             {Object.keys(tier_1_attributes).map(function(attribute_key, x) {

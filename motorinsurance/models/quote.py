@@ -177,7 +177,7 @@ class QuotedProduct(AuditTrailMixin, models.Model):
     agency_repair = models.BooleanField()
     premium = models.DecimalField(max_digits=10, decimal_places=2)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    deductible = models.DecimalField(max_digits=10, decimal_places=2)
+    deductible = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     deductible_extras = models.TextField(blank=True)
     insured_car_value = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     ncd_required = models.BooleanField(default=False)

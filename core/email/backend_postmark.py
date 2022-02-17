@@ -6,6 +6,7 @@ from postmarker.models.emails import Email
 from requests import HTTPError
 
 from core.email.exceptions import EmailSendingException
+from felix.settings import POSTMARK_TOKEN
 
 
 class Postmark:
@@ -13,7 +14,7 @@ class Postmark:
         self.company_settings = company_settings
 
     def get_api_key(self):
-        return self.company_settings.postmark_api_key
+        return POSTMARK_TOKEN
 
     def send_email(self, from_address, to_address, subject, text, html='', attachments=None, cc_addresses=None,
                    bcc_addresses=None, reply_to=None):
@@ -21,9 +22,9 @@ class Postmark:
 
         if not text:
             text = f'''You have been sent an email from the address {from_address} but your email client is unable to 
-display the contents of this email. 
-
-Kindly check the email in a modern email client to see details of the message.'''
+                        display the contents of this email. 
+                        
+                        Kindly check the email in a modern email client to see details of the message.'''
 
         client = PostmarkClient(server_token=self.get_api_key())
         email: Email = client.emails.Email(
@@ -43,9 +44,9 @@ Kindly check the email in a modern email client to see details of the message.''
                 email.attach_binary(file_tuple[1].read(), file_tuple[0])
 
         logger.debug('''Sending email using Postmark.
-From: {}
-To: {}
-Subject: {}'''.format(from_address, to_address, subject))
+                    From: {}
+                    To: {}
+                    Subject: {}'''.format(from_address, to_address, subject))
 
         try:
             email.send()

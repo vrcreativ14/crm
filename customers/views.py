@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.http import Http404
 from django.http.response import JsonResponse
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.views.generic import TemplateView, UpdateView, FormView, View, DetailView
 from django.utils.html import strip_tags, escape
 
@@ -36,6 +36,8 @@ from motorinsurance.models import CustomerProfile, Deal, Policy
 
 from core.algolia import Algolia
 from core.timeline import Timeline
+
+from mortgage.forms import CreateDealForm
 
 
 class CustomerBaseView(LoginRequiredMixin, PermissionRequiredMixin):
@@ -97,7 +99,6 @@ class CustomersSearchView(CustomerBaseView, AjaxListViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         qs = self.get_queryset()
-
         return JsonResponse(self.serialize_object_list(qs), safe=False)
 
     def serialize_object_list(self, customers):
@@ -120,7 +121,6 @@ class CustomersSearchView(CustomerBaseView, AjaxListViewMixin, View):
                     record['phone'] or '-',
                 )
             })
-
         return res
 
 
@@ -161,9 +161,10 @@ class CustomersView(CustomerBaseView, AjaxListViewMixin, TemplateView):
         ctx['customer_merge_form'] = CustomerMergeForm()
         ctx['page'] = self.request.GET.get('page') or 1
         ctx['default_sort_by'] = self.request.GET.get('sort_by') or 'created_on_desc'
-
+        if self.request.GET.get('entity', None) == 'mortgage':
+            ctx['productline'] = "mortgage"
+            ctx['entity'] = "mortgage"
         log_user_activity(self.request.user, self.request.path)
-
         return ctx
 
 
@@ -235,12 +236,15 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
         ctx['form'] = CustomerForm(instance=customer)
         ctx['customer'] = customer
-
+        if resolve(self.request.path).kwargs.get('entity') == "mortgage":
+            ctx['entity'] = 'mortgage'
         ctx['deal_form'] = DealForm(
             initial={'customer': customer},
             company=self.request.company,
             user=self.request.user
         )
+
+        ctx['mortgage_deal_form'] = CreateDealForm()
 
         note_form = NoteForm()
         ctx['note_form'] = note_form
@@ -258,17 +262,29 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         customer_motor_policies = customer.get_policies()
         customer_motor_active_policies = customer.get_active_policies()
 
+        customer_mortgage_deals = customer.get_non_deleted_mortgage_deals()
+        customer_motor_open_deals = customer.get_open_deals()
+        customer_mortgage_open_deals = customer.get_mortgage_open_deals()
+        customer_motor_policies = customer.get_policies()
+        customer_motor_active_policies = customer.get_active_policies()
+
         if self.request.user.userprofile.has_producer_role():
             customer_motor_deals = customer_motor_deals.filter(producer=self.request.user)
+            customer_mortgage_deals = customer_mortgage_deals.filter(producer=self.request.user)
+
             customer_motor_open_deals = customer_motor_open_deals.filter(producer=self.request.user)
+            customer_mortgage_open_deals = customer_mortgage_open_deals.filter(producer=self.request.user)
+            
             customer_motor_policies = customer_motor_policies.filter(deal__producer=self.request.user)
             customer_motor_active_policies = customer_motor_active_policies.filter(deal__producer=self.request.user)
 
         ctx['motor_deals'] = customer_motor_deals
+        ctx['mortgage_deals'] = customer_mortgage_deals
         ctx['motor_open_deals'] = customer_motor_open_deals
+        ctx['mortgage_open_deals'] = customer_mortgage_open_deals
         ctx['motor_policies'] = customer_motor_policies
         ctx['motor_active_policies'] = customer_motor_active_policies
-
+        ctx['total_deals'] = len(customer_motor_deals) + len(customer_mortgage_deals)
         ctx['attachments'] = json.dumps([{
             'id': attachment.id,
             'label': attachment.label,
@@ -279,6 +295,7 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
             'created_on': attachment.created_on.strftime('%Y-%m-%d'),
         } for attachment in customer.get_attachments()])
 
+        
         return ctx
 
     def form_valid(self, form, **kwargs):
