@@ -347,6 +347,7 @@ if not DEBUG:
 
 _1mb = 1024 * 1024
 LOG_DIR = env('LOG_DIR')
+CSRF_TRUSTED_ORIGINS = ['https://crm1.insurenex.io']
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
