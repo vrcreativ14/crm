@@ -30,9 +30,20 @@ from django.db.models import Q
 from rest_framework.generics import ListAPIView
 from accounts.pagination import UserPagination
 from collections import OrderedDict
+from django.contrib.auth.views import LoginView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseRedirect
 
 logger = logging.getLogger('api.typeform')
 
+class UserLogin(LoginView):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        if self.redirect_authenticated_user and self.request.user.is_authenticated:
+            redirect_to = self.get_success_url()
+            return HttpResponseRedirect(redirect_to)
+        return super(LoginView, self).dispatch(request, *args, **kwargs)
 
 class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = "accounts/dashboard.djhtml"
