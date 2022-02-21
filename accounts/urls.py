@@ -19,6 +19,8 @@ from accounts.views import ProfileView
 from accounts.views import SearchResultAgentView
 from accounts.views.settings import *
 from django.views.decorators.csrf import csrf_exempt
+from accounts.views import UserLogin
+
 app_name = 'accounts'
 
 urlpatterns = [
@@ -27,7 +29,7 @@ urlpatterns = [
     path(
         'login/',
         ratelimit('login', 'ip', '5/m', block=True)(
-            LoginView.as_view(template_name='accounts/login.djhtml', redirect_authenticated_user=True,
+            UserLogin.as_view(template_name='accounts/login.djhtml', redirect_authenticated_user=True,
                               form_class=LoginForm)
         ),
         name='login'
