@@ -8,7 +8,7 @@ import pandas as pd
 
 class BankHelper:
     
-    def __init__(self, bank, property_price, mortgage_amount, tenure, govt_fee_key=GovernmentFee.objects.last().pk):
+    def __init__(self, bank, property_price, mortgage_amount, tenure, govt_fee_key=1):
         self.bank = bank
         self.property_price = property_price
         self.mortgage_amount = mortgage_amount
