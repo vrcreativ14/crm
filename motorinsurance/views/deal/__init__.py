@@ -931,6 +931,7 @@ class DealStagesView(DealEditBaseView, DetailView):
                 document_url = deal.quote.get_document_upload_url()
                 absolute_url = self.request.build_absolute_uri(document_url)
                 ctx['absolute_document_upload_url'] = absolute_url
+                print(absolute_url)
 
             ctx['has_order'] = has_order
 
