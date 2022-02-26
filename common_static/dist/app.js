@@ -5451,6 +5451,7 @@ var __MORTGAGE_DEALS;
             if(!_deal_id || !$('#mortgage_tab_history').length) return;
 
             $.get(DjangoUrls['mortgage:deal-history'](_deal_id), function(response) {
+                console.log(response)
                 $('#mortgage_tab_history').html(response);
             });
         },
