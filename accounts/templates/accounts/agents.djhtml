@@ -27,8 +27,8 @@
                 <hr />
 
                 {% if agents %}
-                <div class="row">
-                    <div class="col-lg-1">                        
+                <div class="row" style="justify-content: flex-end;align-items: center;margin-right: 5px;">
+                    <div class="col-lg-1" style="margin-right: 20px;">                        
                         <div class="options-table float-right" style="align-self: center;">
                             <a class="dropdown-toggle" data-toggle="dropdown"
                                href="#"
@@ -37,30 +37,34 @@
                                <i class="ti-filter"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" style="padding:20px;">                                
-                                    <div class="dropdown-item form-check">
+                                    <!-- <div class="dropdown-item form-check">
                                         <input id="search_name_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'name' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
                                         <label class="form-check-label">Filter by name</label>
                                     </div>                                                                         
                                     <div class="dropdown-item form-check">
                                         <input id="search_email_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'email' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
                                         <label class="form-check-label">Filter by Email</label>
-                                    </div>       
-                                    <!-- <div class="dropdown-item form-check">
-                                        <label class="form-check-label">Filter by Role</label>
-                                        <div>
-                                            <input id="search_role_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                    </div> -->
+                                    <div class="dropdown-item form-check" style="margin-left: -25px;"> <label class="form-check-label">Filter by Role</label></div>
+                                   
+                                    <div class="dropdown-item form-check">             
+                                            <input id="search_producer_checkbox" class="form-check-input" type="checkbox" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
                                             <label class="form-check-label">Producer</label>
                                         </div>
-                                        <div>
-                                            <input id="search_role_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                        <div class="dropdown-item form-check">
+                                            <input id="search_regular_checkbox" class="form-check-input" type="checkbox" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
                                             <label class="form-check-label">Regular User</label>
                                         </div>
-                                        <div>
-                                            <input id="search_role_checkbox" class="form-check-input" type="checkbox" id="check1" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                        <div class="dropdown-item form-check">
+                                            <input id="search_admin_checkbox" class="form-check-input" type="checkbox" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
                                             <label class="form-check-label">Admin User</label>
                                         </div>
-                                    </div>-->
-                                    <button type="button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Apply</button>                                                                                                                                                              
+                                        <div class="dropdown-item form-check">
+                                            <input id="search_none_role_checkbox" class="form-check-input" type="checkbox" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %} checked {% endif %}>
+                                            <label class="form-check-label">None</label>
+                                        </div>
+                                   
+                                    <button type="button" id="apply-filter-button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Apply</button>                                                                                                                                                              
                             </div>
                         </div>
                     </div>
@@ -74,9 +78,7 @@
                     </div>                    
                         
                     </div>
-                    <!-- <div class="col-lg-1">
-                        <button id="search-button" type="button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Search</button>    
-                    </div> -->                    
+                    
                 </div>                
                     <small class="table_counts">{{ agents.paginator.count }} records found</small>
                     <table class="table felix-table" cellspacing="0" width="90%">
@@ -163,7 +165,7 @@ document.addEventListener('click',function(e){
  });
 
     function SendRequest(url){
-        document.querySelector('table.felix-table').classList.add('opacity')        
+        document.querySelector('table.felix-table').classList.add('opacity')
         let table_body = document.querySelector('#id-felix-table-body')
         $.ajax({
          type: "GET",
@@ -248,14 +250,27 @@ document.addEventListener('click',function(e){
         let url = GetUrl()  
         SendRequest(url)        
     })
+    document.querySelector('#apply-filter-button').addEventListener('click', function(){        
+        let url = GetUrl()  
+        SendRequest(url)        
+    })
+    
     
     function GetUrl(pageNum){
         let key = document.querySelector('#id-search-user').value
         let filters = ''
-        if (document.getElementById('search_name_checkbox').checked)
-            filters += 'name,'
-        if (document.getElementById('search_email_checkbox').checked)
-            filters += 'email,'
+        // if (document.getElementById('search_name_checkbox').checked)
+        //     filters += 'name,'
+        // if (document.getElementById('search_email_checkbox').checked)
+        //     filters += 'email,'
+        if (document.getElementById('search_producer_checkbox').checked)
+            filters += 'producer,'
+        if (document.getElementById('search_regular_checkbox').checked)
+            filters += 'regular,'
+        if (document.getElementById('search_admin_checkbox').checked)
+            filters += 'admin,'
+        if (document.getElementById('search_none_role_checkbox').checked)
+            filters += 'none,'
         let url = ''
         if (pageNum)
             url = `/accounts/users/search/?search_key=${key}&filters=${filters}&page=${pageNum}`

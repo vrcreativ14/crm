@@ -30,20 +30,9 @@ from django.db.models import Q
 from rest_framework.generics import ListAPIView
 from accounts.pagination import UserPagination
 from collections import OrderedDict
-from django.contrib.auth.views import LoginView
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseRedirect
 
 logger = logging.getLogger('api.typeform')
 
-class UserLogin(LoginView):
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        if self.redirect_authenticated_user and self.request.user.is_authenticated:
-            redirect_to = self.get_success_url()
-            return HttpResponseRedirect(redirect_to)
-        return super(LoginView, self).dispatch(request, *args, **kwargs)
 
 class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = "accounts/dashboard.djhtml"
@@ -179,25 +168,46 @@ class SearchResultAgentView(LoginRequiredMixin, HasPermissionsMixin,ListAPIView)
         def search_user(self,key, filters):            
             qs_name = UserProfile.objects.none()
             qs_email = UserProfile.objects.none()
-            qs_producer = UserProfile.objects.none()
-            if 'name' in filters:
+            qs_role = UserProfile.objects.none()
+            filter_array = filters.split(',')
+            # if 'name' in filters:
+            #     qs_name = UserProfile.objects.filter((Q(user__first_name__icontains = key) | Q(user__last_name__contains = key)),company=self.request.company,user__is_active=True).order_by(self.default_order_by)
+            #     filter_array.remove('name')
+            # if 'email' in filters:
+            #     qs_email = UserProfile.objects.filter(user__email__icontains = key,company=self.request.company,user__is_active=True).order_by(self.default_order_by)
+            #     filter_array.remove('email')
+            
+            if key:
                 qs_name = UserProfile.objects.filter((Q(user__first_name__icontains = key) | Q(user__last_name__contains = key)),company=self.request.company,user__is_active=True).order_by(self.default_order_by)
-            if 'email' in filters:
                 qs_email = UserProfile.objects.filter(user__email__icontains = key,company=self.request.company,user__is_active=True).order_by(self.default_order_by)
-            if 'producer' in filters:                                     
-                qs = UserProfile.objects.all()
-                for user in qs:
-                    if user.get_assigned_role() == 'producer':
-                        qs_producer.union(user)
+                qs1 = (qs_name | qs_email ).distinct()
+                qs1_copy = qs1.order_by(self.default_order_by)
+            else:
+                qs1_copy = UserProfile.objects.all().order_by(self.default_order_by)
+            if len(filter_array) > 1:
+                for user_profile in qs1_copy:
+                    if 'producer' in filters:
+                        if user_profile.get_assigned_role() == 'producer':
+                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
+                    if 'regular' in filters:               
+                        if user_profile.get_assigned_role() == 'user':
+                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
+                    if 'admin' in filters:
+                        if user_profile.get_assigned_role() == 'admin':
+                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
+                    if 'none' in filters:
+                        if user_profile.get_assigned_role() == None:
+                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
 
-            qs1 = (qs_name | qs_email).distinct()
-            return qs1
+                return qs_role.order_by(self.default_order_by)
+            
+            return qs1.order_by(self.default_order_by)
 
         def get(self, request, *args, **kwargs):            
             search_key = self.request.GET.get('search_key')
             filters = self.request.GET.get('filters')
             page = self.request.GET.get('page', 1)            
-            if search_key:
+            if search_key or filters:
                 qs = self.search_user(search_key, filters)
             else:
                 qs = self.get_queryset()
