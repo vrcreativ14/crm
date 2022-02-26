@@ -5,7 +5,8 @@ Django settings for felix project.
 import os
 
 import environ
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -58,7 +59,7 @@ COMPANY_ID = env('COMPANY_ID')
 ALLOWED_HOSTS = ['*']
 
 SECURE_SSL_REDIRECT = env('SSL_REDIRECT')
-#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 INSTALLED_APPS = [
@@ -334,9 +335,7 @@ ENVIRONMENT = env('ENVIRONMENT_NAME')
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-if not DEBUG:
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
+
 if not DEBUG:
     sentry_sdk.init(
         environment=env('ENVIRONMENT_NAME'),
@@ -350,8 +349,8 @@ if not DEBUG:
 _1mb = 1024 * 1024
 LOG_DIR = env('LOG_DIR')
 CSRF_TRUSTED_ORIGINS = ['.insurenex.io']
-CORS_ORIGIN_WHITELIST = ('https://crm1.insurenex.io',)
-CSRF_COOKIE_DOMAIN = ".crm1.insurenex.io"
+#CORS_ORIGIN_WHITELIST = ('https://crm1.insurenex.io',)
+#CSRF_COOKIE_DOMAIN = ".crm1.insurenex.io"
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
