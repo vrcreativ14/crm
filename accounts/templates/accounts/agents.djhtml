@@ -169,7 +169,7 @@ document.addEventListener('click',function(e){
         let table_body = document.querySelector('#id-felix-table-body')
         $.ajax({
          type: "GET",
-         url: url,        
+         url: url,
          contentType: "application/json; charset=utf-8",
          dataType: "json",
          success: function(data){             

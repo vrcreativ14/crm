@@ -183,7 +183,7 @@ class SearchResultAgentView(LoginRequiredMixin, HasPermissionsMixin,ListAPIView)
                 qs1 = (qs_name | qs_email ).distinct()
                 qs1_copy = qs1.order_by(self.default_order_by)
             else:
-                qs1_copy = UserProfile.objects.all().order_by(self.default_order_by)
+                qs1_copy = self.get_queryset()
             if len(filter_array) > 1:
                 for user_profile in qs1_copy:
                     if 'producer' in filters:
