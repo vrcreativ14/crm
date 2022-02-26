@@ -5317,7 +5317,7 @@ var __BANKS;
                     // alert(data.message)
                 },
                 error: function(data){
-                    debugger
+                    
 
                 }
             });
@@ -5830,7 +5830,7 @@ var __MORTGAGE_DEALS;
                                 }
                               }
                             }
-                            debugger
+                            
                             if (data.errors.__all__){
                                 form_el.property_price.parentElement.getElementsByTagName('span')[0].innerText = data.errors.__all__[0]
                             }
