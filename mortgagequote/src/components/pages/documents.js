@@ -51,7 +51,7 @@ const Documents = () => {
             <p className="fw-light-bold mb-4">Please submit the below documents for pre approval:</p>
 			<div className="row align-items-center">
 
-				<UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bank Application Form" filekey="bank-application-form" desc={(bankForm) ? '<p className="font-size-bigger-upload">Download Sample Form <a className="text-fade-grey" href="'+bankForm+'"><i className="fas fa-arrow-circle-down"></i></a></p>':null}/>
+				<UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bank Application Form" filekey="bank-application-form" desc={(bankForm) ? '<p className="font-size-bigger-upload">Download Sample Form <a target="_blank" className="text-fade-grey" href="'+bankForm+'"><i className="fas fa-arrow-circle-down"></i></a></p>':null}/>
 				<UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Passport" filekey="passport" desc=""/>
 				<UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Salary Certificate" filekey="salary-certificate" desc="Addressed to the chosen bank"/>
 				<UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Visa" filekey="visa" desc=""/>
