@@ -31,7 +31,7 @@ from .deal import DealDeleteAttachmentView
 from .deal import DealCopyAttachmentView
 from .deal import DealGetProductsAjax
 from .deal import DealJsonAttributesList
-
+from .deal import delete_note
 from .deal.email import DealHandleEmailContent
 
 from .deal.policy import DealAddEditPolicyView

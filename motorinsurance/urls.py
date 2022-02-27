@@ -41,7 +41,7 @@ urlpatterns = [
     path('deals/<int:pk>/quoted-products/json/',
          csrf_exempt(DealQuotedProductsView.as_view()), name='deal-quoted-products-json'),
     path('deals/<int:pk>/mark-closed/<str:type>/', DealMarkClosedView.as_view(), name='deal-mark-closed'),
-    path('deals/note/<int:pk>/delete/', DealDeleteNoteView.as_view(), name='deal-delete-note'),
+    path('deals/note/<int:pk>/delete/', delete_note, name='deal-delete-note'),
     path('deals/update-field/<int:pk>/<str:model>/', csrf_exempt(DealUpdateFieldView.as_view()),
          name='update-deal-field'),
     path("deals/<int:pk>/tasks/", DealTaskListView.as_view(), name="deal-tasks"),

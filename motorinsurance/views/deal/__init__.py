@@ -656,6 +656,10 @@ class DealDeleteNoteView(DeleteNoteView):
     def get_success_url(self, attached_obj):
         return reverse('motorinsurance:deal-edit', kwargs=dict(pk=attached_obj.pk))
 
+def delete_note(request, *args, **kwargs):
+    from core.models import Note
+    Note.objects.get(pk=kwargs.get("pk")).delete()
+    return JsonResponse({"success":True})
 
 class DealAssignToMeView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'auth.update_motor_deals'
@@ -931,7 +935,6 @@ class DealStagesView(DealEditBaseView, DetailView):
                 document_url = deal.quote.get_document_upload_url()
                 absolute_url = self.request.build_absolute_uri(document_url)
                 ctx['absolute_document_upload_url'] = absolute_url
-                print(absolute_url)
 
             ctx['has_order'] = has_order
 

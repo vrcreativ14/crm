@@ -416,6 +416,12 @@
 
 <script>
 
+$( document ).ready(function() {            
+            $('#modal_update_note #note_form_edit').on('submit',function(){
+                const pk = $(this).find('input[name=pk]').val();                
+                $('.note-id-'+pk).html($(this).find('textarea').val())
+            });
+        });
     function entitySelect()
     {
         base_url = window.location.pathname
@@ -438,6 +444,32 @@
         }
      })
     }
+
+    function editMortgageNote(el){
+            $("#modal_update_note textarea").val($(el).closest('li').find('.note').html())
+            $("#modal_update_note input[name='pk']").val(el.dataset.pk)
+        }
+
+    function deleteMortgageNote(element){
+    {
+        debugger
+        $.ajax({
+            url: element.dataset.deleteurl,
+            method: 'DELETE',
+            headers: {
+                "X-CSRFToken":$('#delete_note_csrftoken input').val()
+        },
+            success: function( data ) {
+                element.closest('li').remove()
+                Utilities.Notify.success('Note deleted', 'Success');
+            },
+            error: function(data){
+                Utilities.Notify.error('Note not deleted', 'Error');
+
+            }
+        });
+    }
+}
 </script>
 
 

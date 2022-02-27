@@ -29,12 +29,10 @@
 </div>
 <div id="modal_update_note" class="felix-modal-container">
     <div class="felix-modal">
-        <h1>New Note</h1>
+        <h1>Edit Note</h1>
         <form id="note_form_edit" method="post" action="{% url 'mortgage:note-edit'%}">
             {% csrf_token %}
-            {% if entity == "mortgage" %}
             <input type="hidden" name="pk">
-            {% endif %}
             <div class="content has-bg note">
                 <div class="form-group">
                     <div class="row">

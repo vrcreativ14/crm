@@ -815,10 +815,13 @@
                             <button class="add-documents btn btn-info-container btn-secondary btn-sm">Add Documents
                             </button>
 
+                            <div id="delete_note_csrftoken">
+                                {% csrf_token %}
+                                </div>
                             {% if deal.notes.all %}
                                 <ul class="trail note-trail">
                                     {% for note in deal.notes.all %}
-                                        {% include 'core/_note.djhtml' with delete_form_action='customers:delete-note' %}
+                                        {% include 'core/_note.djhtml' with delete_form_action='motorinsurance:deal-delete-note' %}
                                     {% endfor %}
                                 </ul>
                             {% else %}

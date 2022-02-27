@@ -5,9 +5,7 @@
     <div class="note note-id-{{note.pk}}">{{ note.content|safe }}</div>
     <div class="text-muted">{{ note.created_on }} {% if note.added_by %}by {{ note.added_by.get_full_name }}{% endif %}</div>
     </span>
-    <span>
-        {% csrf_token %}
-         <button id="delete-mortgage-note" data-deleteurl="{% url 'mortgage:notes-delete' pk=note.pk %}" 
+         <button id="delete-mortgage-note" data-deleteurl="{% url delete_form_action pk=note.pk %}" 
          onclick="deleteMortgageNote(this)" class="btn btn-sm btn-danger"> Delete </button>
          <button data-felix-modal="modal_update_note"  data-pk="{{note.pk}}"
          class="btn btn-info-container btn-primary btn-sm" onclick="editMortgageNote(this)">
