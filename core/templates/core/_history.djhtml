@@ -1,6 +1,5 @@
 <style>
 .email-edit{
-background:grey;
 cursor: pointer;
 }
 
