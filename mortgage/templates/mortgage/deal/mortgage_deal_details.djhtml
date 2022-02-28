@@ -284,6 +284,7 @@
 {% endblock %}
 
 {% block content %}
+{% if not deal.status == 'deleted' %}
     <div class="deal-detail-settings">
         <a class="dropdown-toggle" data-toggle="dropdown"
            href="javascript:"
@@ -292,21 +293,20 @@
             <i class="ti-settings"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right">
-            {% if not deal.is_deleted %}
-                <a href="#" data-redirect-to="{% url 'mortgage:deal-edit' pk=deal.pk %}"
+                <a href="#" data-redirect-to="{% url 'mortgage:deals' %}"
                    data-url="{% url 'mortgage:delete-deal' pk=deal.pk %}" data-id="{{ deal.pk }}"
                    class="dropdown-item btn-delete-record">
                     <i class="ti-trash"></i> Delete
                 </a>
-            {% endif %}
         </div>
     </div>
+    {% endif %}
     <div class="deal-container container-fluid squeeze"
          data-id="{{ deal.pk }}"
          data-title="{{ deal.get_title }}"
          data-status="{{ deal.stage }}"
     >
-        {% if deal.is_deleted %}
+        {% if deal.status == 'deleted' %}
             {% include 'core/_deleted_record_message.djhtml' %}
         {% endif %}
         <div class="row">

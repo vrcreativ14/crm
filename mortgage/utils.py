@@ -8,7 +8,7 @@ import pandas as pd
 
 class BankHelper:
     
-    def __init__(self, bank, property_price, mortgage_amount, tenure, govt_fee_key=1):
+    def __init__(self, bank, property_price, mortgage_amount, tenure, govt_fee_key=GovernmentFee.objects.last().pk):
         self.bank = bank
         self.property_price = property_price
         self.mortgage_amount = mortgage_amount
@@ -67,7 +67,7 @@ class BankHelper:
     @property
     def real_estate_fee_vat(self):
         real_state_fee = self.property_price * (self.govt_fee.real_state_fee/100)
-        real_state_fee = real_state_fee + real_state_fee * VAT_PERCENTAGE
+        #real_state_fee = real_state_fee + real_state_fee * VAT_PERCENTAGE
         return real_state_fee
 
     # FINALS

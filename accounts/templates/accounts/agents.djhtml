@@ -9,7 +9,7 @@
 {% block settings_content %}
     <style>
         .sidebar{
-            display: none;
+            display: none !important;
         }
     </style>
     <div class="row justify-content-md-center p-t-60">
@@ -32,7 +32,7 @@
 
                 {% if agents %}
                 <div class="row" style="justify-content: flex-end;align-items: center;margin-right: 5px;">
-                    <div class="col-lg-1" style="margin-right: 20px;">                        
+                    <div class="col-lg-1" style="margin-right: 90px;">                 
                         <div class="options-table float-right" style="align-self: center;">
                             <a class="dropdown-toggle" data-toggle="dropdown"
                                href="#"
