@@ -40,7 +40,11 @@ $('.email-edit').click( function(){
         $('#custom_email_form_history input[id="id_bcc_emails"').val(data.content.bcc_addresses.join())
         $('#custom_email_form_history input[id="id_cc_emails"').val(data.content.bcc_addresses.join())
         $('#custom_email_form_history input[id="id_subject"').val(data.content.subject)
-        $('#custom_email_form_history textarea').val(data.content.html)
+        let email_msg = data.content.html
+        email_msg = email_msg.replace(/<br\s*[\/]?>/gi, "\n");
+        email_msg = email_msg.replace(/<p[^>]*>/g, '');
+        email_msg = email_msg.replace(/<\/p>/g, '');
+        $('#custom_email_form_history textarea').html(email_msg)
         $('#custom_email_form_history #id_from_email').text(data.content.from)
         $('#custom_email_form_history #id_reply_to').text(data.content.reply_to)
         $.each(data.content.stages, function(key, value) {   

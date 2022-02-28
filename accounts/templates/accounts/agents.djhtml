@@ -7,7 +7,11 @@
 {% block body_class %}company-agents{% endblock %}
 
 {% block settings_content %}
-
+    <style>
+        .sidebar{
+            display: none;
+        }
+    </style>
     <div class="row justify-content-md-center p-t-60">
         <input type="hidden" name="user_value" id="user_value" value="{{ request.user.pk }}" />
         <input type="hidden" name="entity_value" id="entity_value" value="{{ entity }}" />
