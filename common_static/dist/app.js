@@ -2335,6 +2335,8 @@ var __DOCUMENTS_VIEWER;
 
         _loadPDF: function(file) {
             debugger
+            $(_pdf_container).removeClass('hide');
+            $(_pdf_container).addClass('show');
         	$(_pdf_container).attr('src', file.url);
 
             $(_pdf_container)
@@ -3725,7 +3727,7 @@ var __NOTE;
                                 note += 'by ' + response.note.added_by;
                                 note += '</div>';
                                 if('note_pk' in response.note){
-                                    note += '<div><button id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="btn btn-sm btn-danger"> Delete </button> <button data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="btn btn-info-container btn-primary btn-sm" onclick="editMortgageNote(this)">Edit Note</button></div>'
+                                    note += '<div><span title="Click to remove" id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="remove task-remove"> <i class="ti-trash"></i> </span> <span title="Click to edit" data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="edit task-edit" onclick="editMortgageNote(this)"><i class="ti-pencil-alt"></i></span></div>'
                                 }
 
                             _this._prependNoteInTrail(note);
