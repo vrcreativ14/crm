@@ -761,7 +761,7 @@
                             {% if deal.notes.all %}
                                 <ul class="trail note-trail">
                                     {% for note in deal.notes.all %}
-                                        {% include 'core/_note.djhtml' with delete_form_action='customers:delete-note' %}
+                                        {% include 'core/_note.djhtml' with delete_form_action='mortgage:notes-delete' %}
                                     {% endfor %}
                                 </ul>
                             {% else %}
