@@ -4054,6 +4054,15 @@ var __QUOTES;
 
     _quoted_products_data = {'products': [], 'quote': {'status': true, 'email': false, 'delete': false}};
 
+    document.getElementById('id_premium').addEventListener('input', function(){
+        let sale_price = document.getElementById('id_premium').value
+        if (isNaN(sale_price)) return
+        if(sale_price)
+        document.getElementById('id_sale_price').value = parseFloat(sale_price).toFixed(2);
+        else
+            document.getElementById('id_sale_price').value = sale_price;
+})
+
     __QUOTES =
     {
         init: function()
