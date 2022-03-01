@@ -2334,12 +2334,14 @@ var __DOCUMENTS_VIEWER;
         },
 
         _loadPDF: function(file) {
+            debugger
         	$(_pdf_container).attr('src', file.url);
 
             $(_pdf_container)
                 .on('load', function() {
                     $(_loader).removeClass('show');
                     $(_pdf_container).removeClass('hide');
+                    $(_pdf_container).addClass('show');
                     $(_img_container).addClass('hide');
                 })
                 .attr("src", file.url);

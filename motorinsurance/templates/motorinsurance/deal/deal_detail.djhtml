@@ -976,6 +976,15 @@
                 return false;
             }
         }
+
+        document.getElementById('id_premium').addEventListener('input', function(){
+            let sale_price = document.getElementById('id_premium').value
+            if (isNaN(sale_price)) return
+            if(sale_price)
+            document.getElementById('id_sale_price').value = parseFloat(sale_price).toFixed(2);
+            else
+                document.getElementById('id_sale_price').value = sale_price;
+})
     </script>
 
 
