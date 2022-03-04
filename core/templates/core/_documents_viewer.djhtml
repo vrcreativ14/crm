@@ -54,6 +54,12 @@
             $('#pdf_document_container').addClass('show');
             $('#pdf_document_container').attr('src', url);
         }
+        else if(element.extension == 'JPEG' || element.extension == 'JPG'){
+            $('#pdf_document_container').removeClass('show');
+            $('#pdf_document_container').addClass('hide');
+            $('#image_document_container').removeClass('hide');
+            $('#image_document_container').addClass('show');            
+        }
     });
 })
 document.querySelector('#pdf_document_container').addEventListener('load', function(){
