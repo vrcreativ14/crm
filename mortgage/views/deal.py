@@ -838,8 +838,7 @@ class BankRefNumber(View):
         except Exception as e:
             return JsonResponse({'error': _(e.args[0])}, status=status.HTTP_400_BAD_REQUEST)
 
-class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
-    permission_required = 'auth.list_motor_quotes'
+class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):    
 
     def get(self, *args, **kwargs):
         type = self.request.GET.get('type')
