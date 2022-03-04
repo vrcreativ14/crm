@@ -53,6 +53,7 @@
             $('#image_document_container').addClass('hide');
             $('#pdf_document_container').addClass('show');
             $('#pdf_document_container').attr('src', url);
+            $('.loader').removeClass('show');
         }
     });
 })

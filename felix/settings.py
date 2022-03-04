@@ -336,6 +336,8 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
+X_FRAME_OPTIONS = 'ALLOW-FROM https://nexusbrokersprdsac01.blob.core.windows.net/'
+
 if not DEBUG:
     sentry_sdk.init(
         environment=env('ENVIRONMENT_NAME'),
