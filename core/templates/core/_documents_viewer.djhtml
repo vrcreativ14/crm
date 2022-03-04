@@ -53,8 +53,15 @@
             $('#image_document_container').addClass('hide');
             $('#pdf_document_container').addClass('show');
             $('#pdf_document_container').attr('src', url);
-            $('.loader').removeClass('show');
         }
     });
+})
+document.querySelector('#pdf_document_container').addEventListener('load', function(){
+    let url = document.querySelector("#image_document_container").src
+            $('#pdf_document_container').removeClass('hide');
+            $('#image_document_container').addClass('hide');
+            $('#pdf_document_container').addClass('show');
+            $('#pdf_document_container').attr('src', url);
+            $('.loader').removeClass('show');
 })
 </script>
