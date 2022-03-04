@@ -10,7 +10,7 @@
         <div class="preview-container fit-to-container" data-doc-id>
             <div class="loader">loading. please wait...</div>
             <img src="" class="hide" id="image_document_container" />
-            <iframe src="" class="hide" id="pdf_document_container" type="application/pdf"></iframe>
+            <iframe src="" class="hide" id="pdf_document_container" type="application/pdf" crossorigin></iframe>
 
             <div class="zoom-toggle hide">
                 <div title="Click to zoom in" class="zoomin"><i class="ti-zoom-in"></i></div>
