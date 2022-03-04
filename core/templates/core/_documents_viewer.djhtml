@@ -9,8 +9,8 @@
 
         <div class="preview-container fit-to-container" data-doc-id>
             <div class="loader">loading. please wait...</div>
-            <img src="" class="hide" />
-            <iframe src="" class="hide"></iframe>
+            <img src="" class="hide" id="image_document_container" />
+            <iframe src="" class="hide" id="pdf_document_container" type="application/pdf"></iframe>
 
             <div class="zoom-toggle hide">
                 <div title="Click to zoom in" class="zoomin"><i class="ti-zoom-in"></i></div>
@@ -43,5 +43,17 @@
 
     </div>
 </div>
-
 <button data-felix-modal="modal_documents_viewer" class="hide preview-documents-viewer-trigger"></button>
+<script type="text/javascript">
+   document.querySelector('.preview-documents-viewer-trigger').addEventListener('click', function(){
+    attachments.forEach(element => {
+        if (element.extension == 'PDF'){
+            let url = document.querySelector("#image_document_container").src
+            $('#pdf_document_container').removeClass('hide');
+            $('#image_document_container').addClass('hide');
+            $('#pdf_document_container').addClass('show');
+            $('#pdf_document_container').attr('src', url);
+        }
+    });
+})
+</script>
