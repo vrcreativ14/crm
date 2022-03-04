@@ -342,7 +342,8 @@ class Deal(AuditTrailMixin, models.Model):
                 self.loan_amount = self.property_price - self.down_payment
         else:
             self.loan_amount = self.property_price - self.down_payment
-        self.l_tv = round(((self.down_payment / self.property_price) * 100), 2)
+        #self.l_tv = round(((self.down_payment / self.property_price) * 100), 2)          
+        self.l_tv = round(((abs(self.property_price - self.down_payment) / self.property_price) * 100), 2)           #formula change as suggested for Mortgage Amount (LTV %)
         if hasattr(self, "mortgage_quote_deals"):
             if self.mortgage_quote_deals.is_sent and self.stage == STAGE_QUOTE:
                 self.status == STATUS_CLIENT
