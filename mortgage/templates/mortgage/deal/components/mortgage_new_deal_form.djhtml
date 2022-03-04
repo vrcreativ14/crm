@@ -55,7 +55,6 @@
                         </div>
                         <div class="col-lg-9">
                             {{ mortgage_deal_form.stage }}
-
                         </div>
                     </div>
                     <br>
@@ -96,6 +95,17 @@
                         </div>
                     </div>
                     <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">LTV (%)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input class="form-control" id="id_ltv_input" readonly disabled />
+                                <span id="ltv_error_span" style="color: #e6487e;font-size: 11px;">
+                                </span>
+                        </div>
+                    </div>
+                    <br />
                     <div class="row">
                         <div class="col-lg-3 p-0">
                             <label class="">Expat</label>
@@ -240,6 +250,17 @@
                     <br>
                     <div class="row">
                         <div class="col-lg-3 p-0">
+                            <label class="">LTV (%)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input class="form-control price-input" id="id_ltv_input" readonly disabled />
+                                <span id="ltv_error_span" style="color: #e6487e;font-size: 11px;">
+                                </span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
                             <label class="">Expat</label>
                         </div>
                         <div class="col-lg-9">
@@ -305,5 +326,48 @@ elt.addEventListener('keyup', function (event) {
             $(".if-customer").show()
         }
     })
+
+document.querySelector('#id_property_price').addEventListener('input', function(e){
+    let down_payment = parseInt(document.querySelector('#id_down_payment').value.replace(/,/g, ''))
+    let property_price = parseInt(document.querySelector('#id_property_price').value.replace(/,/g, ''))
+    document.querySelector('#ltv_error_span').innerHTML = ''
+    if(property_price && down_payment){
+        
+        let diff =  property_price - down_payment
+        if(diff < 0){
+            document.querySelector('#id_ltv_input').value = ''
+            document.querySelector('#ltv_error_span').innerHTML = 'Down payment can not be more than property price'
+        }
+        else{
+                let ltv = parseFloat(((parseInt(property_price) - parseInt(down_payment))/parseInt(property_price)) * 100).toFixed(2)
+                document.querySelector('#id_ltv_input').value = ltv
+        }
+    }
+    else{
+        document.querySelector('#id_ltv_input').value = ''
+    }
+    
+})
+
+document.querySelector('#id_down_payment').addEventListener('input', function(e){
+    let property_price = parseInt(document.querySelector('#id_property_price').value.replace(/,/g, ''))
+    let down_payment = parseInt(document.querySelector('#id_down_payment').value.replace(/,/g, ''))
+    document.querySelector('#ltv_error_span').innerHTML = ''
+    if(property_price && down_payment){
+        
+        let diff =  property_price - down_payment
+        if(diff < 0){
+            document.querySelector('#id_ltv_input').value = ''
+            document.querySelector('#ltv_error_span').innerHTML = 'Down payment can not be more than property price'
+        }
+        else{
+            let ltv = parseFloat(((parseInt(property_price) - parseInt(down_payment))/parseInt(property_price)) * 100).toFixed(2)
+            document.querySelector('#id_ltv_input').value = ltv
+        }
+    }
+    else{
+        document.querySelector('#id_ltv_input').value = ''
+    }
+})
 </script>
 {% endblock %}

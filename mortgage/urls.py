@@ -51,7 +51,7 @@ urlpatterns = [
     path("deals-total/", TotalDealsView.as_view(), name="dashboard-deals-total"),
     path("deals-total-won/", TotalWonView.as_view(), name="dashboard-deals-total-won"),
     path("deals-won/", DealsWonView.as_view(), name="dashboard-deals-won"),
-
+    path("deals/<int:pk>/attributes-list/", DealJsonAttributesList.as_view(), name="deal-attributes-list"),
 
     path("banks/", MortgageBank.as_view(), name="banks"),
     path("banks/edit/<int:pk>/", MortgageBank.as_view(), name="bank-edit"),

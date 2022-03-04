@@ -316,7 +316,7 @@ class MortgageDealUpdateFieldView(LoginRequiredMixin, PermissionRequiredMixin, V
         deal = self.get_object()
         field_name = request.POST['name']
         field_value = strip_tags(request.POST['value'])
-        excluded_fields = ['l_tv', 'created_on', 'updated_on']
+        excluded_fields = ['created_on', 'updated_on']
 
         success = True
         status_code = 200
@@ -338,12 +338,17 @@ class MortgageDealUpdateFieldView(LoginRequiredMixin, PermissionRequiredMixin, V
 
         data = {'name': field_name, 'value': return_value}
         if success:
+            if field_name == 'l_tv':
+                ltv = float(field_value)
+                field_name = 'loan_amount'
+                field_value = int((ltv * (deal.property_price)) / 100)
+                
             setattr(deal, field_name, field_value)
             if (Decimal(deal.down_payment) + Decimal(deal.loan_amount)) > Decimal(deal.property_price):
                 if not (field_name == "property_price"):
                     return JsonResponse({
                         'success': False,
-                        'message': 'Down Payment and Loan amount should be less then property price '},
+                        'message': 'Down Payment and Loan amount should be less than property price '},
                         status=401)
             if not (int(deal.tenure) in range(1, 361)):
                 return JsonResponse({'success': False, 'message': 'Ensure value  is  between 1,360 '}, status=401)
@@ -832,3 +837,18 @@ class BankRefNumber(View):
 
         except Exception as e:
             return JsonResponse({'error': _(e.args[0])}, status=status.HTTP_400_BAD_REQUEST)
+
+class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
+    permission_required = 'auth.list_motor_quotes'
+
+    def get(self, *args, **kwargs):
+        type = self.request.GET.get('type')
+        print(type)
+        response = {}
+
+        if type == 'agents':
+            response = self.get_company_agents_list()
+        elif type == 'producers':
+            response = self.get_company_producers_list()
+
+        return JsonResponse(response, safe=False)

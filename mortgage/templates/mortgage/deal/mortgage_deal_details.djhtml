@@ -392,6 +392,25 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="deal-email-settings__bcc row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}"
+                        {% if deal.stage %} style="display: flex;" {% endif %}>
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                LTV %
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                    class="text-editable"
+                                    data-name="l_tv"
+                                    data-class="form-control-sm"
+                                    data-value="{{ deal.l_tv }}"
+                                    data-pk="{{ deal.pk }}"
+                                    data-title="Loan Amount"
+                                    data-url="{% url 'mortgage:update-deal-field' pk=deal.pk %}"
+                                >
+                                    {{ deal.l_tv | floatformat }} %
+                                </a>
+                            </div>
+                        </div>
 
                         <div class="deal-email-settings__bcc row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}"
                         {% if deal.stage %} style="display: flex;" {% endif%}>
@@ -412,7 +431,6 @@
                                 </a>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -577,14 +595,6 @@
                             </div>
                         </div>
                         <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
-                            <div class="col col-lg-4 label p-l-20 p-r-0">
-                                LTV (%)
-                            </div>
-                            <div class="col col-lg-8 editable-icon">
-                                {{ deal.l_tv }}
-                            </div>
-                        </div>
-                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
                             <div class="col col-lg-4 label p-l-20 p-r-0">Referrer</div>
                             <div class="col col-lg-8 editable-icon">
                                 <a href="javascript:"
@@ -629,7 +639,7 @@
                                 data-emptytext="Add"
                                 data-pk="{{ deal.pk }}"
                                 data-value="{% if deal.referrer %}{{ deal.referrer.pk }}{% endif %}"
-                                data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=agents"
+                                data-source="{% url 'mortgage:deal-attributes-list' pk=deal.pk %}?type=agents"
                                 data-url="{% url 'mortgage:update-deal-field' pk=deal.pk %}"
                                 data-title="Select"
                             >
