@@ -839,7 +839,8 @@ class BankRefNumber(View):
             return JsonResponse({'error': _(e.args[0])}, status=status.HTTP_400_BAD_REQUEST)
 
 class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):    
-
+    permission_required = None
+    
     def get(self, *args, **kwargs):
         type = self.request.GET.get('type')
         print(type)
