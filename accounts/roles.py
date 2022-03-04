@@ -42,6 +42,9 @@ permissions = {
     'export_tasks': True,
 
     #Mortgage Tasks
+    'list_mortgage_deals': True,
+
+    #Mortgage Tasks
     'list_mortgage_tasks': True,
     'create_mortgage_tasks': True,
     'update_mortgage_tasks': True,
