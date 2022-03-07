@@ -249,8 +249,8 @@ class Deal(AuditTrailMixin, models.Model):
     )
     notes = GenericRelation('core.Note')
     tasks = GenericRelation('core.Task')
-    is_property_reg_financed = models.BooleanField(default=False)
-    is_real_estate_fee_financed = models.BooleanField(default=False)
+    is_property_reg_financed = models.BooleanField(default=False, null=True)
+    is_real_estate_fee_financed = models.BooleanField(default=False, null=True)
 
     def __str__(self):
         return f"{self.customer.name if self.customer else '' } - AED ({int(self.property_price):,})"
