@@ -257,10 +257,11 @@ class SubStageToggle(View):
             if sub_stage.sub_stage == SELECT_BANK:
                 bank_id = request.POST.get("bank_id")
                 bank = Bank.objects.filter(pk = bank_id)
-                bank = bank[0]
+                
                 if bank.exists():
-                     efa = bank.extra_financing_allowed
-                     if efa == True:
+                    bank = bank[0]
+                    efa = bank.extra_financing_allowed
+                    if efa == True:
                         #mortgage_amt = request.POST.get("mortgage_amount")
                         is_property_reg_financed = request.POST.get("is_property_reg_financed")
                         is_real_estate_fee_financed = request.POST.get("is_real_estate_fee_financed")
