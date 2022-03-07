@@ -32,7 +32,7 @@
 
                 {% if agents %}
                 <div class="row" style="justify-content: flex-end;align-items: center;margin-right: 5px;">
-                    <div class="col-lg-1" style="margin-right: 95px;">                        
+                    <div class="col-lg-5 col-md-5" style="margin-right: 95px;">                        
                         <div class="options-table float-right" style="align-self: center;">
                             <a class="dropdown-toggle" data-toggle="dropdown"
                                href="#"
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                  
-                    <div class="col-lg-3">    
+                    <div class="col-lg-5 col-md-5">
                         <div class="table-filters">
                         <div class="input-group open-search-field">                            
                             <input name="search_term" id="id-search-user" style="padding-left: 25px;" type="text" class="form-control" placeholder="Search User by name or email" {% if search_key %} value={{search_key}} {% endif %} />

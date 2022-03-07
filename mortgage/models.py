@@ -241,6 +241,8 @@ class Deal(AuditTrailMixin, models.Model):
     referrer = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL, related_name="deal_user"
     )
+    assigned_to = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL, related_name="deal_assigned_to")
     customer = models.ForeignKey(
         'customers.Customer', null=True, on_delete=models.SET_NULL, related_name="deal_customer"
     )
@@ -249,8 +251,8 @@ class Deal(AuditTrailMixin, models.Model):
     )
     notes = GenericRelation('core.Note')
     tasks = GenericRelation('core.Task')
-    is_property_reg_financed = models.BooleanField(default=False, null=True)
-    is_real_estate_fee_financed = models.BooleanField(default=False, null=True)
+    is_property_reg_financed = models.BooleanField(default=False)
+    is_real_estate_fee_financed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.customer.name if self.customer else '' } - AED ({int(self.property_price):,})"
