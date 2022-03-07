@@ -82,7 +82,7 @@
                 <thead>
                     <tr>
                         {% for field in form %}
-                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" %}
+                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" or field.label == "Extra Financing Allowed ?"%}
                         {% else %}
                         <td> {{ field.label }} </td>
                         {% endif %}
@@ -111,6 +111,7 @@
                                 </td>
                             {% endif %}    
                         {% endfor %}
+                        <input type="hidden" id="bank_{{bank.bank_id}}_extra_financing_allowed" value="{{bank.extra_financing_allowed}}" />
                         {% comment %} 
                         <td data-name="eibor_rate" data-value="{{bank.eibor_rate}}">
                             {{bank.eibor_rate}}
@@ -249,6 +250,11 @@
 
     function update_bank_modal(id) {
         let actionUrl = "{% url 'mortgage:bank-edit' pk=1111111111111111111 %}";
+        let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value        
+        if (is_extra_financing == 'True')
+            $("#id_extra_financing_allowed").val(1);
+        else
+            $("#id_extra_financing_allowed").val(0);
         actionUrl = actionUrl.replace('1111111111111111111', id);
         $('#modal_update_bank form').attr('action', actionUrl);
         $('#tr-' + id + ' td').each(function (index, value) {

@@ -840,13 +840,14 @@ class BankRefNumber(View):
 
 class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
     permission_required = 'auth.list_mortgage_deals'
-
+    
     def get(self, *args, **kwargs):
-        type = self.request.GET.get('type')
-        print(type)
+        type = self.request.GET.get('type')        
         response = {}
+        if type == 'assigned_to':
+            response = self.get_company_user_admin_list()
 
-        if type == 'agents':
+        elif type == 'agents':
             response = self.get_company_agents_list()
         elif type == 'producers':
             response = self.get_company_producers_list()

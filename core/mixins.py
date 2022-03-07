@@ -87,6 +87,20 @@ class AdminAllowedMixin():
 
 
 class CompanyAttributesMixin():
+
+    def get_company_user_admin_list(self):
+        from accounts.models import UserProfile
+        users = [{'value': -1, 'text': '-----'}]
+        for up in UserProfile.objects.filter(company=self.request.company, user__is_active=True) \
+                                     .order_by('user__first_name'):
+            if up.has_admin_role() or up.has_user_role():
+                users.append({
+                    'value': up.user.pk,
+                    'text': str(up.user)
+                })
+
+        return users
+
     def get_company_agents_list(self):
         logged_in_user = self.request.user
 
