@@ -144,14 +144,15 @@
             <tr class="background-blue">
                 <th><strong>Mortgage Amount</strong></th>
                 {% for x in quote_info.data.quote_details %}
-                <td class="col-td-{{x.bank_pk}}"><strong>{{deal.loan_amount| intcomma }} AED</strong></td>
+                <input type="hidden" id="mortgage-amount-{{x.bank_pk}}-value" />
+                <td class="col-td-{{x.bank_pk}}"><strong id="mortgage-amount-label-{{x.bank_pk}}">{{deal.loan_amount| intcomma }} AED</strong></td>
                 {% endfor %}
             </tr>
 
             <tr>
                 <th><strong>Down Payment</strong></th>
                 {% for x in quote_info.data.quote_details %}
-                <td class="col-td-{{x.bank_pk}}"><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></td>
+                <td class="col-td-{{x.bank_pk}}"><strong id="down-payment-label-{{x.bank_pk}}">{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></td>
                 {% endfor %}
             </tr>
 
@@ -219,7 +220,7 @@
                 <th>Land Dep. Property Registration</th>
                 {% for x in quote_info.data.quote_details %}
                 <td class="col-td-{{x.bank_pk}}">
-                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk efa=x.bank_extra_financing_allowed value=x.land_dep_property_registration name='land_dep_property_registration' %}
                 </td>
                 {% endfor %}
             </tr>
@@ -233,7 +234,7 @@
                 <th>Real Estate Fee</th>
                 {% for x in quote_info.data.quote_details %}
                 <td class="col-td-{{x.bank_pk}}">
-                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' %}
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' efa=x.bank_extra_financing_allowed %}
                 </td>
                 {% endfor %}
             </tr>
@@ -297,7 +298,7 @@
                 {% endfor %}
             </tr>
             <tr>
-                <th></th> 
+                <th></th>
                 {% for x in quote_info.data.quote_details %}
                     <td class="col-td-{{x.bank_pk}}">
                         <input data-bank="{{x.bank_pk}}" class="d-none" type="checkbox" id="new-bank-rate-{{x.bank_pk}}" value="{{x.bank_pk}}">
@@ -314,4 +315,33 @@
         {% endif %}
         </tbody>
     </table>
+    <script >
+        $(document).ready(function() {
+            $('[data-toggle="popover"]').popover()
+})
+        let extra_financing_checkboxes = document.querySelectorAll('.extra-financing-checkbox')
+        extra_financing_checkboxes.forEach(element => {
+            element.addEventListener('change', function(){
+            debugger
+            let bank_id = document.querySelector('#option_bank_id').value
+            let mortgage_amount = document.querySelector(`#mortgage-amount-label-${bank_id}`).innerText
+            let down_payment = document.querySelector(`#down-payment-label-${bank_id}`).innerText
+            mortgage_amount = parseFloat(mortgage_amount.replace(/,/g, '').replace('AED',''))
+            down_payment = parseFloat(down_payment.replace(/,/g, '').replace('AED',''))
+            
+            if(this.checked){
+            mortgage_amount += parseFloat(this.value)         
+            down_payment -= parseFloat(this.value)            
+            }
+            else{
+                mortgage_amount -= parseFloat(this.value)
+                down_payment += parseFloat(this.value)                
+            }
+            document.querySelector(`#mortgage-amount-${bank_id}-value`).value = mortgage_amount 
+            document.querySelector(`#mortgage-amount-label-${bank_id}`).innerText = mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+            //document.querySelector(`#down-payment-label-${bank_id}`).innerText = down_payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+        })
+        });
+        
+    </script>
 </ul>

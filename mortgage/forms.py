@@ -13,6 +13,10 @@ from mortgage.constants import *
 from django.conf import settings
 from rolepermissions.checkers import get_user_roles
 
+BOOLEAN_CHOICE = (
+    (True, 'Yes'),
+    (False, 'No')
+)
 
 class CustomerForm(forms.Form):
     customer_phone = forms.CharField(max_length=20)
@@ -233,7 +237,7 @@ class CreateBankForm(forms.ModelForm):
     eibor_post_duration = BankInterestRateForm().fields['eibor_post_duration']
     introduction_period_in_years = BankInterestRateForm().fields['introduction_period_in_years']
     post_introduction_rate = BankInterestRateForm().fields['post_introduction_rate']
-
+    extra_financing_allowed = forms.ChoiceField(choices=BOOLEAN_CHOICE, label="Extra Financing Allowed ?", initial=False, widget=forms.Select(), required=False)
     class Meta:
         model = Bank
         fields = (
@@ -254,6 +258,7 @@ class CreateBankForm(forms.ModelForm):
             "full_settlement_max_value",
             "free_partial_payment_per_year",
             "sample_form",
+            "extra_financing_allowed",
         )
 
 

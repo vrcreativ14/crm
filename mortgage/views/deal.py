@@ -434,7 +434,7 @@ class MortgageDealStagesView(DealEditBaseView, DetailView):
             else:
                 ctx['rate'] = bank.bank_interest_rates.get(is_default=True).get_rate
             
-            ctx['monthly_repayment'] = BankHelper(bank_info, deal.property_price, deal.loan_amount, deal.tenure, deal.govt_fee.pk).monthly_repayment
+            ctx['monthly_repayment'] = BankHelper(bank_info, deal.property_price, deal.loan_amount, deal.tenure, deal.govt_fee.pk, deal = deal).monthly_repayment
 
         if stage == STAGE_NEW:
             self.template_name = 'mortgage/deal/components/deal_overview.djhtml'
@@ -838,7 +838,7 @@ class BankRefNumber(View):
         except Exception as e:
             return JsonResponse({'error': _(e.args[0])}, status=status.HTTP_400_BAD_REQUEST)
 
-class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):    
+class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
     permission_required = 'auth.list_mortgage_deals'
 
     def get(self, *args, **kwargs):

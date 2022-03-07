@@ -8,7 +8,7 @@ import pandas as pd
 
 class BankHelper:
     
-    def __init__(self, bank, property_price, mortgage_amount, tenure, govt_fee_key=GovernmentFee.objects.last().pk):
+    def __init__(self, bank, property_price, mortgage_amount, tenure, govt_fee_key=GovernmentFee.objects.last().pk, **kwargs):
         self.bank = bank
         self.property_price = property_price
         self.mortgage_amount = mortgage_amount
@@ -17,6 +17,9 @@ class BankHelper:
         #     self.mortgage_amount = self.mortgage_amount + Decimal(self.govt_fee.trustee_center_fee)
 
         self.tenure = tenure
+        deal = kwargs.get('deal',None)     
+        self.is_property_reg_financed = deal.is_property_reg_financed if deal else False            
+        self.is_real_estate_fee_financed = deal.is_real_estate_fee_financed if deal else False
 
     @property
     def get_down_payment(self):  # calculate the down payment
@@ -73,17 +76,34 @@ class BankHelper:
     # FINALS
     @property
     def calculate_total_down_payment(self):
-        return (
-            self.get_down_payment
-            + self.bank.property_valuation_fee
-            + self.get_bank_processing_fee
-            + self.get_life_insurance_monthly
-            + self.get_property_insurance_yearly
-            + self.trustee_center_fee_vat
-            + self.land_dep_mortgage_registration
-            + self.land_dep_property_registration
-            + self.real_estate_fee_vat
-        )
+        total_down_payment =  self.get_down_payment + self.bank.property_valuation_fee 
+        total_down_payment += self.get_bank_processing_fee + self.get_life_insurance_monthly 
+        total_down_payment += self.get_property_insurance_yearly + self.trustee_center_fee_vat 
+        total_down_payment += self.land_dep_mortgage_registration
+        if self.bank.extra_financing_allowed == True:
+            if self.is_real_estate_fee_financed == False:
+                total_down_payment += self.real_estate_fee_vat
+            else:
+                total_down_payment -= self.real_estate_fee_vat
+            if self.is_real_estate_fee_financed == False:
+                total_down_payment += self.land_dep_property_registration
+            else:
+                total_down_payment -= self.land_dep_property_registration
+        else:
+            total_down_payment += self.land_dep_property_registration + self.real_estate_fee_vat
+            
+        return total_down_payment
+        # return (
+        #     self.get_down_payment
+        #     + self.bank.property_valuation_fee
+        #     + self.get_bank_processing_fee
+        #     + self.get_life_insurance_monthly
+        #     + self.get_property_insurance_yearly
+        #     + self.trustee_center_fee_vat
+        #     + self.land_dep_mortgage_registration
+        #     + self.land_dep_property_registration
+        #     + self.real_estate_fee_vat
+        # )
 
     @property
     def calculate_extra_financing(self):
@@ -177,7 +197,7 @@ def get_quote_data(quote, order=None):
     final_data = []
 
     for bank in banks_list:
-        data = BankHelper(bank, deal.property_price, deal.loan_amount, deal.tenure, deal.govt_fee.pk)
+        data = BankHelper(bank, deal.property_price, deal.loan_amount, deal.tenure, deal.govt_fee.pk, deal = deal)
         total_monthly_repayment_with_extra_financing = int(data.monthly_repayment_after) + int(data.monthly_repayment_extra_financing)
         mortgage_emi = int(data.monthly_repayment) + int(data.monthly_repayment_extra_financing)
         bank_data = {
@@ -206,6 +226,7 @@ def get_quote_data(quote, order=None):
             "introduction_period_in_years": bank.introduction_period_in_years,
             "post_introduction_rate": bank.post_introduction_rate,
             "poverty_valuation_fee": bank.property_valuation_fee,
+            "bank_extra_financing_allowed": bank.extra_financing_allowed,
             f"monthly_repayment_after__years_main_amount": int(data.monthly_repayment),
             f"monthly_repayment_after__years_after_the_fix_period": int(data.monthly_repayment_after),
             f"monthly_repayment_extra_financing": int(data.monthly_repayment_extra_financing),

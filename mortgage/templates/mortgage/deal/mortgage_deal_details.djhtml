@@ -594,6 +594,7 @@
                                 >{{ deal.tenure }}</a>
                             </div>
                         </div>
+                        
                         <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
                             <div class="col col-lg-4 label p-l-20 p-r-0">Referrer</div>
                             <div class="col col-lg-8 editable-icon">
@@ -771,7 +772,7 @@
                             {% if deal.notes.all %}
                                 <ul class="trail note-trail">
                                     {% for note in deal.notes.all %}
-                                        {% include 'core/_note.djhtml' with delete_form_action='mortgage:notes-delete' %}
+                                        {% include 'core/_note.djhtml' with delete_form_action='customers:delete-note' %}
                                     {% endfor %}
                                 </ul>
                             {% else %}
@@ -1011,7 +1012,7 @@
             },sec);
         }
 
-        function deal_sub_tages_processor(sub_stage){
+        function deal_sub_tages_processor(sub_stage, bank_id=""){
 
             let subStages = {}
             subStages['Select Bank'] = 'SELECT_BANK';
@@ -1037,6 +1038,28 @@
             data['sub_stage'] = subStages[current_stage];
             data['change_sub_stage'] = subStages[sub_stage];
             data['csrfmiddlewaretoken'] = $('body #sub-stage-csrf input').val();
+            let mortgage_amt = ''
+            let is_real_estate_fee_financed = document.querySelector('#real_estate_fee_vat_financing_check')
+            let is_property_reg_financed = document.querySelector('#land_dep_property_registration_financing_check')
+            if(sub_stage == 'confirm-bank' && is_real_estate_fee_financed && is_property_reg_financed){
+                if(bank_id){
+                mortgage_amt = document.querySelector(`#mortgage-amount-${bank_id}-value`)
+                if (mortgage_amt)
+                    mortgage_amt = parseInt(mortgage_amt.value)
+                data['mortgage_amount'] = mortgage_amt
+                data['bank_id'] = bank_id
+            }
+            
+            if (is_real_estate_fee_financed)
+                is_real_estate_fee_financed = is_real_estate_fee_financed.checked
+            
+            if(is_property_reg_financed)
+                is_property_reg_financed = is_property_reg_financed.checked
+
+            data['is_real_estate_fee_financed'] = is_real_estate_fee_financed
+            data['is_property_reg_financed'] = is_property_reg_financed
+        }
+            
 
             $.ajax({
                 method: 'POST',

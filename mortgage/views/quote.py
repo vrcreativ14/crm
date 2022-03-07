@@ -255,6 +255,23 @@ class SubStageToggle(View):
 
         if deal.stage == STAGE_QUOTE:
             if sub_stage.sub_stage == SELECT_BANK:
+                bank_id = request.POST.get("bank_id")
+                bank = Bank.objects.filter(pk = bank_id)
+                bank = bank[0]
+                if bank.exists():
+                     efa = bank.extra_financing_allowed
+                     if efa == True:
+                        #mortgage_amt = request.POST.get("mortgage_amount")
+                        is_property_reg_financed = request.POST.get("is_property_reg_financed")
+                        is_real_estate_fee_financed = request.POST.get("is_real_estate_fee_financed")
+                        # if mortgage_amt:
+                        #     deal.loan_amount = int(mortgage_amt)
+                        if is_property_reg_financed:
+                            deal.is_property_reg_financed = True if is_property_reg_financed == 'true' else False
+                        if is_real_estate_fee_financed:
+                            deal.is_real_estate_fee_financed = True if is_real_estate_fee_financed == 'true' else False
+                            
+                        deal.save()
                 sub_stage.sub_stage = CONFIRM_BANK
             else:
                 sub_stage.sub_stage = SELECT_BANK

@@ -1,9 +1,35 @@
 {% load humanize %}
-<div>
+<div style="display: flex;justify-content: center;">
+    <style>
+        label{
+            display: inline-flex;
+    border: 1px solid #DBAE58;
+    padding: 3px;
+    border-radius: 10px;
+    color: #DBAE58 !important;
+    font-weight: 500;
+    font-size: 10px;
+        }
+        .checkbox-wrapper {
+    height: 13px;
+    width: 13px;
+}
+    </style>
     {% if table %}
+    
         <span class="static-display">
-            {{ value | intcomma }} AED 
+            {{ value | intcomma }} AED
         </span>
+        
+        {% if efa == True %}
+        <div data-original-title="check" style="margin-left: 8px;">
+            <input type="hidden" id="option_bank_id" value={{deal_bank_id}} />            
+            <div class="checkbox-wrapper" data-toggle="popover" data-content="select to include in loan amount" data-trigger="hover">
+                <input type="checkbox" id="{{name}}_financing_check" class="extra-financing-checkbox" value="{{value}}">
+            </div>
+        </div>
+        {% endif %}
+ 
         <span class="editable-bank-rate float-right d-none">Edit</span>
     {% else %}
         <span class="editable-bank-rate-modal float-left d-none">Edit</span>

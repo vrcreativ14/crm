@@ -148,6 +148,7 @@ class Bank(models.Model):
     add_fees_to_loan_amount = models.BooleanField()
     objects = BankManager()
     sample_form = models.FileField(upload_to='upload/', blank=True, null=True, default="upload/sample_word.pdf")
+    extra_financing_allowed = models.BooleanField(default=False)
     class Meta:
         verbose_name = "Bank"
         verbose_name_plural = "Banks"
@@ -212,7 +213,6 @@ class CustomerProfile(models.Model):
 
 
 class Deal(AuditTrailMixin, models.Model):
-
     deal_id = models.AutoField(primary_key=True, db_index=True)
     stage = models.CharField(max_length=50, choices=DEAL_STAGES, default=STAGE_NEW)
     deal_type = models.CharField(max_length=50, choices=DEAL_TYPES, default=DEAL_TYPE_NEW)
@@ -249,6 +249,8 @@ class Deal(AuditTrailMixin, models.Model):
     )
     notes = GenericRelation('core.Note')
     tasks = GenericRelation('core.Task')
+    is_property_reg_financed = models.BooleanField(default=False)
+    is_real_estate_fee_financed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.customer.name if self.customer else '' } - AED ({int(self.property_price):,})"

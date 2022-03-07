@@ -150,7 +150,7 @@
         $('table td,table th').addClass('unselected');
         $('table td.col-td-'+id).removeClass('unselected');
         $('table td.col-td-'+id).addClass('selected');
-        deal_sub_tages_processor('confirm-bank')
+        deal_sub_tages_processor('confirm-bank', id)
     }
     function delete_bank(id){
         $('.bank-'+id).remove();
