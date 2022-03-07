@@ -41,10 +41,14 @@ const Banks = ({ bank, data, index = false, comparison = false, handleCompare = 
                     <p><small>Total Down Payment</small></p>
                 </div>
                 {(comparison) ?
+                <>
+                { (bank.bank_extra_financing_allowed == true) &&
                 <div>
                     <p className="main"><CurrencyFormat num={bank.extra_financing} noDecimal={true} /></p>
                     <p><small>Extra Financing</small></p>
                 </div>
+                }
+                </>
                 :
                 <>
                 <div className="full-border">
