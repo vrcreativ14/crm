@@ -250,11 +250,15 @@
 
     function update_bank_modal(id) {
         let actionUrl = "{% url 'mortgage:bank-edit' pk=1111111111111111111 %}";
-        let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value        
+        let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value
+        let extra_financing_div = document.querySelector('#extra_financing_div')
+        let yes_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1" selected>Yes</option><option value="0">No<option></select>'
+        let no_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1">Yes</option><option value="0" selected>No<option></select>'
         if (is_extra_financing == 'True')
-            $("#id_extra_financing_allowed").val(1);
+            extra_financing_div.innerHTML = yes_selected
         else
-            $("#id_extra_financing_allowed").val(0);
+            extra_financing_div.innerHTML = no_selected
+
         actionUrl = actionUrl.replace('1111111111111111111', id);
         $('#modal_update_bank form').attr('action', actionUrl);
         $('#tr-' + id + ' td').each(function (index, value) {
