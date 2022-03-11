@@ -41,7 +41,7 @@ const UploadDoc = ({setuploadDoc,uploadDoc,name,filekey,desc,required = true}) =
                     <span className="name">
                         <i className="far fa-file"></i>
                         <span className="ms-2">
-                            {name}{(required) ? '*':null}<br/><small>{parse(desc)}</small><br/><span className="uploader"></span>
+                            {name}{(required) ? '*':null}<br/><small>{desc && parse(desc)}</small><br/><span className="uploader"></span>
                         </span>
                     </span>
                     <span className="file">
@@ -72,7 +72,7 @@ const UploadDoc = ({setuploadDoc,uploadDoc,name,filekey,desc,required = true}) =
                 <span className="name">
                     <i className="far fa-file"></i>
                     <span className="ms-2">
-                        {name}{(required) ? '*':null}<br/><small>{parse(desc)}</small><br/><span className="uploader"></span>
+                        {name}{(required) ? '*':null}<br/><small>{desc && parse(desc)}</small><br/><span className="uploader"></span>
                     </span>
                 </span>
                 <span className="file">

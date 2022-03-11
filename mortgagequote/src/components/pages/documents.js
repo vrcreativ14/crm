@@ -5,7 +5,7 @@ import { DataContext } from '../../helpers/context.js'
 import Loading from '../layout/Loading.js'
 import { BrowserRouter as Router, useParams, useHistory } from "react-router-dom"
 import SelectButton from '../layout/Button.js'
-import Attached from '../../Assets/lorem-ipsum.pdf'
+import Attached from '../../assets/lorem-ipsum.pdf'
 import UploadDoc from '../layout/Uploads.js'
 import ThankYou from '../layout/ThanksMessage.js'
 import ContactInfo from '../layout/ContactInfo.js'
