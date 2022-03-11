@@ -27,7 +27,11 @@
                             </div>
                             <div class="d-flex">
                                 <p>Mortgage Amount</p>
-                                <p><strong>{{deal.loan_amount| intcomma }} AED</strong></p>
+                                {% if x.updated_mortgage_amount %}
+                                    <p id="mortgage_amount_modal"><strong>{{x.updated_mortgage_amount| intcomma }} AED</strong></p>
+                                {% else %}
+                                    <p id="mortgage_amount_modal"><strong>{{deal.loan_amount| intcomma }} AED</strong></p>
+                                {% endif %}
                             </div>
                             <div class="d-flex">
                                 <p>Down Payment</p>
@@ -79,7 +83,13 @@
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.trustee_center_fee_vat name='trustee_center_fee_vat' %}
                             </div>
                             <div class="d-flex">
-                                <p>Land Dep. Property Registration</p>
+                                <p style="display: flex;flex-direction: column;">Land Dep. Property Registration
+                                    {% if deal.is_property_reg_financed == True %}
+                                    <span id="property_reg_financed_label_modal_{{x.bank_pk}}">(extra financing opted)</span>
+                                    {% else %}
+                                    <span id="property_reg_financed_label_modal_{{x.bank_pk}}" style="display:none;">(extra financing opted)</span>
+                                    {% endif %}
+                                </p>
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.land_dep_property_registration name='land_dep_property_registration' %}
                             </div>
                             <div class="d-flex">
@@ -137,7 +147,13 @@
                         <div class="bg-light-grey-nexus">
                             <div class="heading mb-4">Real Estate Fee:</div>
                             <div class="d-flex">
-                                <p>Real Estate Fee 2%</p>
+                                <p style="display: flex;flex-direction: column;">Real Estate Fee 2%
+                                    {% if deal.is_real_estate_fee_financed == True %}
+                                    <span id="real_estate_fee_financed_label_modal_{{x.bank_pk}}">(extra financing opted)</span>
+                                    {% else %}
+                                    <span id="real_estate_fee_financed_label_modal_{{x.bank_pk}}" style="display:none;">(extra financing opted)</span>
+                                    {% endif %}
+                                </p>
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.real_estate_fee_vat name='real_estate_fee_vat' %}
                             </div>
                         </div>
@@ -182,7 +198,11 @@
                             </div>
                             <div class="d-flex">
                                 <p>Mortgage Amount</p>
-                                <p><strong>{{deal.loan_amount| intcomma }} AED</strong></p>
+                                {% if x.updated_mortgage_amount %}
+                                    <p id="mortgage_amount_modal_label_{{x.bank_pk}}"><strong>{{x.updated_mortgage_amount| intcomma }} AED</strong></p>
+                                {% else %}
+                                    <p id="mortgage_amount_modal_label_{{x.bank_pk}}"><strong>{{deal.loan_amount| intcomma }} AED</strong></p>
+                                {% endif %}
                             </div>
                             <div class="d-flex">
                                 <p>Down Payment</p>
@@ -203,7 +223,7 @@
                             <div class="heading mb-4">Bank Details and Fees:</div>
                             <div class="d-flex">
                                 <p>Post introduction rate</p>
-                                <p><strong>{{ x.post_introduction_rate| intcomma }}% + {{x.eibor_post_duration}} Eibor</strong></p>
+                                <p style="text-align: center;"><strong>{{ x.post_introduction_rate| intcomma }}% + {{x.eibor_post_duration}} Eibor</strong></p>
                             </div>
                             <div class="d-flex">
                                 <p>Property valuation fee</p>
@@ -211,7 +231,7 @@
                             </div>
                             <div class="d-flex">
                                 <p>Bank Processing Fee</p>
-                                <p><strong>{{ x.bank_processing_fee| intcomma }} AED</strong></p>
+                                <p style="text-align: center;"><strong>{{ x.bank_processing_fee| intcomma }} AED</strong></p>
                             </div>
                             <div class="d-flex">
                                 <p>Life Insurance (Monthly)</p>
@@ -234,7 +254,13 @@
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.trustee_center_fee_vat name='trustee_center_fee_vat' %}
                             </div>
                             <div class="d-flex">
-                                <p>Land Dep. Property Registration</p>
+                                <p style="display: flex;flex-direction: column;">Land Dep. Property Registration <br/>
+                                    {% if deal.is_property_reg_financed == True %}
+                                    <span id="property_reg_financed_label_modal_{{x.bank_pk}}">(extra financing opted)</span>
+                                    {% else %}
+                                    <span id="property_reg_financed_label_modal_{{x.bank_pk}}" style="display:none;">(extra financing opted)</span>
+                                    {% endif %}
+                                </p>
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.land_dep_property_registration name='land_dep_property_registration' %}
                             </div>
                             <div class="d-flex">
@@ -248,7 +274,7 @@
                             <div class="heading mb-4">Total Paid Over {{deal.tenure}} Months:</div>
                             <div class="d-flex">
                                 <p>Monthly Repayment</p>
-                                <p><strong>{{ x.monthly_repayment| intcomma }} AED</strong></p>
+                                <p id="monthly_repayment_modal_{{x.bank_pk}}"><strong>{{ x.monthly_repayment| intcomma }} AED</strong></p>
                             </div>
                             <div class="d-flex">
                                 <p>Early Settlement</p>
@@ -286,7 +312,13 @@
                         <div class="bg-light-grey-nexus">
                             <div class="heading mb-4">Real Estate Fee:</div>
                             <div class="d-flex">
-                                <p>Real Estate Fee 2%</p>
+                                <p style="display: flex;flex-direction: column;">Real Estate Fee 2%
+                                    {% if deal.is_real_estate_fee_financed == True %}
+                                    <span id="real_estate_fee_financed_label_modal_{{x.bank_pk}}">(extra financing opted)</span>
+                                    {% else %}
+                                    <span id="real_estate_fee_financed_label_modal_{{x.bank_pk}}" style="display:none;">(extra financing opted)</span>
+                                    {% endif %}
+                                </p>
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' %}
                             </div>
                         </div>

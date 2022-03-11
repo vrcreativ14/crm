@@ -1,7 +1,15 @@
 {% load humanize %}
 <div style="display: flex;justify-content: center;">
     <style>
-        
+        label{
+            display: inline-flex;
+    border: 1px solid #DBAE58;
+    padding: 3px;
+    border-radius: 10px;
+    color: #DBAE58 !important;
+    font-weight: 500;
+    font-size: 10px;
+        }
         .checkbox-wrapper {
     height: 13px;
     width: 13px;
@@ -14,10 +22,11 @@
         </span>
         
         {% if efa == True %}
-        <div data-original-title="check" style="margin-left: 8px;">
-            <input type="hidden" id="option_bank_id" value={{deal_bank_id}} />            
+        <div data-original-title="check" style="margin-left: 8px;cursor: pointer;">
+            
             <div class="checkbox-wrapper" data-toggle="popover" data-content="select to include in loan amount" data-trigger="hover">
-                <input type="checkbox" id="{{name}}_financing_check" class="extra-financing-checkbox" value="{{value}}">
+                <input type="hidden" id="option_bank_id" value={{deal_bank_id}} />
+                <input type="checkbox" id="{{name}}_financing_check" class="extra-financing-checkbox" value="{{value}}" {% if efa_selected == True %} checked {% endif %}>
             </div>
         </div>
         {% endif %}

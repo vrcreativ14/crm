@@ -114,7 +114,7 @@
                     <div class="d-flex justify-content-center idle-action">
                         {% if quote_info.data.quote_details|length > 1 %}
                         <form method="POST" class="new-bank-interest-form" action="{% url 'mortgage:quotes' %}">
-                            <input class="form-control" type="hidden" name="deals" value="{{deal.pk}}">
+                            <input id="deal_id" class="form-control" type="hidden" name="deals" value="{{deal.pk}}">
                             {% for xxx in quote_info.data.quote_details %}
                                 {% if x.bank_pk != xxx.bank_pk %}
                                     <input type="hidden" name="banks" value="{{xxx.bank_pk}}"/>
@@ -145,7 +145,7 @@
                 <th><strong>Mortgage Amount</strong></th>
                 {% for x in quote_info.data.quote_details %}
                 <input type="hidden" id="mortgage-amount-{{x.bank_pk}}-value" />
-                <td class="col-td-{{x.bank_pk}}"><strong id="mortgage-amount-label-{{x.bank_pk}}">{{deal.loan_amount| intcomma }} AED</strong></td>
+                <td class="col-td-{{x.bank_pk}}"><strong id="mortgage-amount-label-{{x.bank_pk}}">{{x.updated_mortgage_amount | intcomma }} AED</strong></td>
                 {% endfor %}
             </tr>
 
@@ -182,7 +182,7 @@
             <tr>
                 <th>Monthly Repayment</th>
                 {% for x in quote_info.data.quote_details %}
-                <td class="col-td-{{x.bank_pk}}">{{ x.monthly_repayment| intcomma }} AED</td>
+                <td class="col-td-{{x.bank_pk}}"><span id="monthly_repayment_span_{{x.bank_pk}}" value="">{{ x.monthly_repayment| intcomma }} AED </span></td>
                 {% endfor %}
             </tr>
 
@@ -220,7 +220,7 @@
                 <th>Land Dep. Property Registration</th>
                 {% for x in quote_info.data.quote_details %}
                 <td class="col-td-{{x.bank_pk}}">
-                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk efa=x.bank_extra_financing_allowed value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk efa_selected=deal.is_property_reg_financed deal_bank_id=x.bank_pk efa=x.bank_extra_financing_allowed value=x.land_dep_property_registration name='land_dep_property_registration' %}
                 </td>
                 {% endfor %}
             </tr>
@@ -234,7 +234,7 @@
                 <th>Real Estate Fee</th>
                 {% for x in quote_info.data.quote_details %}
                 <td class="col-td-{{x.bank_pk}}">
-                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' efa=x.bank_extra_financing_allowed %}
+                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk efa_selected=deal.is_real_estate_fee_financed deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' efa=x.bank_extra_financing_allowed  %}
                 </td>
                 {% endfor %}
             </tr>
@@ -322,24 +322,59 @@
         let extra_financing_checkboxes = document.querySelectorAll('.extra-financing-checkbox')
         extra_financing_checkboxes.forEach(element => {
             element.addEventListener('change', function(){
-            debugger
-            let bank_id = document.querySelector('#option_bank_id').value
+            let bank_id = this.parentElement.querySelector('#option_bank_id').value
             let mortgage_amount = document.querySelector(`#mortgage-amount-label-${bank_id}`).innerText
             let down_payment = document.querySelector(`#down-payment-label-${bank_id}`).innerText
             mortgage_amount = parseFloat(mortgage_amount.replace(/,/g, '').replace('AED',''))
             down_payment = parseFloat(down_payment.replace(/,/g, '').replace('AED',''))
             
             if(this.checked){
-            mortgage_amount += parseFloat(this.value)         
-            down_payment -= parseFloat(this.value)            
+            mortgage_amount += parseFloat(this.value)
+            down_payment -= parseFloat(this.value)
+            if (this.id == 'land_dep_property_registration_financing_check')
+                document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'block'
+            else if (this.id == 'real_estate_fee_vat_financing_check')
+                document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'block'            
             }
             else{
                 mortgage_amount -= parseFloat(this.value)
-                down_payment += parseFloat(this.value)                
+                down_payment += parseFloat(this.value)
+                if (this.id == 'land_dep_property_registration_financing_check')
+                document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'none'
+            else if (this.id == 'real_estate_fee_vat_financing_check')
+                document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'none'         
             }
             document.querySelector(`#mortgage-amount-${bank_id}-value`).value = mortgage_amount 
             document.querySelector(`#mortgage-amount-label-${bank_id}`).innerText = mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+            document.querySelector(`#mortgage_amount_modal_label_${bank_id}`).innerHTML = `<strong>${mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
+
             //document.querySelector(`#down-payment-label-${bank_id}`).innerText = down_payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+            let deal_id = document.getElementById('deal_id').value
+            debugger
+            $.ajax({
+                method: 'GET',
+                url: '{% url 'mortgage:deal-detail' pk=deal.pk %}',
+                data :{
+                    bank_id: bank_id,
+                    deal_id: deal_id,
+                    mortgage_amount: mortgage_amount,
+                    attribute: 'monthly_repayment'
+                },
+                success: function(response){
+                    console.log(response)
+                    if(response['monthly_repayment']){
+                        let monthly_repayment = response['monthly_repayment']
+                        document.getElementById(`monthly_repayment_span_${bank_id}`).value = monthly_repayment.toFixed(2)
+                        document.getElementById(`monthly_repayment_span_${bank_id}`).innerText = monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`monthly_repayment_modal_${bank_id}`).innerHTML = `<strong>${monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
+                    }
+                },
+                error: function(errors){
+                    Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+                }
+            });
+
+
         })
         });
         

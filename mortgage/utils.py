@@ -76,40 +76,47 @@ class BankHelper:
     # FINALS
     @property
     def calculate_total_down_payment(self):
-        total_down_payment =  self.get_down_payment + self.bank.property_valuation_fee 
-        total_down_payment += self.get_bank_processing_fee + self.get_life_insurance_monthly 
-        total_down_payment += self.get_property_insurance_yearly + self.trustee_center_fee_vat 
-        total_down_payment += self.land_dep_mortgage_registration
-        if self.bank.extra_financing_allowed == True:
-            if self.is_real_estate_fee_financed == False:
-                total_down_payment += self.real_estate_fee_vat
-            else:
-                total_down_payment -= self.real_estate_fee_vat
-            if self.is_real_estate_fee_financed == False:
-                total_down_payment += self.land_dep_property_registration
-            else:
-                total_down_payment -= self.land_dep_property_registration
-        else:
-            total_down_payment += self.land_dep_property_registration + self.real_estate_fee_vat
+        # total_down_payment =  self.get_down_payment + self.bank.property_valuation_fee 
+        # total_down_payment += self.get_bank_processing_fee + self.get_life_insurance_monthly 
+        # total_down_payment += self.get_property_insurance_yearly + self.trustee_center_fee_vat 
+        # total_down_payment += self.land_dep_mortgage_registration
+        # if self.bank.extra_financing_allowed == True:
+        #     if self.is_real_estate_fee_financed == False:
+        #         total_down_payment += self.real_estate_fee_vat
+        #     else:
+        #         total_down_payment -= self.real_estate_fee_vat
+        #     if self.is_real_estate_fee_financed == False:
+        #         total_down_payment += self.land_dep_property_registration
+        #     else:
+        #         total_down_payment -= self.land_dep_property_registration
+        # else:
+        #     total_down_payment += self.land_dep_property_registration + self.real_estate_fee_vat
             
-        return total_down_payment
-        # return (
-        #     self.get_down_payment
-        #     + self.bank.property_valuation_fee
-        #     + self.get_bank_processing_fee
-        #     + self.get_life_insurance_monthly
-        #     + self.get_property_insurance_yearly
-        #     + self.trustee_center_fee_vat
-        #     + self.land_dep_mortgage_registration
-        #     + self.land_dep_property_registration
-        #     + self.real_estate_fee_vat
-        # )
+        # return total_down_payment
+        return (
+            self.get_down_payment
+            + self.bank.property_valuation_fee
+            + self.get_bank_processing_fee
+            + self.get_life_insurance_monthly
+            + self.get_property_insurance_yearly
+            + self.trustee_center_fee_vat
+            + self.land_dep_mortgage_registration
+            + self.land_dep_property_registration
+            + self.real_estate_fee_vat
+        )
 
     @property
     def calculate_extra_financing(self):
-        return (
-            self.land_dep_property_registration + self.real_estate_fee_vat - 580
-        )
+        extra_financing = 0
+        if self.is_property_reg_financed == True:
+            extra_financing += self.land_dep_property_registration
+        if self.is_real_estate_fee_financed == True:
+            extra_financing += self.real_estate_fee_vat
+        
+        return extra_financing - 580
+        # return (
+        #     self.land_dep_property_registration + self.real_estate_fee_vat - 580
+        # )
 
     @property
     def get_extra_financing(self):
@@ -117,8 +124,24 @@ class BankHelper:
 
     @property
     def calculate_net_down_payment(self):
-        return self.calculate_total_down_payment - self.get_extra_financing
+        if self.bank.extra_financing_allowed == True:
+            return self.calculate_total_down_payment - self.get_extra_financing
+        else:
+            return self.calculate_total_down_payment
 
+    @property
+    def get_updated_mortgage_amount(self):
+        if self.bank.extra_financing_allowed:
+            extra_financing = 0
+            if self.is_property_reg_financed == True:
+                extra_financing += self.land_dep_property_registration
+            if self.is_real_estate_fee_financed == True:
+                extra_financing += self.real_estate_fee_vat
+
+            updated_mortgage = self.mortgage_amount + extra_financing
+            return updated_mortgage
+        else:
+            return self.mortgage_amount
     # calculate the monthly repayment
     @property
     def loan(self):
@@ -130,8 +153,8 @@ class BankHelper:
     def monthly_repayment(self):
         int_rate = self.bank.interest_rate
         if not self.bank.post_introduction_rate:
-            int_rate = int_rate + self.bank.eibor_rate  
-        repayment = abs(npf.pmt((int_rate/100)/(12), (1)*(self.tenure), self.mortgage_amount))
+            int_rate = int_rate + self.bank.eibor_rate
+        repayment = abs(npf.pmt((int_rate/100)/(12), (1)*(self.tenure), self.get_updated_mortgage_amount))
         if pd.isna(repayment):
             repayment = 0
         return repayment
@@ -146,7 +169,7 @@ class BankHelper:
             int_rate = self.bank.post_introduction_rate + self.bank.eibor_rate
         else:
             int_rate = int_rate + self.bank.eibor_rate
-        repayment = abs(npf.pmt((int_rate/100)/(12), (1)*(self.tenure), self.mortgage_amount))
+        repayment = abs(npf.pmt((int_rate/100)/(12), (1)*(self.tenure), self.get_updated_mortgage_amount))
         if pd.isna(repayment):
             repayment = 0
         return repayment
@@ -219,6 +242,7 @@ def get_quote_data(quote, order=None):
             "net_down_payment": int(data.calculate_net_down_payment),
             "loan": int(data.loan),
             "monthly_repayment": int(data.monthly_repayment),
+            "updated_mortgage_amount":int(data.get_updated_mortgage_amount),
             "full_settlement_percentage": bank.full_settlement_percentage,
             "full_settlement_max_value": bank.full_settlement_max_value,
             "free_partial_payment_per_year": bank.free_partial_payment_per_year,

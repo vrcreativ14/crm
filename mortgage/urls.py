@@ -80,7 +80,8 @@ urlpatterns = [
     path("issued/<int:pk>/", csrf_exempt(issuedDeaitl.as_view()), name="issued_details"),
     path("substage/", SubStageToggle.as_view(), name="substage"),
     path("bank-ref-number/<int:pk>/", csrf_exempt(BankRefNumber.as_view()), name="bank-ref-number"),
-    path("issued/export/", IssuedDealsExportView.as_view(), name="export-issued-deals")
+    path("issued/export/", IssuedDealsExportView.as_view(), name="export-issued-deals"),
+    path("deal/detail/<int:pk>/", GetDealDetail.as_view(), name="deal-detail"),
 
 
 ]

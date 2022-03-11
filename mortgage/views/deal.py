@@ -853,3 +853,30 @@ class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
             response = self.get_company_producers_list()
 
         return JsonResponse(response, safe=False)
+
+
+class GetDealDetail(View):
+    @staticmethod
+    def get(request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        deal_pk = request.GET.get("deal_id")
+        bank_pk = request.GET.get("bank_id")
+        attribute = request.GET.get("attribute")
+        updated_mortgage_amount = int(request.GET.get("mortgage_amount"))
+        if not deal_pk or not bank_pk:
+            return JsonResponse({
+                "data": "",
+                "message": "please provide bank_id and deal_id in query params"
+            })
+        if attribute == 'monthly_repayment':
+            if Deal.objects.filter(pk=deal_pk).exists():
+                deal = Deal.objects.get(pk=deal_pk)
+
+            if Bank.objects.filter(pk=bank_pk).exists():
+                bank = Bank.objects.bank_info(pk=bank_pk)
+
+            data = BankHelper(bank, deal.property_price, updated_mortgage_amount, deal.tenure, deal.govt_fee.pk)
+            Updated_monthly_repayment = data.monthly_repayment
+            return JsonResponse({'monthly_repayment' : Updated_monthly_repayment})
+        else:
+            return JsonResponse({'error' : 'attribute name is not correct'})

@@ -19,6 +19,7 @@ from .deal import MortgageDeleteAttachedFile
 from .deal import MortgageDealDeleteView
 from .deal import BankRefNumber
 from .deal import DealJsonAttributesList
+from .deal import GetDealDetail
 
 from .tasks import DealTaskListView, TaskSingleView, TaskView, TasksMarkAsDoneView, AddEditTaskView,\
     TaskDeleteView, TaskUpdateFieldView

@@ -237,7 +237,7 @@ class CreateBankForm(forms.ModelForm):
     eibor_post_duration = BankInterestRateForm().fields['eibor_post_duration']
     introduction_period_in_years = BankInterestRateForm().fields['introduction_period_in_years']
     post_introduction_rate = BankInterestRateForm().fields['post_introduction_rate']
-    extra_financing_allowed = forms.ChoiceField(choices=BOOLEAN_CHOICE, label="Extra Financing Allowed ?", initial=0, widget=forms.Select(), required=False)
+    extra_financing_allowed = forms.ChoiceField(choices=BOOLEAN_CHOICE, label="Extra Financing Allowed?", initial=0, widget=forms.Select(), required=False)
     class Meta:
         model = Bank
         fields = (
