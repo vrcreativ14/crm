@@ -109,6 +109,7 @@ class BankSerializer(serializers.ModelSerializer):
             "full_settlement_max_value",
             "free_partial_payment_per_year",
             "extra_financing_allowed",
+             "type",
         ]
 
 

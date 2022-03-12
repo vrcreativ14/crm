@@ -149,6 +149,7 @@ class Bank(models.Model):
     objects = BankManager()
     sample_form = models.FileField(upload_to='upload/', blank=True, null=True, default="upload/sample_word.pdf")
     extra_financing_allowed = models.BooleanField(default=False)
+    type = models.CharField(max_length=50, choices=BANK_TYPE, default=VARIABLE_BANK_TYPE, null=True)
     class Meta:
         verbose_name = "Bank"
         verbose_name_plural = "Banks"

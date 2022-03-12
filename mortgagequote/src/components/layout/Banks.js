@@ -28,21 +28,28 @@ const Banks = ({ bank, data, index = false, comparison = false, handleCompare = 
                     <p className="main fw-light-bold"><CurrencyFormat num={bank.monthly_repayment} noDecimal={true}/></p>
                     <p><small>Monthly Repayment</small></p>
                 </div>
+                { (bank.bank_type == 'fixed') ?
+                <div>
+                    <p className="main">{bank.interest_rate}%</p>
+                    <p><small>Interest Rate<br/> Fixed for {bank.introduction_period_in_years} years</small></p>
+                </div>
+                :
                 <div>
                     <p className="main">{bank.interest_rate}%</p>
                     <p><small>Interest Rate<br/> +{bank.eibor_duration} Eibor</small></p>
                 </div>
+                }
                 <div>
                     <p className="main">20 Years</p>
                     <p><small>Max Term</small></p>
                 </div>
                 <div>
                     <p className="main"><CurrencyFormat num={bank.total_down_payment} noDecimal={true}/></p>
-                    <p><small>Total Down Payment</small></p>
+                    <p><small>Total Upfront Payment</small></p>
                 </div>
                 {(comparison) ?
                 <>
-                { (bank.bank_extra_financing_allowed == true) &&
+                { (bank.bank_extra_financing_allowed == 'true') &&
                 <div>
                     <p className="main"><CurrencyFormat num={bank.extra_financing} noDecimal={true} /></p>
                     <p><small>Extra Financing</small></p>

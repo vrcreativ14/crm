@@ -156,7 +156,7 @@ function ExtractTableColumn({data,colName,selectedBank,customCol = false}){
                 }else{
                     if(colName=='post_introduction_rate'){
                         return(
-                            <td key={colName+'-'+bankIndex+Math.random()}>{data.quote_details[bankIndex]['post_introduction_rate']}%</td>
+                            <td key={colName+'-'+bankIndex+Math.random()}>{data.quote_details[bankIndex]['post_introduction_rate']}% +{data.quote_details[bankIndex]['eibor_duration']} Eibor</td>
                         )
                     }else if(colName=='full_settlement_max_value'){
                         return(

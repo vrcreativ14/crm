@@ -14,7 +14,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="d-flex w-100 align-items-center">
                         <div class="w-50"><img src="{{ quote_info.bank_logo }}" width="150"/></div>
-                        <div class="w-50 heading text-right">{{ quote_info.bank_name }} {{quote_info.eibor_duration}} Eibor</div>
+                        <div class="w-50 heading text-right">{{ quote_info.bank_name }} {% if quote_info.bank_type == 'variable' %} {{quote_info.eibor_duration}} Eibor {% endif %} </div>
                     </div>
                 </div>
                <div class="row">
@@ -38,8 +38,13 @@
                                 <p><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></p>
                             </div>
                             <div class="d-flex">
+                                {% if quote_info.bank_type == 'fixed' %}
+                                <p>Interest Rate</p>
+                                <p><strong>{{ quote_info.interest_rate| intcomma }}% Fixed for {{quote_info.introduction_period_in_years}} years</strong></p>
+                                {% else %}
                                 <p>Interest Rate</p>
                                 <p><strong>{{ quote_info.interest_rate| intcomma }}% + {{quote_info.eibor_duration}} Eibor</strong></p>
+                                {% endif %}
                             </div>
                             {% comment %} <div class="d-flex">
                                 <p>Loan Amount</p>
@@ -52,7 +57,7 @@
                             <div class="heading mb-4">Bank Details and Fees:</div>
                             <div class="d-flex">
                                 <p>Post introduction rate</p>
-                                <p><strong>{{ quote_info.post_introduction_rate| intcomma }}% + {{quote_info.eibor_post_duration}} Eibor</strong></p>
+                                <p style="text-align: center;"><strong>{{ quote_info.post_introduction_rate| intcomma }}% + {{quote_info.eibor_post_duration}} Eibor</strong></p>
                             </div>
                             <div class="d-flex">
                                 <p>Property valuation fee</p>
@@ -60,7 +65,7 @@
                             </div>
                             <div class="d-flex">
                                 <p>Bank Processing Fee</p>
-                                <p><strong>{{ quote_info.bank_processing_fee| intcomma }} AED</strong></p>
+                                <p style="text-align: center;"><strong>{{ quote_info.bank_processing_fee| intcomma }} AED</strong></p>
                             </div>
                             <div class="d-flex">
                                 <p>Life Insurance (Monthly)</p>
@@ -185,7 +190,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <div class="d-flex w-100 align-items-center">
                         <div class="w-50"><img src="{{ x.bank_logo }}" width="150"/></div>
-                        <div class="w-50 heading text-right">{{ x.bank_name }} {{x.eibor_duration}} Eibor</div>
+                        <div class="w-50 heading text-right">{{ x.bank_name }} {% if x.bank_type == 'variable' %} {{x.eibor_duration}} Eibor {% endif %} </div>
                     </div>
                 </div>
                <div class="row">

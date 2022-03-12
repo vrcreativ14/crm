@@ -251,6 +251,7 @@ def get_quote_data(quote, order=None):
             "post_introduction_rate": bank.post_introduction_rate,
             "poverty_valuation_fee": bank.property_valuation_fee,
             "bank_extra_financing_allowed": bank.extra_financing_allowed,
+            "bank_type": bank.type,
             f"monthly_repayment_after__years_main_amount": int(data.monthly_repayment),
             f"monthly_repayment_after__years_after_the_fix_period": int(data.monthly_repayment_after),
             f"monthly_repayment_extra_financing": int(data.monthly_repayment_extra_financing),

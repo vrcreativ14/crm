@@ -163,3 +163,10 @@ DOCUMENT_NAMES = (
     (SELLER_EMIRATES_ID_BACK,'sellers emirates id back'),
     (SELLERS_EMIRATES_ID_FRONT,'sellers emirates id front'),
 )
+
+FIXED_BANK_TYPE = 'fixed'
+VARIABLE_BANK_TYPE = 'variable'
+BANK_TYPE = (
+    (FIXED_BANK_TYPE,'Fixed'),
+    (VARIABLE_BANK_TYPE,'Variable'),
+)

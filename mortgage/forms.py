@@ -243,6 +243,7 @@ class CreateBankForm(forms.ModelForm):
         fields = (
             "name",
             "logo",
+            "type",
             "interest_rate",
             "eibor_duration",
             "introduction_period_in_years",

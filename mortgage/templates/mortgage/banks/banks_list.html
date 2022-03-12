@@ -56,6 +56,12 @@
         width: 80px;
         height: auto;
     }
+    .show{
+        display: block;
+    }
+    .hide{
+        display: none !important;
+    }
 </style>
 {% endblock %}
 <div class="container-fluid">
@@ -82,7 +88,7 @@
                 <thead>
                     <tr>
                         {% for field in form %}
-                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" or field.label == "Extra Financing Allowed ?"%}
+                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" or field.label == "Extra Financing Allowed?" or field.label == "Type" %}
                         {% else %}
                         <td> {{ field.label }} </td>
                         {% endif %}
@@ -109,9 +115,10 @@
                                 <td class="d-none" data-name="eibor_duration" data-value="{{bankRate.eibor_duration}}">
                                     {{bankRate.eibor_duration}}
                                 </td>
-                            {% endif %}    
+                            {% endif %}
                         {% endfor %}
                         <input type="hidden" id="bank_{{bank.bank_id}}_extra_financing_allowed" value="{{bank.extra_financing_allowed}}" />
+                        <input type="hidden" id="bank_{{bank.bank_id}}_type" value="{{bank.type}}" />
                         {% comment %} 
                         <td data-name="eibor_rate" data-value="{{bank.eibor_rate}}">
                             {{bank.eibor_rate}}
@@ -247,10 +254,22 @@
         }
     }
 
+    
+
+    document.querySelectorAll('#id_type').forEach(element => {
+        element.addEventListener('change', function(){        
+        if(this.value == 'fixed')
+            this.parentElement.parentElement.parentElement.querySelector('#id_eibor_duration').parentElement.parentElement.classList.add('hide')
+        else
+            this.parentElement.parentElement.parentElement.querySelector('#id_eibor_duration').parentElement.parentElement.classList.remove('hide')
+        });
+    });
+
 
     function update_bank_modal(id) {
         let actionUrl = "{% url 'mortgage:bank-edit' pk=1111111111111111111 %}";
         let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value
+        let bank_type = document.querySelector(`#bank_${id}_type`).value
         let extra_financing_div = document.querySelector('#extra_financing_div')
         let yes_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1" selected>Yes</option><option value="0">No<option></select>'
         let no_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1">Yes</option><option value="0" selected>No<option></select>'
@@ -258,6 +277,17 @@
             extra_financing_div.innerHTML = yes_selected
         else
             extra_financing_div.innerHTML = no_selected
+
+        
+        if (bank_type.toLowerCase() == 'fixed'){
+           document.querySelector('#modal_update_bank').querySelector('#id_type').value = 'fixed'
+            document.querySelector('#modal_update_bank').querySelector('#id_eibor_duration').parentElement.parentElement.classList.add('hide')
+        }            
+        else{            
+            document.querySelector('#modal_update_bank').querySelector('#id_type').value = 'variable'
+            document.querySelector('#modal_update_bank').querySelector('#id_eibor_duration').parentElement.parentElement.classList.remove('hide')
+        }
+           
 
         actionUrl = actionUrl.replace('1111111111111111111', id);
         $('#modal_update_bank form').attr('action', actionUrl);
