@@ -270,13 +270,13 @@
         let actionUrl = "{% url 'mortgage:bank-edit' pk=1111111111111111111 %}";
         let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value
         let bank_type = document.querySelector(`#bank_${id}_type`).value
-        let extra_financing_div = document.querySelector('#extra_financing_div')
-        let yes_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1" selected>Yes</option><option value="0">No<option></select>'
-        let no_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1">Yes</option><option value="0" selected>No<option></select>'
+        //let extra_financing_div = document.querySelector('#extra_financing_div')
+        //let yes_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1" selected>Yes</option><option value="0">No<option></select>'
+        //let no_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1">Yes</option><option value="0" selected>No<option></select>'
         if (is_extra_financing == 'True')
-            extra_financing_div.innerHTML = yes_selected
+        document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'True'
         else
-            extra_financing_div.innerHTML = no_selected
+        document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'False'
 
         
         if (bank_type.toLowerCase() == 'fixed'){

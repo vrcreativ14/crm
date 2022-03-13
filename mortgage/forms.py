@@ -14,8 +14,8 @@ from django.conf import settings
 from rolepermissions.checkers import get_user_roles
 
 BOOLEAN_CHOICE = (
-    (1, 'Yes'),
-    (0, 'No')
+    (True, 'Yes'),
+    (False, 'No')
 )
 
 class CustomerForm(forms.Form):
