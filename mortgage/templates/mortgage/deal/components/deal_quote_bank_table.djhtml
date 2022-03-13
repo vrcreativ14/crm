@@ -17,7 +17,11 @@
 
                 <tr class="background-blue">
                     <th>Interest Rate</th>
+                    {% if quote_info.bank_type == 'fixed' %}
+                    <td class="col-td-{{quote_info.bank_pk}}">{{ quote_info.interest_rate| intcomma }}% Fixed for {{quote_info.introduction_period_in_years}} years</td>
+                    {% else %}
                     <td>{{ quote_info.interest_rate| intcomma }}% + {{quote_info.eibor_duration}} Eibor</td>
+                    {% endif %}
                 </tr>
                 <tr>
                     <th>Post introduction rate (after the fix period)</th>
@@ -159,7 +163,11 @@
             <tr class="background-blue">
                 <th>Interest Rate</th>
                 {% for x in quote_info.data.quote_details %}
+                {% if x.bank_type == 'fixed' %}
+                <td class="col-td-{{x.bank_pk}}">{{ x.interest_rate| intcomma }}% Fixed for {{x.introduction_period_in_years}} years</td>
+                {% else %}
                 <td class="col-td-{{x.bank_pk}}">{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</td>
+                {% endif %}
                 {% endfor %}
             </tr>
             <tr>
