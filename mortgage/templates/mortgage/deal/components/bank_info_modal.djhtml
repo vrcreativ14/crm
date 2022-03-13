@@ -214,8 +214,13 @@
                                 <p><strong>{% widthratio deal.loan_amount 1 -1 as result %}{{result|add:deal.property_price| intcomma }} AED</strong></p>
                             </div>
                             <div class="d-flex">
-                                <p>Interest Rate</p>
-                                <p><strong>{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</strong></p>
+                                {% if x.bank_type == 'fixed' %}
+                                    <p>Interest Rate</p>
+                                    <p><strong>{{ x.interest_rate| intcomma }}% Fixed for {{x.introduction_period_in_years}} years</strong></p>
+                                {% else %}
+                                    <p>Interest Rate</p>
+                                    <p><strong>{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</strong></p>
+                                {% endif %}
                             </div>
                             {% comment %} <div class="d-flex">
                                 <p>Loan Amount</p>
