@@ -178,18 +178,16 @@ class SearchResultAgentView(LoginRequiredMixin, HasPermissionsMixin,ListAPIView)
             #     filter_array.remove('email')
             
             if key:
-                qs_name = UserProfile.objects.filter((Q(user__first_name__icontains = key) | Q(user__last_name__contains = key)),company=self.request.company,user__is_active=True).order_by(self.default_order_by)
-                qs_email = UserProfile.objects.filter(user__email__icontains = key,company=self.request.company,user__is_active=True).order_by(self.default_order_by)
-                qs1 = (qs_name | qs_email ).distinct()
-                qs1_copy = qs1.order_by(self.default_order_by)
+                qs = UserProfile.objects.filter((Q(user__first_name__icontains = key) | Q(user__last_name__icontains = key) | Q(user__email__icontains = key)),company=self.request.company,user__is_active=True).order_by(self.default_order_by)                
+                qs1_copy = qs.order_by(self.default_order_by)
             else:
-                qs1_copy = self.get_queryset()
+                qs1_copy = UserProfile.objects.filter(company=self.request.company, user__is_active=True).order_by(self.default_order_by)
             if len(filter_array) > 1:
                 for user_profile in qs1_copy:
                     if 'producer' in filters:
                         if user_profile.get_assigned_role() == 'producer':
                             qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
-                    if 'regular' in filters:               
+                    if 'regular' in filters:
                         if user_profile.get_assigned_role() == 'user':
                             qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
                     if 'admin' in filters:
@@ -201,9 +199,9 @@ class SearchResultAgentView(LoginRequiredMixin, HasPermissionsMixin,ListAPIView)
 
                 return qs_role.order_by(self.default_order_by)
             
-            return qs1.order_by(self.default_order_by)
+            return qs.order_by(self.default_order_by)
 
-        def get(self, request, *args, **kwargs):            
+        def get(self, request, *args, **kwargs):
             search_key = self.request.GET.get('search_key')
             filters = self.request.GET.get('filters')
             page = self.request.GET.get('page', 1)            
