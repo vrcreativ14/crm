@@ -5595,6 +5595,26 @@ var __MORTGAGE_DEALS;
                     form.find('#send_sms').prop('checked', false);
                 }
 
+                if('whatsapp_msg_content' in response && response.whatsapp_msg_content) {
+
+                    form.find('.show-when-wa-msg').removeClass('hide');
+                    form.find('#id_send_wa_msg').val(response.whatsapp_msg_content);
+
+                    form.find('#id_send_sms').change(function() {
+                        form.find('.sms_container').addRemoveClass(!$(this).is(':checked'), 'hide');
+                    });
+
+                    $('textarea[maxlength]').maxlength({
+                        alwaysShow: true,
+                        warningClass: "badge badge-info",
+                        limitReachedClass: "badge badge-warning"
+                    });
+                } else {
+                    form.find('.show-when-wa-msg').addClass('hide');
+                    form.find('#id_wa_msg_content').val('');
+                    form.find('#id_send_wa_msg').prop('checked', false);
+                }
+
                 // if('attachments' in response && response.attachments.length) {
                 //     form.find('.attachments').removeClass('hide');
                 //     form.find('.attachments ul li').remove();
