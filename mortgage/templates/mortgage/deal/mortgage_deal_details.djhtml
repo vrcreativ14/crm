@@ -368,7 +368,7 @@
                                 data-title="Down Payment"
                                 data-url="{% url 'mortgage:update-deal-field' pk=deal.pk %}"
                             >
-                            {{ deal.down_payment | floatformat | intcomma}}
+                            {{ deal.down_payment | floatformat | intcomma }}
                                 </a>
                             </div>
                         </div>
@@ -399,6 +399,7 @@
                             </div>
                             <div class="col col-lg-8 editable-icon">
                                 <a href="javascript:"
+                                    id="deal_ltv"
                                     class="text-editable"
                                     data-name="l_tv"
                                     data-class="form-control-sm"
