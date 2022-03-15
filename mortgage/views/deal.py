@@ -875,7 +875,7 @@ class GetDealDetail(View):
             if Bank.objects.filter(pk=bank_pk).exists():
                 bank = Bank.objects.bank_info(pk=bank_pk)
 
-            data = BankHelper(bank, deal.property_price, updated_mortgage_amount, deal.tenure, deal.govt_fee.pk)
+            data = BankHelper(bank, deal.property_price, updated_mortgage_amount, deal.tenure, deal.govt_fee.pk, deal = deal)
             Updated_monthly_repayment = data.monthly_repayment
             return JsonResponse({'monthly_repayment' : Updated_monthly_repayment})
         else:

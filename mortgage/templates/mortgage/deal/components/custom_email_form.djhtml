@@ -110,6 +110,26 @@
                             <textarea maxlength="159" class="form-control tiny modal-textarea" name="sms_content" id="id_sms_content"></textarea>
                         </div>
                     </div>
+                    <hr class="show-when-wa-msg" />
+                    <br />
+                    <div class="row sms_toggler show-when-sms hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Send WhatsApp Message</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <input id="id_send_wa_msg" name="send_wa_msg" type="checkbox" switch="success" />
+                            <label class="switch-toggle" for="id_send_wa_msg" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row sms_container show-when-sms hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Message Content</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <textarea maxlength="159" class="form-control tiny modal-textarea" name="wa_msg_content" id="id_wa_msg_content"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -221,6 +241,27 @@
                         </div>
                         <div class="col-lg-9 font-12">
                             <textarea maxlength="159" class="form-control tiny modal-textarea" name="sms_content" id="id_sms_content"></textarea>
+                        </div>
+                    </div>
+
+                    <hr class="show-when-wa-msg" />
+                    <br />
+                    <div class="row sms_toggler show-when-sms hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Send WhatsApp Message</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <input id="id_send_wa_msg" name="send_wa_msg" type="checkbox" switch="success" />
+                            <label class="switch-toggle" for="id_send_wa_msg" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row sms_container show-when-sms hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Message Content</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <textarea maxlength="159" class="form-control tiny modal-textarea" name="wa_msg_content" id="id_wa_msg_content"></textarea>
                         </div>
                     </div>
                 </div>

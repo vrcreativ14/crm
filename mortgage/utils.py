@@ -17,9 +17,10 @@ class BankHelper:
         #     self.mortgage_amount = self.mortgage_amount + Decimal(self.govt_fee.trustee_center_fee)
 
         self.tenure = tenure
-        deal = kwargs.get('deal',None)     
-        self.is_property_reg_financed = deal.is_property_reg_financed if deal else False            
+        deal = kwargs.get('deal',None)
+        self.is_property_reg_financed = deal.is_property_reg_financed if deal else False
         self.is_real_estate_fee_financed = deal.is_real_estate_fee_financed if deal else False
+        self.ltv = deal.l_tv if deal else 80
 
     @property
     def get_down_payment(self):  # calculate the down payment
@@ -120,7 +121,8 @@ class BankHelper:
 
     @property
     def get_extra_financing(self):
-        return self.calculate_extra_financing * 80 / 100
+        #return self.calculate_extra_financing * 80 / 100
+        return self.calculate_extra_financing * (self.ltv / 100)
 
     @property
     def calculate_net_down_payment(self):

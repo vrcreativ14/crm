@@ -12,6 +12,7 @@ from core.email import Emailer, EmailSendingException
 from motorinsurance.models import Deal
 
 from felix.sms import SMSService
+from felix.message import WhatsappService
 
 
 class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -131,6 +132,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
         cc_emails = request.POST['cc_emails']
         bcc_emails = request.POST['bcc_emails']
         sms_content = request.POST['sms_content']
+        wa_msg_content = request.POST['wa_msg_content']
         attachments = None
 
         validation_errors = self._validate_fields()
@@ -181,6 +183,13 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
             sms.send_sms(
                 deal.customer.phone,
                 sms_content
+            )
+
+        if request.POST.get('send_wa_msg', None) and deal.customer.phone and wa_msg_content:
+            wa = WhatsappService()
+            wa.send_whatsapp_msg(
+                deal.customer.phone,
+                wa_msg_content
             )
 
         return JsonResponse({'success': success, 'email_type': email_type})
@@ -266,6 +275,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
             'subject': subject,
             'content': content,
             'sms_content': sms_content,
+            'whatsapp_msg_content': sms_content,
             'attachments': [{
                 'name': document[0],
                 'url': document[1].url

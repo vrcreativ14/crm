@@ -30,22 +30,26 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
                 :null
                 }
                 <tr className="sub-title">
-                    <th>Monthly Payments :</th>
+                    <th>Monthly Payments:</th>
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
                 <tr>
-                    <th>Monthly Repayment {data.deal_info.tenure} Years</th>
+                    <th>Monthly Repayment</th>
                     <ExtractTableColumn data={data} colName="monthly_repayment_after__years_main_amount" selectedBank={selectedBank}/>
                 </tr>
-                <tr className="color-4D8BFF">
+                {/* <tr className="color-4D8BFF">
                     <th>Monthly Repayment {data.deal_info.tenure} (After The Fix Period)s</th>
                     <ExtractTableColumn data={data} colName="monthly_repayment_after__years_after_the_fix_period" selectedBank={selectedBank}/>
-                </tr>
+                </tr> */}
 
 
                 <tr className="sub-title">
-                    <th>Bank Details And Fees :</th>
+                    <th>Bank Details And Fees:</th>
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
+                </tr>
+                <tr>
+                    <th>Interest Rate:</th>
+                    <ExtractTableColumn data={data} colName="interest_rate" selectedBank={selectedBank} customCol={true}/>
                 </tr>
                 <tr>
                     <th>Post Introduction Rate</th>
@@ -70,7 +74,7 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
 
 
                 <tr className="sub-title">
-                    <th>Government Fees :</th>
+                    <th>Government Fees:</th>
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
                 <tr className="color-4D8BFF">
@@ -88,7 +92,7 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
 
 
                 <tr className="sub-title">
-                    <th>Real Estate Fee 2% :</th>
+                    <th>Real Estate Fee 2%:</th>
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
                 <tr className="color-4D8BFF">
@@ -98,7 +102,7 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
 
 
                 <tr className="sub-title">
-                    <th>Total Paid Over {data.deal_info.tenure} Years :</th>
+                    <th>Early Settlement Charges:</th>
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
                 <tr className="color-4D8BFF">
@@ -156,7 +160,7 @@ function ExtractTableColumn({data,colName,selectedBank,customCol = false}){
                 }else{
                     if(colName=='post_introduction_rate'){
                         return(
-                            <td key={colName+'-'+bankIndex+Math.random()}>{data.quote_details[bankIndex]['post_introduction_rate']}% +{data.quote_details[bankIndex]['eibor_duration']} Eibor</td>
+                            <td key={colName+'-'+bankIndex+Math.random()}>{data.quote_details[bankIndex]['post_introduction_rate']}% +{data.quote_details[bankIndex]['eibor_post_duration']} Eibor</td>
                         )
                     }else if(colName=='full_settlement_max_value'){
                         return(
@@ -166,6 +170,19 @@ function ExtractTableColumn({data,colName,selectedBank,customCol = false}){
                         return(
                             <td key={colName+'-'+bankIndex+Math.random()}>Up to {data.quote_details[bankIndex][colName]}%</td>
                         )
+                    }
+                    else if(colName=='interest_rate'){
+                        { (data.quote_details[bankIndex]['bank_type'] == 'fixed') ?
+                <div>
+                    <p className="main">{data.quote_details[bankIndex]['interest_rate']}%</p>
+                    <p><small>Interest Rate<br/> Fixed for {data.quote_details[bankIndex]['introduction_period_in_years']} years</small></p>
+                </div>
+                :
+                <div>
+                    <p className="main">{bank.interest_rate}%</p>
+                    <p><small>Interest Rate<br/> +{data.quote_details[bankIndex]['eibor_duration']} Eibor</small></p>
+                </div>
+                }
                     }
                 }
             }else{

@@ -100,7 +100,7 @@
                             <label class="">LTV (%)</label>
                         </div>
                         <div class="col-lg-9">
-                            <input class="form-control" id="id_ltv_input" readonly disabled />
+                            <input class="form-control" id="id_ltv_input" type="number" min="0" max="100"/>
                                 <span id="ltv_error_span" style="color: #e6487e;font-size: 11px;">
                                 </span>
                         </div>
@@ -253,7 +253,7 @@
                             <label class="">LTV (%)</label>
                         </div>
                         <div class="col-lg-9">
-                            <input class="form-control price-input" id="id_ltv_input" readonly disabled />
+                            <input class="form-control price-input" id="id_ltv_input" type="number" min="0" max="100"/>
                                 <span id="ltv_error_span" style="color: #e6487e;font-size: 11px;">
                                 </span>
                         </div>
@@ -326,6 +326,32 @@ elt.addEventListener('keyup', function (event) {
             $(".if-customer").show()
         }
     })
+
+document.querySelector('#id_ltv_input').addEventListener('input', function(){    
+    let ltv = parseFloat(this.value)
+    if (ltv > 100){
+        document.querySelector('#ltv_error_span').innerHTML = 'LTV can not be greater than 100%'
+        document.querySelector('#id_ltv_input').value = 100    
+        return
+}
+    
+    let down_payment = ''
+    let property_price = parseInt(document.querySelector('#id_property_price').value.replace(/,/g, ''))
+    let loan_amount = ''
+    if(property_price && ltv){
+        document.querySelector('#ltv_error_span').innerHTML = ''
+        loan_amount = parseInt(property_price * (ltv / 100))
+        down_payment = property_price - loan_amount
+        if(down_payment > property_price){
+            document.querySelector('#ltv_error_span').innerHTML = 'Down payment can not be more than property price'
+            return
+        }
+        document.querySelector('#id_down_payment').value = down_payment.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+    else{
+        document.querySelector('#id_down_payment').value = ''
+    }
+})
 
 document.querySelector('#id_property_price').addEventListener('input', function(e){
     let down_payment = parseInt(document.querySelector('#id_down_payment').value.replace(/,/g, ''))

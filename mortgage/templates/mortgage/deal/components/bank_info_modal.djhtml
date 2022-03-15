@@ -123,7 +123,7 @@
                 </div>
 
                 <div class="row pt-4">
-                    <div class="col-6">
+                    <!-- <div class="col-6">
                         <div class="bg-light-grey-nexus">
                             <div class="heading mb-4">Monthly Repayments:</div>
                             <div class="d-flex">
@@ -147,7 +147,7 @@
                                 </div>
                             {% endif %}
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-6">
                         <div class="bg-light-grey-nexus">
                             <div class="heading mb-4">Real Estate Fee:</div>
@@ -299,7 +299,7 @@
                 </div>
 
                 <div class="row pt-4">
-                    <div class="col-6">
+                    <!-- <div class="col-6">
                         <div class="bg-light-grey-nexus">
                             <div class="heading mb-4">Monthly Repayments:</div>
                             <div class="d-flex">
@@ -317,10 +317,10 @@
                                 </div>
                             {% endif %} {% endcomment %}
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-6">
                         <div class="bg-light-grey-nexus">
-                            <div class="heading mb-4">Real Estate Fee:</div>
+                            <div class="heading mb-4">Real Estate Fees:</div>
                             <div class="d-flex">
                                 <p style="display: flex;flex-direction: column;">Real Estate Fee 2%
                                     {% if deal.is_real_estate_fee_financed == True %}
