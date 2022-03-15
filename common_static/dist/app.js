@@ -2353,8 +2353,7 @@ var __DOCUMENTS_VIEWER;
             $(_preview_container).addClass('fit-to-container');
         },
 
-        _loadPDF: function(file) {
-            debugger
+        _loadPDF: function(file) {            
             $(_pdf_container).removeClass('hide');
             $(_pdf_container).addClass('show');
         	$(_pdf_container).attr('src', file.url);

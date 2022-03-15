@@ -356,8 +356,7 @@
             document.querySelector(`#mortgage_amount_modal_label_${bank_id}`).innerHTML = `<strong>${mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
 
             
-            let deal_id = document.getElementById('deal_id').value
-            debugger
+            let deal_id = document.getElementById('deal_id').value            
             $.ajax({
                 method: 'GET',
                 url: '{% url 'mortgage:deal-detail' pk=deal.pk %}',
