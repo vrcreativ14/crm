@@ -338,14 +338,14 @@
             let ltv = document.querySelector('#deal_ltv').getAttribute('data-value');
              
             if(this.checked){
-                mortgage_amount += parseInt((ltv/100) * parseFloat(this.value))            
+                mortgage_amount += Math.round((ltv/100) * parseFloat(this.value))            
                 if (this.id == 'land_dep_property_registration_financing_check')
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'block'
                 else if (this.id == 'real_estate_fee_vat_financing_check')
                     document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'block'            
             }
             else{
-                mortgage_amount -= parseInt((ltv/100) * parseFloat(this.value))                
+                mortgage_amount -= Math.round((ltv/100) * parseFloat(this.value))                
                 if (this.id == 'land_dep_property_registration_financing_check')
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'none'
                 else if (this.id == 'real_estate_fee_vat_financing_check')
