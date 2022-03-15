@@ -179,7 +179,7 @@ function ExtractTableColumn({data,colName,selectedBank,customCol = false}){
                 </div>
                 :
                 <div>
-                    <p className="main">{bank.interest_rate}%</p>
+                    <p className="main">{data.quote_details[bankIndex]['interest_rate']}%</p>
                     <p><small>Interest Rate<br/> +{data.quote_details[bankIndex]['eibor_duration']} Eibor</small></p>
                 </div>
                 }
