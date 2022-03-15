@@ -172,17 +172,22 @@ function ExtractTableColumn({data,colName,selectedBank,customCol = false}){
                         )
                     }
                     else if(colName=='interest_rate'){
-                        { (data.quote_details[bankIndex]['bank_type'] == 'fixed') ?
-                <div>
-                    <p className="main">{data.quote_details[bankIndex]['interest_rate']}%</p>
-                    <p><small>Interest Rate<br/> Fixed for {data.quote_details[bankIndex]['introduction_period_in_years']} years</small></p>
-                </div>
-                :
-                <div>
-                    <p className="main">{data.quote_details[bankIndex]['interest_rate']}%</p>
-                    <p><small>Interest Rate<br/> +{data.quote_details[bankIndex]['eibor_duration']} Eibor</small></p>
-                </div>
-                }
+                        if(data.quote_details[bankIndex]['bank_type'] == 'fixed'){
+                            return(
+                                <td key={colName+'-'+bankIndex+Math.random()}>
+                                {data.quote_details[bankIndex]['interest_rate']}%
+                                <small> Fixed for {data.quote_details[bankIndex]['introduction_period_in_years']} years</small>
+                            </td>
+                            )
+                        }
+                        else{
+                            return(
+                                <td key={colName+'-'+bankIndex+Math.random()}>
+                    {data.quote_details[bankIndex]['interest_rate']}%
+                    <small> + {data.quote_details[bankIndex]['eibor_duration']} Eibor</small>
+                </td>
+                            )
+                        }                                                                                           
                     }
                 }
             }else{

@@ -47,9 +47,10 @@ const Banks = ({ bank, data, index = false, comparison = false, handleCompare = 
                     <p className="main"><CurrencyFormat num={bank.total_down_payment} noDecimal={true}/></p>
                     <p><small>Total Upfront Payment</small></p>
                 </div>
+               
                 {(comparison) ?
                 <>
-                { (bank.bank_extra_financing_allowed == 'true') &&
+                { (bank.bank_extra_financing_allowed == 'true') && ((data.deal_info.is_property_reg_financed || data.deal_info.is_real_estate_fee_financed)) &&
                 <div>
                     <p className="main"><CurrencyFormat num={bank.extra_financing} noDecimal={true} /></p>
                     <p><small>Extra Financing</small></p>
