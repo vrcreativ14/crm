@@ -164,4 +164,5 @@ urlpatterns = [
     path('motor-step16/', MotorStep16.as_view(), name="motor-step16"),
     path('motor-step17/', MotorStep17.as_view(), name="motor-step17"),
     path('motor-step18/', MotorStep18.as_view(), name="motor-step18"),
+    path('dashboard/report/', DealReport.as_view(), name="motor-step18"),
 ]

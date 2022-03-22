@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from motorinsurance.models import Deal, Order
+from felix.exporter import ExportService
 
 
 def get_last_12_month_dates():
@@ -138,3 +139,48 @@ class MotorSalesConversionRateView(BaseChartDataView):
             ))
 
         return JsonResponse(chart_data, safe=False)
+
+class DealReport(View):
+    def get_user_filter(self):
+        user = self.request.GET.get('user')
+        try:
+            user = User.objects.get(pk=user, userprofile__company=self.request.company)
+        except User.DoesNotExist:
+            user = None
+        return user
+
+    def get(self, request):
+        data = list()                
+        columns = ['Month','No. of Motor Deals Created', 'No. of Motor Orders Created', 'Total Premium from Orders',
+        'Sales Conversion Rate']
+        for i in range(1,4):
+            start_date = datetime.datetime(2021, i, 1)
+            end_date = datetime.datetime(2021, i, 31) if i!=2 else datetime.datetime(2021, i, 28)
+            deals = Deal.objects.filter(company=self.request.company, is_deleted=False, created_on__range=(start_date, end_date))
+            orders = Order.objects.filter(deal__company=self.request.company, deal__is_deleted=False, is_void=False, created_on__range=(start_date, end_date))
+            total_premium = orders.aggregate(total_premium=Sum('payment_amount'))['total_premium'] or 0.0
+            number_of_orders = orders.count()
+            number_of_deals = deals.count()
+            month = ''
+            if number_of_deals > 0:
+                conversion_rate = number_of_orders / float(number_of_deals)
+            else:
+                conversion_rate = 0.0
+            if i == 1:
+                month = 'Jan 2021'
+            elif i == 2:
+                month = 'Feb 2021'
+            elif i == 3:
+                month = 'Mar 2021'
+
+            data.append([
+                month,
+                number_of_deals,
+                number_of_orders,
+                total_premium,
+                conversion_rate,
+            ])
+            
+
+        exporter = ExportService()
+        return exporter.to_csv(columns, data, filename='motor_deals_report{}.csv'.format(datetime.datetime.today()))
