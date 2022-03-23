@@ -88,7 +88,7 @@
                 <thead>
                     <tr>
                         {% for field in form %}
-                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" or field.label == "Extra Financing Allowed?" or field.label == "Type" %}
+                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" or field.label == "Extra Financing Allowed?" or field.label == "Type" or field.label == "Minimum floor rate" %}
                         {% else %}
                         <td> {{ field.label }} </td>
                         {% endif %}
@@ -119,6 +119,7 @@
                         {% endfor %}
                         <input type="hidden" id="bank_{{bank.bank_id}}_extra_financing_allowed" value="{{bank.extra_financing_allowed}}" />
                         <input type="hidden" id="bank_{{bank.bank_id}}_type" value="{{bank.type}}" />
+                        <input type="hidden" id="bank_{{bank.bank_id}}_minimum_floor_rate" value="{{bank.minimum_floor_rate}}" />
                         {% comment %} 
                         <td data-name="eibor_rate" data-value="{{bank.eibor_rate}}">
                             {{bank.eibor_rate}}
@@ -269,25 +270,23 @@
     function update_bank_modal(id) {
         let actionUrl = "{% url 'mortgage:bank-edit' pk=1111111111111111111 %}";
         let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value
-        let bank_type = document.querySelector(`#bank_${id}_type`).value
-        //let extra_financing_div = document.querySelector('#extra_financing_div')
-        //let yes_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1" selected>Yes</option><option value="0">No<option></select>'
-        //let no_selected = '<select name="extra_financing_allowed" id="id_extra_financing_allowed"><option value="1">Yes</option><option value="0" selected>No<option></select>'
-        if (is_extra_financing == 'True')
-        document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'True'
-        else
-        document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'False'
+        let bank_type = document.querySelector(`#bank_${id}_type`).value        
+         if (is_extra_financing == 'True')
+            document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'True'
+            else
+            document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'False'
 
         
         if (bank_type.toLowerCase() == 'fixed'){
            document.querySelector('#modal_update_bank').querySelector('#id_type').value = 'fixed'
             document.querySelector('#modal_update_bank').querySelector('#id_eibor_duration').parentElement.parentElement.classList.add('hide')
-        }            
-        else{            
+        }
+        else{
             document.querySelector('#modal_update_bank').querySelector('#id_type').value = 'variable'
             document.querySelector('#modal_update_bank').querySelector('#id_eibor_duration').parentElement.parentElement.classList.remove('hide')
         }
-           
+        let min_floor_rate = document.querySelector(`#bank_${id}_minimum_floor_rate`).value
+        document.querySelector('#modal_update_bank').querySelector('#id_minimum_floor_rate').value = min_floor_rate
 
         actionUrl = actionUrl.replace('1111111111111111111', id);
         $('#modal_update_bank form').attr('action', actionUrl);

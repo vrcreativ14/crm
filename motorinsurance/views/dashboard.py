@@ -150,7 +150,7 @@ class DealReport(View):
         return user
 
     def get(self, request):
-        data = list()                
+        data = list()
         columns = ['Month','No. of Motor Deals Created', 'No. of Motor Orders Created', 'Total Premium from Orders',
         'Sales Conversion Rate']
         for i in range(1,4):

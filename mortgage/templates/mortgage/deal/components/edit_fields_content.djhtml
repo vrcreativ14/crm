@@ -1,15 +1,8 @@
 {% load humanize %}
 <div style="display: flex;justify-content: center;">
-    <style>
-        
-        .checkbox-wrapper {
-    height: 13px;
-    width: 13px;
-}
-    </style>
     {% if table %}
     
-        <span class="static-display">
+        <span class="static-display" id="table_{{name}}_{{deal_bank_id}}">
             {{ value | intcomma }} AED
         </span>
         
@@ -26,8 +19,8 @@
         <span class="editable-bank-rate float-right d-none">Edit</span>
     {% else %}
         <span class="editable-bank-rate-modal float-left d-none">Edit</span>
-        <span class="static-display">
-            <strong>{{ value | intcomma }} AED</strong> 
+        <span class="static-display" id="{{name}}_{{deal_bank_id}}">
+            <strong>{{ value | intcomma }} AED</strong>
         </span>
     {% endif %}
     <span class="input-field-display d-none">

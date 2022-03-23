@@ -150,6 +150,7 @@ class Bank(models.Model):
     sample_form = models.FileField(upload_to='upload/', blank=True, null=True, default="upload/sample_word.pdf")
     extra_financing_allowed = models.BooleanField(default=False)
     type = models.CharField(max_length=50, choices=BANK_TYPE, default=VARIABLE_BANK_TYPE, null=True)
+    minimum_floor_rate = models.FloatField(default=0, blank=False, null=True)
     class Meta:
         verbose_name = "Bank"
         verbose_name_plural = "Banks"
@@ -502,6 +503,7 @@ class Quote(models.Model):
     is_sent = models.BooleanField(default=False)
     deals = models.OneToOneField(Deal, related_name="mortgage_quote_deals", on_delete=models.CASCADE)
     bank = models.ManyToManyField(Bank, related_name="mortgage_bank_quotes")
+    selected_bank = models.ForeignKey(Bank, on_delete=models.SET_NULL, null=True, blank=True,related_name="quote_selected_bank")
 
     def __str__(self):
         return f"{self.deals}-{self.reference_number}"

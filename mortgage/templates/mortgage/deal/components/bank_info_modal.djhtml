@@ -60,6 +60,14 @@
                                 <p style="text-align: center;"><strong>{{ quote_info.post_introduction_rate| intcomma }}% + {{quote_info.eibor_post_duration}} Eibor</strong></p>
                             </div>
                             <div class="d-flex">
+                                <p>Minimum floor rate</p>
+                                {% if quote_info.bank_minimum_floor_rate == 0 %}
+                                <p style="text-align: center;"><strong>nil</strong></p>
+                                {% else %}
+                                <p style="text-align: center;"><strong>{{ quote_info.bank_minimum_floor_rate }} %</strong></p>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex">
                                 <p>Property valuation fee</p>
                                 {% include 'mortgage/deal/components/edit_fields_content.djhtml' with deal_id=deal.pk deal_bank_id=quote_info.bank_pk value=quote_info.poverty_valuation_fee name='poverty_valuation_fee' %}
                             </div>
@@ -215,11 +223,11 @@
                             </div>
                             <div class="d-flex">
                                 {% if x.bank_type == 'fixed' %}
-                                    <p>Interest Rate</p>
-                                    <p><strong>{{ x.interest_rate| intcomma }}% Fixed for {{x.introduction_period_in_years}} years</strong></p>
+                                <p>Interest Rate</p>
+                                <p><strong>{{ x.interest_rate| intcomma }}% Fixed for {{x.introduction_period_in_years}} years</strong></p>
                                 {% else %}
-                                    <p>Interest Rate</p>
-                                    <p><strong>{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</strong></p>
+                                <p>Interest Rate</p>
+                                <p><strong>{{ x.interest_rate| intcomma }}% + {{x.eibor_duration}} Eibor</strong></p>
                                 {% endif %}
                             </div>
                             {% comment %} <div class="d-flex">
@@ -234,6 +242,14 @@
                             <div class="d-flex">
                                 <p>Post introduction rate</p>
                                 <p style="text-align: center;"><strong>{{ x.post_introduction_rate| intcomma }}% + {{x.eibor_post_duration}} Eibor</strong></p>
+                            </div>
+                            <div class="d-flex">
+                                <p>Minimum floor rate</p>
+                                {% if quote_info.bank_minimum_floor_rate == 0 %}
+                                <p style="text-align: center;"><strong>nil</strong></p>
+                                {% else %}
+                                <p style="text-align: center;"><strong>{{ quote_info.bank_minimum_floor_rate }} %</strong></p>
+                                {% endif %}
                             </div>
                             <div class="d-flex">
                                 <p>Property valuation fee</p>

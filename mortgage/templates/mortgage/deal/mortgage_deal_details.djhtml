@@ -260,6 +260,10 @@
   .single-upload-parent-div .editableform{
     display: block;
   }
+  .checkbox-wrapper {
+    height: 13px;
+    width: 13px;
+}
 </style>
 {% endblock %}
 {% block breadcrumb %}
@@ -1063,6 +1067,8 @@
             data['sub_stage'] = subStages[current_stage];
             data['change_sub_stage'] = subStages[sub_stage];
             data['csrfmiddlewaretoken'] = $('body #sub-stage-csrf input').val();
+            if(bank_id)
+                data['bank_id'] = bank_id
             let mortgage_amt = ''
             let is_real_estate_fee_financed = document.querySelector('#real_estate_fee_vat_financing_check')
             let is_property_reg_financed = document.querySelector('#land_dep_property_registration_financing_check')
@@ -1072,7 +1078,6 @@
                 if (mortgage_amt)
                     mortgage_amt = parseInt(mortgage_amt.value)
                 data['mortgage_amount'] = mortgage_amt
-                data['bank_id'] = bank_id
             }
             
             if (is_real_estate_fee_financed)

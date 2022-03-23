@@ -34,11 +34,11 @@
 
                 <tr>
                     <th>Bank Processing Fee</th>
-                    <td>{{ quote_info.bank_processing_fee| intcomma }} AED</td>
+                    <td id="bank_processing_fee_{{quote_info.bank_pk}}">{{ quote_info.bank_processing_fee| intcomma }} AED</td>
                 </tr>
                 <tr class="background-blue">
                     <th>Life Insurance (Monthly)</th>
-                    <td>{{ quote_info.life_insurance_monthly| intcomma }} AED</td>
+                    <td id="life_insurance_monthly_{{quote_info.bank_pk}}">{{ quote_info.life_insurance_monthly| intcomma }} AED</td>
                 </tr>
                 <tr>
                     <th>Property Insurance (Annually)</th>
@@ -54,7 +54,7 @@
                 </tr>
                 <tr class="background-blue">
                     <th>Land Dep. Mortgage Registration</th>
-                    <td>{{ quote_info.land_dep_mortgage_registration| intcomma }} AED</td>
+                    <td id="land_dep_mortgage_registration_{{quote_info.bank_pk}}">{{ quote_info.land_dep_mortgage_registration| intcomma }} AED</td>
                 </tr>
                 <tr>
                     <th>Real Estate Fee 2% </th>
@@ -129,7 +129,19 @@
                             <input class="btn-nexus btn-nexus-grey" type="submit" value="Remove">
                         </form>
                         {% endif %}
+                        {% if quote_info.data.quote_info.selected_bank.pk == x.bank_pk %}
+                        <div class="d-flex justify-content-center">
+                        <div class="d-flex">
+                        <button class="btn-nexus btn-nexus-dark-grey trigger-select-bank selected-bank" data-value="{{x.bank_pk}}">Selected</button>
+                        </div>
+                        <div class="d-flex">
+                        <button class="btn-nexus btn-nexus-golden trigger-select-bank edit-selected-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})" style="display:none;">Save</button>
+                        </div>
+                    </div>
+                        {% else %}
                         <button class="btn-nexus btn-nexus-golden trigger-select-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})">Select</button>
+                        {% endif %}
+                       
                     </div>
                     <div class="d-flex justify-content-center active-action">
                         <button class="btn-nexus btn-nexus-grey ml-0 trigger-select-bank" onclick="unselect_mortgage_bank({{x.bank_pk}})">Unselect</button>
@@ -177,6 +189,18 @@
                     {{ x.post_introduction_rate| intcomma }}% + {{x.eibor_post_duration}} Eibor
                 </td>
                 {% endfor %}
+            </tr>           
+            <tr>
+                <th>Minimum floor rate</th>
+                {% for x in quote_info.data.quote_details %}
+                <td class="col-td-{{x.bank_pk}}">
+                    {% if x.bank_minimum_floor_rate == 0 %}
+                            nil
+                    {% else %}
+                    {{ x.bank_minimum_floor_rate }}
+                    {% endif %}
+                </td>
+                {% endfor %}
             </tr>
             <tr class="background-blue">
                 <th>Property valuation fee</th>
@@ -197,7 +221,7 @@
             <tr class="background-blue">
                 <th>Bank Processing Fee</th>
                 {% for x in quote_info.data.quote_details %}
-                <td class="col-td-{{x.bank_pk}}">{{ x.bank_processing_fee| intcomma }} AED</td>
+                <td class="col-td-{{x.bank_pk}}" id="bank_processing_fee_{{x.bank_pk}}">{{ x.bank_processing_fee| intcomma }} AED </td>
                 {% endfor %}
             </tr>
             <tr>
@@ -235,7 +259,7 @@
             <tr>
                 <th>Land Dep. Mortgage Registration</th>
                 {% for x in quote_info.data.quote_details %}
-                <td class="col-td-{{x.bank_pk}}">{{ x.land_dep_mortgage_registration| intcomma }} AED</td>
+                <td class="col-td-{{x.bank_pk}}" id="land_dep_mortgage_registration_{{x.bank_pk}}">{{ x.land_dep_mortgage_registration| intcomma }} AED</td>
                 {% endfor %}
             </tr>
             <tr class="background-blue">
@@ -311,9 +335,20 @@
                     <td class="col-td-{{x.bank_pk}}">
                         <input data-bank="{{x.bank_pk}}" class="d-none" type="checkbox" id="new-bank-rate-{{x.bank_pk}}" value="{{x.bank_pk}}">
                         <label for="new-bank-rate-{{x.bank_pk}}" data-bank-id="{{x.bank_pk}}" data-image="{{ x.bank_logo }}" class="d-none ml-0 new-bank-rate quote-select-bank btn-nexus btn-nexus-dark-grey">Add different rate</label>
-                        <div class="d-flex justify-content-center idle-action">
-                        <button class="btn-nexus btn-nexus-golden trigger-select-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})">Select</button>
+                        {% if quote_info.data.quote_info.selected_bank.pk == x.bank_pk %}
+                        <div class="d-flex justify-content-center">
+                        <div class="d-flex">
+                        <button class="btn-nexus btn-nexus-dark-grey trigger-select-bank selected-bank" data-value="{{x.bank_pk}}">Selected</button>
                         </div>
+                        <div class="d-flex">
+                        <button class="btn-nexus btn-nexus-golden trigger-select-bank edit-selected-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})" style="display:none;">Save</button>
+                        </div>
+                    </div>
+                        {% else %}
+                        <div class="d-flex justify-content-center idle-action">
+                            <button class="btn-nexus btn-nexus-golden trigger-select-bank" data-value="{{x.bank_pk}}" onclick="select_mortgage_bank({{x.bank_pk}})">Select</button>
+                            </div>
+                        {% endif %}
                         <div class="d-flex justify-content-center active-action">
                         <button class="btn-nexus btn-nexus-grey ml-0 trigger-select-bank" onclick="unselect_mortgage_bank({{x.bank_pk}})">Unselect</button>
                         </div>
@@ -338,14 +373,14 @@
             let ltv = document.querySelector('#deal_ltv').getAttribute('data-value');
              
             if(this.checked){
-                mortgage_amount += Math.round((ltv/100) * parseFloat(this.value))            
+                mortgage_amount += ((ltv/100) * parseFloat(this.value))
                 if (this.id == 'land_dep_property_registration_financing_check')
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'block'
                 else if (this.id == 'real_estate_fee_vat_financing_check')
                     document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'block'            
             }
             else{
-                mortgage_amount -= Math.round((ltv/100) * parseFloat(this.value))                
+                mortgage_amount -= ((ltv/100) * parseFloat(this.value))                
                 if (this.id == 'land_dep_property_registration_financing_check')
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'none'
                 else if (this.id == 'real_estate_fee_vat_financing_check')
@@ -356,7 +391,17 @@
             document.querySelector(`#mortgage_amount_modal_label_${bank_id}`).innerHTML = `<strong>${mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
 
             
-            let deal_id = document.getElementById('deal_id').value            
+            let editButtons = document.querySelectorAll('.edit-selected-bank')
+            editButtons.forEach(e => {
+                e.style.display = 'block'
+            })
+            let selectedButtons = document.querySelectorAll('.selected-bank')
+            selectedButtons.forEach(e => {
+                e.style.display = 'none'
+            })
+
+            let deal_id = document.getElementById('deal_id').value
+            
             $.ajax({
                 method: 'GET',
                 url: '{% url 'mortgage:deal-detail' pk=deal.pk %}',
@@ -370,9 +415,19 @@
                     console.log(response)
                     if(response['monthly_repayment']){
                         let monthly_repayment = response['monthly_repayment']
+                        let land_mortgage_registration = response['land_dep_mortgage_registration']
+                        let bank_processing_fee = response['bank_processing_fee']
+                        let life_insurance_monthly = response['life_insurance_monthly']
+                        
+
                         document.getElementById(`monthly_repayment_span_${bank_id}`).value = monthly_repayment.toFixed(2)
                         document.getElementById(`monthly_repayment_span_${bank_id}`).innerText = monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                         document.getElementById(`monthly_repayment_modal_${bank_id}`).innerHTML = `<strong>${monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
+
+                        document.getElementById(`bank_processing_fee_${bank_id}`).innerText = bank_processing_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        //document.getElementById(`table_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`table_life_insurance_monthly_${bank_id}`).innerText = life_insurance_monthly.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                     }
                 },
                 error: function(errors){

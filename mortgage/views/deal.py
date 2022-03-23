@@ -877,6 +877,15 @@ class GetDealDetail(View):
 
             data = BankHelper(bank, deal.property_price, updated_mortgage_amount, deal.tenure, deal.govt_fee.pk, deal = deal)
             Updated_monthly_repayment = data.monthly_repayment
-            return JsonResponse({'monthly_repayment' : Updated_monthly_repayment})
+            Updated_land_mortgage_registration = data.land_dep_mortgage_registration
+            Updated_bank_processing_fee = data.get_bank_processing_fee
+            Updated_life_insurance_monthly = data.get_life_insurance_monthly
+            
+            return JsonResponse({
+                'monthly_repayment' : Updated_monthly_repayment,
+                'land_dep_mortgage_registration' : Updated_land_mortgage_registration,
+                'bank_processing_fee' : Updated_bank_processing_fee,
+                'life_insurance_monthly' : Updated_life_insurance_monthly,
+                })
         else:
             return JsonResponse({'error' : 'attribute name is not correct'})

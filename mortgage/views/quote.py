@@ -243,7 +243,7 @@ class SubStageToggle(View):
     def post(self, request, *args, **kwargs):
         deal = get_object_or_404(Deal, pk=request.POST.get("deal"))
         sub_stage = deal.current_sub_stage
-        
+        quote = deal.mortgage_quote_deals
         if not sub_stage:
             return JsonResponse(
             {
@@ -254,11 +254,9 @@ class SubStageToggle(View):
         )
 
         if deal.stage == STAGE_QUOTE:
-            if sub_stage.sub_stage == SELECT_BANK:
-                bank_id = request.POST.get("bank_id")
-                bank = Bank.objects.filter(pk = bank_id)
-                
-                if bank.exists():
+            bank_id = request.POST.get("bank_id")
+            bank = Bank.objects.filter(pk = bank_id)
+            if bank.exists():
                      bank = bank[0]
                      efa = bank.extra_financing_allowed
                      if efa == True:
@@ -274,8 +272,10 @@ class SubStageToggle(View):
                      else:
                          deal.is_property_reg_financed = False
                          deal.is_real_estate_fee_financed = False
-
+                     quote.selected_bank = bank
+                     quote.save()
                      deal.save()
+            if sub_stage.sub_stage == SELECT_BANK:
                 sub_stage.sub_stage = CONFIRM_BANK
             else:
                 sub_stage.sub_stage = SELECT_BANK
