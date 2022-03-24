@@ -189,7 +189,8 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
             wa = WhatsappService()
             wa.send_whatsapp_msg(
                 deal.customer.phone,
-                wa_msg_content
+                wa_msg_content,
+                app_name = 'motor'
             )
 
         return JsonResponse({'success': success, 'email_type': email_type})

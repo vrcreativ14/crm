@@ -122,7 +122,7 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row sms_container show-when-sms hide">
+                    <div class="row msg_container show-when-sms hide">
                         <div class="col-lg-3">
                             <label class="text-muted">Message Content</label>
                         </div>
@@ -256,7 +256,7 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row sms_container show-when-sms hide">
+                    <div class="row msg_container show-when-sms hide">
                         <div class="col-lg-3">
                             <label class="text-muted">Message Content</label>
                         </div>

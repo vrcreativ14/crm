@@ -220,7 +220,8 @@ class MortgageHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, De
                 wa = WhatsappService()
                 wa.send_whatsapp_msg(
                     deal.customer.phone,
-                    wa_msg_content
+                    wa_msg_content,
+                    app_name = 'mortgage'
                 )
 
         return JsonResponse({'success': success, 'email_type': email_type})

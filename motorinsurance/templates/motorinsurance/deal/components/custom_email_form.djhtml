@@ -110,7 +110,7 @@
                     </div>
                     <hr class="show-when-wa-msg" />
                     <br />
-                    <div class="row sms_toggler show-when-sms hide">
+                    <div class="row sms_toggler show-when-wa-msg hide">
                         <div class="col-lg-3">
                             <label class="text-muted">Send WhatsApp Message</label>
                         </div>
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row sms_container show-when-sms hide">
+                    <div class="row msg_container show-when-wa-msg hide">
                         <div class="col-lg-3">
                             <label class="text-muted">Message Content</label>
                         </div>

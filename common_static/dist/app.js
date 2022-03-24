@@ -1290,8 +1290,8 @@ var __DEALS;
                     form.find('.show-when-wa-msg').removeClass('hide');
                     form.find('#id_wa_msg_content').val(response.whatsapp_msg_content);
 
-                    form.find('#id_send_sms').change(function() {
-                        form.find('.sms_container').addRemoveClass(!$(this).is(':checked'), 'hide');
+                    form.find('#id_send_wa_msg').change(function() {
+                        form.find('.msg_container').addRemoveClass(!$(this).is(':checked'), 'hide');
                     });
 
                     $('textarea[maxlength]').maxlength({
@@ -2353,7 +2353,7 @@ var __DOCUMENTS_VIEWER;
             $(_preview_container).addClass('fit-to-container');
         },
 
-        _loadPDF: function(file) {            
+        _loadPDF: function(file) {
             $(_pdf_container).removeClass('hide');
             $(_pdf_container).addClass('show');
         	$(_pdf_container).attr('src', file.url);
@@ -2362,8 +2362,8 @@ var __DOCUMENTS_VIEWER;
                 .on('load', function() {
                     $(_loader).removeClass('show');
                     $(_pdf_container).removeClass('hide');
-                    $(_pdf_container).addClass('show');
                     $(_img_container).addClass('hide');
+                    $(_pdf_container).addClass('show');
                 })
                 .attr("src", file.url);
         },
@@ -3746,7 +3746,7 @@ var __NOTE;
                                 note += 'by ' + response.note.added_by;
                                 note += '</div>';
                                 if('note_pk' in response.note){
-                                    note += '<div><span title="Click to remove" id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="remove task-remove"> <i class="ti-trash"></i> </span> <span title="Click to edit" data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="edit task-edit" onclick="editMortgageNote(this)"><i class="ti-pencil-alt"></i></span></div>'
+                                     note += '<div><span title="Click to remove" id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="remove task-remove"> <i class="ti-trash"></i> </span> <span title="Click to edit" data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="edit task-edit" onclick="editMortgageNote(this)"><i class="ti-pencil-alt"></i></span></div>'
                                 }
 
                             _this._prependNoteInTrail(note);
@@ -4074,7 +4074,6 @@ var __QUOTES;
     var _auto_quoter_xhr_form_request = false;
 
     _quoted_products_data = {'products': [], 'quote': {'status': true, 'email': false, 'delete': false}};
-
 
     __QUOTES =
     {
@@ -5475,7 +5474,6 @@ var __MORTGAGE_DEALS;
             if(!_deal_id || !$('#mortgage_tab_history').length) return;
 
             $.get(DjangoUrls['mortgage:deal-history'](_deal_id), function(response) {
-                console.log(response)
                 $('#mortgage_tab_history').html(response);
             });
         },
@@ -5599,8 +5597,8 @@ var __MORTGAGE_DEALS;
                     form.find('.show-when-wa-msg').removeClass('hide');
                     form.find('#id_wa_msg_content').val(response.whatsapp_msg_content);
 
-                    form.find('#id_send_sms').change(function() {
-                        form.find('.sms_container').addRemoveClass(!$(this).is(':checked'), 'hide');
+                    form.find('#id_send_wa_msg').change(function() {
+                        form.find('.msg_container').addRemoveClass(!$(this).is(':checked'), 'hide');
                     });
 
                     $('textarea[maxlength]').maxlength({
