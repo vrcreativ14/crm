@@ -248,6 +248,7 @@ class CreateBankForm(forms.ModelForm):
             "eibor_duration",
             "introduction_period_in_years",
             "post_introduction_rate",
+            "minimum_floor_rate",
             "eibor_post_duration",
             "property_valuation_fee",
             "bank_processing_fee_rate",
