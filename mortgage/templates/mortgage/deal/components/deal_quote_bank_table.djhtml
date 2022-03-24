@@ -1,6 +1,7 @@
 {% load static %}
 {% load humanize %}
 <ul class="ml-0 pl-0">
+    <input type="hidden" id="selected_bank_id" value={{quote_info.data.quote_info.selected_bank.pk}} />
     <table class="table show-selected-bank-table">
         <tbody>
             {% if 'bank_pk' in quote_info %}
@@ -398,7 +399,8 @@
             document.querySelector(`#mortgage-amount-label-${bank_id}`).innerText = mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
             document.querySelector(`#mortgage_amount_modal_label_${bank_id}`).innerHTML = `<strong>${mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
 
-            //document.querySelector(`#bank_processing_fee_${x.bank_pk}`).
+            let selected_bank_id = document.getElementById('selected_bank_id').value
+            if(this.id == `real_estate_fee_vat_financing_check_${selected_bank_id}` || this.id == `land_dep_property_registration_financing_check_${selected_bank_id}`){
             let editButtons = document.querySelectorAll('.edit-selected-bank')
             editButtons.forEach(e => {
                 e.style.display = 'block'
@@ -407,6 +409,7 @@
             selectedButtons.forEach(e => {
                 e.style.display = 'none'
             })
+        }
 
             let deal_id = document.getElementById('deal_id').value
             debugger
@@ -433,7 +436,6 @@
                         document.getElementById(`modal_bank_processing_fee_${bank_id}`).innerText = bank_processing_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'                        
                         document.getElementById(`land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                         document.getElementById(`modal_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
-                        //document.getElementById(`table_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                         document.getElementById(`modal_life_insurance_monthly_${bank_id}`).innerText = life_insurance_monthly.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                     }
                 },

@@ -109,17 +109,40 @@ class BankHelper:
         #     total_down_payment += self.land_dep_property_registration + self.real_estate_fee_vat
             
         # return total_down_payment
-        return (
-            self.get_down_payment
-            + self.bank.property_valuation_fee
-            + self.get_bank_processing_fee
-            + self.get_life_insurance_monthly
-            + self.get_property_insurance_yearly
-            + self.trustee_center_fee_vat
-            + self.land_dep_mortgage_registration
-            + self.land_dep_property_registration
-            + self.real_estate_fee_vat
-        )
+        if self.bank.extra_financing_allowed == True:
+                total_down_payment = (
+                    self.get_down_payment
+                    + self.bank.property_valuation_fee
+                    + self.get_bank_processing_fee
+                    + self.get_life_insurance_monthly
+                    + self.get_property_insurance_yearly
+                    + self.trustee_center_fee_vat
+                    + self.land_dep_mortgage_registration
+                )
+                if self.is_property_reg_financed == True:
+                    total_down_payment = total_down_payment + (((100 - self.ltv)/100) * self.land_dep_property_registration)
+                else:
+                    total_down_payment += self.land_dep_property_registration
+                if self.is_real_estate_fee_financed == True:
+                    total_down_payment = total_down_payment + (((100 - self.ltv)/100) * self.real_estate_fee_vat)
+                else:
+                    total_down_payment += self.real_estate_fee_vat
+                
+        else:
+                total_down_payment = (
+                self.get_down_payment
+                + self.bank.property_valuation_fee
+                + self.get_bank_processing_fee
+                + self.get_life_insurance_monthly
+                + self.get_property_insurance_yearly
+                + self.trustee_center_fee_vat
+                + self.land_dep_mortgage_registration
+                + self.land_dep_property_registration
+                + self.real_estate_fee_vat
+            )
+
+        return total_down_payment
+
 
     @property
     def calculate_extra_financing(self):
@@ -183,7 +206,7 @@ class BankHelper:
     def monthly_repayment_extra_financing(self):
         int_rate = self.bank.interest_rate
         if not self.bank.post_introduction_rate:
-            int_rate = int_rate + self.bank.eibor_rate  
+            int_rate = int_rate + self.bank.eibor_rate 
         repayment = abs(npf.pmt((int_rate/100)/(12), (1)*(self.tenure), self.get_extra_financing))
         if pd.isna(repayment):
             repayment = 0

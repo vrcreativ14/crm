@@ -48,12 +48,16 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
                 <tr>
-                    <th>Interest Rate:</th>
+                    <th>Interest Rate</th>
                     <ExtractTableColumn data={data} colName="interest_rate" selectedBank={selectedBank} customCol={true}/>
                 </tr>
                 <tr>
                     <th>Post Introduction Rate</th>
                     <ExtractTableColumn data={data} colName="post_introduction_rate" selectedBank={selectedBank} customCol={true}/>
+                </tr>
+                <tr>
+                    <th>Minimum floor rate</th>
+                    <ExtractTableColumn data={data} colName="bank_minimum_floor_rate" selectedBank={selectedBank} customCol={true}/>
                 </tr>
                 <tr className="color-4D8BFF">
                     <th>Property Valuation Fee</th>
@@ -106,7 +110,7 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
                 <tr className="color-4D8BFF">
-                    <th>Monthly Repayment {data.deal_info.tenure} Years</th>
+                    <th>Monthly Repayment </th>
                     <ExtractTableColumn data={data} colName="monthly_repayment_after__years_main_amount" selectedBank={selectedBank}/>
                 </tr>
                 <tr className="no-border">
@@ -169,6 +173,12 @@ function ExtractTableColumn({data,colName,selectedBank,customCol = false}){
                     }else if(colName=='free_partial_payment_per_year'){
                         return(
                             <td key={colName+'-'+bankIndex+Math.random()}>Up to {data.quote_details[bankIndex][colName]}%</td>
+                        )
+                    }
+                    else if(colName=='bank_minimum_floor_rate'){
+                        let row = data.quote_details[bankIndex][colName] == 0 ? <td key={colName+'-'+bankIndex+Math.random()}>nil</td> : <td key={colName+'-'+bankIndex+Math.random()}>{data.quote_details[bankIndex][colName]}%</td>
+                        return (
+                            row
                         )
                     }
                     else if(colName=='interest_rate'){

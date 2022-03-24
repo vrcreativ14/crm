@@ -19,6 +19,7 @@ from core.email.exceptions import EmailSendingException
 from core.utils import clean_and_validate_email_addresses
 from felix.constants import INVITATION_EXPIRE_DAYS
 from felix.settings import POSTMARK_TOKEN
+from felix.settings import DOMAIN
 
 
 class MortgageSendEmail:
@@ -239,9 +240,12 @@ class MortgageSendEmail:
         return subject, content
 
     def prepare_email_content_for_quote(self, deal, updated=False):
+        quote_url = f"{DOMAIN}/mortgage-quote/{deal.mortgage_quote_deals.reference_number}/{deal.pk}/"
+        
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer
+            'customer_name': deal.referrer,
+            'quote_url' : quote_url,
         }
 
         subject = 'Mortgage Quote'

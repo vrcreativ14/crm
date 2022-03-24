@@ -115,7 +115,7 @@
                             <label class="text-muted">Send WhatsApp Message</label>
                         </div>
                         <div class="col-lg-9 font-12">
-                            <input id="id_send_wa_msg" name="send_wa_msg" type="checkbox" switch="success" />
+                            <input id="id_send_wa_msg" name="send_wa_msg" type="checkbox" switch="success" checked/>
                             <label class="switch-toggle" for="id_send_wa_msg" data-on-label="Yes" data-off-label="No"></label>
                         </div>
                     </div>
