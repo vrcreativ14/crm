@@ -25,7 +25,7 @@ class BankHelper:
 
     @property
     def get_updated_mortgage_amount(self):
-        if self.bank.extra_financing_allowed and self.selected_bank.pk == self.bank.pk:
+        if self.bank.extra_financing_allowed and self.selected_bank and self.selected_bank.pk == self.bank.pk:
             extra_financing = 0
             if self.is_property_reg_financed == True:
                 extra_financing += (self.ltv/100) * self.land_dep_property_registration

@@ -50,11 +50,14 @@ const Banks = ({ bank, data, index = false, comparison = false, handleCompare = 
                
                 {(comparison) ?
                 <>
-                { (bank.bank_extra_financing_allowed == 'true') && ((data.deal_info.is_property_reg_financed || data.deal_info.is_real_estate_fee_financed)) &&
+                {
+                    (bank.bank_extra_financing_allowed && bank.bank_pk == data.quote_info.selected_bank) ?
                 <div>
                     <p className="main"><CurrencyFormat num={bank.extra_financing} noDecimal={true} /></p>
                     <p><small>Extra Financing</small></p>
                 </div>
+                :
+                <div></div>
                 }
                 </>
                 :
