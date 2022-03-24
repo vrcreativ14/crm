@@ -11,7 +11,7 @@
             
             <div class="checkbox-wrapper" data-toggle="popover" data-content="select to include in loan amount" data-trigger="hover">
                 <input type="hidden" id="option_bank_id" value={{deal_bank_id}} />
-                <input type="checkbox" id="{{name}}_financing_check" class="extra-financing-checkbox" value="{{value}}" {% if efa_selected == True %} checked {% endif %}>
+                <input type="checkbox" id="{{name}}_financing_check_{{deal_bank_id}}" class="extra-financing-checkbox" value="{{value}}" {% if efa_selected == True %} checked {% endif %}>
             </div>
         </div>
         {% endif %}
@@ -19,7 +19,7 @@
         <span class="editable-bank-rate float-right d-none">Edit</span>
     {% else %}
         <span class="editable-bank-rate-modal float-left d-none">Edit</span>
-        <span class="static-display" id="{{name}}_{{deal_bank_id}}">
+        <span class="static-display" id="modal_{{name}}_{{deal_bank_id}}">
             <strong>{{ value | intcomma }} AED</strong>
         </span>
     {% endif %}

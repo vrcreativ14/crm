@@ -252,7 +252,11 @@
                 <th>Land Dep. Property Registration</th>
                 {% for x in quote_info.data.quote_details %}
                 <td class="col-td-{{x.bank_pk}}">
-                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk efa_selected=deal.is_property_reg_financed deal_bank_id=x.bank_pk efa=x.bank_extra_financing_allowed value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                    {% if x.bank_pk == quote_info.data.quote_info.selected_bank.pk %}
+                        {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk efa_selected=deal.is_property_reg_financed deal_bank_id=x.bank_pk efa=x.bank_extra_financing_allowed value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                    {% else %}
+                        {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk efa=x.bank_extra_financing_allowed value=x.land_dep_property_registration name='land_dep_property_registration' %}
+                    {% endif %}
                 </td>
                 {% endfor %}
             </tr>
@@ -266,7 +270,11 @@
                 <th>Real Estate Fee</th>
                 {% for x in quote_info.data.quote_details %}
                 <td class="col-td-{{x.bank_pk}}">
-                {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk efa_selected=deal.is_real_estate_fee_financed deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' efa=x.bank_extra_financing_allowed  %}
+                    {% if x.bank_pk == quote_info.data.quote_info.selected_bank.pk %}
+                        {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk efa_selected=deal.is_real_estate_fee_financed deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' efa=x.bank_extra_financing_allowed  %}
+                    {% else %}
+                        {% include 'mortgage/deal/components/edit_fields_content.djhtml' with table='true' deal_id=deal.pk deal_bank_id=x.bank_pk value=x.real_estate_fee_vat name='real_estate_fee_vat' efa=x.bank_extra_financing_allowed  %}
+                    {% endif %}
                 </td>
                 {% endfor %}
             </tr>
@@ -374,23 +382,23 @@
              
             if(this.checked){
                 mortgage_amount += ((ltv/100) * parseFloat(this.value))
-                if (this.id == 'land_dep_property_registration_financing_check')
+                if (this.id == `land_dep_property_registration_financing_check_${bank_id}`)
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'block'
-                else if (this.id == 'real_estate_fee_vat_financing_check')
+                else if (this.id == `real_estate_fee_vat_financing_check_${bank_id}`)
                     document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'block'            
             }
             else{
                 mortgage_amount -= ((ltv/100) * parseFloat(this.value))                
-                if (this.id == 'land_dep_property_registration_financing_check')
+                if (this.id == `land_dep_property_registration_financing_check_${bank_id}`)
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'none'
-                else if (this.id == 'real_estate_fee_vat_financing_check')
+                else if (this.id == `real_estate_fee_vat_financing_check_${bank_id}`)
                     document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'none'         
             }
             document.querySelector(`#mortgage-amount-${bank_id}-value`).value = mortgage_amount 
             document.querySelector(`#mortgage-amount-label-${bank_id}`).innerText = mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
             document.querySelector(`#mortgage_amount_modal_label_${bank_id}`).innerHTML = `<strong>${mortgage_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
 
-            
+            //document.querySelector(`#bank_processing_fee_${x.bank_pk}`).
             let editButtons = document.querySelectorAll('.edit-selected-bank')
             editButtons.forEach(e => {
                 e.style.display = 'block'
@@ -401,7 +409,7 @@
             })
 
             let deal_id = document.getElementById('deal_id').value
-            
+            debugger
             $.ajax({
                 method: 'GET',
                 url: '{% url 'mortgage:deal-detail' pk=deal.pk %}',
@@ -417,17 +425,16 @@
                         let monthly_repayment = response['monthly_repayment']
                         let land_mortgage_registration = response['land_dep_mortgage_registration']
                         let bank_processing_fee = response['bank_processing_fee']
-                        let life_insurance_monthly = response['life_insurance_monthly']
-                        
-
+                        let life_insurance_monthly = response['life_insurance_monthly']                       
                         document.getElementById(`monthly_repayment_span_${bank_id}`).value = monthly_repayment.toFixed(2)
                         document.getElementById(`monthly_repayment_span_${bank_id}`).innerText = monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
-                        document.getElementById(`monthly_repayment_modal_${bank_id}`).innerHTML = `<strong>${monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`
-
+                        document.getElementById(`monthly_repayment_modal_${bank_id}`).innerHTML = `<strong>${monthly_repayment.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'}</strong>`                        
                         document.getElementById(`bank_processing_fee_${bank_id}`).innerText = bank_processing_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`modal_bank_processing_fee_${bank_id}`).innerText = bank_processing_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'                        
                         document.getElementById(`land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`modal_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                         //document.getElementById(`table_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
-                        document.getElementById(`table_life_insurance_monthly_${bank_id}`).innerText = life_insurance_monthly.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`modal_life_insurance_monthly_${bank_id}`).innerText = life_insurance_monthly.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                     }
                 },
                 error: function(errors){

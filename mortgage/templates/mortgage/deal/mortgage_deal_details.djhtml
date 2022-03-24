@@ -1070,24 +1070,24 @@
             if(bank_id)
                 data['bank_id'] = bank_id
             let mortgage_amt = ''
-            let is_real_estate_fee_financed = document.querySelector('#real_estate_fee_vat_financing_check')
-            let is_property_reg_financed = document.querySelector('#land_dep_property_registration_financing_check')
-            if(sub_stage == 'confirm-bank' && is_real_estate_fee_financed && is_property_reg_financed){
+            
+            if(sub_stage == 'confirm-bank'){
                 if(bank_id){
                 mortgage_amt = document.querySelector(`#mortgage-amount-${bank_id}-value`)
                 if (mortgage_amt)
                     mortgage_amt = parseInt(mortgage_amt.value)
                 data['mortgage_amount'] = mortgage_amt
-            }
+                let is_real_estate_fee_financed = document.querySelector(`#real_estate_fee_vat_financing_check_${bank_id}`)
+                let is_property_reg_financed = document.querySelector(`#land_dep_property_registration_financing_check_${bank_id}`)
+                if (is_real_estate_fee_financed)
+                    is_real_estate_fee_financed = is_real_estate_fee_financed.checked
             
-            if (is_real_estate_fee_financed)
-                is_real_estate_fee_financed = is_real_estate_fee_financed.checked
-            
-            if(is_property_reg_financed)
-                is_property_reg_financed = is_property_reg_financed.checked
+                if(is_property_reg_financed)
+                    is_property_reg_financed = is_property_reg_financed.checked
 
-            data['is_real_estate_fee_financed'] = is_real_estate_fee_financed
-            data['is_property_reg_financed'] = is_property_reg_financed
+                data['is_real_estate_fee_financed'] = is_real_estate_fee_financed
+                data['is_property_reg_financed'] = is_property_reg_financed
+            }
         }
             
 

@@ -21,6 +21,21 @@ class BankHelper:
         self.is_property_reg_financed = deal.is_property_reg_financed if deal else False
         self.is_real_estate_fee_financed = deal.is_real_estate_fee_financed if deal else False
         self.ltv = deal.l_tv if deal else 80
+        self.selected_bank = deal.mortgage_quote_deals.selected_bank
+
+    @property
+    def get_updated_mortgage_amount(self):
+        if self.bank.extra_financing_allowed and self.selected_bank.pk == self.bank.pk:
+            extra_financing = 0
+            if self.is_property_reg_financed == True:
+                extra_financing += (self.ltv/100) * self.land_dep_property_registration
+            if self.is_real_estate_fee_financed == True:
+                extra_financing += (self.ltv/100) * self.real_estate_fee_vat
+
+            updated_mortgage = self.mortgage_amount + extra_financing
+            return updated_mortgage
+        else:
+            return self.mortgage_amount
 
     @property
     def get_down_payment(self):  # calculate the down payment
@@ -33,7 +48,7 @@ class BankHelper:
 
     @property
     def get_bank_processing_fee(self):  # calculate bank processing fee
-        fee = float(self.mortgage_amount) * self.bank.bank_processing_fee_rate / 100 
+        fee = float(self.get_updated_mortgage_amount) * self.bank.bank_processing_fee_rate / 100 
         # if self.bank.bank_processing_fee_extra:
         #     fee = fee + self.bank.bank_processing_fee_extra
 
@@ -46,7 +61,7 @@ class BankHelper:
     @property
     def get_life_insurance_monthly(self):  # calculate the life insurance per month
         return (
-            self.mortgage_amount * (self.bank.life_insurance_monthly_rate/100)
+            self.get_updated_mortgage_amount * (self.bank.life_insurance_monthly_rate/100)
         )
         
     @property
@@ -66,7 +81,7 @@ class BankHelper:
 
     @property
     def land_dep_mortgage_registration(self):
-        return self.mortgage_amount * self.govt_fee.mortgage_fee_rate/100 + self.govt_fee.mortgage_fee_addition
+        return self.get_updated_mortgage_amount * self.govt_fee.mortgage_fee_rate/100 + self.govt_fee.mortgage_fee_addition
 
     @property
     def real_estate_fee_vat(self):
@@ -114,7 +129,7 @@ class BankHelper:
         if self.is_real_estate_fee_financed == True:
             extra_financing += self.real_estate_fee_vat
         
-        return extra_financing - 580
+        return extra_financing
         # return (
         #     self.land_dep_property_registration + self.real_estate_fee_vat - 580
         # )
@@ -131,19 +146,7 @@ class BankHelper:
         else:
             return self.calculate_total_down_payment
 
-    @property
-    def get_updated_mortgage_amount(self):
-        if self.bank.extra_financing_allowed:
-            extra_financing = 0
-            if self.is_property_reg_financed == True:
-                extra_financing += self.land_dep_property_registration
-            if self.is_real_estate_fee_financed == True:
-                extra_financing += self.real_estate_fee_vat
 
-            updated_mortgage = self.mortgage_amount + extra_financing
-            return updated_mortgage
-        else:
-            return self.mortgage_amount
     # calculate the monthly repayment
     @property
     def loan(self):
@@ -254,6 +257,7 @@ def get_quote_data(quote, order=None):
             "poverty_valuation_fee": bank.property_valuation_fee,
             "bank_extra_financing_allowed": bank.extra_financing_allowed,
             "bank_type": bank.type,
+            "bank_minimum_floor_rate": bank.minimum_floor_rate,
             f"monthly_repayment_after__years_main_amount": int(data.monthly_repayment),
             f"monthly_repayment_after__years_after_the_fix_period": int(data.monthly_repayment_after),
             f"monthly_repayment_extra_financing": int(data.monthly_repayment_extra_financing),

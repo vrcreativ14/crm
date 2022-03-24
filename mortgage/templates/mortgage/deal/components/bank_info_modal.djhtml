@@ -61,7 +61,7 @@
                             </div>
                             <div class="d-flex">
                                 <p>Minimum floor rate</p>
-                                {% if quote_info.bank_minimum_floor_rate == 0 %}
+                                {% if quote_info.bank_minimum_floor_rate == 0 or quote_info.bank_minimum_floor_rate == None %}
                                 <p style="text-align: center;"><strong>nil</strong></p>
                                 {% else %}
                                 <p style="text-align: center;"><strong>{{ quote_info.bank_minimum_floor_rate }} %</strong></p>
@@ -245,7 +245,7 @@
                             </div>
                             <div class="d-flex">
                                 <p>Minimum floor rate</p>
-                                {% if quote_info.bank_minimum_floor_rate == 0 %}
+                                {% if quote_info.bank_minimum_floor_rate == 0 or quote_info.bank_minimum_floor_rate == None %}
                                 <p style="text-align: center;"><strong>nil</strong></p>
                                 {% else %}
                                 <p style="text-align: center;"><strong>{{ quote_info.bank_minimum_floor_rate }} %</strong></p>
@@ -257,7 +257,7 @@
                             </div>
                             <div class="d-flex">
                                 <p>Bank Processing Fee</p>
-                                <p style="text-align: center;"><strong>{{ x.bank_processing_fee| intcomma }} AED</strong></p>
+                                <p style="text-align: center;" id="modal_bank_processing_fee_{{x.bank_pk}}"><strong>{{ x.bank_processing_fee| intcomma }} AED</strong></p>
                             </div>
                             <div class="d-flex">
                                 <p>Life Insurance (Monthly)</p>
