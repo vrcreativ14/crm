@@ -65,7 +65,7 @@
                                         </div>
                                         <div class="dropdown-item form-check">
                                             <input id="search_none_role_checkbox" class="form-check-input" type="checkbox" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %}  {% endif %}>
-                                            <label class="form-check-label">None</label>
+                                            <label class="form-check-label">Others</label>
                                         </div>
                                    
                                     <button type="button" id="apply-filter-button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Apply</button>                                                                                                                                                              
@@ -169,6 +169,7 @@ document.addEventListener('click',function(e){
  });
 
     function SendRequest(url){
+        document.getElementById('id-search-user').setAttribute('readonly', true);
         document.querySelector('table.felix-table').classList.add('opacity')
         let table_body = document.querySelector('#id-felix-table-body')
         $.ajax({
@@ -240,23 +241,26 @@ document.addEventListener('click',function(e){
              }
              document.querySelector('.pagination').innerHTML = pagination_list
              table_body.innerHTML = table_content
-             document.querySelector('table.felix-table').classList.remove('opacity')             
+             document.querySelector('table.felix-table').classList.remove('opacity')
+             document.getElementById('id-search-user').removeAttribute('readonly');
             },
         error:function(errors){
             document.querySelector('table.felix-table').classList.remove('opacity')
             console.log(errors)
             Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+            document.getElementById('id-search-user').removeAttribute('readonly');
         }
         });
     }
     
-    document.querySelector('#id-search-user').addEventListener('input', function(){   
-        let url = GetUrl()  
+    document.querySelector('#id-search-user').addEventListener('input', function(){
+        let url = GetUrl()
         SendRequest(url)        
     })
+
     document.querySelector('#apply-filter-button').addEventListener('click', function(){        
-        let url = GetUrl()  
-        SendRequest(url)        
+        let url = GetUrl()
+        SendRequest(url)
     })
     
     

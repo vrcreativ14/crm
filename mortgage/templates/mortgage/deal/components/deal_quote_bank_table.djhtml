@@ -435,8 +435,9 @@
                         document.getElementById(`bank_processing_fee_${bank_id}`).innerText = bank_processing_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                         document.getElementById(`modal_bank_processing_fee_${bank_id}`).innerText = bank_processing_fee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'                        
                         document.getElementById(`land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
-                        document.getElementById(`modal_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`modal_land_dep_mortgage_registration_${bank_id}`).innerText = land_mortgage_registration.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'                        
                         document.getElementById(`modal_life_insurance_monthly_${bank_id}`).innerText = life_insurance_monthly.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
+                        document.getElementById(`table_life_insurance_monthly_${bank_id}`).innerText = life_insurance_monthly.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' AED'
                     }
                 },
                 error: function(errors){
