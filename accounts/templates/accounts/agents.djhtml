@@ -247,8 +247,9 @@ document.addEventListener('click',function(e){
         error:function(errors){
             document.querySelector('table.felix-table').classList.remove('opacity')
             console.log(errors)
-            Utilities.Notify.error(errors.responseJSON.errors, 'Error');
             document.getElementById('id-search-user').removeAttribute('readonly');
+            Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+            
         }
         });
     }
