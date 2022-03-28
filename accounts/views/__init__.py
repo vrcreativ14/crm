@@ -134,7 +134,7 @@ class ProfilePasswordChangeView(LoginRequiredMixin, TemplateView):
 class LockView(TemplateView):
     template_name = "accounts/lock.djhtml"
 
-class SearchResultAgentView(LoginRequiredMixin, HasPermissionsMixin,ListAPIView):
+class SearchResultAgentView(LoginRequiredMixin,ListAPIView):
         #required_permission = 'list_users'
         default_order_by = 'user__first_name'
         page_size = 30
