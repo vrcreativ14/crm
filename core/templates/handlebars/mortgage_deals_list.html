@@ -15,7 +15,7 @@
         {% endif %}
     </td>
     <td data-name="created_on" data-sort="{{ deal.created_date | date:'Ymd' }}" data-search="{{ deal.created_date | date:'Ymd' }}" style="min-width: 115px;">{{ deal.created_date | date:'M. d, Y' }}</td>
-    <td class="capitalize" data-name="customer__name">{{ deal.customer }}</td>
+    <td class="capitalize" data-name="customer__name"><a href={% url 'customers:edit' deal.customer.pk %}>{{ deal.customer.name }}</a></td>
     <td data-name="bank" class="link capitalize" data-name="cached_bank_name" href="#">{% if deal.deal_bank.bank.logo %}<img src="{{deal.deal_bank.bank.logo.url}}" alt="-"/>{% else %}-{% endif %}</td>
     <td data-name="property_price" data-sort="{{ deal.property_price }}" style="min-width: 140px;">{{ deal.property_price | intcomma }} <small>AED</small></td>
     <td data-name="down_payment" data-sort="{{ deal.down_payment }}" style="min-width: 140px;">{{ deal.down_payment | intcomma }} <small>AED</small></td>

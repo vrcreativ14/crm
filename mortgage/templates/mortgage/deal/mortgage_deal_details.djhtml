@@ -664,16 +664,16 @@
                             <span class="text-muted font-12">Assigned to:</span>
                             <a href="javascript:"
                                 class="deal-inline-update-field select-editable editable"
-                                data-name="assigned_to_id"
+                                data-name="user_id"
                                 data-type="select"
                                 data-emptytext="Add"
                                 data-pk="{{ deal.pk }}"
-                                data-value="{% if deal.assigned_to %}{{ deal.assigned_to.pk }}{% endif %}"
+                                data-value="{% if deal.user %}{{ deal.user.pk }}{% endif %}"
                                 data-source="{% url 'mortgage:deal-attributes-list' pk=deal.pk %}?type=assigned_to"
                                 data-url="{% url 'mortgage:update-deal-field' pk=deal.pk %}"
                                 data-title="Select"
                             >
-                                {% if deal.assigned_to %}{{ deal.assigned_to }}{% else %}-{% endif %}
+                                {% if deal.user %}{{ deal.user }}{% else %}-{% endif %}
                             </a>
                         </div>
 
