@@ -288,6 +288,7 @@
 {% endblock %}
 
 {% block content %}
+<input type="hidden" id="mortgage_deal_id" value={{deal.pk}} />
 {% if not deal.status == 'deleted' %}
     <div class="deal-detail-settings">
         <a class="dropdown-toggle" data-toggle="dropdown"
@@ -915,7 +916,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- MODALS -->
         {% include 'core/_documents_viewer.djhtml' %}
 

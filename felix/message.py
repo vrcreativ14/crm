@@ -15,7 +15,12 @@ class WhatsappService:
             token = '6479e9c54e58b868088a3c8219bf5aeb114b0d4abf48911487ecbd5a69a38eda9ecb3f6290116a1a'
         payload = {
             "phone": to,
-            "message": message
+            "message": message,
+            "actions": [
+                    {
+                      "action": "chat:resolve"
+                    }
+                ]
             }
         headers = {
             "Content-Type": "application/json",

@@ -411,7 +411,7 @@
             })
         }
 
-            let deal_id = document.getElementById('deal_id').value
+            let deal_id = document.getElementById('mortgage_deal_id').value
             debugger
             $.ajax({
                 method: 'GET',
