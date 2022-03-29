@@ -127,7 +127,7 @@
                             <label class="text-muted">Message Content</label>
                         </div>
                         <div class="col-lg-9 font-12">
-                            <textarea maxlength="159" class="form-control tiny modal-textarea" name="wa_msg_content" id="id_wa_msg_content"></textarea>
+                            <textarea class="form-control modal-textarea" name="wa_msg_content" id="id_wa_msg_content"></textarea>
                         </div>
                     </div>
                 </div>
