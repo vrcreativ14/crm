@@ -112,7 +112,8 @@ class MortgageHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, De
 
         allowed_templates = {
             'new_deal': 'New Deal',
-            'new_quote': 'Quote',
+            # 'new_quote': 'Quote',
+            'quote_updated': 'Quote',
             'pre_approval': 'Pre Approval',
             'new_valuation': 'Valuation',
             # 'valuation_updated': 'Valuation Update',
@@ -255,18 +256,16 @@ class MortgageHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, De
         elif email_type == 'new_quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
             subject, content = emailer.prepare_email_content_for_quote(deal, updated)
-
+            quote_url = f"{DOMAIN}/mortgage-quote/{deal.mortgage_quote_deals.reference_number}/{deal.pk}/"
             sms_content = 'Hi {}, your mortgage quotes are ready'.format(deal.referrer)
-            wa_msg_content = sms_content
-            if updated:
-                quote_url = f"{DOMAIN}/mortgage-quote/{deal.mortgage_quote_deals.reference_number}/{deal.pk}/"
-                sms_content = 'Hi {}, we\'ve updated your quote. Click here to check them out:'.format(
-                    deal.referrer, quote_url
-                )
-                wa_msg_content = 'Hi {},\nWe\'ve updated your mortgage quote. Click here to check them out:\n{}\n' \
+            wa_msg_content = 'Hi {},\nWe\'ve updated your mortgage quote. Click here to check them out:\n{}\n' \
                                 'If the link doesn’t work, simply reply to this message, and try the link again.\n'  \
                                 'Thanks,\n' \
                                 'Nexus Mortgage Brokers'.format(deal.referrer, quote_url)
+            if updated:                
+                sms_content = 'Hi {}, we\'ve updated your quote. Click here to check them out:'.format(
+                    deal.referrer, quote_url
+                )
 
         elif email_type == 'pre_approval':
             subject, content = emailer.prepare_email_content_for_pre_approval(deal)
