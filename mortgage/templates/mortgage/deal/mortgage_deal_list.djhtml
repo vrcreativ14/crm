@@ -403,7 +403,7 @@
             </div>
             <div class="col-12">
                 <div class="felix-table-container">
-                    <table class="mt-3 table table-hover table-striped no-footer felix-table opacity" data-mode="index" data-name="deals">
+                    <table class="table table-hover table-striped no-footer felix-table opacity" data-mode="index" data-name="deals">
                         <thead>
                             <tr>
                                 <th>
@@ -416,7 +416,7 @@
                                 <th data-name="created_on">
                                     Created On <img src="{% static 'icons/sort_arrows.svg' %}" />
                                 </th>
-                                <th data-name="customer__name">
+                                <th data-name="customer__name" width="130px;">
                                     Customer <img src="{% static 'icons/sort_arrows.svg' %}" />
                                 </th>
                                 <th data-name="cached_bank_name">
