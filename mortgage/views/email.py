@@ -257,72 +257,72 @@ class MortgageHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, De
             updated = email_type == 'quote_updated'
             subject, content = emailer.prepare_email_content_for_quote(deal, updated)
             quote_url = f"{DOMAIN}/mortgage-quote/{deal.mortgage_quote_deals.reference_number}/{deal.pk}/"
-            sms_content = 'Hi {}, your mortgage quotes are ready'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage quotes are ready'.format(deal.customer.name)
             wa_msg_content = 'Hi {},\nWe\'ve updated your mortgage quote. Click here to check them out:\n{}\n' \
                                 'If the link doesn’t work, simply reply to this message, and try the link again.\n'  \
                                 'Thanks,\n' \
-                                'Nexus Mortgage Brokers'.format(deal.referrer, quote_url)
+                                'Nexus Mortgage Brokers'.format(deal.customer.name, quote_url)
             if updated:                
                 sms_content = 'Hi {}, we\'ve updated your quote. Click here to check them out:'.format(
-                    deal.referrer, quote_url
+                    deal.customer.name, quote_url
                 )
 
         elif email_type == 'pre_approval':
             subject, content = emailer.prepare_email_content_for_pre_approval(deal)
 
-            sms_content = 'Hi {}, your mortgage pre approval is ready'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage pre approval is ready'.format(deal.customer.name)
             wa_msg_content = 'Dear {},\n' \
                             'Congrats! You have been pre-approved.\n' \
                             'We have sent you an email, please check to find out more.\n' \
                             'Thanks,\n' \
-                            'Nexus Mortgage Brokers'.format(deal.referrer)
+                            'Nexus Mortgage Brokers'.format(deal.customer.name)
 
         elif email_type == 'new_valuation':
             subject, content = emailer.prepare_email_content_for_valuation(deal)
 
-            sms_content = 'Hi {}, your mortgage valuation is ready.'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage valuation is ready.'.format(deal.customer.name)
             wa_msg_content = 'Dear {},\n' \
                             'The valuation process has been initiated and we will have the report within few days.\n' \
                             'Thanks,\n' \
-                            'Nexus Mortgage Brokers'.format(deal.referrer)
+                            'Nexus Mortgage Brokers'.format(deal.customer.name)
         
         elif email_type == 'final_offer':
             subject, content = emailer.prepare_email_content_for_final_offer(deal)
 
-            sms_content = 'Hi {}, your mortgage offer is ready.'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage offer is ready.'.format(deal.customer.name)
             wa_msg_content = 'Dear {},\n' \
                              'Your Final Offer Letter is in process and meanwhile we can proceed with the bank account opening.\n' \
                             'For that you can visit a branch with copy of your salary certificate, or you can get in touch with us so we can help you out.\n' \
                             'Thanks,\n' \
-                            'Nexus Mortgage Brokers'.format(deal.referrer)
+                            'Nexus Mortgage Brokers'.format(deal.customer.name)
 
         elif email_type == 'settlement':
             subject, content = emailer.prepare_email_content_for_settlement(deal)
 
-            sms_content = 'Hi {}, your mortgage settlement is ready.'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage settlement is ready.'.format(deal.customer.name)
             wa_msg_content = 'Dear {},\n' \
                             'Thanks for meeting the bank.\n' \
                             'We will now request the seller to apply for his mortgage Liability Letter and once ready we will proceed with the settlement.\n' \
                             'Thanks,\n' \
-                            'Nexus Mortgage Brokers'.format(deal.referrer)
+                            'Nexus Mortgage Brokers'.format(deal.customer.name)
 
         elif email_type == 'loan_disbursal':
             subject, content = emailer.prepare_email_content_for_loan_disbursal(deal)
 
-            sms_content = 'Hi {}, your mortgage loan disbursal is ready.'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage loan disbursal is ready.'.format(deal.customer.name)
             wa_msg_content = 'Dear {},\n' \
                             'We inform you that seller mortgage settlement is completed, and we will now wait for the bank to release the original property documents.\n' \
                             'Thanks,\n' \
-                            'Nexus Mortgage Brokers'.format(deal.referrer)
+                            'Nexus Mortgage Brokers'.format(deal.customer.name)
 
         elif email_type == 'property_transfer':
             subject, content = emailer.prepare_email_content_for_property_transfer(deal)
             wa_msg_content = 'Dear {},\n' \
                              'Property documents are received, and we will now book the trustee office for the property transfer.\n' \
                              'Thanks,\n' \
-                             'Nexus Mortgage Brokers'.format(deal.referrer)
+                             'Nexus Mortgage Brokers'.format(deal.customer.name)
 
-            sms_content = 'Hi {}, your mortgage property transfer is ready.'.format(deal.referrer)
+            sms_content = 'Hi {}, your mortgage property transfer is ready.'.format(deal.customer.name)
 
         bcc_emails = list()
 

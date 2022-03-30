@@ -231,7 +231,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_new_deal(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer,
+            'customer_name': deal.customer.name,
         }
         subject = 'Thank you for trusting Nexus Mortgage Brokers with your mortgage needs'
         text_template = get_template('email/mortgage_lead_received.html')
@@ -244,7 +244,7 @@ class MortgageSendEmail:
         
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer,
+            'customer_name': deal.customer.name,
             'quote_url' : quote_url,
         }
 
@@ -257,7 +257,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_pre_approval(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer,
+            'customer_name': deal.customer.name,
             "upload_url" : "/mortgage-quote/"+str(deal.mortgage_quote_deals.reference_number)+"/"+str(deal.pk)+"/"
         }
 
@@ -270,7 +270,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_valuation(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer
+            'customer_name': deal.customer.name
         }
 
         subject = 'Mortgage Valuation'
@@ -282,7 +282,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_final_offer(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer
+            'customer_name': deal.customer.name
         }
 
         subject = 'Mortgage Final Offer'
@@ -294,7 +294,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_settlement(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer
+            'customer_name': deal.customer.name
         }
 
         subject = 'Mortgage Settlement'
@@ -306,7 +306,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_loan_disbursal(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer
+            'customer_name': deal.customer.name
         }
 
         subject = 'Mortgage Loan Disbursal'
@@ -318,7 +318,7 @@ class MortgageSendEmail:
     def prepare_email_content_for_property_transfer(self, deal):
         ctx = {
             'company_name': 'Nexus Mortgage Brokers',
-            'customer_name': deal.referrer
+            'customer_name': deal.customer.name
         }
 
         subject = 'Mortgage Property Transfer'
