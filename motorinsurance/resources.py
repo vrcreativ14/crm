@@ -140,7 +140,14 @@ class QuoteResource:
 
     @classmethod
     def get_fire_and_theft_cover_attribute(cls, product):
-        return cls.create_attribute_dict(product.fire_and_theft_cover['description'],
+        if product.fire_and_theft_cover['add_on']:
+            return cls.create_addon_attribute_dict(
+                product.fire_and_theft_cover['description'],
+                'fire_and_theft_cover', product.fire_and_theft_cover['price'],
+                product.fire_and_theft_cover['help_text']
+            )
+        else:
+            return cls.create_attribute_dict(product.fire_and_theft_cover['description'],
                                          product.fire_and_theft_cover['help_text'])
 
     @classmethod
