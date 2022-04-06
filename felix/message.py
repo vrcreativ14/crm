@@ -29,7 +29,6 @@ class WhatsappService:
             "phone": to,
             "agent": motor_agent_id,
             "message": message,
-            "status": "resolved",
             "actions": [
                     {
                       "action": "chat:assign"
@@ -43,5 +42,15 @@ class WhatsappService:
         }
 
         response = requests.request("POST", url, json=payload, headers=headers)
+        if app_name == 'motor':
+            #device_id = response['device']
+            #wid = response['wid']
+            device_id = '602cf1d1bf4c6cd13d5e9d27'
+            wid = '971545842322@c.us'
+            status_patch_url = "https://api.omnidigital.ae/v1/io/{deviceId}/chats/{chatWid}/status".format(deviceId = device_id, chatWid = wid)
+            payload = {"status": "resolved"}
+            
+            response = requests.request("PATCH", status_patch_url, json=payload, headers=headers)
+        
         api_logger.info('Sending Whatsapp message to {}. Response received: {}'.format(to,response.text))
         
