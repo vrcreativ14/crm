@@ -29,9 +29,10 @@ class WhatsappService:
             "phone": to,
             "agent": motor_agent_id,
             "message": message,
+            "status": "resolved",
             "actions": [
                     {
-                      "action": "chat:resolve"
+                      "action": "chat:assign"
                     }
                 ]
             }
