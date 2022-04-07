@@ -136,7 +136,7 @@ class MotorSalesConversionRateView(BaseChartDataView):
                 conversion_rate = 0.0
 
             chart_data.append((
-                month_label, '{:0.2f}'.format(conversion_rate * 100.0)
+                "{0}, {1}".format(str(number_of_deals), str(number_of_orders)), '{:0.2f}'.format(conversion_rate * 100.0)
             ))
 
         return JsonResponse(chart_data, safe=False)
