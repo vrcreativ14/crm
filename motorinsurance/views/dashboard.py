@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from motorinsurance.models import Deal, Order
 from felix.exporter import ExportService
-
+from django.db.models import Q
 
 def get_last_12_month_dates():
     """Returns a list of month starting date objects for the last 12 months"""
@@ -70,8 +70,10 @@ class MotorOrdersCreatedCountView(BaseChartDataView):
         user = self.get_user_filter()
         month_ranges = get_month_pairs_for_last_12_months()
 
-        base_qs = Order.objects.filter(deal__company=request.company, deal__is_deleted=False, is_void=False)
-
+        #base_qs = Order.objects.filter(deal__company=request.company, deal__is_deleted=False, is_void=False)
+        #now calculating no. of deals won in place of no. of order as discussed apr 22
+        base_qs = Deal.objects.filter(company=request.company, is_deleted=False)
+        base_qs = base_qs.filter(Q(stage = 'won') | Q(stage = 'housekeeping'))
         if user:
             base_qs = base_qs.filter(deal__assigned_to=user)
 
@@ -89,9 +91,11 @@ class MotorOrdersTotalPremiumView(BaseChartDataView):
     def get(self, request):
         user = self.get_user_filter()
         month_ranges = get_month_pairs_for_last_12_months()
-
-        base_qs = Order.objects.filter(deal__company=request.company, deal__is_deleted=False, is_void=False)
-
+        
+        base_qs = Deal.objects.filter(company=request.company, is_deleted=False)
+        base_qs = base_qs.filter(Q(stage = 'won') | Q(stage = 'housekeeping'))
+        #base_qs = Order.objects.filter(deal__company=request.company, deal__is_deleted=False, is_void=False)
+        #now calculating no. of deals won in place of no. of order as discussed apr 22
         if user:
             base_qs = base_qs.filter(deal__assigned_to=user)
 
@@ -126,17 +130,18 @@ class MotorSalesConversionRateView(BaseChartDataView):
             month_label = sd.strftime('%b, %y')
 
             deals = deal_qs.filter(created_on__range=(sd, ed))
-            order_qs = Order.objects.filter(is_void=False, deal__in=deals)
-            number_of_orders = order_qs.filter(created_on__range=(sd, ed)).count()
+            
+            deals_won_qs = deals.filter(Q(stage = 'won') | Q(stage = 'housekeeping'))
+            number_of_deals_won = deals_won_qs.count()
             number_of_deals = deals.count()
 
             if number_of_deals > 0:
-                conversion_rate = number_of_orders / float(number_of_deals)
+                conversion_rate = number_of_deals_won / float(number_of_deals)
             else:
                 conversion_rate = 0.0
 
             chart_data.append((
-                "{0}, {1}".format(str(number_of_deals), str(number_of_orders)), '{:0.2f}'.format(conversion_rate * 100.0)
+                month_label, '{:0.2f}'.format(conversion_rate * 100.0)
             ))
 
         return JsonResponse(chart_data, safe=False)

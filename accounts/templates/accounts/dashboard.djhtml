@@ -99,7 +99,7 @@
                     {% if entity == 'mortgage' %}
                     <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Value  of Won Deals </h4>
                     {% else %}
-                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Motor Orders Created</h4>
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Motor Deals Won</h4>
                     {% endif %}
                     <hr />
                     <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
@@ -127,7 +127,7 @@
                     {%if entity == 'mortgage'%}
                     <h4 class="header-title m-l-15 m-t-15 m-b-0">Lost Deals</h4>
                     {%else%}
-                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Orders</h4>
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Won Deals</h4>
                     {%endif%}
                     <hr />
                     <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
@@ -150,7 +150,7 @@
                     {%if entity == 'mortgage' %}
                     <h4 class="header-title m-l-15 m-t-15 m-b-0">Won Deals <span class="help-icon" title = "number of Total Deals"></span></h4>
                     {%else%}
-                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Sales Conversion Rate <span class="help-icon" title="The sales conversion rate is calculated using two numbers. We take the number of new deals created in a specific month, and then the number of orders created from those deals. We divide the number of orders by the number of new deals to calculate the sale conversion rate."></span></h4>
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Sales Conversion Rate <span class="help-icon" title="The sales conversion rate is calculated using two numbers. We take the number of new deals created and then the number of deals won in a specific month. We divide the number of deals won by the number of new deals to calculate the sale conversion rate."></span></h4>
                     {%endif%}
                     <hr />
                     <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
