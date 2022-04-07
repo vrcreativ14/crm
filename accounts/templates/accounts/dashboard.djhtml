@@ -127,7 +127,7 @@
                     {%if entity == 'mortgage'%}
                     <h4 class="header-title m-l-15 m-t-15 m-b-0">Lost Deals</h4>
                     {%else%}
-                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Won Deals</h4>
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Orders</h4>
                     {%endif%}
                     <hr />
                     <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>

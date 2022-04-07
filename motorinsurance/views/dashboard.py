@@ -91,11 +91,9 @@ class MotorOrdersTotalPremiumView(BaseChartDataView):
     def get(self, request):
         user = self.get_user_filter()
         month_ranges = get_month_pairs_for_last_12_months()
-        
-        base_qs = Deal.objects.filter(company=request.company, is_deleted=False)
-        base_qs = base_qs.filter(Q(stage = 'won') | Q(stage = 'housekeeping'))
-        #base_qs = Order.objects.filter(deal__company=request.company, deal__is_deleted=False, is_void=False)
-        #now calculating no. of deals won in place of no. of order as discussed apr 22
+
+        base_qs = Order.objects.filter(deal__company=request.company, deal__is_deleted=False, is_void=False)
+
         if user:
             base_qs = base_qs.filter(deal__assigned_to=user)
 
