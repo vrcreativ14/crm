@@ -126,7 +126,8 @@ class MotorSalesConversionRateView(BaseChartDataView):
             month_label = sd.strftime('%b, %y')
 
             deals = deal_qs.filter(created_on__range=(sd, ed))
-            number_of_orders = Order.objects.filter(is_void=False, deal__in=deals).count()
+            order_qs = Order.objects.filter(is_void=False, deal__in=deals)
+            number_of_orders = order_qs.filter(created_on__range=(sd, ed)).count()
             number_of_deals = deals.count()
 
             if number_of_deals > 0:
