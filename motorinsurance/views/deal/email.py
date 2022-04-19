@@ -201,6 +201,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
         subject = ''
         content = ''
         sms_content = None
+        wa_msg_content = None
         email_type = kwargs['type']
         updated = 'updated' in request.GET
         documents = []
@@ -216,7 +217,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
         if email_type == 'new_deal':
             subject, content = emailer.prepare_email_content_for_new_deal(deal)
             sms_content = f'Thank you for requesting car insurance quotes from {company.name}. We\'re preparing some options for you and will send you an email soon!'
-
+            wa_msg_content = sms_content
         elif email_type == 'new_quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
             subject, content = emailer.prepare_email_content_for_quote(deal.quote, updated)
@@ -226,9 +227,17 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
                 deal.company.name,
                 deal.quote.get_quote_short_url(),
             )
-
+            wa_msg_content = 'Hi {}, your {} car insurance quotes are ready: {}. (If the link is not clickable, please reply to this message and then try the link again)'.format(
+                deal.customer.name,
+                deal.company.name,
+                deal.quote.get_quote_short_url(),
+            )
             if updated:
                 sms_content = 'Hi {}, we\'ve updated your car insurance quotes. Click here to check them out: {}'.format(
+                    deal.customer.name.title(),
+                    deal.quote.get_quote_short_url(),
+                )
+                wa_msg_content = 'Hi {}, we\'ve updated your car insurance quotes. Click here to check them out: {}. (If the link is not clickable, please reply to this message and then try the link again)'.format(
                     deal.customer.name.title(),
                     deal.quote.get_quote_short_url(),
                 )
@@ -236,6 +245,10 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
             subject, content = emailer.prepare_email_content_for_order_summary(deal)
             document_upload_url = deal.quote.get_document_upload_short_url()
             sms_content = 'Hi {}, thanks for your order! Please upload your documents here so we can issue your policy: {}'.format(
+                deal.customer.name,
+                document_upload_url
+            )
+            wa_msg_content = 'Hi {}, thanks for your order! Please upload your documents here so we can issue your policy: {}'.format(
                 deal.customer.name,
                 document_upload_url
             )
@@ -276,7 +289,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
             'subject': subject,
             'content': content,
             'sms_content': sms_content,
-            'whatsapp_msg_content': sms_content,
+            'whatsapp_msg_content': wa_msg_content,
             'attachments': [{
                 'name': document[0],
                 'url': document[1].url

@@ -346,12 +346,14 @@ class Emailer:
         return subject, content
 
     def prepare_email_content_for_policy(self, policy):
+        product_document_url = policy.product.document_url
         ctx = {
             'company_name': self.company_settings.company.name,
             'customer_name': policy.customer.name,
             'car_name': policy.deal.get_car_title(),
             'additional_documents': policy.get_attachments(),
-            'assigned_to': policy.deal.assigned_to.get_full_name() if policy.deal.assigned_to else self.company_settings.company.name
+            'assigned_to': policy.deal.assigned_to.get_full_name() if policy.deal.assigned_to else self.company_settings.company.name,
+            'policy_wording' : product_document_url,
         }
 
         documents = self.get_policy_attachments(policy)
