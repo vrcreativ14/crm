@@ -248,7 +248,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
                 deal.customer.name,
                 document_upload_url
             )
-            wa_msg_content = 'Hi {}, thanks for your order! Please upload your documents here so we can issue your policy: {}'.format(
+            wa_msg_content = 'Hi {}, thanks for your order! Please upload your documents here so we can issue your policy: {}. (If the link is not clickable, please reply to this message and then try the link again)'.format(
                 deal.customer.name,
                 document_upload_url
             )
@@ -258,6 +258,7 @@ class DealHandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, Detail
             if not updated:
                 sms_content = 'Hi {}, we\'ve issued your insurance policy! Check your email for details.'.format(
                     deal.customer.name.title())
+                wa_msg_content = sms_content
 
         bcc_emails = list()
 
