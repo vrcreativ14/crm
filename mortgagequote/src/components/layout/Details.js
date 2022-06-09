@@ -109,10 +109,10 @@ const Details = ({data,selectedBank,setShowDetails = false}) => {
                     <th>Early Settlement Charges:</th>
                     <ExtractTableColumn data={data} colName={false} selectedBank={selectedBank}/>
                 </tr>
-                <tr className="color-4D8BFF">
+                {/* <tr className="color-4D8BFF">
                     <th>Monthly Repayment </th>
                     <ExtractTableColumn data={data} colName="monthly_repayment_after__years_main_amount" selectedBank={selectedBank}/>
-                </tr>
+                </tr> */}
                 <tr className="no-border">
                     <th>Early Settlement</th>
                     <ExtractTableColumn data={data} colName="full_settlement_max_value" selectedBank={selectedBank} customCol={true}/>
