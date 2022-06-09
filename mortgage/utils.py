@@ -275,7 +275,7 @@ def get_quote_data(quote, order=None):
             "full_settlement_max_value": bank.full_settlement_max_value,
             "free_partial_payment_per_year": bank.free_partial_payment_per_year,
             "interest_rate": bank.interest_rate,
-            "introduction_period_in_years": bank.introduction_period_in_years,
+            "introduction_period_in_years": int(bank.introduction_period_in_years) if bank.introduction_period_in_years else None,
             "post_introduction_rate": bank.post_introduction_rate,
             "poverty_valuation_fee": bank.property_valuation_fee,
             "bank_extra_financing_allowed": bank.extra_financing_allowed,
