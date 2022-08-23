@@ -92,7 +92,7 @@ FIELD_LENGTHS = {
 }
 
 CAR_YEARS_LIST = [
-    (str(year), year) for year in range(2022, 1993, -1)
+    (str(year), year) for year in range(2023, 1993, -1)
 ]
 
 AGE_YEARS = [(str(x), str(x)) for x in range(18, 71)] + [('71', '70+')]
