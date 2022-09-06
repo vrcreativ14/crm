@@ -10,6 +10,7 @@ LEAD_TYPES = [
 
 TOP_TIER_INSURER_OTHER = "other"
 INSURER_AXA = "axa"
+INSURER_GIG = "gig"
 INSURER_DAT = "dat"
 INSURER_DI = "di"
 INSURER_EIC = "eic"
@@ -22,7 +23,7 @@ INSURER_TOKIO = "tokio-marine"
 INSURER_NOOR_TAKAFUL = "noor-takaful"
 
 TOP_TIER_INSURERS = [
-    (INSURER_AXA, "AXA Gulf"),
+    (INSURER_GIG, "GIG Gulf"),
     (INSURER_DAT, "Dar Al Takaful"),
     (INSURER_DI, "Dubai Insurance"),
     (INSURER_EIC, "Emirates Insurance Co"),
