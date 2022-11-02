@@ -1,0 +1,1406 @@
+<div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+{% load static %}
+<style>
+    .radio-button label{
+         min-height: 33px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     }
+     .modal-content{
+         padding: 20px;
+     }
+     .dropdown-toggle{
+         width: 100%;
+     }
+     .formlabel{
+         font-weight: 500;
+     }
+
+     .radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+.radio-button input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+.radio-button{
+        margin-left: 8px;
+    }
+
+.select_additional_benefits + .btn-group{
+    width: 295px;
+}
+.select_additional_benefits + .btn-group > button{
+    background-color: white !important;
+    border: 0.5px solid #CED4DA;
+}
+button > .multiselect-selected-text{
+    font-size: 12px !important;
+    font-weight: 300 !important;
+    line-height: 30px !important;
+    color: #343A40 !important;
+}
+.select_additional_benefits + .btn-group > ul{
+    width: 295px;
+}
+
+.multiselect-container>li>a>label>input[type=checkbox] {
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.multiselect-container>li>a{
+    color: #000000;
+}
+
+.multiselect.dropdown-toggle::after {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0.255em;
+    vertical-align: 0.255em;
+    content: "";
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+    top: 20px;
+    right: 4px;
+    position: absolute;
+    font-size: 15px;
+    border-color: #888 transparent transparent transparent;
+}
+</style>
+<div>
+{% if deal %}
+
+<div class="felix-modal-container" id="modal_edit_deal">
+    <div class="felix-modal">
+        <h1>Edit Primary Member Details</h1>
+        <button id="countries-button" style="display: none;"></button>        
+        <form action="/health-insurance/deals/edit/{{deal.pk}}" name="edit_deal_form" id="edit_deal_form" method="post" data-module-name="Deal" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="additional_members" id="additional_members" />
+            <input type="hidden" name="primary_member" id="primary_member" value={{deal.primary_member.pk}} />
+            <input type="hidden" name="stage" id="stage" value={{deal.stage}} />
+            <input type="hidden" name="premium" id="stage" value=0 />
+            <div class="content squeeze">
+                <div class="form-group">
+                    <!-- <div class="row">
+                        <span class="font-15 fw-500">Primary Member Details</span>
+                     </div> -->
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Name *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="autocomplete-container">
+                                <input
+                                    type="text"
+                                    data-url="{% url 'customers:customers-search' %}" 
+                                    data-target="id_customer"
+                                    class="autocomplete-field form-control required" 
+                                    id="id_customer_name" 
+                                    name="name" autocomplete="off"
+                                    value='{{deal.primary_member.name}}' />
+                                    <!-- <input class="form-control required" name="name" id="additional_member_name" value={{deal.primary_member.name}} /> -->
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Phone Number</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input class="form-control" name="phone" id="additional_member_phone" value='{{deal.primary_member.phone}}' />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Email *</label> 
+                        </div>
+                        <div class="col-lg-6">
+                            <input class="form-control required" name="email" id="additional_member_email" value='{{deal.primary_member.email}}' />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row select_gender_row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Gender *</label>
+                        </div>
+                        <div class="col-lg-2 radio-button">
+                            <input type="radio" name="gender" id="gender_male" class="btn btn-light btn-outline-secondary required" style="width: inherit;" value="m" {% if deal.primary_member.gender == 'm' %} checked {% endif %} />
+                            <label for="gender_male">Male</label>
+                        </div>
+                      <div class="col-lg-1">
+
+                      </div>
+                        <div class="col-lg-2 radio-button">
+                            <input type="radio" name="gender" id="gender_female" class="btn btn-light btn-outline-secondary required" style="width: inherit;" value="f" {% if deal.primary_member.gender == 'f' %} checked {% endif %} />
+                            <label for="gender_female">Female</label>
+                        </div>
+                        <div class="col-lg-1">
+                          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Marital Status</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <select class="form-control" name="marital_status" required value="{{deal.primary_member.marital_status}}">
+                                <option value="married" {% if deal.primary_member.marital_status == 'married' %} selected {% endif %}>Married</option>
+                                <option value="single" {% if deal.primary_member.marital_status == 'single' %} selected {% endif %}>Unmarried</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Date of Birth *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" class="datepicker-here form-control required" id="id_dob" name="dob" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Select Date" value='{{deal.primary_member.dob|date:"d/m/Y"}}' />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row info-container">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Level of Cover</label>
+                        </div>
+                        <div class="col-lg-3 radio-button">
+                           <input type="radio" name="level_of_cover" id="level_of_cover_comprehensive" class="btn btn-light btn-outline-secondary required" style="width: inherit;" value="comprehensive" {% if deal.level_of_cover == 'comprehensive' %} checked {% endif %}/>
+                            <label for="level_of_cover_comprehensive">Comprehensive</label>
+                        </div>
+                        <div class="col-lg-3 radio-button">
+                           <input type="radio" name="level_of_cover" id="level_of_cover_basic" class="btn btn-light btn-outline-secondary required" style="width: inherit;" value="basic" {% if deal.level_of_cover == 'basic' %} checked {% endif %}/>
+                           <label for="level_of_cover_basic">Basic</label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Nationality *</label>
+                        </div>
+                        <div class="col-lg-6">
+
+                            <select class="form-control" name="nationality" id="id_nationality" required>
+                                <option value="" selected disabled>Please select Nationality</option>
+                                {% for country in countries %}
+                                {% if deal.primary_member.nationality == country.1 %}
+                                <option value="{{country.0}}" selected>{{country.1}}</option>
+                                {% endif %}
+                                <option value="{{country.0}}">{{country.1}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Country of Residence *</label>
+                        </div>
+                        <div class="col-lg-6">
+
+                            <select class="form-control required" name="country_of_stay" id="id_country_of_stay">
+                                <option value="" disabled>Please select Country of Residence</option>                                                              
+                                {% for country in countries %}
+                                {% if deal.primary_member.country_of_stay == country.1 %}
+                                <option value="{{country.0}}" selected>{{country.1}}</option>
+                                {% endif %}
+                                <option value="{{country.0}}">{{country.1}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="row_visa" class="row {% if deal.primary_member.country_of_stay != 'United Arab Emirates' %}hide{% endif %}">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Visa *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <select class="form-control" name="visa">                                
+                                <option value="Dubai" {% if deal.primary_member.visa in 'Dubai' %} selected {% endif %}>Dubai</option>                                                                
+                                <option value="Abu Dhabi" {% if deal.primary_member.visa in 'Abu Dhabi' %} selected {% endif %}>Abu Dhabi</option>
+                                <option value="Sharjah" {% if deal.primary_member.visa in 'Sharjah' %} selected {% endif %}>Sharjah</option>
+                                <option value="Ajman" {% if deal.primary_member.visa in 'Ajman' %} selected {% endif %}>Ajman</option>
+                                <option value="Ras Al Khaimah" {% if deal.primary_member.visa in 'Ras Al Khaimah' %} selected {% endif %}>Ras Al Khaimah</option>
+                                <option value="Fujairah" {% if deal.primary_member.visa in 'Fujairah' %} selected {% endif %}>Fujairah</option>
+                                <option value="Umm Al Quwain" {% if deal.primary_member.visa in 'Umm Al Quwain' %} selected {% endif %}>Umm Al Quwain</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Salary Band</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <select name="salary_band" class="form-control">
+                                <option value="below_4k" {% if deal.primary_member.salary_band == 'below_4k' %} selected {% endif %}>Below 4000 AED</option>
+                                <option value="above_4k" {% if deal.primary_member.salary_band == 'above_4k' %} selected {% endif %}>Above 4000 AED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>                    
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <span class="font-15 fw-500">Policy Coverage</span>
+                            </div>
+                           
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Geographical Coverage</label>
+                            </div>
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_local" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="local" {% if deal.geographical_coverage|lower == 'local' %} checked {% endif %} />
+                                <label for="coverage_local">Local</label>
+                            </div>
+                          
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_regional" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="regional" {% if deal.geographical_coverage|lower == 'regional' %} checked {% endif %} />
+                                <label for="coverage_regional">Regional</label>
+                            </div>
+                            
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_world_ex_us" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="worldwide_except_us" {% if deal.geographical_coverage|lower == 'worldwide_except_us' %} checked {% endif %} />
+                                <label for="coverage_world_ex_us" style="white-space: nowrap;">Worldwide Except US</label>
+                            </div>
+                            
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_world" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="worldwide" {% if deal.geographical_coverage|lower == 'worldwide' %} checked {% endif %} />
+                                <label for="coverage_world">Worldwide</label>
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Additional Benefits</label>
+                            </div>
+                            <div class="col-md-7 col-lg-7">
+                                <select class="select_additional_benefits form-control hide" name="additional_benefits" multiple>                                        
+                                    <option value="Health Screen" {% if 'Health Screen' in deal_additional_benefits %}selected{% endif %}>Health Screening</option>                                        
+                                    <option value="Dental" {% if 'Dental' in deal_additional_benefits %}selected{% endif %}>Dental</option>
+                                    <option value="Optical" {% if 'Optical' in deal_additional_benefits %}selected{% endif %}>Optical</option>
+                                    <option value="Other" {% if 'Other' in deal_additional_benefits %}selected{% endif %}>Other</option>                                    
+                                </select>
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row other_benefits {% if not deal_other_benefits %}hide{% endif %}">
+                        <div class="col-lg-3">
+                            <label>Other Benefits</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input name="other_benefits" type="text" class="form-control"  value='{{deal_other_benefits}}' />
+                        </div>
+                    </div>
+                    {% if deal.other_benefits %} <br/> {% endif %}
+                    <div class="row">
+                        <div class="col-lg-3">
+                           <label style="white-space: nowrap;">Indicative Budget per person</label> 
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <select name="indicative_budget" class="form-control">
+                                <option value="" disabled selected>Please Select Indicative Budget</option>
+                                <option value="Below 1k" {% if deal.indicative_budget == 'Below 1k' %} selected {% endif %}>Below 1k AED</option>
+                                <option value="2-4k" {% if deal.indicative_budget == '2-4k' %} selected {% endif %}>2-4k AED</option>
+                                <option value="4-8k" {% if deal.indicative_budget == '4-8k' %} selected {% endif %}>4-8k AED</option>
+                                <option value="Above 8k" {% if deal.indicative_budget == 'Above 8k' %} selected {% endif %}>8k+ AED</option>
+                                <option value="Not Sure" {% if deal.indicative_budget == 'Not Sure' %} selected {% endif %}>Not Sure</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Start Date</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" class="datepicker-here form-control" id="id_start_date" name="start_date" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Select Date" value="{{ deal.start_date|date:"d/m/Y" }}" />
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Any Preferred Hospitals/ Clinics</label>  
+                            </div>
+                            <div class="col-lg-6">
+                                <textarea class="form-control tiny modal-textarea" name="preferred_hospitals">{{deal.primary_member.preferred_hospitals}}</textarea>
+                            </div>
+                    </div>
+                    <br/>
+               
+                </div>
+            </div>
+
+            <div class="button-container float-right">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md" data-dismiss="modal">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                    <span>Save Deal</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="edit_additional_members" >
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="/health-insurance/deals/edit/members/{{deal.pk}}" name="edit_members_form" id="edit_members_form" method="post">
+            {% csrf_token %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <label class="formlabel" style="font-size:20px;">Edit Additional Member Details</label> 
+                <button type="button" class="close btn-lg" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 25px;font-weight: 500;">&times;</span>
+                  </button>
+            </div>
+            <div class="container">
+        <div class="row">
+            <div class="col-lg-3 font-12" style="margin-left: -35px;">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="add_members" name="add_members" switch="success" {% if deal.primary_member.additional_members.all.count > 0 %} checked {% endif %}>
+                <label class="switch-toggle" for="add_members"></label>
+            </div>
+               
+        </div>
+        <div class="col-lg-6">
+            <span>Any additional members to be added?</span>
+        </div>
+        </div>
+        <br/>
+        <div id="additional_member_div" {% if deal.primary_member.additional_members.all.count == 0 %} style="display: none;" {% endif %}>
+        {% for key, value in counter.items %}
+            {% if value > 0 %}
+            
+                <div class="row">
+                    <div class="form-check">
+                        <input class="form-check-input additional-member" type="checkbox" id="{{key}}" name="{{key}}"  value={{value}} checked>
+                        <label class="form-check-label">{{key}}</label>
+                    </div>
+                </div>
+                <br/>
+            {% endif %}
+        {% endfor %}
+           
+        {% for member in other_members %}
+        <div class="row">
+            <div class="form-check">
+                <input class="form-check-input additional-member" type="checkbox" id="{{member}}" name="{{member}}"  value="0">
+                <label class="form-check-label">{{member}}</label>
+              </div>
+        </div>
+        <br/>
+        {% endfor %}
+        </div>
+ {% for member in deal.primary_member.additional_members.all %}
+ <div id="additional_member_details_{{member.relation}}">
+ <br/>
+ <br/>
+ <div id="additional_member_details_{{member.relation}}_{{member.order}}">
+     <input type="hidden" name="order" value="{{member.order}}" />
+ <div class="row">
+    <div class="col-lg-8">
+     {{member.relation|title }} ({{member.order}})
+    </div>
+    
+    <div class="col-lg-1">
+        <a class='{{member.relation}}' id='add_member' onclick=removeMember(this)>
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+             <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+           </svg>
+        </a>
+    </div>
+    <div>({{member.order}})</div>
+    <div class="col-lg-1">
+     <a class='{{member.relation}}' id='add_member' onclick=addMember(this)>
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+           </svg>
+     </a>
+    </div>
+ </div>
+ <br/>
+ <input type="hidden" name="additional_member_id" class="form-control" value={{member.pk}} />
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Name </label>
+     </div>
+     <div class="col-lg-6">
+         <input name="additional_member_name" class="form-control required" value={{member.name}} />
+     </div>
+ </div>
+ <br/>
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Date of Birth </label>
+     </div>
+     <div class="col-lg-6">
+         <input name="additional_member_dob" class="datepicker-here form-control required" data-date-format="dd/mm/yyyy" data-language='en' value={{member.dob|date:"d/m/Y"}} />         
+     </div>
+ </div>
+ <br/>
+ <div class="row">
+    <div class="col-lg-3">
+       <label> Nationality *</label>
+    </div>
+    <div class="col-lg-6">
+       <select class="form-control required" name="additional_member_nationality" id="id_additional_member_nationality" required>
+           <option value="" disabled>Please select Nationality </option>
+           {% for country in countries %}
+           {% if member.nationality == country.0 %}
+           <option value="{{country.0}}" selected>{{country.1}}</option>
+           {% else %}
+           <option value="{{country.0}}">{{country.1}}</option>
+           {% endif %}
+           
+           {% endfor %}
+       </select>
+    </div>
+</div>
+<br/>
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Country of Residence</label>
+     </div>
+     <div class="col-lg-6">
+
+        <select class="form-control" name="additional_member_country_of_stay" id="id_additional_member_country_of_stay">
+            <option value="" selected disabled>Please select Country of Residence</option>
+            {% for country in countries %}
+                {% if member.country_of_stay == country.0 %}
+                <option value="{{country.0}}" selected>{{country.1}}</option>
+                {% endif %}
+                <option value="{{country.0}}">{{country.1}}</option>
+            {% endfor %}
+        </select>
+     </div>
+ </div>
+</div>
+ <br/>
+</div>
+ {% endfor %}
+
+ <div class="button-container float-right">
+    <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md" data-dismiss="modal">Close</a>
+    <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+        <span>Save</span>
+        <div class="ball-spinner"></div>
+    </button>
+</div>
+</form>
+</div>
+</div>
+<script>
+    $('#edit_members_form').submit(function(e){
+            debugger
+            e.preventDefault()
+            e.target.querySelector('button[type="submit"]').disabled = true
+            let errorCount = 0
+            this.querySelectorAll('input.required').forEach(i => {
+                    if (! i.value) {
+                    $(i).after('<span class="error">This field is required</span>');
+                    errorCount++
+                }                
+            })           
+            this.querySelectorAll('select.required').forEach(i => {
+                    if (! i.value) {
+                    $(i).after('<span class="error">This field is required</span>');
+                    errorCount++
+                }                
+            })           
+            if(errorCount > 0) {
+                Utilities.Notify.error('Please check all the required Fields.', 'Error');
+                $(this).find('button[type=submit]').removeClass('loader');
+                e.target.querySelector('button[type="submit"]').disabled = false
+                return
+            }
+            GetAddedMembers(e.target)   
+            let url = e.target.action
+            $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: $('#edit_members_form').serialize(), 
+                    success: function(response) {
+                        if(response.success) {
+                            Utilities.Notify.success('Additional Member Details Edited Successfully', 'Success');
+                            $(this).find('button[type=submit]').removeClass('loader');
+                            location.reload()
+                        }
+                        e.target.querySelector('button[type="submit"]').disabled = false
+                    },
+                    error:function(error){
+                        Utilities.Notify.error('Some Error Occurred', 'Error');
+                        $(this).find('button[type=submit]').removeClass('loader');
+                        e.target.querySelector('button[type="submit"]').disabled = false
+                    }
+        });
+        
+    });
+        
+
+    $('#edit_deal_form').submit(function(e){
+        debugger            
+        e.preventDefault()
+        e.target.querySelector('button[type="submit"]').disabled = true
+        var loader = '<div class="ball-spinner"></div>';
+        var button = $(this).find('button[type=submit]');
+
+        $(this).find('button[type=submit]').addClass('loader');
+        let errorCount = 0
+        $('.error').hide()
+        let radioList = ['gender']
+        this.querySelectorAll('.required').forEach(i => {
+        if(i.type == 'radio' && i.checked){
+                radioList.pop()
+            }
+                if (! i.value) {
+                    if(i.dataset && i.dataset['inputName'] == 'nationality'){
+                        if(i.querySelector('select').value){
+                            return
+                        }
+                    }
+                $(i).after('<span class="error">This field is required</span>');
+                errorCount++
+            }
+            
+        })
+        if(radioList.length > 0) $('.select_gender_row > div').last().after('<span class="error">This field is required</span>');
+        let member_form = ['additional_member_name','additional_member_dob','nationality']
+
+        if(errorCount > 0) {
+            Utilities.Notify.error('Please check all the required Fields.', 'Error');
+            $(this).find('button[type=submit]').removeClass('loader');
+            e.target.querySelector('button[type="submit"]').disabled = false
+            return
+        }   
+        
+        
+        let url = "{% url 'health-insurance:edit-deal' pk=1 %}"
+        url = url.replace('1',{{deal.pk}})
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: $('#edit_deal_form').serialize() + '&additional_benefits=' + $('.select_additional_benefits').val(), 
+                success: function(response) {
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    if(response.success) {
+                        Utilities.Notify.success('Deal Edited Successfully', 'Success');
+                        $(this).find('button[type=submit]').removeClass('loader');
+                        window.location.reload()                        
+                    }
+                    else if(response.errors){
+                        let errors = ''
+                        for(let i in response.errors){
+                            errors += response.errors[i] + '\n'
+                        }
+                        Utilities.Notify.error(errors, 'Error');
+                    }
+                    $(this).find('button[type=submit]').removeClass('loader');
+                },
+                error:function(error){
+                    Utilities.Notify.error('Some Error Occurred', 'Error');
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                }
+    });
+    })
+
+</script>
+</div>
+{% else %}
+<div class="felix-modal-container"  id="modal_create_health_deal">
+    <!-- Create Deal Form -->
+    <div class="felix-modal">
+        <button id="countries-button" style="display: none;"></button>        
+        <h1>New Deal</h1>
+        <form action="{% url 'health-insurance:new-deal' %}" name="health_deal_form" id="health_deal_form" method="post" data-module-name="Deal" novalidate>
+            {% csrf_token %}
+            <div class="content squeeze">
+                <div class="form-group">
+                    <input type="hidden" name="additional_members" id="additional_members" />
+                    <input type="hidden" name="stage" value="new" />
+                    <input type="hidden" name="premium" value="0" />
+                    <input type="hidden" name="customer" id="id_customer" value={{customer.pk}} />
+                    <input type="hidden" name="customer_name" id="name_customer" value={{customer.name}} />
+                    <input type="hidden" name="source" id="source_customer" value="people_page" />
+                    <div class="row">
+                       <span class="font-15 fw-500">Primary Member Details</span>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Name *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="autocomplete-container">
+                                <input
+                                    type="text"
+                                    data-url="{% url 'customers:customers-search' %}" 
+                                    data-target="id_customer"
+                                    class="autocomplete-field form-control required" 
+                                    id="id_customer_name" 
+                                    name="name" autocomplete="off" />
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Phone Number</label> 
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" name="phone" class="form-control" id="id_phone"/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Email *</label> 
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" name="email" class="form-control required" id="id_email"/>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row select_gender_row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Gender *</label>
+                        </div>
+                        <div class="col-lg-2 radio-button">
+                            <input type="radio" name="gender" id="gender_male" class="btn btn-light btn-outline-secondary required" style="width: inherit;" value="m" />
+                            <label for="gender_male">Male</label>
+                        </div>
+                      <div class="col-lg-1">
+
+                      </div>
+                        <div class="col-lg-2 radio-button">
+                            <input type="radio" name="gender" id="gender_female" class="btn btn-light btn-outline-secondary required" style="width: inherit;" value="f" />
+                            <label for="gender_female">Female</label>
+                        </div>
+                        <div class="col-lg-1">
+                          
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Marital Status</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <select class="form-control" name="marital_status" required>
+                                <option value="" selected disabled>Please select Marital Status</option>
+                                <option value="married">Married</option>
+                                <option value="single">Unmarried</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Date of Birth *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" class="datepicker-here form-control required" id="id_dob" name="dob" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Please Select Date of Birth" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row info-container">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Level of Cover</label>
+                        </div>
+                        <div class="col-lg-3 radio-button">
+                            
+                           
+                           <input type="radio" name="level_of_cover" id="level_of_cover_comprehensive" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="comprehensive" />
+                            <label for="level_of_cover_comprehensive">Comprehensive</label>
+                        </div>
+                        <div class="col-lg-3 radio-button">
+                           <input type="radio" name="level_of_cover" id="level_of_cover_basic" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="basic" />
+                           <label for="level_of_cover_basic">Basic</label>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Nationality *</label>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <select class="form-control required" name="nationality" id="id_nationality" required>
+                                <option value="" selected disabled>Please select Nationality</option>
+                                {% for country in countries %}
+                                <option value="{{country.0}}">{{country.1}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                            <div class="col-lg-3 p-0">
+                                <label class="">Country of Residence *</label>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <select class="form-control required" name="country_of_stay" id="id_country_of_stay" required>
+                                    <option value="" selected disabled>Please select Country of Residence</option>
+                                        {% for country in countries %}
+                                        <option value="{{country.0}}">{{country.1}}</option>
+                                        {% endfor %}                                   
+                                </select>
+                            </div>
+                    </div>
+                    <br />
+                    <div class="row" id="row_visa">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Visa *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <select class="form-control required" name="visa" id="id_visa">
+                                <option value="" disabled selected>Please select Visa</option>                       
+                                <option value="Dubai">Dubai</option>
+                                <option value="Abu Dhabi">Abu Dhabi</option>
+                                <option value="Sharjah">Sharjah</option>
+                                <option value="Ajman">Ajman</option>
+                                <option value="Ras Al Khaimah">Ras Al Khaimah</option>
+                                <option value="Fujairah">Fujairah</option>
+                                <option value="Umm Al Quwain">Umm Al Quwain</option>
+                            </select>
+                        </div>
+                    </div>
+                     </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Salary Band</label>
+                        </div>
+                        <div class="col-lg-6">
+                        <select class="form-control" name="salary_band">
+                            <option value="" disabled selected>Please select Salary Band</option>
+                            <option value="below_4k">Below 4000 AED</option>
+                            <option value="above_4k">Above 4000 AED</option>
+                        </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="row" >
+                        <div class="col-lg-3 font-12" style="margin-left: -35px;">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="add_members" name="add_members" switch="success">
+                            <label class="switch-toggle" for="add_members"></label>
+                        </div>
+                           
+                    </div>
+                    <div class="col-lg-6">
+                        <span>Any additional members to be added?</span>
+                    </div>
+                    </div>
+                    <br/>
+                    <div id="additional_member_div" style="display: none;" class="row">
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input additional-member" type="checkbox" id="spouse" name="Spouse"  value="0">
+                            <label class="form-check-label">Spouse</label>
+                          </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input additional-member" type="checkbox" id="son" name="Son"  value="0">
+                            <label class="form-check-label">Son</label>
+                          </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input additional-member" type="checkbox" id="daughter" name="Daughter" value="0">
+                            <label class="form-check-label">Daughter</label>
+                          </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input additional-member" type="checkbox" id="father" name="Father" value="0">
+                            <label class="form-check-label">Father</label>
+                          </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="form-check">
+                            <input class="form-check-input additional-member" type="checkbox" id="mother" name="Mother" value="0">
+                            <label class="form-check-label">Mother</label>
+                          </div>
+                    </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <span class="font-15 fw-500">Policy Coverage</span>
+                            </div>
+                           
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Geographical Coverage</label>
+                            </div>
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_local" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="local" />
+                                <label for="coverage_local">Local</label>
+                            </div>
+                          
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_regional" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="regional" />
+                                <label for="coverage_regional">Regional</label>
+                            </div>
+                            
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_world_ex_us" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="worldwide_except_us" />
+                                <label for="coverage_world_ex_us" style="white-space: nowrap;">Worldwide Except US</label>
+                            </div>
+                            
+                            <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="geographical_coverage" id="coverage_world" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="worldwide" />
+                                <label for="coverage_world">Worldwide</label>
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Additional Benefits</label>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <select class="select_additional_benefits form-control hide" name="additional_benefits" multiple>
+                                    <option value="Health Screen">Health Screening</option>
+                                    <option value="Dental">Dental</option>
+                                    <option value="Optical">Optical</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row other_benefits hide">
+                        <div class="col-lg-3">
+                            <label>Other Benefits</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <input name="other_benefits" type="text" class="form-control"/>
+                        </div>
+                        
+                    </div>
+                    
+                   
+                    <div class="row">
+                        <div class="col-lg-3">
+                           <label style="white-space: nowrap;">Indicative Budget per person</label> 
+                            </div>
+                            <!-- <div class="col-md-2 col-lg-2 radio-button">
+                                <input type="radio" name="indicative_budget" id="budget_below_4k" class="btn btn-light btn-outline-secondary" style="width: inherit;" value="Below 4k" />
+                                <label for="budget_below_4k">Below 4k AED</label>
+                            </div> -->
+                            <div class="col-md-6 col-lg-6">
+                                <select name="indicative_budget" class="form-control">
+                                    <option value="" disabled selected>Please select Indicative Budget</option>
+                                    <option value="Below 1k">Below 1k AED</option>
+                                    <option value="2-4k">2-4k AED</option>
+                                    <option value="4-8k">4-8k AED</option>
+                                    <option value="Above 8k">8k+ AED</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Start Date</label>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" class="datepicker-here form-control" id="id_start_date" name="start_date" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Please select Start Date" />
+                            </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label>Any Preferred Hospitals/ Clinics</label>  
+                            </div>
+                            <div class="col-lg-6">
+                                <textarea class="form-control tiny modal-textarea" name="preferred_hospitals"></textarea>
+                            </div>
+                    </div>
+                    <br/>
+                </div>
+
+                <div class="button-container float-right">
+                    <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md" data-dismiss="modal" aria-label="Close">Close</a>
+                    <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                        <span>Save</span>
+                        <div class="ball-spinner"></div>
+                    </button>
+                </div>
+            </div>
+
+           
+        </form>
+
+        <script>
+
+            function removeMember(elem){
+                debugger
+                console.log(elem)
+                let relative = elem.className.toLowerCase()
+                $(`#additional_member_details_${relative}:last-child`)
+                let count = parseInt(document.querySelector(`#${relative}`).value)
+                $(`#additional_member_details_${relative}_${count}`).last().remove()
+                count -= 1
+                document.querySelector(`#${relative}`).value = count
+            }
+
+            function addMember(elem){
+                debugger
+                let relative = elem.className.toLowerCase()
+                let count = parseInt(document.querySelector(`#${relative}`).value)
+                count += 1
+                let new_elem = CreateElement(relative, count)
+                $(`#additional_member_details_${relative}`).last().append(new_elem)
+                document.querySelector(`#${relative}`).value = count
+                document.getElementById('countries-button').click()        
+            }
+
+        document.querySelector('#add_members').addEventListener('change', function(){
+            if(this.checked){
+                document.querySelector('#additional_member_div').style.display = 'block'
+            }
+            else{
+                document.querySelector('#additional_member_div').style.display = 'none'
+            }
+        })
+
+        document.querySelectorAll('.radio-button.additional_benefits').forEach(e => {
+            e.addEventListener('click', function(e){
+            debugger
+            let status = this.querySelector('input[type="hidden"]').value            
+            if(this.querySelector('input[type="radio"]').checked){
+                this.querySelector('input[type="hidden"]').value = '1'
+            }
+            else
+                this.querySelector('input[type="hidden"]').value = '0'
+
+        })
+    })
+
+        
+        $('#health_deal_form').submit(function(e){
+        debugger            
+        e.preventDefault()
+        e.target.querySelector('button[type="submit"]').disabled = true
+        var loader = '<div class="ball-spinner"></div>';
+        var button = $(this).find('button[type=submit]');
+
+        $(this).find('button[type=submit]').addClass('loader');
+        let errorCount = 0
+        $('.error').hide()
+        let radioList = ['gender']
+        this.querySelectorAll('.required').forEach(i => {
+        if(i.type == 'radio' && i.checked){
+                radioList.pop()
+            }
+                if (! i.value) {
+                    if(i.dataset && i.dataset['inputName'] == 'nationality'){
+                        if(i.querySelector('select').value){
+                            return
+                        }
+                    }
+                $(i).after('<span class="error">This field is required</span>');
+                errorCount++
+            }
+            
+        })
+        if(radioList.length > 0) $('.select_gender_row > div').last().after('<span class="error">This field is required</span>');
+        let member_form = ['additional_member_name','additional_member_dob','nationality']
+
+        if(errorCount > 0) {
+            Utilities.Notify.error('Please check all the required Fields.', 'Error');
+            $(this).find('button[type=submit]').removeClass('loader');
+            e.target.querySelector('button[type="submit"]').disabled = false
+            return
+        }
+        
+        
+        GetAddedMembers(e.target)
+        let url = "{% url 'health-insurance:new-deal' %}"
+        
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: $('#health_deal_form').serialize() + '&additional_benefits=' + $('.select_additional_benefits').val(), 
+                success: function(response) {
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    if(response.success) {
+                        Utilities.Notify.success('Deal Created Successfully', 'Success');
+                        $(this).find('button[type=submit]').removeClass('loader');
+                        if(response.redirect_url)
+                        window.location = response.redirect_url;                        
+                    }
+                    else if(response.errors){
+                        let errors = ''
+                        for(let i in response.errors){
+                            errors += response.errors[i] + '\n'
+                        }
+                        Utilities.Notify.error(errors, 'Error');
+                    }
+                    $(this).find('button[type=submit]').removeClass('loader');
+                },
+                error:function(error){
+                    Utilities.Notify.error('Some Error Occurred', 'Error');
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                }
+    });
+    })
+        
+        </script>
+
+</div>
+  
+
+{% endif %}
+<select class="form-control created_member_nationality hide" name="nationality" id="id_nationality" required>
+    <option value="" selected disabled>Please select Nationality</option>
+    {% for country in countries %}
+    <option value="{{country.0}}">{{country.1}}</option>
+    {% endfor %}
+</select>
+
+<select class="form-control created_member_country_of_stay hide" name="additional_member_nationality" id="id_additional_member_nationality" required>
+    <option value="" selected disabled>Please select Country of Residence</option>            
+            {% for country in countries %}
+            <option value="{{country.0}}">{{country.1}}</option>
+            {% endfor %}
+</select>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript">
+
+const minus = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+</svg>`
+
+    
+const plus = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+</svg>`
+
+$('select.select_additional_benefits').multiselect({
+    columns: 4,
+    placeholder: 'Select options',
+    minWidth:100,
+    class:'form-control',
+});
+
+document.querySelector('#add_members').addEventListener('change', function(){
+    if(this.checked){
+        document.querySelector('#additional_member_div').style.display = 'block'
+    }
+    else{
+        document.querySelector('#additional_member_div').style.display = 'none'
+    }
+})
+
+function CreateElement(name, number){
+    let relative = name.toLowerCase()
+    let div = ''
+    let nationality_dropdown = document.querySelector('.created_member_nationality').innerHTML
+    let stay_country_dropdown = document.querySelector('.created_member_country_of_stay').innerHTML
+
+    div += `<br/><div id="additional_member_details_${relative}"><div id="additional_member_details_${relative}_${number}">`
+        div += `<input type="hidden" name="order" value="${number}" />`
+        div += `<div class="row"><div class="col-lg-8"><label><b>${name} (${number})</b></label> </div> <div class="col-lg-1"><a class='${relative}' id='remove_member' onclick=removeMember(this)> ${minus}</a></div><div class="col-lg-1"><a class='${relative}' id='add_member' onclick=addMember(this)> ${plus}</a></div></div>`
+        div += `<br/><div class="row"> <div class="col-lg-3 font-12"><label>Name *</label></div> <div class="col-lg-6 font-12"><input name="additional_member_name" class="form-control required" type="text" /></div></div>`
+        div += `<br/><div class="row"> <div class="col-lg-3 font-12"><label>Date of Birth *</label> </div> <div class="col-lg-6 font-12"><input name="additional_member_dob" class="form-control datepicker-dob required" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Please Select Date of Birth"></div> </div>`
+        
+        div += `<br/><div class="row"><div class="col-lg-3 font-12"><label class="">Nationality *</label> </div><div class="col-lg-6"><select name="nationality" class="form-control required">${nationality_dropdown}</select></div></div>`
+        div += `<br/><div class="row"> <div class="col-lg-3 font-12"><label class="">Country of Residence</label> </div>`
+        div += `<div class="col-lg-6 font-12"><select name="country_of_stay" class="form-control">${stay_country_dropdown}</select></div>`
+        div += `</div>`
+        return div
+}
+
+$('.select_additional_benefits').change(function(){
+    console.log($(this).val())
+    debugger
+    $.each($(this).val(), function(k,v){
+        if(v.toLowerCase() == 'other'){
+            $('.row.other_benefits').removeClass('hide')
+            $('.row.other_benefits').after('<br class="br"/>')
+            $('.row.other_benefits input').addClass('required')
+        }
+        else{
+            $('.row.other_benefits').addClass('hide')
+            $('.row.other_benefits').next('.br').remove()
+            $('.row.other_benefits input').val('')
+            $('.row.other_benefits input').removeClass('required')
+        }
+    })
+    if($(this).val().length == 0){
+        $('.row.other_benefits').addClass('hide')
+        $('.row.other_benefits input').removeClass('required')
+    }
+})
+
+$('#id_country_of_stay').change(function(){
+    debugger
+    if($(this).val() !== 'AE'){
+        $('#row_visa select').removeClass('required')
+        $('#row_visa').addClass('hide')
+        $('#row_visa select').val('')
+    }
+    else{
+        $('#row_visa select').addClass('required')
+        $('#row_visa').removeClass('hide')
+    }
+})
+
+document.querySelectorAll('.additional-member').forEach(elem => {
+        debugger
+            elem.addEventListener('change', function(){
+            let div = ''
+            debugger
+            let relative = this.name
+            let number = parseInt(this.value)
+        
+            if(this.checked){
+                number += 1
+                let new_elem = CreateElement(relative, number)
+                $('#additional_member_div').last().append(new_elem)
+                document.getElementById('countries-button').click()
+                this.value = number
+            }
+            else{
+                $('#additional_member_div').append(div)
+                this.value = 0
+                document.querySelectorAll(`.additional_member_details_${relative}`).forEach(elem => {
+                    elem.style.display = 'none'
+                })
+                $(`#additional_member_details_${relative.toLowerCase()}`).last().remove()
+            }
+        })
+    })
+
+$('body').on('focus',".datepicker-dob", function(){
+    $(this).datepicker();
+});
+
+$('#datepicker').setDefaults({
+  showOn: "both",
+  buttonImageOnly: true,
+  buttonImage: "calendar.gif",
+  buttonText: "Calendar"
+});
+
+document.querySelectorAll("select[name='country_of_stay']").forEach(e => {
+    
+    e.addEventListener('change', function(){
+        debugger
+        console.log(this.value)
+    });
+})
+
+$('#edit_members_form').submit(function(e){
+        debugger
+        e.preventDefault()
+        e.target.querySelector('button[type="submit"]').disabled = true
+        let errorCount = 0
+        this.querySelectorAll('input.required').forEach(i => {
+                if (! i.value) {
+                $(i).after('<span class="error">This field is required</span>');
+                errorCount++
+            }                
+        })           
+        this.querySelectorAll('select.required').forEach(i => {
+                if (! i.value) {
+                $(i).after('<span class="error">This field is required</span>');
+                errorCount++
+            }                
+        })           
+        if(errorCount > 0) {
+            Utilities.Notify.error('Please check all the required Fields.', 'Error');
+            $(this).find('button[type=submit]').removeClass('loader');
+            e.target.querySelector('button[type="submit"]').disabled = false
+            return
+        }
+        GetAddedMembers(e.target)   
+        let url = e.target.action
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: $('#edit_members_form').serialize(), 
+                success: function(response) {
+                    if(response.success) {
+                        Utilities.Notify.success('Additional Member Details Edited Successfully', 'Success');
+                        $(this).find('button[type=submit]').removeClass('loader');
+                        location.reload()
+                    }
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                },
+                error:function(error){
+                    Utilities.Notify.error('Some Error Occurred', 'Error');
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                }
+    });
+      
+});
+    
+$('#edit_deal_form').submit(function(e){
+        debugger            
+        e.preventDefault()
+        e.target.querySelector('button[type="submit"]').disabled = true
+        var loader = '<div class="ball-spinner"></div>';
+        var button = $(this).find('button[type=submit]');
+        
+        $(this).find('button[type=submit]').addClass('loader');
+        let errorCount = 0
+        $('.error').hide()
+        let radioList = ['gender']
+
+        
+        this.querySelectorAll('input.required').forEach(i => {
+                if (! i.value) {
+                $(i).after('<span class="error">This field is required</span>');
+                errorCount++
+            }
+        })
+        if(errorCount > 0) {
+            Utilities.Notify.error('Please check all the required Fields.', 'Error');
+            $(this).find('button[type=submit]').removeClass('loader');
+            e.target.querySelector('button[type="submit"]').disabled = false
+            return
+        }
+        let url = "{% url 'health-insurance:edit-deal' pk=11 %}"
+        url = url.replace('11',_deal_id)
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: $('#edit_deal_form').serialize() + '&additional_benefits=' + $('.select_additional_benefits').val(), 
+                success: function(response) {
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    if(response.success) {
+                        Utilities.Notify.success('Deal Edited Successfully', 'Success');
+                        $(this).find('button[type=submit]').removeClass('loader');
+                        if(response.redirect_url)
+                        window.location = response.redirect_url;                        
+                    }
+                    else if(response.errors){
+                        let errors = ''
+                        for(let i in response.errors){
+                            errors += response.errors[i] + '\n'
+                        }
+                        Utilities.Notify.error(errors, 'Error');
+                    }
+                    $(this).find('button[type=submit]').removeClass('loader');
+                },
+                error:function(error){
+                    Utilities.Notify.error('Some Error Occurred', 'Error');
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                }
+    });
+
+});
+
+function GetAddedMembers(elem){
+let additional_member = {}
+let additional_members_list = []
+if(document.querySelector('#add_members').checked){
+let added_members = document.querySelector('#additional_member_div').querySelectorAll('input:checked')
+let relative = ''
+let count = ''
+added_members.forEach(member => {
+    debugger
+    relative = member.id
+    count = document.querySelector(`#${relative}`).value    
+    for(let i=1; i<=count; i++){
+        additional_member = {}
+        let selected_div = document.querySelector(`#additional_member_details_${relative.toLowerCase()}_${i}`)
+        if(!selected_div)
+         selected_div = document.querySelector(`#additional_member_details_${relative}_${i}`)
+        let name = selected_div.querySelector('input[name=additional_member_name]').value
+        let id = selected_div.querySelector('input[name=additional_member_id]')
+        if (id)
+            id = id.value
+        let dob = selected_div.querySelector('input[name=additional_member_dob]').value
+        let order = selected_div.querySelector('input[name=order]').value
+        let country = selected_div.querySelector('select[name="country_of_stay"]')
+        if(country)
+           country = country.value
+        else
+            country = selected_div.querySelector('select[name="additional_member_country_of_stay"]').value
+        
+        let nationality = selected_div.querySelector('select[name="nationality"]')
+        if(nationality)
+        nationality = nationality.value
+        else
+        nationality = selected_div.querySelector('select[name="additional_member_nationality"]').value
+       
+        additional_member['id'] = id
+        additional_member['name'] = name
+        additional_member['relation'] = relative
+        additional_member['dob'] = dob
+        additional_member['order'] = order
+        additional_member['nationality'] = nationality
+        additional_member['country_of_stay'] = country
+        additional_members_list.push(additional_member)
+    }
+})
+console.log(JSON.stringify(additional_members_list))
+document.querySelector('#additional_members').value = JSON.stringify(additional_members_list)
+if(elem)
+    $(elem).append(document.querySelector('#additional_members'));
+else
+    $(this).append(document.querySelector('#additional_members'));
+}
+}
+
+
+</script>
+</div>

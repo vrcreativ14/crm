@@ -209,6 +209,7 @@
                                         <option  selected value="all"> --Entity Type--</option>
                                         <option value="motor"> Motor-Insurance</option>
                                         <option value="mortgage">Mortgage</option>
+                                        <option value="health">Health-Insurance</option>
                                     </select>
                                 </div>
                                 </th>

@@ -1,0 +1,25 @@
+{% verbatim %}
+<script id="health-deal-quote-add-product-template" type="text/x-handlebars-template">
+    <div class="row product" data-id={{ index }}>
+        
+        <div class="product-logo-container col-lg-2 col-md-3 m-l-30">
+            <span class="spacer"></span>
+            <img src="{{ plan_logo }}" style="width:100px;height:100px;">
+        </div>
+        <div class="details col-lg-5 col-md-5 col-sm-7">
+            <div class="heading light">{{ plan_name }}</div>
+            <div class="text-muted font-12">Total Premium: {{ currency }} {{ total_premium }}</div>
+            <div class="text-muted font-12">{{#if is_renewal }}<span>Renewal <i class="fa fa-check m-l-5"></i></span>{{/if }}</div>
+            
+            {{#each default_add_ons }}
+                <span class="badge badge-default badge-font-light m-t-10">
+                    {{ replaceWith this "_" " " }}
+                </span>
+            {{/each}}
+        </div>
+        
+        <div title="Click to remove" class="remove product-remove" data-id="{{ index }}"><i class="ti-trash"></i></div>
+        <div title="Click to edit" class="edit product-edit" data-qp-id="{{ id }}" data-id="{{ index }}" style="margin-left:10px;"><i class="ti-pencil-alt"></i></div>
+    </div><br/>
+</script>
+{% endverbatim %}

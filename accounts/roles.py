@@ -50,6 +50,20 @@ permissions = {
     'update_mortgage_tasks': True,
     'export_mortgage_tasks': True,
 
+    #Health-Insurance Deals
+    'create_health_deals': True,    
+    'list_health_deals': True,
+    'list_health_tasks': True,
+    'list_health_insurers': True,
+    'update_health_deals': True,
+
+    #Health-Insurance Policies
+    'create_health_policies': True,
+    'update_health_policies': True,
+    'export_health_policies': True,
+    'import_health_policies': True,
+    'list_health_policies': True,
+    
     # Users/Agents
     'list_users': True,
     'create_users': True,

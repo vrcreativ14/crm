@@ -1,0 +1,15 @@
+{% load static %}
+
+<div class="deal-overview deal-process display">
+    <br/>
+    {% if not quote or quote.is_deleted %}
+        <div class="w-100 m-auto text-center">
+            <button class="show-insurer-modal btn btn-primary btn-wide-deal" data-felix-modal="modal_quote_insurers">Create Quote</button>
+        </div>    
+    {% endif %}
+    {% include 'healthinsurance/deals/components/deal_quote_form.djhtml' %}
+
+<br/>
+<br/>
+</div>
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}

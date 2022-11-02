@@ -1,0 +1,111 @@
+{% load static %}
+<div class="modal fade felix-modal" tabindex="-1" role="dialog" id="edit_additional_members" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                {% comment %} <h5>Edit Additional Members</h5> {% endcomment %}
+                <button type="button" class="close btn-lg" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="font-size: 25px;font-weight: 500;">&times;</span>
+                  </button>
+            </div>
+ {% for member in deal.primary_member.additional_members.all %}
+ <div id="additional_member_details_{{member.relation}}">
+ <br/>
+ <br/>
+ <div id="additional_member_details_{{member.relation}}_{{member.order}}" >
+     <input type="hidden" name="order" value="{{member.order}}" />
+ <div class="row">
+    <div class="col-lg-8">
+     {{member.relation}} ({{member.order}})
+    </div>
+    
+    <div class="col-lg-1">
+        <a class='{{member.relation}}' id='add_member' onclick=removeMember(this)>
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16">
+             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+             <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+           </svg>
+        </a>
+         
+        
+        
+        
+    </div>
+    <div>({{member.order}})</div>
+    <div class="col-lg-1">
+     <a class='{{member.relation}}' id='add_member' onclick=addMember(this)>
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+           </svg>
+     </a>
+     
+    </div>
+ </div>
+ <br/>
+ <input type="hidden" name="additional_member_id" class="form-control" value={{member.pk}} />
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Name </label>
+     </div>
+     <div class="col-lg-6">
+         <input name="additional_member_name" class="form-control" value={{member.name}} />
+     </div>
+ </div>
+ <br/>
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Date of Birth </label>
+     </div>
+     <div class="col-lg-6">
+         <input name="additional_member_dob" class="datepicker-here form-control" value={{member.dob|date:"d/m/Y"}} />
+     </div>
+ </div>
+ <br/>
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Country of Stay </label>
+     </div>
+     <div class="col-lg-6">
+         
+         <div class="flagstrap" 
+         data-selected-country={{member.country_of_stay}}
+         data-input-name="additional_member_country_of_stay" 
+         data-button-size="btn-md" 
+         data-button-type="btn-default"
+         data-scrollable="true"
+         width="inherit"                            
+         id="id_country_of_stay"
+         style="width: 100%;"
+         name="additional_member_country_of_stay">
+         </div>
+     </div>
+ </div>
+ <br/>
+ <div class="row">
+     <div class="col-lg-3">
+        <label> Nationality </label>
+     </div>
+     <div class="col-lg-6">
+         
+         <div class="flagstrap" 
+         data-selected-country={{member.nationality}}
+         data-input-name="additional_member_nationality" 
+         data-button-size="btn-md" 
+         data-button-type="btn-default" 
+         data-scrollable="true"
+         data-width="inherit"                            
+         id="id_additional_member_nationality"
+         style="width: 100%;"
+         name="additional_member_nationality">
+         </div>
+     </div>
+ </div>
+ </div>
+
+ <br/>
+ {% endfor %}
+</div>
+</div>
+</div>
+</div>

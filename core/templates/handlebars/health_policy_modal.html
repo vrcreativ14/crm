@@ -1,0 +1,173 @@
+
+{% verbatim %}
+<script id="health-policy-modal-template" type="text/x-handlebars-template">
+            <div class="policy-modal">
+                <div class="view-file">
+                    <!-- <a href="{{ policy_document_url }}" target="_blank">
+                        <i class="font-15 ti-new-window"></i> <span class="font-12">View File</span>
+                    </a> -->
+                    <div class="m-t-10 font-10 text-muted c-vlgrey">Created on: {{ policy_created_on }}</div>
+                    <div class="font-10 text-muted c-vlgrey">Last Updated on: {{ policy_updated_on }}</div>
+                </div>
+                <div class="row no-gutters">
+                    <div class=" col-lg-2 col-md-3 m-r-10">
+                        <div class="logo">
+                            <span class="spacer"></span>
+                            <img src="{{ product_logo_url }}" />
+                        </div>
+                    </div>
+                    <div class="details p-0 col-lg-6 col-md-6 col-sm-8">
+                        <div class="heading light">
+                            {{#if selected_plan }}{{ selected_plan }}{{else}}-{{/if}}
+                        </div>
+                        <div class="font-10 c-bgrey">
+                            Policy No. {{ policy_number }}
+                        </div>
+            
+                        <div class="font-12 capitalize">
+                            <span class="stage-icon status-{{{ slugify policy_status }}}"></span> {{ policy_status }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-t-60">
+                    
+                </div>
+                <div class="row m-t-20">                    
+                    <div class="col-lg-4">
+                        <label class="text-muted">Primary Member Name</label>
+                        <div class="value capitalize">{{ primary_member_name }}</div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Premium</label>
+                        <div class="value capitalize">
+                            {{#if premium }}{{ currency }} {{ premium }}{{else}}-{{/if}}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Insurer</label>
+                        <div class="value capitalize">
+                            {{#if insurer }}{{insurer}}{{else}}-{{/if}}
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="row m-t-20">
+                    <div class="col-lg-4">
+                        <label class="text-muted">Plan</label>
+                        <div class="value capitalize">
+                            {{#if selected_plan }}{{selected_plan}}{{else}}-{{/if}}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Commission Rate %</label>
+                        <div class="value capitalize">{{#if commission }} {{ commission }}{{else}}-{{/if}}</div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">No. Of Members</label>
+                        <div class="value capitalize">
+                            {{ deal_members_count }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-t-20">
+                    <div class="col-lg-4">
+                        <label class="text-muted">Start Date</label>
+                        <div class="value capitalize">
+                            {{ policy_start_date }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">End Date</label>
+                        <div class="value capitalize">
+                            {{ policy_expiry_date }}
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Policy Number</label>
+                        <div class="value capitalize">
+                            {{ policy_number }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters m-t-20">
+                    <div class="col-lg-4">
+                        <label class="text-muted">Consultant Name</label>
+                        <div class="value capitalize">
+                            {{#if consultant }}{{consultant}}{{else}}-{{/if}}
+                        </div>
+                    </div>
+
+
+                </div>
+            
+                
+                <hr />
+                <span class="">Policy Documents</span> <a href="#" onclick="downloadAllPolicyFiles('policy','{{source_deal_id}}')"><span class="float-right font-12"><i class="fa fa-download" aria-hidden="true"></i> Download All</a></span>
+                <hr />
+                <div class="row no-gutters m-t-20">
+                    <div class="col-lg-4">
+                        <label class="text-muted">Receipt of Payment</label>
+                        <div class="value capitalize">
+                            {{#if receipt_of_payment }}<a href="{{receipt_of_payment}}" class="link limit-text font-12">Download</a>{{else}}-{{/if}}
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Tax Invoice</label>
+                        <div class="value capitalize">
+                            {{#if tax_invoice }}<a href="{{tax_invoice}}" class="link limit-text font-12">Download</a>{{else}}-{{/if}}
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Certificate of Insurance</label>
+                        <div class="value capitalize">
+                            {{#if certificate_of_insurance }}<a href="{{certificate_of_insurance}}" class="link limit-text font-12">Download</a>{{else}}-{{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters m-t-20">
+                    <div class="col-lg-4">
+                        <label class="text-muted">Medical Card</label>
+                        <div class="value capitalize">
+                            {{#if medical_card }}<a href="{{medical_card}}" class="link limit-text font-12">Download</a>{{else}}-{{/if}}
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Confirmation of Cover</label>
+                        <div class="value capitalize">
+                            {{#if confirmation_of_cover }}<a href="{{confirmation_of_cover}}" class="link limit-text font-12">Download</a>{{else}}-{{/if}}
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="text-muted">Credit Note</label>
+                        <div class="value capitalize">
+                            {{#if credit_note }}<a href="{{credit_note}}" class="link limit-text font-12">Download</a>{{else}}-{{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters m-t-20">
+                {{#if source_deal_id}}
+                    <div class="col-lg-6">
+                        <label class="text-muted">Source Deal</label>
+                        <div class="value">
+                            <a href="{{{ felixUrl 'health-insurance:deal-details' source_deal_id}}}" class="link limit-text font-12">Click here</a>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#if renewal_deal_id}}
+                    <!-- <div class="col-lg-6">
+                        <label class="text-muted">Renewal Deal</label>
+                        <div class="value capitalize">
+                            <a href="{{{ felixUrl 'motorinsurance:deal-edit' renewal_deal_id}}}" class="link limit-text font-12">{{#if renewal_deal_title }}{{ renewal_deal_title }}{{else}}-{{/if}}</a>
+                        </div>
+                    </div> -->
+                {{/if}}
+                </div>
+            </div>
+</script>
+{% endverbatim %}
+          
+    

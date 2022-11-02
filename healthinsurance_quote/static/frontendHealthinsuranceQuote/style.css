@@ -1,0 +1,1157 @@
+:root{
+    --golden-color: #DBAE58;
+    --text-main-color: #111E4A;
+    --text-fade-color: #66788A;
+    --text-green-color: #035603;
+    --grey-color:#F3F4F6;
+    --tab-color: #979797;
+    --border-color: #78738920;
+    --breadcrumb-active: #87878710;
+}
+
+
+
+* {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+body{
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-main-color);
+    font-size: 0.75rem;
+    background-color: #F9FAFC;
+}
+.text-fade-grey{
+    color: var(--text-fade-color);
+}
+.fw-light-bold{
+    font-weight: 500;
+}
+.btn-nexus{
+    padding: 0.5rem 1.5rem;
+    border: unset;
+    box-shadow: unset;
+    border-radius: 0.25rem;
+    min-width: 115px;
+    margin-bottom: 0.5rem;
+}
+@media(max-width: 768px){
+    .comparison .btn-nexus{
+        padding: 0.25rem 1rem;
+    }
+}
+.btn-golden{
+    background-color: var(--golden-color);
+    color: white;
+}
+.btn-grey{
+    background-color: var(--grey-color);
+}
+.color-4D8BFF{
+    background-color: #F8FAFF;
+}
+.text-golden{
+    color: var(--golden-color);
+}
+.text-light-grey{
+    color: #506172;
+}
+.border-bottom-custom{
+    border-bottom: 1px solid #F1F1F1;
+}
+.btn-nexus:disabled{
+    opacity: 0.65;
+}
+.cursor-pointer{
+    cursor: pointer;
+}
+span.cursor-pointer:hover {
+    color: #0e52c1;
+}
+
+
+
+header{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+}
+header img{
+    width: 100px;
+    height: auto;
+    margin-left: 2rem;
+}
+header div{
+    margin-right: 5rem;
+    text-align: center;
+}
+.header a,.invalid-page a{
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--golden-color);
+}
+@media(max-width:768px){
+    header img,header div{
+        margin: 0 !important;
+    }
+}
+
+
+
+main{
+    display: flex;
+}
+main .breadcrumb{
+    background-color: white;
+    min-height: 100vh;
+    margin-bottom: 0;
+}
+main .breadcrumb ul{
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+main .breadcrumb li{
+    display: flex;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+main .breadcrumb li div{
+    width: 175px;
+    font-size: 0.9rem;
+}
+main .breadcrumb li.active,main .breadcrumb li.completed{
+    background-color: var(--breadcrumb-active);
+    color: var(--golden-color);
+}
+main .breadcrumb li.active{
+    font-weight: 600;
+}
+main .breadcrumb li.completed{
+    background-color: white;
+    opacity: 0.5;
+}
+main .breadcrumb li img{
+    margin-right: 1rem;
+}
+main .breadcrumb span{
+    display: none;
+    float: right;
+    width: 15px;
+}
+main .breadcrumb li.active span.current,main .breadcrumb li.completed span.completed{
+   display: inline-block;
+}
+
+
+
+main .content-head h3{
+    /* text-transform: capitalize; */
+    font-weight: 500;
+}
+main .content-head{
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+}
+
+
+main .property-price,main .bank-info{
+    background-color: white;
+    border-radius: 0.5rem;
+}
+main .property-price > *{
+    display: flex;
+    justify-content: space-between;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+main .property-price.user-info > *{
+    align-items: center;
+}
+main .user-info input{
+    background-color: #FBFBFB;
+    border-radius: 0.5rem;
+}
+main .property-price > div{
+    color: var(--text-fade-color);
+    line-height: 1rem;
+}
+main .property-price div small{
+    font-size: 65%;
+}
+main .property-price div span:last-child{
+    text-align: right;
+    font-weight: 500;
+    color: var(--text-green-color);
+}
+main .property-price.user-info span:last-child{
+    width: 70%;
+}
+
+
+main .bank-info{
+    margin-bottom: 1.5rem;
+}
+main .bank-info img{
+    width: 120px;
+    height: auto;
+}
+main .bank-head{
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+main .bank-head input{
+    margin-left: 0.5rem;
+}
+main .bank-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+main .bank-content > *{
+    border-left: 1px solid var(--border-color);
+    text-align: center;
+    width: 100%;
+    margin: 2rem 0;
+}
+main .bank-content .fw-light-bold{
+    color: var(--text-green-color);
+}
+main .bank-content p:first-child{
+    margin-bottom: 0;
+    margin-top: 1rem;
+}
+main .bank-content .full-border{
+    border-right: 1px solid var(--border-color);
+}
+main .bank-content .img,main .bank-content .action,main .bank-content .no-border{
+    border: unset;
+}
+main .bank-content .img{
+    margin: 0;
+    border-right: 1px solid var(--border-color);
+    padding: 3rem 0;
+}
+main .bank-details{
+    position: fixed;
+    margin: 1rem;
+    opacity: 0;
+    transition: opacity ease-in-out 0.3s;
+    z-index: -1;
+}
+main .bank-details.active{
+    position: relative;
+    opacity: 1;
+    z-index: 1;
+    height: auto;
+}
+main .bank-details img,main .comparison img{
+    margin-right: 2rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 0.5rem;
+}
+main .bank-details th,main .comparison th{
+    font-weight: normal;
+}
+main .bank-details .sub-title,main .bank-details .no-border,main .comparison .sub-title,main .comparison .no-border{
+    border: unset;
+    border-color: transparent;
+}
+main .bank-details .sub-title th,main .comparison .sub-title th{
+    font-weight: 600;
+}
+main .bank-details .sub-title td,main .comparison .sub-title td{
+    visibility: hidden;
+}
+
+
+main .compare-nav{
+    position: fixed;
+    bottom: -4rem;
+    right: 2rem;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 45px;
+    transition: bottom ease-in 0.3s;
+    border-radius: 50%;
+    border-top-right-radius: 0;
+    color: white;
+    background-color: var(--golden-color);
+    z-index: 11;
+}
+main .compare-nav.active{
+    bottom: 1.5rem;
+}
+main .compare-nav span{
+    position: absolute;
+    top: -0.5rem;
+    right: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+main .comparison{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: -100vh;
+    right: 0;
+    z-index: 11;
+    opacity: 0;
+    transition: opacity ease-in 0.5s;
+}
+main .comparison.active{
+    opacity: 1;
+    top: 0;
+}
+main .overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.75);
+    z-index: -1;
+}
+main .comparison .close{
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    cursor: pointer;
+}
+main .comparison .row > *{
+    display: flex;
+    justify-content: flex-end;
+}
+main .comparison .row > div > div{
+    overflow-y: scroll;
+    height: 100vh;
+}
+main .comparison table{
+    background-color: white;
+    padding-top: 1.5rem;
+    min-width: 800px;
+    margin-bottom: 0;
+}
+main .comparison table td{
+    text-align: left;
+}
+main .comparison table img{
+    width: 100px;
+    height: auto;
+    margin: auto;
+    float: none;
+}
+
+
+
+main .file-upload{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    min-height: 100px;
+    position: relative;
+}
+main .file-upload i{
+    font-size: 1.5rem;
+}
+main .file-upload .name{
+    width: 70%;
+    display: flex;
+    font-weight: bold;
+}
+main .file-upload .name > span{
+    width: 100%;
+}
+main .file-upload .name a{
+    position: relative;
+    z-index: 1;
+}
+main .file-upload .name small{
+    font-size: 65%;
+    color: var(--text-fade-color);
+}
+main .file-upload .name > span span{
+    display: inline-block;
+    width: 100%;
+    height: 0.20rem;
+    background-color: var(--grey-color);
+}
+
+main .parent-file-upload{
+    background-color: white;
+}
+main .parent-file-upload .file-upload{
+    background-color: transparent;
+}
+main .file-upload.done .name > span span{
+    background-color: var(--golden-color);
+}
+main .file-upload.done .file > label span{
+    background-color: var(--golden-color);
+    display: inline-block;
+    width: 100%;
+    height: 0.20rem;
+    margin-top: 0.5rem;
+}
+main .file-upload .file label{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    text-align: center;
+    border: 4px dotted var(--border-color);
+    border-radius: 0.5rem;
+    background-color: #F2F6FF68;
+}
+main .file-upload input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+main .file-upload .file label small{
+    font-size: 65%;
+    color: var(--text-fade-color);
+    font-weight: bold;
+}
+main .file-upload.done .file label{
+    border: unset;
+    line-height: 1rem;
+}
+main .file-upload.done .file .fa-cloud-upload-alt,main .file-upload.done .file small{
+    display: none;
+}
+main .file-upload.done{
+    width: 50%;
+    display: inline-block;
+    opacity: 0.75;
+}
+main .file-upload.done .name{
+    width: 10%;
+}
+main .file-upload.done .file{
+    width: 90%;
+}
+main .file-upload.done .file label i{
+    cursor: pointer;
+}
+main .file-upload .fa-times-circle{
+    font-size: 0.75rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+main .file-upload .font-size-bigger-upload{
+    font-size: 0.75rem;
+    margin-bottom: 0;
+    float: left;
+}
+main .file-upload .font-size-bigger-upload .fa-arrow-circle-down{
+    color: #DBAE58;
+}
+main .thank-you-bank-details .action{
+    display: none !important;
+}
+main .drag-action-text{
+    display: none;
+}
+main .file-upload.uploading .drag-action-text{
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 204, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+
+main .static-images{
+    max-height: 75px;
+    width: auto;
+}
+
+
+
+
+/* Mobile */
+@media(max-width:768px){
+    body{
+        font-size: 0.8rem !important;
+    }
+    main{
+        display: block;
+        margin-bottom: 5rem;
+    }
+    main .breadcrumb{
+        height: auto;
+        min-height: auto;
+        overflow-x: scroll;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    main .breadcrumb::-webkit-scrollbar{
+        display: none;
+    }
+    main .breadcrumb ul{
+        display: flex;
+    }
+    main .breadcrumb li{
+        display: inline-block;
+        text-align: center;
+        border-right: 1px solid var(--border-color);
+        padding: 1rem;
+    }
+    main .breadcrumb li img{
+        margin: auto;
+    }
+    main .breadcrumb li span{
+        display: none !important;
+    }
+    main .breadcrumb li.completed{
+        display: none;
+    }
+    main .breadcrumb.active li.completed{
+        display: inline-block;
+    }
+    main .breadcrumb li.completed span.completed{
+        display: block !important;
+        width: 100%;
+    }
+    main .breadcrumb li div{
+        width: auto;
+    }
+    main .breadcrumb li div.big{
+        min-width: 135px;
+    }
+    main .property-price, main .bank-info{
+        margin-bottom: 1.5rem;
+    }
+
+    main .bank-content{
+        flex-wrap: wrap;
+        padding: 0;
+        align-items: stretch;
+    }
+    main .bank-content > *{
+        border: 1px solid var(--border-color) !important;
+        width: 50%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    main .bank-content .img{
+        padding: 0.5rem 0;
+    }
+    main .bank-content .img,main .bank-content .no-border,main .bank-content .action{
+        width: 100%;
+    }
+    main .bank-content .action{
+        display: block;
+        border: unset !important;
+        margin-top: 0.5rem;
+    }
+    main .bank-content .action button:first-child{
+        margin-right: 0.5rem;
+    }
+
+    main .bank-details{
+        margin: 1rem 0;
+    }
+
+    main .comparison table{
+        min-width: unset;
+        font-size: 0.7rem;
+        height: 100%;
+    }
+    main .comparison .table>:not(caption)>*>*{
+        padding: 0.25rem 0.5rem;
+    }
+    main .comparison table img{
+        width: 75px;
+    }
+    main .comparison table .btn-nexus{
+        padding: 0.35rem 1rem;
+        min-width: unset;
+    }
+
+    main .file-upload{
+        margin-bottom: 1rem;
+    }
+    main .file-upload .file label{
+        padding: 0.1rem;
+        margin-left: 0.5rem;
+    }
+    main .file-upload.done{
+        width: 100%;
+    }
+}
+
+
+main .file-upload i.fa-arrow-circle-down{
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.insurer-info{
+    background-color: white;
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    padding: 0 0.5rem;
+}
+.insurer-info .quote-short-detail{
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    display: table;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: #506172;
+}
+.insurer-info .quote-short-detail > li{
+    padding: 1rem 0.5rem;
+    border-right: 1px solid #F1F1F1;
+    width: 100%;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+.insurer-info .quote-short-detail li:last-child{
+    border: unset;
+}
+.insurer-info.header-content li{
+    font-weight: 600;
+    padding: 0.75rem 0;
+}
+.insurer-info.header-content li button{
+    padding: 0.25rem;
+    margin-bottom: 0;
+}
+.insurer-info .quote-short-detail .small-column,.insurer-info .quote-short-detail .action-column{
+    width: 10%;
+}
+.insurer-info .quote-short-detail .large-column{
+    width: 18%;
+}
+.insurer-info .quote-short-detail .image-column{
+    width: 12%;
+}
+.insurer-info .quote-short-detail .image-column img{
+    /* width: 120px; */
+    max-width: 150px;
+    max-height: 100px;
+    border-radius: 0.5rem;
+}
+.selected-policy .renewal-parent{
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.07)!important;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.07)!important;
+}
+.renewal-parent{
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+.renewal-parent .renewel{
+    position: absolute;
+    padding: 0.05rem 1.5rem;
+    left: -1.25rem;
+    top: 0.75rem;
+    background-color: #DBAE58;
+    color: white;
+    transform: rotate(-40deg);
+    -webkit-box-shadow: 0 1px 5px 0 rgba(0,0,0,.21)!important;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,.21)!important;
+}
+.comparison .renewal-parent{
+    display: flex;
+    width: 100px;
+    height: 100px;
+    align-items: center;
+}
+.comparison .renewal-parent img{
+    max-width: 100px;
+    max-height: 80px;
+}
+.comparison .btn-nexus{
+    width: 100px;
+}
+.comparison .title-head{
+    font-weight: bold;
+    text-align: center;
+}
+@media(max-width:768px){
+    .insurer-info .quote-short-detail .small-column{
+        width: 50%;
+    }
+    .insurer-info .quote-short-detail .action-column,.insurer-info .quote-short-detail .large-column,.insurer-info .quote-short-detail .image-column{
+        width: 100%;
+        border-bottom: 1px solid #F1F1F1;
+        border-top: 1px solid #F1F1F1;
+        border-right: 0;
+    }
+    .insurer-info .quote-short-detail .image-column{
+        border-top: unset;
+    }
+    .insurer-info .quote-short-detail .image-column .image{
+        text-align: left;
+    }
+    .insurer-info .quote-short-detail .action-column{
+        border-bottom: unset;
+    }
+    .insurer-info .quote-short-detail > li{
+        display: inline-block;
+    }
+    .insurer-info{
+        padding: 0;
+    }
+    .insurer-info .quote-short-detail{
+        --bs-gutter-x: 1.5rem;
+        --bs-gutter-y: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: unset;
+    }
+    .insurer-info .quote-short-detail .small-column{
+        flex: 0 0 auto;
+        width: 50%;
+        height: auto;
+        /* height: 110px; */
+        border: 1px solid #F1F1F1;
+    }
+    .insurer-info .quote-short-detail li span{
+        font-weight: bold;
+    }
+    .insurer-info .quote-short-detail .small-column,.insurer-info .quote-short-detail .large-column{
+        align-items: flex-start;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        text-align: left;
+    }
+    .insurer-info .quote-short-detail .action-column,.insurer-info .quote-short-detail .large-column,.insurer-info .quote-short-detail .image-column{
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    .insurer-info.primary-member-info li,.insurer-info.secondary-member-info li{
+        height: 70px!important;
+    }
+}
+.insurer-info .outpatient{
+    padding-top: 1rem;
+}
+.insurer-info .outpatient i{
+    margin-top: 0.25rem;
+}
+.insurer-info .outpatient li span{
+    font-weight: normal;
+    text-align: left;
+}
+.insurer-info .quote-short-detail .outpatient{
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.insurer-info .quote-short-detail .outpatient li{
+    margin-bottom: 0.5rem;
+}
+
+.insurer-info.secondary-member-info{
+    max-width: 700px;
+}
+.insurer-info.secondary-member-info.policy{
+    max-width: 950px;
+}
+.insurer-info.secondary-member-info li{
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.details-benefits{
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.details-benefits > li{
+    border: 1px solid #78738920;
+    border-radius: 0.5rem;
+    overflow: auto;
+    margin-bottom: 1rem;
+    background-color: #F9F9F9;
+}
+.details-benefits .tab{
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+}
+.details-benefits > li .overlay-content{
+    position: relative;
+    overflow: auto;
+}
+.details-benefits .tab span{
+    color: var(--golden-color);
+}
+.details-benefits i{
+    cursor: pointer;
+}
+.details-benefits .open-tab .fa-chevron-circle-down,.details-benefits .close-tab .fa-chevron-circle-up{
+    display: none;
+}
+.details-benefits .close-tab .content-div{
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+.table-striped>tbody>tr:nth-of-type(odd){
+    --mdb-table-accent-bg: #4D8BFF15;
+    color: inherit;
+}
+.details-benefits table th,.comparison .details-benefits table td,.details-benefits .tab label,.comparison .left-content,.comparison .right-header{
+    min-width: 325px;
+    width: 325px;
+}
+.summary-page .details-benefits table th{
+    width: 50%;
+    max-width: 500px;
+}
+/* .summary-page .details-benefits td{
+    text-align: right;
+} */
+.details-benefits table th{
+    color: #030303;
+    font-weight: 500;
+}
+.details-benefits table td{
+    color: #506172;
+}
+.comparison .left-content input{
+    width: 275px;
+}
+.comparison .right-header > *{
+    width: 125px;
+    display: block;
+}
+.comparison .right-header > p{
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.comparison .right-header .price-highlight{
+    padding: 0.25rem;
+    background-color: #fcfcfc;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+}
+@media(max-width:768px){
+    .insurer-info .details-benefits table td,.insurer-info .details-benefits table th,.insurer-info .details-benefits .tab label{
+        width: 50%;
+        min-width: 50%;
+    }
+    .details-benefits .tab{
+        padding: 0.5rem 0.5rem;
+    }
+    .details-benefits .tab label{
+        width: 100% !important;
+    }
+    .comparison .details-benefits table td,.comparison .details-benefits table th,.comparison .details-benefits .tab label{
+        width: auto;
+        min-width: auto;
+    }
+    main .comparison .row > div > div{
+        padding: 0 0.5rem;
+    }
+    .comparison .left-content,.comparison .right-header{
+        width: 100%;
+        min-width: auto;
+    }
+    main .comparison .close{
+        right: 1rem;
+    }
+    .comparison .left-content input{
+        width: 100%;
+    }
+    .comparison .right-content .hidden-content{
+        width: 100px;
+        min-width: 100px;
+        visibility: hidden;
+    }
+    .comparison .right-header > div > *{
+        width: 100px;
+        min-width: 100px;
+        text-align: center;
+        margin-right: 0 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    .comparison .btn-nexus{
+        padding: 0.25rem 0.5rem;
+    }
+    .comparison .right-header .price-highlight{
+        font-size: inherit;
+    }
+}
+
+main{
+    position: relative;
+}
+main .content{
+    position: relative;
+    padding-bottom: 5rem;
+}
+main .content .background-image{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    overflow: hidden;
+}
+main .content .background-image img{
+    width: 130%;
+}
+main .message{
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 111;
+}
+main .message img{
+    width: 75px;
+}
+main .message.active{
+    left: 1.5rem;
+    right: unset;
+}
+@media(max-width:768px){
+    main{
+        margin-bottom: 0;
+    }
+    main .message{
+        bottom: 1rem;
+        right: 1rem;
+    }
+    main .message img{
+        width: 50px;
+    }
+}
+.thankyou-parent-div .content-head{
+    display: none;
+}
+.thankyou-page-div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 4rem auto;
+    max-width: 650px;
+}
+.border-bottom-dotted-blue{
+    padding-bottom: 0.25rem;
+    border-bottom: 1px dotted blue;
+}
+.selected-policy .large-column{
+    text-align: left !important;
+    padding: 0 !important;
+}
+.selected-policy .large-column > span{
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #F1F1F1;
+}
+.policy-page.selected-policy .large-column > span{
+    border: unset;
+}
+.policy-page.selected-policy .large-column > span:first-child,.policy-page.selected-policy .three-col > span:nth-child(2){
+    border-bottom: 1px solid #F1F1F1;
+}
+.selected-policy.policy-page .large-column > span{
+    padding: 2rem;
+}
+.selected-policy .large-column .no-border{
+    border: unset !important;
+}
+.btn-height{
+    height: 50px;
+}
+@media(max-width: 768px){
+    .selected-policy .large-column.multiple-column-mobile{
+        display: block !important;
+    }
+    .selected-policy .large-column > span{
+        font-weight: 400 !important;
+    }
+    .selected-policy .large-column.multiple-column-mobile > span{
+        width: 50%;
+        border-right: 1px solid #F1F1F1;
+    }
+    .selected-policy.policy-page .large-column > span{
+        padding:  0.75rem 1rem;
+    }
+}
+
+
+.invalid-page p{
+    font-size: 1rem;
+}
+
+.d-quote{
+    height: 35px !important;
+}
+
+.country img{
+    width: 25px;
+}
+
+.info-content{
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    width: auto !important;
+    height: auto !important;
+    background: none !important;
+    z-index: 11;
+}
+.info-content i{
+    cursor: pointer;
+    font-size: 1rem !important;
+}
+.info-content span{
+    position: absolute;
+    bottom: -1.5rem;
+    left: 2rem;
+    width: 200px !important;
+    height: auto !important;
+    padding: 0.5rem;
+    border: 0.5rem;
+    font-size: 12px;
+    background: #f1f1f1;
+    text-align: left;
+    font-weight: bold;
+    display: none !important;
+}
+.info-content:hover span{
+    display: inline-block !important;
+}
+@media(min-width:768px){
+    .text-center-desktop{
+        text-align: center !important;
+    }
+}
+@media(max-width: 768px){
+    .info-content span{
+        left: -100px;
+    }
+    .info-content.right-zero-mobile span{
+        left: auto;
+        right: 1.5rem;
+    }
+}
+.title-head{
+    height: 60px;
+    display: flex !important;
+}
+@media(max-width: 768px){
+    .comparison table th,.comparison table td{
+        min-width: 125px !important;
+        max-width: 126px !important;
+    }
+    .comparison .details-benefits{
+        display: inline-block;
+    }
+}
+.compare-action{
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 1;
+    display: inline-block;
+    border-radius: 50px;
+    line-height: 40px;
+    width: 110px;
+    height: 40px;
+    text-align: center;
+    background-color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.sub-td th .fas{
+    font-size: 0.4rem;
+    cursor: auto;
+}
+.sub-td th,.sub-td td{
+    font-size: 0.8rem;
+    font-weight: 400 !important;
+}
+.sub-td div{
+    display: flex;
+    align-items: center;
+}
+.medi-prat-main,.sub-td{
+    --mdb-table-accent-bg: #4D8BFF15;
+    color: inherit;
+}
+
+.basic-plan-pop-up{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1111;
+    top: 0;
+    left: 0;
+}
+.basic-plan-pop-up .text-end{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+}
+.basic-plan-pop-up .parent-div{
+    width: 100%;
+    max-width: 650px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    position: relative;
+    opacity: 1;
+    transition: all ease-in-out 0.2s;
+    font-size: 13px;
+}
+.font-size-medium{
+    font-size: 13px;
+}

@@ -19,8 +19,6 @@ from accounts.views import ProfileView
 from accounts.views import SearchResultAgentView
 from accounts.views.settings import *
 from django.views.decorators.csrf import csrf_exempt
-
-
 app_name = 'accounts'
 
 urlpatterns = [

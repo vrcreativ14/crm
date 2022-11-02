@@ -153,6 +153,28 @@
                             <div class="row m-t-30">
                                 <div class="col-lg-4">
                                     <label class="font-12 fw-300 c-vlgrey">
+                                        Your Personal Health Link
+                                        <span class="help-icon" title="This is your personal health insurance application form link. Anyone that applies for health insurance using this link will automatically be assigned to you."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="copy-link-container profile">
+                                        <input id="id_health_lead_form_url" name="health_lead_form_url" type="text" readonly class="form-control" value="{{ userprofile.get_health_lead_form_url }}" />
+                                        <ul class="controls">
+                                            <li>
+                                                <a title="Click to copy" onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="id_health_lead_form_url" class="font-14"><i class="ti-files"></i></a>
+                                            </li>
+                                            <li>
+                                                <a title="Click to open" href="{{ userprofile.get_health_lead_form_url }}" target="_blank" class="m-l-5 font-14"><i class="ti-new-window"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
                                         Email me if a lead is created using my personal link
                                         <span class="help-icon" title="Check this box to get an email notification when a lead is created using your personal link."></span>
                                     </label>

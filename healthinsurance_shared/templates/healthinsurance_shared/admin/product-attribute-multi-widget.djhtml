@@ -1,0 +1,60 @@
+<div class="product-attribute-field" style="display:flex">    
+    {% with subwidget=widget.subwidgets.0 %}
+        <label class="check-label">Benefit only applies when your home country is within your area of cover?</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+</div>
+<div class="product-attribute-field flex" style="display:flex">    
+
+
+    {% with subwidget=widget.subwidgets.1 %}
+        <label class="check-label">Is Accomodation costs covered?</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+
+</div>
+
+<div class="product-attribute-field" style="display:flex">
+
+    {% with subwidget=widget.subwidgets.2 %}
+        <label class="check-label">Repatriation in the event of unavailabilty of adequately screened blood?</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+
+</div>
+<div class="product-attribute-field" style="display:flex">
+
+    {% with subwidget=widget.subwidgets.3 %}
+        <label class="check-label">Hotel accomodation costs cover</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+</div>
+
+<div class="product-attribute-field" style="display:flex">
+    
+    {% with subwidget=widget.subwidgets.4 %}
+        <label>Expenses for one person accompanying a repatriated person</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}
+</div>
+<div class="product-attribute-field" style="display:flex">
+    
+    {% with subwidget=widget.subwidgets.5 %}
+        <label>Travel costs of insured family menbers in the event of a repatriation</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}    
+</div>
+<div class="product-attribute-field" style="display:flex">
+    
+    {% with subwidget=widget.subwidgets.6 %}
+        <label>Travel costs of insured members to be with a family member who is at peril of death or died</label>
+        {% include subwidget.template_name with widget=subwidget %}
+    {% endwith %}    
+</div>
+<div style="display:flex">
+    {% with subwidget=widget.subwidgets.7 %}
+    <label>Help text</label>
+    {% include subwidget.template_name with widget=subwidget %}
+{% endwith %}
+
+</div>

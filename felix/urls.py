@@ -24,6 +24,9 @@ urlpatterns = [
     path('mortgage/', include('mortgage.urls')),
     path('mortgage-quote/', include('mortgagequote.urls')),
     path('motor-insurance/', include('motorinsurance.urls')),
+    path('health-insurance/', include('healthinsurance.urls')),
+    path('health-insurance-form/', include('healthinsurance_form.urls')),
+    path('health-insurance-quote/', include('healthinsurance_quote.urls')),
 
     path('core/', include('core.urls', namespace='core')),
 

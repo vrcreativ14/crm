@@ -29,7 +29,7 @@ from customers.models import Customer
 from customers.tasks import add_note_to_customer
 
 from felix.exporter import ExportService
-from felix.constants import ITEMS_PER_PAGE
+from felix.constants import COUNTRIES, ITEMS_PER_PAGE
 
 from motorinsurance.forms import DealForm
 from motorinsurance.models import CustomerProfile, Deal, Policy
@@ -164,6 +164,9 @@ class CustomersView(CustomerBaseView, AjaxListViewMixin, TemplateView):
         if self.request.GET.get('entity', None) == 'mortgage':
             ctx['productline'] = "mortgage"
             ctx['entity'] = "mortgage"
+        elif self.request.GET.get('entity', None) == 'health':
+            ctx['productline'] = "health-insurance"
+            ctx['entity'] = "health"
         log_user_activity(self.request.user, self.request.path)
         return ctx
 
@@ -238,6 +241,8 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         ctx['customer'] = customer
         if resolve(self.request.path).kwargs.get('entity') == "mortgage":
             ctx['entity'] = 'mortgage'
+        elif resolve(self.request.path).kwargs.get('entity') == "health" or self.request.session['selected_product_line'] == 'health-insurance':
+            ctx['entity'] = 'health'
         ctx['deal_form'] = DealForm(
             initial={'customer': customer},
             company=self.request.company,
@@ -268,6 +273,9 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         customer_motor_policies = customer.get_policies()
         customer_motor_active_policies = customer.get_active_policies()
 
+        customer_health_deals = customer.get_non_deleted_health_deals()
+        customer_health_active_policies = customer.get_active_health_policies()
+
         if self.request.user.userprofile.has_producer_role():
             customer_motor_deals = customer_motor_deals.filter(producer=self.request.user)
             customer_mortgage_deals = customer_mortgage_deals.filter(producer=self.request.user)
@@ -278,13 +286,19 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
             customer_motor_policies = customer_motor_policies.filter(deal__producer=self.request.user)
             customer_motor_active_policies = customer_motor_active_policies.filter(deal__producer=self.request.user)
 
+            customer_health_deals = customer_health_deals.filter(deal__producer=self.request.user)
+            customer_health_active_policies = customer_health_active_policies.filter(deal__producer=self.request.user)
+
         ctx['motor_deals'] = customer_motor_deals
         ctx['mortgage_deals'] = customer_mortgage_deals
         ctx['motor_open_deals'] = customer_motor_open_deals
         ctx['mortgage_open_deals'] = customer_mortgage_open_deals
         ctx['motor_policies'] = customer_motor_policies
         ctx['motor_active_policies'] = customer_motor_active_policies
-        ctx['total_deals'] = len(customer_motor_deals) + len(customer_mortgage_deals)
+        ctx['health_deals'] = customer_health_deals
+        ctx['health_active_policies'] = customer_health_active_policies
+        ctx['total_deals'] = len(customer_motor_deals) + len(customer_mortgage_deals) + len(customer_health_deals)
+        ctx['total_active_policies'] = len(customer_motor_active_policies) + len(customer_health_active_policies)
         ctx['attachments'] = json.dumps([{
             'id': attachment.id,
             'label': attachment.label,
@@ -293,9 +307,8 @@ class CustomersEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
             'extension': attachment.get_file_extension(),
             'added_by': attachment.added_by.get_full_name() if attachment.added_by else '',
             'created_on': attachment.created_on.strftime('%Y-%m-%d'),
-        } for attachment in customer.get_attachments()])
-
-        
+        } for attachment in customer.get_attachments()])        
+        ctx['countries'] = COUNTRIES
         return ctx
 
     def form_valid(self, form, **kwargs):

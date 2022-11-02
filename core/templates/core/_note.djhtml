@@ -5,7 +5,8 @@
     <div class="note note-id-{{note.pk}}">{{ note.content|safe }}</div>
     <div class="text-muted">{{ note.created_on }} {% if note.added_by %}by {{ note.added_by.get_full_name }}{% endif %}</div>
     </span>
-        <span title="Click to edit" class="edit task-edit" data-pk="{{note.pk}}" onclick="editMortgageNote(this)">
+
+        <span title="Click to edit" data-felix-modal="modal_update_note" class="edit task-edit" data-pk="{{note.pk}}" onclick="editMortgageNote(this)">
             <i class="ti-pencil-alt"></i>
         </span>
         <span title="Click to remove" class="remove task-remove" data-id="{{ task.pk }}" data-deleteurl="{% url delete_form_action pk=note.pk %}"

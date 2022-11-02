@@ -1,0 +1,34 @@
+<div class="products-preview hide">
+    {% include 'healthinsurance/deals/components/insurer_list_modal.djhtml' %}
+    <div class="products"></div>
+    <button class="show-insurer-modal btn-nexus btn-nexus-golden btn-lg hide" ></button>
+    <!-- <center class="m-30 add-new-product-cta"> -->
+        <button class="btn btn-nexus-golden btn-md" data-toggle="modal" data-target="#modal_quote_insurers">
+            Add Another Product
+        </button>
+    <!-- </center> -->
+
+    <hr />
+
+    <div class="row no-hover">
+        <div class="status-field col-lg-1 col-md-1 col-sm-2">
+            {% if deal.quote %}
+            <!-- <input name="quote_status" id="id_quote_status" type="checkbox" switch='success' name="" {% if  deal.quote.status == 'published'%}checked{% endif %} />
+            <label data-on-label="published" data-off-label="unpublished" for="id_quote_status" class=""></label> -->
+            <div class="row"></div>
+            {% endif %}
+        </div>
+        
+        <div class="col col-lg-6 float-right">
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Save & Send' action='quote-submit send-email' %}
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Save' action='quote-submit' color='gray' %}
+            
+           
+            {% if deal.quote %}
+            <button class="cancel-quote m-r-10 float-right btn btn-outline-secondary btn-md btn-wide-deal">
+                Cancel
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>

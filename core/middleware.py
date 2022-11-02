@@ -48,7 +48,7 @@ class WorkSpaceMiddleware:
                         spaces = user.userprofile.allowed_workspaces
                         requested_app = resolve(request.path).app_names
                         if requested_app:
-                            requested_app = requested_app[0] 
+                            requested_app = requested_app[0]
                         if requested_app == 'accounts':
                             if resolve(request.path).url_name == "dashboard":
                                 deal = False
@@ -56,16 +56,23 @@ class WorkSpaceMiddleware:
                                     deal = True
                                 if request.GET.get('entity') == "mortgage":
                                     if "MG" in spaces:
-                                        ...
+                                        if not request.path == reverse('accounts:dashboard'):
+                                            return redirect(reverse('accounts:dashboard')+"?entity=mortgage")
                                     if deal:
                                         return redirect(reverse('mortgage:deals'))
                                     # else:
                                     #     return HttpResponseBadRequest(f'''
                                     #     You are not allowed to view this page.
                                     #     <a href={reverse('accounts:dashboard')}> Click to go back </a>''', status=403)
+                                elif request.GET.get('entity') == "health" and "HI" in spaces:
+                                    if deal:
+                                        return redirect(reverse('health:deals'))
+                                    else:
+                                        if not request.path == reverse('accounts:dashboard'):
+                                            return redirect(reverse('accounts:dashboard')+"?entity=health")
                                 else:
                                     if not "MT" in spaces:
-                                        return redirect(reverse('accounts:dashboard')+"?entity=mortgage")
+                                            return redirect(reverse('accounts:dashboard')+"?entity=health")
                                     if deal:
                                         return redirect(reverse('motorinsurance:deals'))
                             elif resolve(request.path).url_name == "profile":
@@ -83,11 +90,27 @@ class WorkSpaceMiddleware:
 
                         if requested_app == 'motorinsurance':
                             if not "MT" in spaces:
-                                return redirect(reverse('mortgage:deals'))
+                                if "MG" in spaces:
+                                    return redirect(reverse('mortgage:deals'))  
+                                else: #if health module in spaces
+                                    return redirect(reverse('health-insurance:deals'))
 
                         elif requested_app == 'mortgage':
                             if not "MG" in spaces:
-                                return redirect(reverse('motorinsurance:deals'))
+                                if "MT" in spaces:
+                                    return redirect(reverse('motorinsurance:deals'))
+                                else: #if health module in spaces
+                                    return redirect(reverse('health-insurance:deals'))
+                                
+                        elif requested_app == 'health-insurance':
+                            if not "HI" in spaces:
+                                if "MT" in spaces:
+                                    return redirect(reverse('motorinsurance:deals'))
+                                else:
+                                    return redirect(reverse('mortgage:deals'))
+                        else:
+                            # All 3 modules present have been included in the above conditions
+                            pass
                 else:
                     "You are not allowed to view this page. Contact administrator"
             else:

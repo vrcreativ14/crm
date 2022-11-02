@@ -1,0 +1,313 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Order Summary {{ deal.customer }}
+        </title>
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet" />
+        <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "dist/style.public.min.css" %}" rel="stylesheet" type="text/css"/>
+        {% if override_css %}
+        <link href="{% static override_css %}" rel="stylesheet" />
+        {% endif %}
+    </head>
+    <body class="quote-pdf-preview" style="color: #404040 !important">
+        <table width="100%">
+            <tr>
+                <td valign="top">
+                    {{ request.company.companysettings.displayed_name }}<br />
+                    {% if request.company.companysettings.address %}
+                        {{ request.company.companysettings.address }}<br />
+                    {% endif %}
+                    {% if request.company.companysettings.city_name %}
+                        {{ request.company.companysettings.city_name }}<br />
+                    {% endif %}
+                    {% if request.company.companysettings.get_country_display %}
+                        {{ request.company.companysettings.get_country_display }}<br />
+                    {% endif %}
+                    {% if request.company.companysettings.phone %}
+                        {{ request.company.companysettings.phone }}<br />
+                    {% endif %}
+                    {% if request.company.companysettings.email %}
+                        {{ request.company.companysettings.email }}<br />
+                    {% endif %}
+                </td>
+                <td valign="top">
+                    <h4 class="title float-right">
+                        Order Confirmation Summary 
+                    </h4>
+                </td>
+            </tr>
+        </table>
+        <br />
+        <p>
+            <strong>Order Date: {{ order.created_on|date:"d/m/Y"}}</strong>
+        </p>
+        <br />
+        <!-- Customer Info -->
+        <table width="100%">
+            <tr>
+                <td valign="top" width="40%">
+                    <h4>Client Details</h4>
+                    <table class="customer-info" border=1>
+                        <tr class="bg">
+                            <td>
+                                <label>Name:</label>
+                            </td>
+                            <td>{{ deal.primary_member.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Email:</label>
+                            </td>
+                            <td>
+                                {{ deal.primary_member.email }}
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Phone:</label>
+                            </td>
+                            <td>
+                                {{ deal.primary_member.phone }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Date of Birth</label>
+                            </td>
+                            <td>
+                                {{ deal.primary_member.dob }}
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Nationality:</label>
+                            </td>
+                            <td>
+                                {{ deal.primary_member.get_nationality }}
+                            </td>
+                        </tr>
+
+                        <tr class="bg">
+                            <td>
+                                <label>Country of Residence:</label>
+                            </td>
+                            <td>
+                                {{ deal.primary_member.get_residence_country }}
+                            </td>
+                        </tr>
+                        
+                        <tr class="bg">
+                            <td>
+                                <label>Visa:</label>
+                            </td>
+                            <td>
+                                {{ deal.primary_member.visa }}
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                    </table>
+                    <br />
+                    {% for member in deal.primary_member.additional_members.all %}
+                    <h4> Member {{forloop.counter|add:1}} </h4>
+                    <table class="customer-info" border=1>
+                        <tr class="bg">
+                            <td>
+                                <label>Name:</label>
+                            </td>
+                            <td>{{ member.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Date of Birth:</label>
+                            </td>
+                            <td>
+                                {{ member.dob }}
+                            </td>
+                        </tr>
+                       
+                        <tr class="bg">
+                            <td>
+                                <label>Nationality:</label>
+                            </td>
+                            <td>
+                                {{ member.get_nationality }}
+                            </td>
+                        </tr>
+
+                        <tr class="bg">
+                            <td>
+                                <label>Country of Residence:</label>
+                            </td>
+                            <td>
+                                {{ member.get_residence_country }}
+                            </td>
+                        </tr>
+                        
+                        
+                    </table>
+                    {% endfor %}
+                    <br />
+                    <h4>Client Confirmation</h4>
+                    <table class="customer-info">
+                        
+                            <tr>
+                                <td><img src="{% static "images/checkbox-checked.png" %}" width="16" />&nbsp;&nbsp; The above information is accurate and correct.</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><img src="{% static "images/checkbox-checked.png" %}" width="16" />&nbsp;&nbsp; I'm appointing Nexus as my insurance broker on record for this policy</td>
+                            </tr>                        
+                            <tr>
+                                <td>
+                                    <img src="{% static "images/checkbox-checked.png" %}" width="16" />&nbsp;&nbsp; I have read the <a href="https://www.nexusadvice.com/terms-and-conditions/" target="_blank" class="text-golden">Terms & Conditions</a>
+                                </td>
+                            </tr>
+                        
+                    </table>
+                </td>
+                <td valign="top" width="5%"></td>
+                <td valign="top" width="55%">
+                    <h4>Policy Summary</h4>
+                    <table class="customer-info" border=1>
+
+                        <tr class="bg">
+                            <td>
+                                <label>Selected Plan:</label>
+                            </td>
+                            <td>{{ order.selected_plan.plan.name }}</td>
+                        </tr>
+
+                        <tr >
+                            <td>
+                                <label>Insurer</label>
+                            </td>
+                            <td>{{ order.selected_plan.plan.insurer.name }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label>Total Premium (inc VAT):</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.plan.currency }} {{ order.selected_plan.total_premium }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <label>
+                                    Requested Start Date:
+                                </label>
+                            </td>
+                            <td>
+                                {{ order.policy_start_date|date:"d/m/Y" }}
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Annual Limit:</label>
+                            </td>
+                            <td>{{ order.selected_plan.annual_limit }}</td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Geographical Cover:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.area_of_cover }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Dental Benefits:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.dental_benefits }}
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Pre-Existing Cover:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.pre_existing_cover }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Network:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.network }}
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Alternative Medicines:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.alternative_medicine }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:none;">
+                                <b>Outpatient Co-payment</b>
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Consultation Copay:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.consultation_copay }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Diagnostics and Labs Copay:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.diagnostics_copay }}
+                            </td>
+                        </tr>
+                        <tr class="bg">
+                            <td>
+                                <label>Pharmacy Copay:</label>
+                            </td>
+                            <td>
+                                {{ order.selected_plan.pharmacy_copay }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Discliamer -->
+        <br />
+        <br />
+        <div class="disclaimer">
+            The pricing is based on the information provided to us, please ensure that the above information is accurate.
+            <br/>
+            {% if order.created_by_agent %}
+                This order was placed offline by 
+                <span class="capitalize">
+                    {% if deal.assigned_to.get_full_name %}{{ deal.assigned_to.get_full_name }}{% else %}{{ deal.company.name }}{% endif %}
+                </span>
+                on {{ order.created_on|date:'d.m.Y' }}
+            {% else %}
+                This order was placed online by
+                <span class="capitalize">
+                    {{ deal.customer.name }}
+                </span>
+                on {{ order.created_on|date:'d.m.Y' }}
+            {% endif %}
+        </div>
+    </body>
+</html>

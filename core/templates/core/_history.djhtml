@@ -31,8 +31,13 @@ cursor: pointer;
 {% endif %}
 <script>
 $('.email-edit').click( function(){
+    debugger
     $('#modal_send_custom_email_history').show()
-    var url = "{% url 'mortgage:processed_emails' pk=111111111111111111 %}"
+    let url = ''
+    if (__app_name == "mortgage")
+        url = "{% url 'mortgage:processed_emails' pk=111111111111111111 %}"
+    else if (__app_name == "health-insurance")
+        url = DjangoUrls['health-insurance:processed_emails'](this.dataset.emailpk)
     url = url.replace("111111111111111111", this.dataset.emailpk)
     $.get(url, function( data ) {
         $('#custom_email_form_history').attr('action', url)

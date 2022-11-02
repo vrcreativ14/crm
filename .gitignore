@@ -10,3 +10,7 @@ lib/
 include/
 site-packages/
 media/
+core/migrations
+accounts/migrations
+healthinsurance/migrations
+healthinsurance_shared/migrations

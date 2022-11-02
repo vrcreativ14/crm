@@ -1,5 +1,6 @@
 {% load static %}
 <div id="modal_documents_viewer" class="felix-modal-container document-viewer">
+    <input type="hidden" id="check_pdf_loaded" value="0" />
     <div class="felix-modal">
         <h1>Documents Viewer</h1>
 
@@ -10,7 +11,7 @@
         <div class="preview-container fit-to-container" data-doc-id>
             <div class="loader">loading. please wait...</div>
             <img src="" class="hide" id="image_document_container" />
-            <iframe src="" class="hide" id="pdf_document_container" type="application/pdf"></iframe>
+            <iframe src="" class="hide" id="pdf_document_container"></iframe>
 
             <div class="zoom-toggle hide">
                 <div title="Click to zoom in" class="zoomin"><i class="ti-zoom-in"></i></div>
@@ -44,30 +45,3 @@
     </div>
 </div>
 <button data-felix-modal="modal_documents_viewer" class="hide preview-documents-viewer-trigger"></button>
-<script type="text/javascript">
-   document.querySelector('.preview-documents-viewer-trigger').addEventListener('click', function(){
-    attachments.forEach(element => {
-        if (element.extension == 'PDF'){
-            let url = document.querySelector("#image_document_container").src
-            $('#pdf_document_container').removeClass('hide');
-            $('#image_document_container').addClass('hide');
-            $('#pdf_document_container').addClass('show');
-            $('#pdf_document_container').attr('src', url);
-        }
-        else if(element.extension == 'JPEG' || element.extension == 'JPG'){
-            $('#pdf_document_container').removeClass('show');
-            $('#pdf_document_container').addClass('hide');
-            $('#image_document_container').removeClass('hide');
-            $('#image_document_container').addClass('show');            
-        }
-    });
-})
-document.querySelector('#pdf_document_container').addEventListener('load', function(){
-    let url = document.querySelector("#image_document_container").src
-            $('#pdf_document_container').removeClass('hide');
-            $('#image_document_container').addClass('hide');
-            $('#pdf_document_container').addClass('show');
-            $('#pdf_document_container').attr('src', url);
-            $('.loader').removeClass('show');
-})
-</script>

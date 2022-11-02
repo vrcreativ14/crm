@@ -14,6 +14,7 @@
     </style>
     <div class="row justify-content-md-center p-t-60">
         <input type="hidden" name="user_value" id="user_value" value="{{ request.user.pk }}" />
+        <input type="hidden" name="user_profile" id="user_profile_value" value="{{ request.user.userprofile.pk }}" />
         <input type="hidden" name="entity_value" id="entity_value" value="{{ entity }}" />
         <div class="col-lg-9">
             <div class="card m-b-20">
@@ -32,7 +33,7 @@
 
                 {% if agents %}
                 <div class="row" style="justify-content: flex-end;align-items: center;margin-right: 5px;">
-                    <div class="col-lg-5 col-md-5" style="margin-right: 95px;">                        
+                    <div class="col-lg-1" style="margin-right: 95px;">                        
                         <div class="options-table float-right" style="align-self: center;">
                             <a class="dropdown-toggle" data-toggle="dropdown"
                                href="#"
@@ -65,7 +66,7 @@
                                         </div>
                                         <div class="dropdown-item form-check">
                                             <input id="search_none_role_checkbox" class="form-check-input" type="checkbox" name="option1" value="something" {% if search_key %} {% if 'role' in  filters %} checked {% endif %} {% else %}  {% endif %}>
-                                            <label class="form-check-label">Others</label>
+                                            <label class="form-check-label">None</label>
                                         </div>
                                    
                                     <button type="button" id="apply-filter-button" class="search-apply btn btn-sm btn-primary" style="float: right;margin: 5px 20px 5px 5px;">Apply</button>                                                                                                                                                              
@@ -73,7 +74,7 @@
                         </div>
                     </div>
                  
-                    <div class="col-lg-5 col-md-5">
+                    <div class="col-lg-3">    
                         <div class="table-filters">
                         <div class="input-group open-search-field">                            
                             <input name="search_term" id="id-search-user" style="padding-left: 25px;" type="text" class="form-control" placeholder="Search User by name or email" {% if search_key %} value={{search_key}} {% endif %} />
@@ -172,9 +173,14 @@ document.addEventListener('click',function(e){
         document.getElementById('id-search-user').setAttribute('readonly', true);
         document.querySelector('table.felix-table').classList.add('opacity')
         let table_body = document.querySelector('#id-felix-table-body')
+        let u = document.getElementById('user_profile_value').value
+        data = {
+            'up' : u,
+        }
         $.ajax({
          type: "GET",
-         url: url,        
+         url: url,
+         data: data,   
          contentType: "application/json; charset=utf-8",
          dataType: "json",
          success: function(data){             
@@ -193,11 +199,9 @@ document.addEventListener('click',function(e){
              let delete_url = ''
              document.querySelector('.table_counts').innerHTML = `${count} records found`
              for(let j=0; j < len; j++){
-
                 if (u == res[j]['id']){
                     edit_url = `/accounts/profile/`                                           
-                }
-                    
+                }                    
                 else{
                     if (entity == 'mortgage'){
                         edit_url = `users/edit/${res[j]['id']}/?entity=mortgage`                        
@@ -206,7 +210,7 @@ document.addEventListener('click',function(e){
                         edit_url = `users/edit/${res[j]['id']}/`                        
                     }
                 }
-                if (entity == 'mortgage'){                        
+                if (entity == 'mortgage'){
                         delete_url = `users/deals/${res[j]['id']}/?entity=mortgage`
                     }
                     else{                        
@@ -242,25 +246,26 @@ document.addEventListener('click',function(e){
              document.querySelector('.pagination').innerHTML = pagination_list
              table_body.innerHTML = table_content
              document.querySelector('table.felix-table').classList.remove('opacity')
-             document.getElementById('id-search-user').removeAttribute('readonly');
+             document.getElementById('id-search-user').removeAttribute('readonly'); 
             },
         error:function(errors){
             document.querySelector('table.felix-table').classList.remove('opacity')
             console.log(errors)
-            document.getElementById('id-search-user').removeAttribute('readonly');
             Utilities.Notify.error(errors.responseJSON.errors, 'Error');
-            
+            document.getElementById('id-search-user').removeAttribute('readonly'); 
         }
         });
     }
     
-    document.querySelector('#id-search-user').addEventListener('input', function(){
+    document.querySelector('#id-search-user').addEventListener('input', function(){  
+        debugger      
+        
         let url = GetUrl()
-        SendRequest(url)        
+        SendRequest(url)
+          
     })
-
     document.querySelector('#apply-filter-button').addEventListener('click', function(){        
-        let url = GetUrl()
+        let url = GetUrl()  
         SendRequest(url)
     })
     

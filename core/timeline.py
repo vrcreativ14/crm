@@ -3,6 +3,7 @@ import dateutil
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday
 from mortgage.models import Deal as mortgagedeals
+from healthinsurance.models.deal import Deal as health_deals
 
 from felix.constants import GENDER_CHOICES, EMIRATES_LIST
 
@@ -38,7 +39,7 @@ class Timeline:
                 msg = message[0]
                 email_pk = None
                 try:
-                    if isinstance(obj, mortgagedeals):
+                    if isinstance(obj, mortgagedeals) or isinstance(obj, health_deals):
                         sub = message[0].split("emailpk")
                         msg = sub[0].strip()
                         email_pk = sub[1].strip()

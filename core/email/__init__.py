@@ -345,7 +345,8 @@ class Emailer:
 
         return subject, content
 
-    def prepare_email_content_for_policy(self, policy):
+    def prepare_email_content_for_policy(self, policy):        
+        
         product_document_url = policy.product.document_url
         ctx = {
             'company_name': self.company_settings.company.name,

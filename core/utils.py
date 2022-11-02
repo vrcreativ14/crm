@@ -115,3 +115,11 @@ def add_months(date, months=1):
     newyear = int(date.year + (((date.month - 1) + months) / 12))
 
     return datetime.date(newyear, newmonth, date.day)
+
+def get_space_name(abbreviation):
+    space = {
+        "MT":'motor',
+        "MG":'mortgage',
+        "HI":'health',
+    }
+    return space.get(abbreviation,"")

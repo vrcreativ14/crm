@@ -1,0 +1,39 @@
+{
+  "name": "healthinsurance_quote",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --mode development --entry ./src/index.js --output-path ./static/frontendHealthinsuranceQuote",
+    "build": "webpack --mode production --entry ./src/index.js --output-path ./static/frontendHealthinsuranceQuote",
+    "start": "node your-script.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "axios": "^0.27.2",
+    "babel-loader": "^8.2.5",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "css-loader": "^6.7.1",
+    "file-saver": "^2.0.5",
+    "html-react-parser": "^1.4.14",
+    "jszip": "^3.10.0",
+    "jszip-utils": "^0.1.0",
+    "moment": "^2.29.3",
+    "prop-types": "^15.8.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-notifications-component": "^4.0.1",
+    "react-router-dom": "^6.3.0",
+    "style-loader": "^3.3.1",
+    "svg-url-loader": "^7.1.1"
+  }
+}

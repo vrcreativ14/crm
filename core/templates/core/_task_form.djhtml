@@ -6,6 +6,8 @@
         <h1>Schedule a Task</h1>
         {% if entity == "mortgage" %}
         <form id="task_form" name="task_form" method="post" action="{% url 'mortgage:tasks-add-edit' %}">
+        {% elif entity == 'health' %}
+        <form id="task_form" name="task_form" method="post" action="{% url 'health-insurance:tasks-add-edit' %}">
         {% else %}
         <form id="task_form" name="task_form" method="post" action="{% url 'motorinsurance:tasks-add-edit' %}">
         {% endif %}

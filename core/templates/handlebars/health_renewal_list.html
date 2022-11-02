@@ -1,0 +1,34 @@
+{% for policy in policies %}
+<tr id="tr_{{ policy.pk }}" data-target="#modal_view_policy" data-toggle="modal" class="health-policy-row">
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ policy.pk }}" value="{{ policy.pk }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td data-felix-modal="modal_view_policy" class="p-l-15 important capitalize">
+        <span class="capitalize stage-icon status-{{ policy.status }}"></span> {{ policy.status }}
+    </td>
+    <td data-felix-modal="modal_view_policy">{{ policy.policy_number }}</td>
+    {% if policy.renewal_deal_id %}
+    <td class="new-tab link">
+        <a title="{{ this.renewal_deal }}" href="" class="link limit-text">{{ this.renewal_deal }}</a>
+        {% if policy.renewal_deal_stage %}
+        <span class="policy-renewal-badge badge badge-default badge-font-light badge-{{this.renewal_deal_stage}}">{{policy.renewal_deal_stage}}</span>
+    {% endif %}
+    </td>
+    {{else}}
+    <td>-</td>
+    {% endif %}
+    <td data-felix-modal="modal_view_policy" class="link">
+        <a class="link" href="">{{ policy.customer.name }}</a>
+    </td>
+    <td> {% if policy.user %}{{ policy.user }} {% else %} - {% endif %} </td>
+    <td> - </td>
+    <td data-felix-modal="modal_view_policy">{% if policy.deal %}{{policy.deal.selected_plan.insurer.name}} {% else %} - {% endif %}</td>
+    
+    <td data-felix-modal="modal_view_policy">{{ policy.total_premium_vat_inc}}</td>
+    
+    <td data-felix-modal="modal_view_policy">{{ policy.expiry_date }}</td>
+</tr>
+{% endfor %}

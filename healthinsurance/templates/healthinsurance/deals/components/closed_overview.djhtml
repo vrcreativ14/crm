@@ -1,0 +1,23 @@
+{% load static %}
+{% load humanize %}
+
+<div class="closed-overview deal-process {% if has_closed %}no-border m-0{% endif %}">
+	{% if not has_closed %}
+    	<p class="empty-area">Here, you can see an overview of the entire deal once it is closed as won or lost</p>
+    {% else %}
+	    <div class="policy-summary">
+	    	{% if deal.stage == 'lost' %}
+	    	<div class="deal-lost">
+	    		<center class="c-error m-b-30">
+			   		<div class="font-40 m-b--10"><i class="ti-thumb-down"></i></div>
+			   		<div class="font-32">Deal Lost</div>
+			   	</center>
+			   	<div class="align-center c-lgrey font-15 m-b-40">Tasks were not verified to successfully complete the deal</div>
+	    	</div>
+	    	{% endif %}
+	    	
+		</div>
+	{% endif %}
+</div>
+
+{% include 'handlebars/policy_modal.html' %}

@@ -26,6 +26,7 @@
     {% include '../motorinsurance/deal/components/deal_policy_modal.djhtml' %}
     {% include '../motorinsurance/deal/components/new_deal_form.djhtml' %}
     {% include '../mortgage/deal/components/mortgage_new_deal_form.djhtml' %}
+    {% include '../healthinsurance/deals/components/new_deal_form.djhtml' %}
     {% include 'handlebars/policy_modal.html' %}
     <div class="container-fluid squeeze customer-detail-container" data-id="{{ customer.pk }}">
         {% if deleted %}
@@ -136,9 +137,13 @@
                 </div>
                 {% if request.user.userprofile.has_admin_role  %}
                 <button type="button" data-felix-modal="modal_create_deal" class="btn btn-outline-primary full-width" 
-                onclick="__DEALS._resetDealForm();__DEALS._setCustomerInDealForm('{{ customer.pk }}', '{{ customer.name }}');">Create new deal</button>
+                onclick="__DEALS._resetDealForm();__DEALS._setCustomerInDealForm('{{ customer.pk }}', '{{ customer.name }}');">Create motor deal</button>
+                <br/>
                 <button type="button" data-felix-modal="modal_create_mortgage_deal" class="btn btn-outline-primary full-width" 
                 onclick="__DEALS._resetDealForm(this);__DEALS._setCustomerInDealForm('{{ customer.pk }}', '{{ customer.name }}');">Create mortgage deal </button>
+                <br/>
+                <button type="button" data-felix-modal="modal_create_health_deal" class="btn btn-outline-primary full-width"
+                onclick="setCustomerInHealthDealForm('{{ customer.pk }}', '{{ customer.name }}', '{{ customer.email}}', '{{customer.phone}}');">Create health deal</button>
                 {% else %}
                     {% for space in request.user.userprofile.allowed_workspaces  %}
                         {% if space == "MT" %}
@@ -148,6 +153,10 @@
                         {% if space == "MG" %}
                             <button type="button" data-felix-modal="modal_create_mortgage_deal" class="btn btn-outline-primary full-width" 
                             onclick="__DEALS._resetDealForm(this);__DEALS._setCustomerInDealForm('{{ customer.pk }}', '{{ customer.name }}');">Create mortgage deal </button>
+                        {% endif %}
+                        {% if space == "HI" %}
+                        <button type="button" data-felix-modal="modal_create_health_deal" class="btn btn-outline-primary full-width"
+                        onclick="setCustomerInDealForm('{{ customer.pk }}', '{{ customer.name }}', '{{ customer.email}}', '{{customer.phone}}');">Create health Deal</button>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
@@ -176,23 +185,34 @@
                                 </li>
                                 {% endfor %}
                             </ul>
-                            {% elif  mortgage_deals %}
+                            {% endif %}
+                            {% if  mortgage_deals %}
                                 <ul class="open-deals-list m-t-20">
                                     {% for deal in mortgage_deals|slice:":2" %}
                                     <li>
                                         <a  href="{% url 'mortgage:deal-edit' pk=deal.pk %}">
-                                            <i class="product-line-icon mortgage"></i> {{ deal}}
+                                            <i class="product-line-icon home"></i> {{ deal }}
                                         </a>
                                     </li>
                                     {% endfor %}
                                 </ul>
-                            {% else %}
-                            <div class="small-note m-t-20">There is no active deal</div>
+                            {% endif %}                        
+                            {% if  health_deals %}
+                                <ul class="open-deals-list m-t-20">
+                                    {% for deal in health_deals|slice:":2" %}
+                                    <li>
+                                        <a  href="{% url 'health-insurance:deal-details' pk=deal.pk %}">
+                                            <i class="product-line-icon medical"></i> {{ deal.get_title }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
                             {% endif %}
+                           
                         </div>
                         <div class="col col-lg-6">
                             <div class="heading">
-                                Active Policies ({{ motor_active_policies|length }})
+                                Active Policies ({{ total_active_policies }})
                                 {% if motor_active_policies.count > 1 %}
                                     <a class="view-all-policies font-12 capitalize" href="javascript:">view all</a>
                                 {% endif %}
@@ -324,63 +344,254 @@
 
                         <!-- DEALS -->
                         <div class="tab-pane p-3" id="tab_deals" role="tabpanel">
-                            {% if motor_deals %}
-                                <table class="table no-footer felix-table" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Stage</th>
-                                            <th>Status</th>
-                                            <th data-name="cached_car_name">Vehicle</th>
-                                            <th data-name="assigned_to__first_name">User</th>
-                                            <th data-name="created_on">Created On</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="felix-table-body">
-                                        {% for deal in motor_deals %}
-                                            <tr
-                                                id="tr_{{ deal.pk }}"
-                                                data-url="{% url 'motorinsurance:deal-edit' pk=deal.pk %}"
-                                                >
-                                                <td>{{ deal.get_stage_display }}</td>
-                                                <td>
-                                                    {% if deal.get_tags %}
-                                                        {% for tag in deal.get_tags %}
-                                                            <span class="badge badge-default badge-font-light badge-{{ tag|slugify }}">{{ tag }}</span>
-                                                        {% endfor %}
-                                                    {% else %}
-                                                        -
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    <div title="{{ deal.car_trim.get_title_with_model }}" class="limit-text">
-                                                        {{ deal.get_car_title }}
-                                                    </div>
-                                                </td>
-                                                <td class="link">
-                                                    {% if deal.assigned_to %}
-                                                    <a href="{% url 'accounts:agent-edit' pk=deal.assigned_to.userprofile.pk %}">
-                                                        {{ deal.assigned_to.get_full_name }}
-                                                    </a>
-                                                    {% else %} - 
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ deal.created_on }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% else %}
-                            <button type="button" data-felix-modal="modal_create_deal" class="btn btn-info-container btn-primary btn-sm" onclick="$('#id_customer').val({{ customer.pk }}).change()">Create new deal</button>
-                                <br><br>
-                                <div class="small-note">
-                                    There are no deals for this customer.
+                            <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active show" data-toggle="tab" href="#tab_motor_deals" role="tab" aria-selected="true">Motor Deals</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_mortgage_deals" role="tab" aria-selected="true">Mortgage Deals</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_health_deals" role="tab" aria-selected="true">Health Deals</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane p-3 active show" id="tab_motor_deals" role="tabpanel">
+                                    {% if motor_deals %}
+                                        <table class="table no-footer felix-table" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Stage</th>
+                                                    <th>Status</th>
+                                                    <th data-name="cached_car_name">Vehicle</th>
+                                                    <th data-name="assigned_to__first_name">User</th>
+                                                    <th data-name="created_on">Created On</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="felix-table-body">
+                                                {% for deal in motor_deals %}
+                                                    <tr
+                                                        id="tr_{{ deal.pk }}"
+                                                        data-url="{% url 'motorinsurance:deal-edit' pk=deal.pk %}"
+                                                        >
+                                                        <td>{{ deal.get_stage_display }}</td>
+                                                        <td>
+                                                            {% if deal.get_tags %}
+                                                                {% for tag in deal.get_tags %}
+                                                                    <span class="badge badge-default badge-font-light badge-{{ tag|slugify }}">{{ tag }}</span>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            <div title="{{ deal.car_trim.get_title_with_model }}" class="limit-text">
+                                                                {{ deal.get_car_title }}
+                                                            </div>
+                                                        </td>
+                                                        <td class="link">
+                                                            {% if deal.assigned_to %}
+                                                            <a href="{% url 'accounts:agent-edit' pk=deal.assigned_to.userprofile.pk %}">
+                                                                {{ deal.assigned_to.get_full_name }}
+                                                            </a>
+                                                            {% else %} - 
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>{{ deal.created_on }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                    <button type="button" data-felix-modal="modal_create_deal" class="btn btn-info-container btn-primary btn-sm" onclick="$('#id_customer').val({{ customer.pk }}).change()">Create motor deal</button>
+                                        <br><br>
+                                        <div class="small-note">
+                                            There are no motor deals for this customer.
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+
+                            <!-- MORTGAGE DEALS -->
+                            <div class="tab-pane p-3" id="tab_mortgage_deals" role="tabpanel">
+                                {% if mortgage_deals %}
+                                    <table class="table no-footer felix-table" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Stage</th>                                                
+                                                <th data-name="cached_car_name">Bank</th>
+                                                <th data-name="assigned_to__first_name">User</th>
+                                                <th data-name="assigned_to__referrer">Referrer</th>
+                                                <th data-name="created_on">Created On</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="felix-table-body">
+                                            {% for deal in mortgage_deals %}
+                                                <tr
+                                                    id="tr_{{ deal.pk }}"
+                                                    data-url="{% url 'mortgage:deal-edit' pk=deal.pk %}"
+                                                    >
+                                                    <td>{{ deal.stage }}</td>
+                                                    
+                                                    <td data-name="bank" class="link capitalize" data-name="cached_bank_name" href="#">{% if deal.deal_bank.bank.logo %}<img src="{{deal.deal_bank.bank.logo.url}}" alt="-"/>{% else %}-{% endif %}</td>
+                                                    <td data-name="user">{% if deal.user %}{{ deal.user }}{% else %}-{% endif %}</td>
+                                                    <td data-name="referrer" data-search="{% if deal.referrer %}referrer-{{ deal.referrer }}{% else %}Unassigned{% endif %}" style="min-width: 100px;">{% if deal.referrer %}{{ deal.referrer }}{% else %}-{% endif %}</td>
+                                                    <td data-name="created_on" data-sort="{{ deal.created_date | date:'Ymd' }}" data-search="{{ deal.created_date | date:'Ymd' }}">{{ deal.created_date | date:'M. d, Y' }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                <button type="button" data-felix-modal="modal_create_mortgage_deal" class="btn btn-info-container btn-primary btn-sm" 
+                onclick="__DEALS._resetDealForm(this);__DEALS._setCustomerInDealForm('{{ customer.pk }}', '{{ customer.name }}');">Create mortgage deal </button>
+                                    <br><br>
+                                    <div class="small-note">
+                                        There are no mortgage deals for this customer.
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- HEALTH DEALS -->
+                            <div class="tab-pane p-3" id="tab_health_deals" role="tabpanel">
+                                {% if health_deals %}
+                                    <table class="table no-footer felix-table" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Stage</th>
+                                                <th>Status</th>
+                                                <th data-name="primary_member">Primary Member</th>
+                                                <th data-name="assigned_to__first_name">User</th>
+                                                <th data-name="referrer">Referrer</th>
+                                                <th data-name="created_on">Created On</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="felix-table-body">
+                                            {% for deal in health_deals %}
+                                                <tr
+                                                    id="tr_{{ deal.pk }}"
+                                                    data-url="{% url 'health-insurance:deal-details' pk=deal.pk %}"
+                                                    >
+                                                    <td>{{ deal.get_stage_display }}</td>
+                                                    <td>
+                                                        {% if deal.status_text %}                                                        
+                                                        <span class="badge badge-{{deal.status_badge}} badge-font-light badge">{{ deal.status_text }}</span>                                                        
+                                                        {% else %}
+                                                            -
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div title="{{ deal.car_trim.get_title_with_model }}" class="limit-text">
+                                                            {{ deal.primary_member }}
+                                                        </div>
+                                                    </td>
+                                                    <td class="link">
+                                                        {% if deal.assigned_to %}
+                                                        <a href="{% url 'accounts:agent-edit' pk=deal.assigned_to.userprofile.pk %}">
+                                                            {{ deal.assigned_to.get_full_name }}
+                                                        </a>
+                                                        {% else %} - 
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if deal.referrer %}
+                                                        {{deal.referrer}}
+                                                        {% else %} - 
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ deal.created_on }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                <button type="button" data-felix-modal="modal_create_health_deal" class="btn btn-info-container btn-primary btn-sm"
+                onclick="setCustomerInHealthDealForm('{{ customer.pk }}', '{{ customer.name }}', '{{ customer.email}}', '{{customer.phone}}');">Create health deal</button>    
+                                <br><br>
+                                    <div class="small-note">
+                                        There are no health deals for this customer.
+                                    </div>
+                                {% endif %}
+                            </div>
+                            </div>
                         </div>
 
                         <!-- POLICIES -->
                         <div class="tab-pane p-3" id="tab_policies" role="tabpanel">
-                            {% if motor_policies %}
+                            
+                            <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active show" data-toggle="tab" href="#tab_motor_policies" role="tab" aria-selected="true">Motor Policies</a>
+                                </li>                               
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tab_health_policies" role="tab" aria-selected="true">Health Policies</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane p-3 active show" id="tab_motor_policies" role="tabpanel">
+                                    {% if motor_policies %}
+                                        <table class="table no-footer felix-table" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th data-name="status">Status</th>
+                                                    <th data-name="reference_number">Policy</th>
+                                                    <th>Deal</th>
+                                                    <th data-name="product">Premium</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="felix-table-body">
+                                                {% for policy in motor_policies %}
+                                                    <tr
+                                                        id="tr_{{ policy.pk }}"
+                                                        data-trigger-modal="#modal_view_policy"
+                                                        data-click-callback="__POLICY._getPolicyDetail({{ policy.pk }})"
+                                                        >
+                                                        <td class="capitalize">
+                                                            <span class="stage-icon status-{{ policy.get_policy_expiry_status|slugify }}"></span>
+                                                            {{ policy.get_policy_expiry_status }}
+                                                        </td>
+                                                        <td>
+                                                            <div class="logo wide float-left">
+                                                                {% if policy.deal and policy.deal.get_order %}
+                                                                    <img title="{{ policy.deal.get_order.selected_product.product.name }}" src="{{ policy.deal.get_order.selected_product.product.get_logo }}" />
+                                                                {% elif policy.product %}
+                                                                    <img title="{{ policy.product.name }}" src="{{ policy.product.get_logo }}" />
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="logo-info float-left">
+                                                                {{ policy.reference_number }}
+                                                                <div class="dates text-muted">{{ policy.policy_start_date }} - {{ policy.policy_expiry_date }}</div>
+                                                                {% if policy.get_policy_expires_in >= 0 %}
+                                                                    <span class="badge badge-warning-light">Renewal in {{ policy.get_policy_expires_in }} days</span>
+                                                                {% endif %}
+                                                            </div>
+                                                        </td>
+                                                        <td class="link">
+                                                            {% if policy.deal %}
+                                                                <i class="product-line-icon motor"></i>
+                                                                <a href="{% url 'motorinsurance:deal-edit' pk=policy.deal.pk %}">
+                                                                    {{ policy.deal.get_car_title }}
+                                                                </a>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td class="link">
+                                                            {% if policy.get_selected_product_premium %}
+                                                                {{ companysettings.get_currency_display }} {{ policy.get_selected_product_premium|intcomma }}
+                                                            {% else %} -
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <div class="small-note">
+                                            There are no motor policies for this customer.
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- HEALTH POLICIES -->
+                        <div class="tab-pane p-3" id="tab_health_policies" role="tabpanel">
+                            {% if health_policies %}
                                 <table class="table no-footer felix-table" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
@@ -437,10 +648,14 @@
                                 </table>
                             {% else %}
                                 <div class="small-note">
-                                    There are no deals for this customer.
+                                    There are no health policies for this customer.
                                 </div>
                             {% endif %}
                         </div>
+                            </div>
+                        </div>
+
+                        
                     </div>
                 </div>
             </div>
@@ -459,6 +674,12 @@
 {% block extra_js %}
     <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
     <script type="text/javascript">
+        function setCustomerInHealthDealForm(customer_id, customer_name, customer_email, customer_phone){
+            $('#health_deal_form #id_customer').val(customer_id);
+            $('#health_deal_form #id_customer_name').val(customer_name);
+            $('#health_deal_form #id_email').val(customer_email);
+            $('#health_deal_form #id_phone').val(customer_phone);
+        }
         function confirm_delete() {
             if(window.confirm('Are you sure to delete this document?')) {
                 return true;

@@ -1,0 +1,48 @@
+<style>
+  .quote-insurers-modal .insurer-block-container .product-logo-container{
+    width: 120px;
+    min-height: 80px;
+    max-width: 118px;
+    max-height: 80px;
+    padding: 2px 10px;
+    background-color: #FFF;
+    border: 1px solid #E9ECEF;
+    border-radius: 4px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+  }
+</style>
+<div id="modal_quote_insurers" class="felix-modal-container quote-insurers-modal">
+    <div class="felix-modal insurers">
+        <div class="close-bar"><a href="javascript:" class="close"></a></div>
+        <h1>Select an Insurer</h1>
+        <div class="content squeeze-top-sm">
+            <center>
+                <div class="row">
+                    {% for id, insurer in allowed_insurers.items %}
+                    <div
+                        data-modal-close
+                        data-id="{{ insurer.pk }}"
+                        data-name="{{ insurer.name }}"
+                        title="click to select this insurer"                        
+                        class="insurer-block-container col-lg-3 col-sm-6 insurer-container"                       
+                      >
+                        {% if insurer.auto_quotable and companysettings.auto_quote_allowed %}
+                            <div class="badge badge-success badge-font-light">Automatic</div>
+                        {% endif %}
+                        <div class="product-logo-container col-2">
+                            <span class="spacer"></span>
+                            <img src="{{ insurer.logo }}" alt="{{ insurer.name }}" />
+                        </div>
+                        <div class="heading light m-t-10">{{ insurer.name }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </center>
+        </div>
+        <div class="button-container">
+            <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+        </div>
+    </div>
+</div>

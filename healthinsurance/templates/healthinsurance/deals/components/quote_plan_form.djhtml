@@ -1,0 +1,295 @@
+{% include 'healthinsurance/deals/components/plan_review.djhtml' %}
+<div class="form health-deal-add-product">
+    
+    <input type="hidden" name="edited_qp_id" id="edited_qp_id" value="" />
+    <input type="hidden" name="edited_id" id="edited_id" value="" />
+    <input type="hidden" name="selected_qp" id="selected_qp" value="{{selected_plan.plan.pk}}" />
+    <div class="products-container">
+        <div class="row product-row">
+            <input type="hidden" id="product_name" value="" />
+            <input type="hidden" id="product_logo" value="" />
+            <div class="col-lg-12">
+                <div class="row">
+                    <!--Product-->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Product *</div>
+                            <select name="product" id="id_product" class="product-field form-control" onchange="updateQuoteForm(this, 'edit')">
+                                <option value="" disabled selected>Select Product</option>
+                                {% for plan in quoted_plans %}
+                                    {% comment %} {% if plan.is_active %} {% endcomment %}
+                                        <option value="{{ plan.id }}" data-insurer-id="{{ plan.insurer_id }}" {% if selected_plan.plan.pk == plan.pk %} selected {% endif %}>{{ plan.name }}</option>
+                                    {% comment %} {% endif %} {% endcomment %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Insurer-->
+                    <div class="col-lg-4 insurer">
+                        <div class="form-group">
+                            <div class="label m-b-5">Insurer Quote Reference</div>
+                            <!-- {{ quoted_product_form.insurer_quote_reference }} -->
+                            <input type="text" name="insurer_quote_reference" class="form-control" id="id_insurer_quote_reference" value="{{ selected_plan.insurer_quote_reference }}" />
+                        </div>
+                    </div>
+
+                    <!--Car Value-->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Total Premium</div>
+                            <input type="text" name="total_premium" class="form-control auto-format-money-field" id="id_total_premium" value="{{ selected_plan.total_premium }}"/>
+                        </div>
+                    </div>
+
+                    <!--Premium-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Base Premium incl. 5% VAT *</div>
+                            {{ quoted_product_form.premium }}
+                            <input type="text" name="base_premium" class="form-control auto-format-money-field" id="id_base_premium"  />  
+                            
+                        </div>
+                    </div> -->
+
+                    <!-- Sale Price-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">
+                                Sale Price incl. 5% VAT
+                                <span class="help-icon" title="If you want to offer your client a discounted premium or a sale price then enter it here. Otherwise leave it blank to quote the standard base premium."></span>
+                            </div>
+                            <input type="text" name="sale_price" class="form-control auto-format-money-field" id="id_sale_price"  />  
+                        </div>
+                    </div> -->
+
+                    <!--Deductible-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Deductible</div>
+                            <input type="text" name="deductible" class="form-control auto-format-money-field" id="id_deductible"  />  
+                        </div>
+                    </div> -->
+
+                    <!--Area Of Cover-->
+                    <div class="col-lg-4 area_of_cover hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Area Of Cover</div>
+                            <select class="form-control" name="area_of_cover" id="id_area_of_cover">                                    
+                                <option value="" disabled selected>Select Area Of Cover</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 payment_frequency hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Payment Frequency</div>
+                            <select class="form-control" name="payment_frequency" id="id_payment_frequency">                                    
+                                <option value="" disabled selected>Select Payment Frequency</option>
+                            </select>                                
+                        </div>
+                    </div>
+
+                    <!--Copayment(Outpatient)-->
+                    <div class="col-lg-4 copayment hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Copayment(Outpatient)</div>
+                            <select class="form-control" name="copayment" id="id_copayment">                                    
+                                <option value="" disabled selected>Select Copayment</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 deductible hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Deductible (Outpatient Consultation)</div>
+                            <select class="form-control" name="deductible" id="id_deductible">                                    
+                                <option value="" disabled selected>Select Deductible</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--Network-->
+                    <div class="col-lg-4 network hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Network</div>
+                            <select class="form-control" name="network" id="id_network">                                    
+                                <option value="" disabled selected>Select Network</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Annual Limit-->
+                    <div class="col-lg-4 annual_limit hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Annual Limit</div>
+                            <select class="form-control" name="annual_limit" id="id_annual_limit">                                    
+                                <option value="" disabled selected>Select Annual Limit</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Physiotherapy-->
+                    <div class="col-lg-4 physiotherapy hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Physiotherapy</div>
+                            <select class="form-control" name="physiotherapy" id="id_physiotherapy">                                    
+                                <option value="" disabled selected>Select Physiotherapy</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Pre-Existing Cover-->
+                    <div class="col-lg-4 pre_existing_cover">                           
+                            <div class="label m-b-5">Pre-Existing Cover</div>
+                            <select class="form-control" name="pre_existing_cover" id="id_pre_existing_cover">                                    
+                                <option value="" disabled selected>Select Pre-Existing Cover</option>
+                                <option value="" disabled selected>AED 150,000 (excluded for the first 6 months)</option>
+                            </select>
+                    </div>
+                    <!--Pre-Existing Cover-->
+                    <div class="col-lg-4 alternative_medicine hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Alternative Medicine</div>
+                            <select class="form-control" name="alternative_medicine" id="id_alternative_medicine">                                    
+                                <option value="" disabled selected>Select Alternative Medicine</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Pre-Existing Cover-->
+                    <div class="col-lg-4 maternity_benefits hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Maternity Benefits</div>
+                            <select class="form-control" name="maternity_benefits" id="id_maternity_benefits">                                    
+                                <option value="" disabled selected>Select Maternity Benefits</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Pre-Existing Cover-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Maternity Benefits</div>
+                            <select name="alternative_medicine" id="id_alternative_medicine">                                    
+                                <option value="" disabled selected>Select Maternity Benefits</option>
+                            </select>
+                            
+                        </div>
+                    </div> -->
+                    <!--Maternity waiting period-->
+                    <div class="col-lg-4 maternity_waiting_period hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Maternity waiting period</div>
+                            <select class="form-control" name="maternity_waiting_period" id="id_maternity_waiting_period">
+                                <option value="" disabled selected>Select Maternity waiting period</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Dental-->
+                    <div class="col-lg-4 dental_benefits hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Dental Cost</div>
+                            <select class="form-control" name="dental_cost" id="id_dental_cost">                                    
+                                <option value="" disabled selected>Select Dental Cost</option>
+                                
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Wellness Benefits/Health screening-->
+                    <div class="col-lg-4 wellness_benefits hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Wellness Benefits/Health screening</div>
+                            <select class="form-control" name="alternative_medicine" id="id_alternative_medicine">                                    
+                                <option value="" disabled selected>Select Wellness Benefits/Health screening</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!--Optical Cost-->
+                    <div class="col-lg-4 optical_benefits hide">
+                        <div class="form-group">
+                            <div class="label m-b-5">Optical Benefits</div>
+                            <select class="form-control" name="optical" id="id_optical">                                    
+                                <option value="" disabled selected>Select Optical Cost</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+
+                    
+                    
+                    <!--Extra-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Ancillary Deductible</div>
+                            {{ quoted_product_form.deductible_extras }}
+                        </div>
+                    </div> -->
+
+                    <!--Agency Checkbox-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group m-t-25 m-l-5">
+
+                            <label class="felix-checkbox-form">
+                                Agency Repair
+                                {{ quoted_product_form.agency_repair }}
+                                <div class="control__indicator"></div>
+                            </label>
+                        </div>
+                    </div> -->
+
+                    <!--NCD Checkbox-->
+                    <!-- <div class="col-lg-4">
+                        <div class="form-group m-t-25 m-l-5">
+                            <label class="felix-checkbox-form">
+                                NCD Required
+                                {{ quoted_product_form.ncd_required }}
+                                <div class="control__indicator"></div>
+                            </label>
+                        </div>
+                    </div> -->
+                    <div class="clear m-10">
+                        
+                    </div>
+
+                    <!--Addons-->
+                    <!-- <div class="addons col-md-12"
+                         data-selected-addons="{{ quoted_product_form.default_add_ons.value }}">
+                        <div class="form-group">
+                            <div class="label m-b-5">Default add-ons</div>
+                            {{ quoted_product_form.default_add_ons }}
+                        </div>
+                    </div> -->
+                </div>
+                
+                
+                <div class="heading m-b-5">Additional Member Premium</div> <br/>
+                <div class="row">
+                    
+                    {% for member in deal.primary_member.additional_members.all %}
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <div class="label m-b-5">Member {{ forloop.counter }} Premium</div>
+                            {% comment %} <select name="optical" id="id_optical">                                    
+                                <option value="" disabled selected>Select Optical Cost</option>
+                            </select> {% endcomment %}
+                            <input type="text" name="member_{{ forloop.counter }}" class="form-control auto-format-money-field" id="id_member_{{ forloop.counter }}"  value="{{member.premium}}" />  
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="add-product float-right btn btn-success btn-md m-l-10 m-t-10">
+        <span class="add-label">Add product</span><span class="edit-label hide">Update product</span>
+    </button>
+    <!-- <button type="button" class="float-right btn-cancel-generate-new-quote btn btn-outline-secondary btn-md m-t-10">
+        Cancel
+    </button> -->
+</div>

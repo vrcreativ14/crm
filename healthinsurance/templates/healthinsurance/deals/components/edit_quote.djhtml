@@ -1,0 +1,56 @@
+
+<div class="products-preview">
+
+    {% include 'healthinsurance/deals/components/deal_quote_form.djhtml' %}
+    <div class="products">
+        {% for qp in quoted_plans %}
+        <div class="row product" data-id={{ qp.pk }}>
+        
+            <div class="product-logo-container col-lg-2 col-md-3 m-l-30">
+                <span class="spacer"></span>
+                <img src="{{ qp.plan.logo.url }}" style="width:100px;height:100px;">
+            </div>
+            <div class="details col-lg-5 col-md-5 col-sm-7">
+                <div class="heading light">{{ qp.plan.name }}</div>
+                <div class="text-muted font-12">Total Premium: AED {{ qp.total_premium }}</div>
+                <div class="text-muted font-12">Insurer Quote Reference: {% if qp.insurer_quote_reference %}{{ qp.insurer_quote_reference }} {% else %}-{% endif %}</div>
+                
+                
+            </div>
+            
+            <div title="Click to remove" class="remove product-remove" data-id="{{ qp.pk }}"><i class="ti-trash"></i></div>
+            <div title="Click to edit" style="margin-left:10px;" class="edit product-edit" data-id="{{ qp.pk }}" ><i class="ti-pencil-alt"></i></div>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="show-insurer-modal btn-nexus btn-nexus-golden btn-lg hide" ></button>
+    <!-- <center class="m-30 add-new-product-cta"> -->
+        <button class="btn btn-outline-primary btn-md" data-toggle="modal" data-target="#modal_quote_insurers">
+            Add Another Product
+        </button>
+    <!-- </center> -->
+
+    <hr />
+
+    <div class="row no-hover">
+        <div class="status-field col-lg-1 col-md-1 col-sm-2">
+            {% if deal.quote %}
+            <!-- <input name="quote_status" id="id_quote_status" type="checkbox" switch='success' name="" {% if  deal.quote.status == 'published'%}checked{% endif %} />
+            <label data-on-label="published" data-off-label="unpublished" for="id_quote_status" class=""></label> -->
+            <div class="row"></div>
+            {% endif %}
+        </div>
+        
+        <div class="col col-lg-6 float-right">
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Save & Send' class="loader-blue quote-submit send-email m-r-10 float-right btn btn-primary btn-md btn-wide-deal" %}
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Save' class="loader-blue quote-submit m-r-10 float-right btn btn-outline-primary btn-md btn-wide-deal" color='gray' %}
+            
+           
+            {% if deal.quote %}
+            <button class="cancel-quote m-r-10 float-right btn btn-outline-secondary btn-md btn-wide-deal">
+                Cancel
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -12,9 +12,11 @@ from core.algolia import Algolia
 
 from felix.constants import COUNTRIES
 from felix.constants import FIELD_LENGTHS, GENDER_CHOICES, MARITAL_STATUS_LIST
+from healthinsurance.models.policy import HealthPolicy
 
 from motorinsurance.models import Deal as MotorDeals, Policy
 from mortgage.models import Deal as MortgageDeals
+from healthinsurance.models.deal import Deal as HealthDeals
 
 
 class Customer(AuditTrailMixin, models.Model):
@@ -64,6 +66,9 @@ class Customer(AuditTrailMixin, models.Model):
     def get_mortgage_deals(self):
         return MortgageDeals.objects.filter(customer=self)
 
+    def get_health_deals(self):
+        return HealthDeals.objects.filter(customer=self)
+
     def get_whatsapp_formatted_number(self):
         return ''.join([n for n in self.phone if n.isdigit()])
 
@@ -72,6 +77,9 @@ class Customer(AuditTrailMixin, models.Model):
 
     def get_non_deleted_mortgage_deals(self):
         return self.get_mortgage_deals().exclude(status="deleted").order_by('-created_date')
+
+    def get_non_deleted_health_deals(self):
+        return self.get_health_deals().exclude(status="deleted").order_by('-created_on')
 
     def get_open_deals(self):
         return self.get_motor_deals().filter(is_deleted=False).exclude(
@@ -86,8 +94,14 @@ class Customer(AuditTrailMixin, models.Model):
     def get_policies(self):
         return Policy.objects.filter(customer=self, status=Policy.STATUS_ACTIVE).order_by('-created_on')
 
+    def get_health_policies(self):
+        return HealthPolicy.objects.filter(customer=self, status=Policy.STATUS_ACTIVE).order_by('-created_on')
+
     def get_active_policies(self):
         return self.get_policies().filter(policy_expiry_date__gte=datetime.date.today()).order_by('-created_on')
+
+    def get_active_health_policies(self):
+        return self.get_health_policies().filter(expiry_date__gte=datetime.date.today()).order_by('-created_on')
 
     def get_attachments(self):
         return self.attachments.order_by('-created_on')

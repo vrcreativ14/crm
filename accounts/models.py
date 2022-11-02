@@ -308,6 +308,10 @@ class UserProfile(AuditTrailMixin, models.Model):
             f'?email={self.user.email}&source={self.user.first_name}_{self.user.last_name}'
         )
 
+    def get_health_lead_form_url(self):
+        user_first_name = slugify(self.user.first_name or self.user.username)
+        return f"https://{settings.DOMAIN}/health-insurance-form/get-quotes/start/{user_first_name}/{self.user.pk}/"        
+
     def get_normalized_whatsapp_number(self):
         if self.whatsapp_widget_for_ecommerce and is_valid_number(self.phone):
             return normalize_phone_number(self.phone)

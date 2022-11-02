@@ -1,0 +1,135 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container">
+    {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+    <div class="heading m-b-5">Sub Stages</div>
+    <div class="row">
+        <div class="col-lg-6">
+    <ul class="deal-stages-breadcrumb nav" >
+        <li data-id='new' class="no-underline nav-item {% if sub_stage_number < 1 %}current selected {% else %} completed {% endif %} substage_1" >
+            <a href="#" data-bs-target="received">
+                Documents Received
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+        <li data-id='new' class="no-underline nav-item substage_2 {% if sub_stage_number == 1 or sub_stage_number == 2 %}current selected {% elif sub_stage_number > 2 %} completed {% endif %}" >
+            <a href="#" data-bs-target="send">
+                World Check
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+        <li data-id='new' class="no-underline nav-item substage_3 {% if sub_stage_number == 3 %}current selected {% endif %}" >
+            <a href="#" data-bs-target="world-check">
+                Send to Insurer
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+<!-- <div class="heading m-b-5">Sub Stages</div> -->
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade substage_1 {% if sub_stage_number < 1 %}show active {% endif %}" role="tabpanel" aria-labelledby="received-tab">
+    <div class="row">
+            <div class="product col-lg-2 col-md-2 m-l-30" data-id={{ index }}>
+        
+                <div class="product-logo-container ">
+                    <span class="spacer"></span>
+                    <img src="{{  order.selected_plan.plan.insurer.logo.url }}" style="width:100px;height:100px;">
+                </div>
+            </div>
+           
+            <div class="details col-lg-8 col-md-8 col-sm-6">
+                <div class="heading light">{{ order.selected_plan.plan.name }}</div>
+                <div class="text-muted font-12">Total Premium: AED {{ order.selected_plan.total_premium }}</div>
+                <div class="text-muted font-12">Insurer Quote Reference: {{ order.selected_plan.insurer_quote_reference }}</div>
+            </div>
+    </div>
+
+    <form action="POST" class="">
+    <div class="row m-b-5">
+       
+        <div class="col-lg-4">
+            <div class="form-check">
+            <input class="form-check-input required" type="checkbox" value="" name="documents_uploaded" id="documents_uploaded" required>
+            <label class="form-check-label">
+                Documents have been uploaded?
+            </label>
+        </div>
+        </div>
+        
+        
+        
+    </div>
+    <br/>
+    {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' action='next-substage' class="btn-nexus btn-nexus-blue next-substage float-right" %}
+</form>
+</div>
+
+
+
+<div class="tab-pane fade substage_2 {% if sub_stage_number == 1 or sub_stage_number == 2 %}show active {% endif %}" role="tabpanel" aria-labelledby="world-check-tab">
+    <form action="POST" class="">
+    <div class="row">
+        <div class="col-lg-3">
+           <label>Upload world check proof</label>
+           <input type="file" name="world_check_proof" class="required"/>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-3">Was there a hit?</div>
+        <div class="col-lg-3">
+            <input type="radio" id="check_yes" name="is_world_check_done" class="required" value="1" {% if substage_obj.world_check_hit %} checked="checked" {% endif %}/>
+            <label for="check_yes">Yes</label>
+
+            <input class="m-l-20" type="radio" id="check_no" name="is_world_check_done" class="required" value="0" {% if not substage_obj.world_check_hit %} checked="checked" {% endif %}/>
+            <label for="check_no">No</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">Approved by compliance? </div>
+        <div class="col-lg-3">
+            <input type="radio" id="check_yes" name="approved_by_compliance" class="required" value="yes" {% if substage_obj.world_check_approved == "yes" %} checked="checked" {% endif %} %}/>
+            <label for="check_yes">Yes</label>
+            
+            <input class="m-l-20" type="radio" id="check_no" name="approved_by_compliance" class="required" value="no" {% if substage_obj.world_check_approved == 'no' %} checked="checked" {% endif %}/>
+            <label for="check_no">No</label>
+
+            <input class="m-l-20" type="radio" id="check_no" name="approved_by_compliance" class="required" value="pending" {% if substage_obj.world_check_approved == "pending" %} checked="checked" {% endif %}/>
+            <label for="check_no">Pending</label>
+        </div>
+    </div>
+    <label>If the client was flagged, please contact the compliance team directly</label>
+    {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Submit' action='next-substage' class='btn-nexus btn-nexus-blue next-substage float-right' %}
+</form>
+</div>
+
+<div class="tab-pane fade substage_3 {% if sub_stage_number == 3 %}show active {% endif %}" role="tabpanel" aria-labelledby="send-tab">
+    <form action="POST" class="">
+    <div class="row m-b-5">
+    
+        <div class="col-lg-4">
+            <div class="form-check">
+            <input class="form-check-input required" type="checkbox" value="" name="documents_verified" id="documents_verified" required>
+            <label class="form-check-label">
+                Documents have been verified and sent to the insurer?
+            </label>
+        </div>
+        </div>
+        
+        
+    </div>
+    {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' action='next-substage' class="btn-nexus btn-nexus-blue next-substage float-right" %}
+</form>
+</div>
+
+</div>
+ 
+    
+</div>
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}

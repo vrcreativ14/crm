@@ -160,6 +160,7 @@ class Attachment(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     attached_to = GenericForeignKey()
+    
 
     label = models.CharField(max_length=1000, blank=True)
     file = models.FileField(max_length=FIELD_LENGTHS['file'], upload_to=get_file_upload_path)

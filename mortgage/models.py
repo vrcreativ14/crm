@@ -151,6 +151,7 @@ class Bank(models.Model):
     extra_financing_allowed = models.BooleanField(default=False)
     type = models.CharField(max_length=50, choices=BANK_TYPE, default=VARIABLE_BANK_TYPE, null=True)
     minimum_floor_rate = models.FloatField(default=0, blank=False, null=True)
+    extra_financed_mortgage = models.BigIntegerField(default=0, blank=True)
     class Meta:
         verbose_name = "Bank"
         verbose_name_plural = "Banks"

@@ -5,8 +5,7 @@ Django settings for felix project.
 import os
 
 import environ
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +31,8 @@ environ.Env.read_env(root('felix/.env'))
 
 SITE_ROOT = root()
 
-DOMAIN = env('DOMAIN')
+#DOMAIN = env('DOMAIN')
+DOMAIN = 'http://127.0.0.1:8000'
 
 # Databases
 DATABASES = {
@@ -43,16 +43,16 @@ DATABASES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Caches
-CACHES = {
-    'default': env.cache()
-}
+# CACHES = {
+#     'default': env.cache()
+# }
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')  # False if not in os.environ
-#DEBUG = False
+#DEBUG = env('DEBUG')  # False if not in os.environ
+DEBUG = True
 
 COMPANY_ID = env('COMPANY_ID')
 
@@ -60,7 +60,6 @@ ALLOWED_HOSTS = ['*']
 
 SECURE_SSL_REDIRECT = env('SSL_REDIRECT')
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
@@ -93,9 +92,13 @@ INSTALLED_APPS = [
     'auto_quoter',
     'mortgage',
     'mortgagequote',
+    'healthinsurance',
+    'healthinsurance_shared',
+    'healthinsurance_form',
+    'healthinsurance_quote'
 ]
 
-MIDDLEWARE = [    
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -174,7 +177,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-USE_AZURE = env('USE_AZURE')
+#USE_AZURE = env('USE_AZURE')
+USE_AZURE = False
 
 AWS_S3_REGION_NAME = env('AWS_DEFAULT_REGION')
 AWS_S3_FILE_OVERWRITE = False
@@ -335,8 +339,9 @@ ENVIRONMENT = env('ENVIRONMENT_NAME')
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-
-
+if not DEBUG:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
 if not DEBUG:
     sentry_sdk.init(
         environment=env('ENVIRONMENT_NAME'),
@@ -349,9 +354,6 @@ if not DEBUG:
 
 _1mb = 1024 * 1024
 LOG_DIR = env('LOG_DIR')
-CSRF_TRUSTED_ORIGINS = ['.insurenex.io']
-#CORS_ORIGIN_WHITELIST = ('https://crm1.insurenex.io',)
-#CSRF_COOKIE_DOMAIN = ".crm1.insurenex.io"
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

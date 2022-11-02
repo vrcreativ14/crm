@@ -30,6 +30,7 @@ from django.db.models import Q
 from rest_framework.generics import ListAPIView
 from accounts.pagination import UserPagination
 from collections import OrderedDict
+from accounts.permissions import HasAdminRolePermission
 
 logger = logging.getLogger('api.typeform')
 
@@ -41,7 +42,7 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data()
         params = ''
-
+        allowed_worspaces = UserProfile.objects.get(user = self.request.user).allowed_workspaces
         user_id = self.request.GET.get('user') or None
         if user_id:
             params = 'user={}'.format(self.request.GET['user'])
@@ -57,14 +58,28 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
                 if parse_datetime(self.request.GET.get('start_date')):
                     ctx['start_date'] = parse_datetime(self.request.GET.get('start_date')).date().strftime("%m/%d/%Y") 
                     ctx['show_date'] = True
-            if self.request.GET.get('end_date'): 
+            if self.request.GET.get('end_date'):
                 if parse_datetime(self.request.GET.get('end_date')):
                     ctx['end_date'] = parse_datetime(self.request.GET.get('end_date')).date().strftime("%m/%d/%Y")
                     ctx['show_date'] = True
-        else:
+        elif self.request.GET.get('entity') == "health":
+            self.request.session["selected_product_line"] = "health-insurance"
+            ctx['params'] = self.request.get_full_path().replace(self.request.path,'').replace('?','')
+            ctx['filtertype'] = self.request.GET.get('filtertype')
+            if self.request.GET.get('start_date'):
+                if parse_datetime(self.request.GET.get('start_date')):
+                    ctx['start_date'] = parse_datetime(self.request.GET.get('start_date')).date().strftime("%m/%d/%Y") 
+                    ctx['show_date'] = True
+            if self.request.GET.get('end_date'):
+                if parse_datetime(self.request.GET.get('end_date')):
+                    ctx['end_date'] = parse_datetime(self.request.GET.get('end_date')).date().strftime("%m/%d/%Y")
+                    ctx['show_date'] = True
+        elif "MT" in allowed_worspaces:
             self.request.session["selected_product_line"] = "motorinsurance"
             ctx['params'] = params
-        ctx['entity_switch'] = True
+        else:
+            return
+        #ctx['entity_switch'] = True
         return ctx
 
 
@@ -140,7 +155,16 @@ class SearchResultAgentView(LoginRequiredMixin,ListAPIView):
         page_size = 30
         pagination_class = UserPagination
         serializer_class = UserProfileSerializer
-        permission_classes = []
+        #permission_classes = []
+
+        def get_permissions(self):
+            profile = self.request.GET.get('up')
+            user_profile = UserProfile.objects.filter(pk = profile)
+            # permissions_list = [HasAdminRolePermission] 
+            
+            # return [permission() for permission in permissions_list]
+            
+
         def get_queryset(self):
             qs = UserProfile.objects.filter(company=self.request.company, user__is_active=True).order_by(self.default_order_by)
             return qs
@@ -165,7 +189,7 @@ class SearchResultAgentView(LoginRequiredMixin,ListAPIView):
 
             return paginator.get_page(self.request.GET.get('page', 1))
 
-        def search_user(self,key, filters):            
+        def search_user(self,key, filters):
             qs_name = UserProfile.objects.none()
             qs_email = UserProfile.objects.none()
             qs_role = UserProfile.objects.none()
@@ -186,17 +210,21 @@ class SearchResultAgentView(LoginRequiredMixin,ListAPIView):
                 for user_profile in qs1_copy:
                     if 'producer' in filters:
                         if user_profile.get_assigned_role() == 'producer':
-                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
+                            qs_role = qs_role | UserProfile.objects.filter(pk = user_profile.pk)
+                            
                     if 'regular' in filters:
                         if user_profile.get_assigned_role() == 'user':
-                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
+                            qs_role = qs_role | UserProfile.objects.filter(pk = user_profile.pk)
+                            
                     if 'admin' in filters:
                         if user_profile.get_assigned_role() == 'admin':
-                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
+                            qs_role = qs_role | UserProfile.objects.filter(pk = user_profile.pk)
+                            
                     if 'none' in filters:
                         if user_profile.get_assigned_role() == None:
-                            qs_role |= UserProfile.objects.filter(pk = user_profile.pk)
-
+                            qs_role = qs_role | UserProfile.objects.filter(pk = user_profile.pk)
+                            
+                #qs_role = producers | regular_users | admins | no_roles
                 return qs_role.order_by(self.default_order_by)
             
             return qs.order_by(self.default_order_by)
@@ -211,7 +239,7 @@ class SearchResultAgentView(LoginRequiredMixin,ListAPIView):
                 qs = self.get_queryset()
             paginator = UserPagination()
             search_result = paginator.paginate_queryset(qs, request)
-            user_serializer = UserProfileSerializer(search_result, many=True)            
+            user_serializer = UserProfileSerializer(search_result, many=True)
             
             return paginator.get_paginated_response(user_serializer.data)            
 
@@ -542,7 +570,6 @@ class InvitationCancelView(LoginRequiredMixin, HasPermissionsMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
-
         obj.delete()
 
         return JsonResponse({'success': True})

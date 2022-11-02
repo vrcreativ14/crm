@@ -1,0 +1,178 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="info-container">
+        <div class="row">
+            <div class="col-lg-11"><span class="heading">Primary Member Details</span> </div>
+            <i class="bi bi-caret-up"></i>
+           
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-3">
+               <label>Name</label>
+            </div>
+            <div class="col-lg-3">
+                <span class="capitalize">{{deal.primary_member.name}}</span>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <label>Salary Band</label> 
+            </div>
+            <div class="col-lg-3 bg-color">
+                {% if deal.primary_member.salary_band == 'above_4k' %}
+                <span>Above 4000 AED</span>
+                {% elif deal.primary_member.salary_band == 'below_4k' %}
+                <span>Below 4000 AED</span>
+                {% endif %}
+            </div>
+        </div>
+       
+        <div class="row capitalize">
+            <div class="col-lg-3 bg-color">
+                <label>Phone Number</label> 
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span>{{deal.primary_member.phone}}</span>
+            </div>
+            <div class="col-lg-3">
+                <label> Level Of Cover</label>
+            </div>
+            <div class="col-lg-3">
+                <span class="capitalize">{{deal.level_of_cover}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <label> Email </label>
+            </div>
+            <div class="col-lg-3">
+                <span>{{deal.primary_member.email}}</span>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <label> Policy Start Date </label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span>{{deal.start_date}}</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 bg-color">
+                <label> Date Of Birth </label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span> {{deal.primary_member.dob}} </span>
+            </div>
+            <div class="col-lg-3">
+                <label> Geographical Coverage </label>
+            </div>
+            <div class="col-lg-3">
+                <span class="capitalize"> {{ deal.geographical_coverage }} </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <label> Nationality </label>
+            </div>
+            <div class="col-lg-3">
+                <span class="capitalize"> {{deal.primary_member.nationality}} </span>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <label> Additional Benefits </label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span>
+                    {% if deal.additional_benefits.all.count > 0 %}
+                        {% for benefit in deal.additional_benefits.all %}
+                            {{benefit}}{% if forloop.counter < deal.additional_benefits.all.count  %},{% endif %}
+                        {% endfor %}
+                    {% else %} 
+                            -
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 bg-color">
+                <label> Country of Residence </label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span class="capitalize"> {{deal.primary_member.country_of_stay}} </span>
+            </div>
+            <div class="col-lg-3">
+                <label> Indicative Budget per person </label>
+            </div>
+            <div class="col-lg-3">
+                <span> {{deal.indicative_budget}} </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <label> Visa </label>
+            </div>
+            <div class="col-lg-3">
+                <span>  {{deal.primary_member.visa}} </span>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <label>Preferred Hospitals/Clinics</label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span>AB Hospital</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 bg-color">
+                <label> Gender </label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                {% if deal.primary_member.gender == 'm' %}
+                <span>Male</span>
+                {% else %}
+                <span>Female</span>
+                {% endif %}
+                
+            </div>
+        </div>
+        <br/>
+        
+        
+        {% for member in additional_members %}
+        <div class="row">
+            <span class="heading capitalize">Member {{forloop.counter}}: {{member.relation}} </span>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-3 bg-color">
+                <label>Name</label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span class="capitalize"> {{member.name}} </span>
+            </div>
+            <div class="col-lg-3">
+                <label> Country of Residence </label>
+            </div>
+            <div class="col-lg-3">
+                <span class="capitalize"> {{member.country_of_stay}} </span>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-lg-3">
+                <label>Date Of Birth</label>
+            </div>
+            <div class="col-lg-3">
+                <span>{{member.dob}}</span>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <label>Nationality</label>
+            </div>
+            <div class="col-lg-3 bg-color">
+                <span class="capitalize">{{member.nationality}}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

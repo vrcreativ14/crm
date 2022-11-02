@@ -12,7 +12,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
     <!-- App Icons -->
-    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+    <!-- <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" /> -->
+    <meta property=“og:image” content=“https://www.nexusadvice.com/wp-content/uploads/2020/09/Nexus_logo_Clr.svg” />
     {% block extra_css %}{% endblock %}
 
     <!-- APP CSS -->
@@ -24,8 +25,12 @@
     <script src="{% static "js/jquery-migrate-3.3.2.min.js" %}"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
+    <link href="{% static 'css/flags.css' %}" rel="stylesheet"/>
+    
     <!-- JS variables populated from backend code -->
     <script>
         var __app_name = '{{ request.session.selected_product_line }}';
@@ -86,9 +91,11 @@
                             <div id="navigation">
                                 <!-- Navigation Menu-->
                                 {% if entity == 'mortgage' %}
-                                {% include 'topmenus/mortgage.djhtml' %}
+                                    {% include 'topmenus/mortgage.djhtml' %}
+                                {% elif entity == 'health' %}
+                                    {% include 'topmenus/health.djhtml' %}
                                 {% else %}
-                                {% include 'topmenus/motorinsurance.djhtml' %}
+                                    {% include 'topmenus/motorinsurance.djhtml' %}
                                 {% endif %}
                                 <!-- End navigation menu -->
                             </div> <!-- end #navigation -->
@@ -105,23 +112,30 @@
                                     <option value="mortgage"
                                     {% if entity == 'mortgage' %}
                                     selected
-                                    {% endif%}
+                                    {% endif %}
                                     >
                                 Mortgage-Deals </option>
-
+                                <option value="health"
+                                {% if entity == 'health' %}
+                                    selected
+                                    {% endif %}> Health-Deals</option>
                                     {% else %}
-                                    {% for space in request.user.userprofile.allowed_workspaces  %}
-                                    {% if space == "MT" %}
-                                    <option value="motor"> Motor Insurance-Deals </option>
-                                    {% endif %}
-                                    {% if space == "MG" %}
-                                    <option value="mortgage"
-                                        {% if entity == 'mortgage' %}
-                                        selected
-                                        {% endif%}
-                                    >
-                                    Mortgage-Deals </option>
-                                    {% endif %}
+                                    {% for space in request.user.userprofile.allowed_workspaces %}
+                                        {% if space == "MT" %}
+                                        <option value="motor"> Motor Insurance-Deals </option>
+                                        {% endif %}
+                                        {% if space == "MG" %}
+                                            <option value="mortgage"
+                                                {% if entity == 'mortgage' %}
+                                                selected
+                                                {% endif%}>Mortgage-Deals </option>
+                                        {% endif %}
+                                        {% if space == "HI" %}
+                                            <option value="health"
+                                            {% if entity == 'health' %}
+                                            selected
+                                            {% endif %}>Health-Deals</option>
+                                        {% endif %}
                                     {% endfor %}
                                     {% endif %}
                                 </select>
@@ -424,9 +438,10 @@ $( document ).ready(function() {
         });
     function entitySelect()
     {
+        debugger
         base_url = window.location.pathname
         params = window.location.search
-        if (this.value == 'mortgage'){
+        if (this.value == 'mortgage' || this.value == 'health'){
             base_url = window.location.href
         }
         $.ajax(
@@ -508,12 +523,25 @@ $( document ).ready(function() {
 {% endcomment %}
 <script src="{% static 'dist/app.js' %}"></script>
 <script src="{% static 'js/utilities.js' %}"></script>
-
+<script src="{% static 'js/jquery.flagstrap.js' %}"></script>
 {% block extra_js %}{% endblock %}
 
 <script type="text/javascript">
     $.trumbowyg.svgPath = '{% static "images/trumbowyg-icons.svg" %}';
+    jQuery(document).ready(function($) {
+        if(__app_name == 'health-insurance'){
+            if($('.health-renewals-menu-counter').length) {
+                $.get(DjangoUrls['health-insurance:renewals-count'](), function(res) {
+                    if(res.count)
+                        $('.health-renewals-menu-counter .badge-counter').html(res.count).addClass('visible');
+                });
+            }
+        }
+        $('.flagstrap').flagStrap({
+            buttonSize: "btn-lg",
+        }
+        );
+        });
 </script>
-
 </body>
 </html>
