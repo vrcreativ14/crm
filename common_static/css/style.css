@@ -15909,13 +15909,13 @@ a.has-childs .profile .sidebar ul li a:after {
 }
 .motor-deals .table-filters,
 .mortgage-deals .table-filters,
-.imedical-deals .table-filters {
+.health-insurance .table-filters {
   margin-top: 30px;
   margin-bottom: 20px;
 }
 .motor-deals .deal-detail-settings,
 .mortgage-deals .deal-detail-settings,
-.imedical-deals .deal-detail-settings {
+.health-insurance .deal-detail-settings {
   position: absolute;
   z-index: 1;
   top: 105px;
@@ -15927,17 +15927,17 @@ a.has-childs .profile .sidebar ul li a:after {
 }
 .motor-deals .deal-detail-settings a.dropdown-toggle,
 .mortgage-deals .deal-detail-settings a.dropdown-toggle,
-.imedical-deals .deal-detail-settings a.dropdown-toggle {
+.health-insurance .deal-detail-settings a.dropdown-toggle {
   color: inherit;
 }
 .motor-deals .deal-detail-settings .dropdown-menu,
 .mortgage-deals .deal-detail-settings .dropdown-menu,
-.imedical-deals .deal-detail-settings .dropdown-menu {
+.health-insurance .deal-detail-settings .dropdown-menu {
   font-size: 13px;
 }
 .motor-deals .deal-detail-settings .dropdown-menu .dropdown-item,
 .mortgage-deals .deal-detail-settings .dropdown-menu .dropdown-item,
-.imedical-deals .deal-detail-settings .dropdown-menu .dropdown-item {
+.health-insurance .deal-detail-settings .dropdown-menu .dropdown-item {
   padding: 6px 1rem;
 }
 
@@ -16368,3 +16368,126 @@ a.has-childs .profile .sidebar ul li a:after {
   font-size: 18px;
   margin-left: 10px;
 }
+
+.upload-icon{
+    background-image: url(../images/icons/upload.svg);
+  background-size: 25px;
+  background-position: 4px;  
+  opacity: 0.4;
+}
+.badge.badge-active{
+  background-color: #6FD088;
+  color: #FFF !important;
+  font-weight: 400;
+}
+a.badge-active.select-editable:hover{
+  background-color: #6FD088 !important;
+  font-weight: 400 !important;
+  }
+.badge.badge-waiting-for-insurer{
+background-color: #FFC300;
+font-weight: 400;
+}
+a.badge-waiting-for-insurer.select-editable:hover{
+background-color: #FFC300 !important;
+font-weight: 400 !important;
+}
+.badge.badge-waiting-for-client{
+  background-color: #F6FB48;  
+  font-weight: 400;
+}
+
+a.badge-waiting-for-client.select-editable:hover{
+  background-color: #F6FB48 !important;
+  font-weight: 400 ;
+}
+.badge.badge-waiting-for-us{
+  background-color: #F46445;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+a.badge-waiting-for-us.select-editable:hover{
+  background-color: #F46445 !important;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+
+.badge.badge-waiting-for-compliance{
+  background-color: #f56b5d;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+
+a.badge-waiting-for-compliance.select-editable:hover{
+  background-color: #f56b5d !important;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+.badge.badge-new-deal{
+  background-color: #8862E0 !important;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+a.badge-new-deal.select-editable{
+  background-color: #8862E0 !important;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+a.badge-new-deal.select-editable:hover{
+  background-color: #8862E0 !important;
+  color: #FFF !important;
+  font-weight: 400 ;
+}
+
+.radio-button label{
+  min-height: 33px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.modal-content{
+  padding: 20px;
+}
+.dropdown-toggle{
+  width: 100%;
+}
+.formlabel{
+  font-weight: 500;
+}
+
+.radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+.radio-button input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+
+.added-email-attachments > div{
+  margin-top: -18px;
+}
+

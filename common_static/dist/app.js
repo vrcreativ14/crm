@@ -1288,7 +1288,7 @@ var __DEALS;
                 if('whatsapp_msg_content' in response && response.whatsapp_msg_content) {
 
                     form.find('.show-when-wa-msg').removeClass('hide');
-                    form.find('#id_wa_msg_content').val(response.whatsapp_msg_content);
+                    form.find('#id_send_wa_msg').val(response.whatsapp_msg_content);
 
                     form.find('#id_send_wa_msg').change(function() {
                         form.find('.msg_container').addRemoveClass(!$(this).is(':checked'), 'hide');
@@ -1602,22 +1602,18 @@ var __DEALS;
                 beforeSubmit: Utilities.Form.beforeSubmit,
                 success: function(response, status, xhr, form) {
                     if(response.success) {
-                        $.get(DjangoUrls[`${__app_name}:get-deal-json`](response.deal_id), function(r) {
+                        $.get(DjangoUrls['motorinsurance:get-deal-json'](response.deal_id), function(r) {
                             __AMPLITUDE.logEvent(__AMPLITUDE.event('motor_deal_created'), {
                                 'source': 'manual',
-
                                 'deal_id': r.deal.id,
-
                                 'vehicle_model_year': r.deal.vehicle_year,
                                 'vehicle make': r.deal.vehicle_make,
                                 'vehicle_model': r.deal.vehicle_model,
                                 'vehicle_body_type': r.deal.vehicle_body_type,
                                 'vehicle_sum_insured': r.deal.insured_car_value,
-
                                 'client_nationality': r.customer.nationality,
                                 'client_gender': r.customer.gender,
                                 'client_age': r.customer.age,
-
                                 'deal_type': 'new'
                             });
                         });
@@ -2354,8 +2350,6 @@ var __DOCUMENTS_VIEWER;
         },
 
         _loadPDF: function(file) {
-            $(_pdf_container).removeClass('hide');
-            $(_pdf_container).addClass('show');
         	$(_pdf_container).attr('src', file.url);
 
             $(_pdf_container)
@@ -2661,15 +2655,21 @@ var __TABLE;
 
                 });
                 // Delete Button
-                _felix_table_action_buttons.find('.delete-record').on('click', function() {
+                _felix_table_action_buttons.find('.delete-record').on('click', function() {                    
                     if(window.confirm('Are you sure you want to delete selected record(s)?')) {
                         var ids = getSelectedIds();
                         $.each(ids, function(id) {
-                            var row = $('#tr_' + this.substring());
+                            var row = $('#tr_' + this.substring());                            
                             $.get(row.data('url-delete'), function(response) {
-                                if(response.success)
+                                if(response.success){
                                     row.remove();
+                                    debugger
+                                    if(__app_name=='health-insurance'){
+                                        Utilities.Notify.success('Deal deleted successfully.', 'Success');
+                                    }                                    
+                                }                                    
                             });
+                            
                         });
 
                         _felix_table.find('.select-record-all').prop('checked', false);
@@ -3673,7 +3673,7 @@ var __FELIX__;
         },
 
         initDeleteRecord: function() {
-            $('.btn-delete-record').click(function() {
+            $('.btn-delete-record').click(function() {                
                 var redirect_url = $(this).data('redirect-to');
                 if(window.confirm('Are you sure you want to delete this record?')) {
                     $.get($(this).data('url'), function(response) {
@@ -3720,8 +3720,7 @@ var __NOTE;
         },
 
         initForm: function() {
-            if(_note_form.length) {
-
+            if(_note_form.length) {                
                 $('[data-felix-modal="modal_add_note"]').click(function() {
                     _note_form.find('textarea').val('');
                 });
@@ -3729,8 +3728,9 @@ var __NOTE;
                     beforeSubmit: Utilities.Form.beforeSubmit,
                     error: Utilities.Form.onFailure,
                     success: function(response, status, xhr, form) {
-                        form.find('button[type=submit]').removeClass('loader');
-
+                        form.find('button[type=submit]').removeClass('loader');                        
+                        console.log('response')
+                        console.log(response)
                         if(response.success) {
                             Utilities.Notify.success('Note added successfully.', 'Success');
 
@@ -4863,7 +4863,7 @@ var __RENEWALS;
                         return this.value;
                     }).get();
                     $.get(
-                        DjangoUrls['motorinsurance:create-renewals-deals'](),
+                        DjangoUrls[`${__app_name}:create-renewals-deals`](),
                         {'pids': ids.join(',')},
                         function(response) {
                             if(response.success) {
@@ -5091,8 +5091,7 @@ var __TASKS;
         },
 
         _loadDealTasks: function() {
-            if(!_tasks_trail.length) return;
-
+            if(!_tasks_trail.length) return;            
             var url = DjangoUrls[__app_name + ':deal-tasks'](_deal_id) + '?' + $('#id_tasks-fitler-form').serialize();
             $('.task-loader').show();
             $.get(url, function(response){
@@ -5339,8 +5338,7 @@ var __BANKS;
                     element.closest('tr').remove()
                     // alert(data.message)
                 },
-                error: function(data){
-                    
+                error: function(data){                    
 
                 }
             });
@@ -5438,6 +5436,7 @@ var __MORTGAGE_DEALS;
 
             // Email modal Template DD change event
             $('.deal-container').on('change', '#custom_email_type', function() {
+                
                 if($('body').hasClass('mortgage-deals')) {
                     _this._triggerCustomEmailMortgageModal($(this).val());
                 }
@@ -5558,10 +5557,11 @@ var __MORTGAGE_DEALS;
                 form.find('#id_content').trumbowyg($.trumbowyg.config);
                 form.find('#id_content').trumbowyg('html', response.content);
 
-                form.find('#custom_email_type option').remove();
-
+                form.find('#custom_email_type option').remove();                
                 $.each(response.allowed_templates, function(k, v) {
+                    console.log(k)
                     var selected = k==response.email_type?'selected':'';
+                    console.log(selected)
                     form.find('#custom_email_type').append(
                         `<option ${selected} value="${k}">${v}</option>`
                     );
@@ -5595,7 +5595,7 @@ var __MORTGAGE_DEALS;
                 if('whatsapp_msg_content' in response && response.whatsapp_msg_content) {
 
                     form.find('.show-when-wa-msg').removeClass('hide');
-                    form.find('#id_wa_msg_content').val(response.whatsapp_msg_content);
+                    form.find('#id_send_wa_msg').val(response.whatsapp_msg_content);
 
                     form.find('#id_send_wa_msg').change(function() {
                         form.find('.msg_container').addRemoveClass(!$(this).is(':checked'), 'hide');
@@ -5796,16 +5796,13 @@ var __MORTGAGE_DEALS;
                 beforeSubmit: Utilities.Form.beforeSubmit,
                 success: function(response, status, xhr, form) {
                     if(response.success) {
-                        $.get(DjangoUrls[`${__app_name}:get-deal-json`](response.deal_id), function(r) {
+                        $.get(DjangoUrls['mortgage:get-deal-json'](response.deal_id), function(r) {
                             __AMPLITUDE.logEvent(__AMPLITUDE.event('mortgage_deal_created'), {
                                 'source': 'manual',
-
                                 'deal_id': r.deal.id,
-
                                 'client_nationality': r.customer.nationality,
                                 'client_gender': r.customer.gender,
                                 'client_age': r.customer.age,
-
                                 'deal_type': 'new'
                             });
                         });

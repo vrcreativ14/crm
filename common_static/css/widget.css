@@ -1,0 +1,20 @@
+#id_network{
+    width: 200px !important;
+}
+
+.selector-available,
+.selector-chosen {
+    width: 200px;
+}
+
+.selector .selector-available input {
+    width: 184px;
+}
+
+.selector select {
+    width: 200px;
+}
+
+.selector {
+    width: 450px;
+}
