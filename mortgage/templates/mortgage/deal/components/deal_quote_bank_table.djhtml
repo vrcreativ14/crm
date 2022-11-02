@@ -386,8 +386,7 @@
                 if (this.id == `land_dep_property_registration_financing_check_${bank_id}`)
                     document.getElementById(`property_reg_financed_label_modal_${bank_id}`).style.display = 'block'
                 else if (this.id == `real_estate_fee_vat_financing_check_${bank_id}`)
-                    document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'block'
-                $(this.parentElement.parentElement).after('<span class="loan_amount_inclusive">(Included in Loan Amount)</span>')            
+                    document.getElementById(`real_estate_fee_financed_label_modal_${bank_id}`).style.display = 'block'            
             }
             else{
                 mortgage_amount -= ((ltv/100) * parseFloat(this.value))                
