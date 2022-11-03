@@ -5,7 +5,8 @@ Django settings for felix project.
 import os
 
 import environ
-
+import sentry_sdk	
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,8 +32,8 @@ environ.Env.read_env(root('felix/.env'))
 
 SITE_ROOT = root()
 
-#DOMAIN = env('DOMAIN')
-DOMAIN = 'http://127.0.0.1:8000'
+DOMAIN = env('DOMAIN')
+
 
 # Databases
 DATABASES = {
@@ -42,17 +43,17 @@ DATABASES = {
 # To avoid warnings. New in Django 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# Caches
-# CACHES = {
-#     'default': env.cache()
-# }
+#Caches
+CACHES = {
+    'default': env.cache()
+}
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = env('DEBUG')  # False if not in os.environ
-DEBUG = True
+DEBUG = env('DEBUG')  # False if not in os.environ
+
 
 COMPANY_ID = env('COMPANY_ID')
 
@@ -177,8 +178,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-#USE_AZURE = env('USE_AZURE')
-USE_AZURE = False
+USE_AZURE = env('USE_AZURE')
 
 AWS_S3_REGION_NAME = env('AWS_DEFAULT_REGION')
 AWS_S3_FILE_OVERWRITE = False
@@ -339,9 +339,7 @@ ENVIRONMENT = env('ENVIRONMENT_NAME')
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-if not DEBUG:
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
+
 if not DEBUG:
     sentry_sdk.init(
         environment=env('ENVIRONMENT_NAME'),

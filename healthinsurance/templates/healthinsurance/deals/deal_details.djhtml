@@ -1280,7 +1280,7 @@ a{
     <link rel="stylsheet" href="{% static "plugins/fileuploader/jquery-fileuploader.css" %}"/>
     <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
     <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
-    <script src="{% static 'dist/health_module.js' %}?v=1.1"></script>
+    <script type="text/javascript" src="{% static 'dist/health_module.js' %}?v=1.1"></script>
     <script type="text/javascript">
     window.products_data = [];
     var _deal_id = document.querySelector('#deal_id').value
