@@ -14,6 +14,7 @@ const Documents = () => {
     const[uploadDoc,setuploadDoc] = useState({})
     const{ id, secretCode, quoteID } = useParams()
     const[data,setData] = useState(false)
+    const[loader,setLoader] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -49,7 +50,7 @@ const Documents = () => {
         //     'member_emiratesid_':'Dependent Member Emirates ID',
         //     'member_visa_':'Dependent Member Visa'
         // }
-        
+        setLoader(true)
         var rawData = new FormData()
         console.log(uploadDoc)
         rawData.append('pk', id)
@@ -76,6 +77,7 @@ const Documents = () => {
             })
         })}
         const { data: res } = await RequestHandler.post('health-insurance/quote-api/',rawData,{headers: { 'Content-Type': 'multipart/form-data'}})
+        setLoader(false)
         if(res.success){
             // rawData.append('email', data.primary_member.email)
             // RequestHandler.post('health-insurance/deals/'+id+'/email/order_confirmation/',rawData)
@@ -160,7 +162,7 @@ const Documents = () => {
                     </div>
                 </div>
                 {/* <ActionButton submit={true} customClass="ms-2" url={'policy-thankyou/'+quoteID} text={'Submit'}/> */}
-                <button type="submit" class="btn-nexus btn-golden ms-2" onClick={() => validateDocUpload()}>Submit</button>
+                <button type={(!loader) ? "submit":"button"} class="btn-nexus btn-golden ms-2" onClick={() => validateDocUpload()}>Submit{loader ? <i className="ms-1 fas fa-circle-notch fa-spin"></i>:''}</button>
             </form>
         </Layout>
     )

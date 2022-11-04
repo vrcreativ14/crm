@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 const Form = () => {
     const[formData, setFormData] = useState({})
     const[currentSection, setCurrentSection] = useState(1)
+    const[submitting, setSubmitting] = useState(false)
     const primaryRef = useRef(null)
     const memberRef = useRef(null)
     const policyRef = useRef(null)
@@ -205,6 +206,8 @@ const Form = () => {
             policyRef.current.scrollIntoView()
             return Notification('Message','Change the type of cover to "Comprehensive" and Indicative Budget to more than 2K AED inorder to proceed.','danger',15000)
         }
+        
+        setSubmitting(true)
 
         var rawData = new FormData(event.currentTarget)
 
@@ -225,6 +228,7 @@ const Form = () => {
         // }
 
         Notification('Response',(res.success) ? 'Success':'Error',(res.success) ? 'success':'danger')
+        setSubmitting(false)
         if(res.success && formData.indicative_budget=='below1k')return window.location.href = "/health-insurance-quote/"+res.quote_reference_number+'/'+res.deal;
         if(res.success)return window.location.href = "https://forms.nexusadvice.com/thank-you/";
     }
@@ -270,7 +274,8 @@ const Form = () => {
                             <FormFields isRequired={false} type="textarea" name="preferred_hospitals" placeholder='Please seperate hospital or clinic name by comma for multiple values.' labelName="Preferred Hospitals/ Clinics" formData={formData} setFormData={setFormData}/>
                         </div>
                         <input type="hidden" name="referrer" value={(id) ? id:''}/>
-                        <button type="submit" className="btn-nexus btn-golden">Submit</button>
+                        {submitting ? <button type="button" className="btn-nexus btn-golden">Submit<i class="ms-1 fas fa-circle-notch fa-spin"></i></button>:
+                        <button type="submit" className="btn-nexus btn-golden">Submit</button>}
                     </form>
                 </div>
             </div>

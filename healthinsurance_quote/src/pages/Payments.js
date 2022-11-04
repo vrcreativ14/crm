@@ -14,6 +14,7 @@ const Payments = () => {
     const[uploadDoc,setuploadDoc] = useState({})
     const{ id, secretCode, quoteID } = useParams()
     const[data,setData] = useState(false)
+    const[loader,setLoader] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -34,6 +35,7 @@ const Payments = () => {
     async function handleFormSubmit(event){
         event.preventDefault()
         const docsPrim = ['payment_proof']
+        setLoader(true)
         var rawData = new FormData()
         console.log(uploadDoc)
         rawData.append('pk', id)
@@ -57,6 +59,7 @@ const Payments = () => {
         }catch(e){
             Notifications('Error','Something went wrong, pls contact us.','error')
         }
+        setLoader(false)
     }
 
     const name = 'Hi <span class="text-capitalize">'+data.primary_member.name+'</span>,'
@@ -92,7 +95,7 @@ const Payments = () => {
                         </label>
                     </div>
                     <div className='col-md-12 mt-4'>
-                        <ActionButton submit={true} url={'payment-thankyou/1'} text={'Submit'}/>
+                        <ActionButton submit={true} url={'payment-thankyou/1'} text={'Submit'} loader={loader}/>
                     </div>
                 </div>
             </form>

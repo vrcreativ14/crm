@@ -15,6 +15,7 @@ const FinalQuote = ({type = 1}) => {
     const[uploadDoc,setuploadDoc] = useState({})
     const{ id, secretCode, quoteID } = useParams()
     const[data,setData] = useState(false)
+    const[loader,setLoader] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -35,6 +36,7 @@ const FinalQuote = ({type = 1}) => {
     async function handleFormSubmit(event){
         event.preventDefault()
         const docsPrim = ['signed_final_quote','signed_final_quote_additional_document']
+        setLoader(true)
         var rawData = new FormData()
         console.log(uploadDoc)
         rawData.append('pk', id)
@@ -58,6 +60,7 @@ const FinalQuote = ({type = 1}) => {
         }catch(e){
             Notifications('Error','Something went wrong, pls contact us.','error')
         }
+        setLoader(false)
     }
 
     const name = 'Hi <span class="text-capitalize">'+data.primary_member.name+'</span>,'
@@ -105,7 +108,7 @@ const FinalQuote = ({type = 1}) => {
                     </div>
                     }
                     <div className='col-md-12 mt-4'>
-                        <ActionButton submit={true} url={'finalquote-thankyou/'} text={'Submit'}/>
+                        <ActionButton submit={true} url={'finalquote-thankyou/'} text={'Submit'} loader={loader}/>
                     </div>
                 </div>
             </form>

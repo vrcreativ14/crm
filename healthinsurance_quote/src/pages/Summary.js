@@ -13,6 +13,7 @@ const Summary = () => {
     const{ id, secretCode, quoteID } = useParams()
     const[data,setData] = useState(false)
     const[selectedQuote,setSelectedQuote] = useState(false)
+    const[loader,setLoader] = useState(false)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -39,6 +40,7 @@ const Summary = () => {
 
     async function handleFormSubmit(event){
         event.preventDefault()
+        setLoader(true)
         var rawData = new FormData()
         rawData.append('pk', id)
         rawData.append('plan', quoteID)
@@ -79,7 +81,7 @@ const Summary = () => {
                     </div>
                     <div className='col-md-12 mt-5'>
                         <ActionButton customClass="ms-2" url={false} text={'Go Back'} golden={false}/>
-                        <ActionButton submit={true} customClass="ms-3" text={'Next'}/>
+                        <ActionButton submit={true} customClass="ms-3" text={'Next'} loader={loader}/>
                     </div>
                 </div>
             </form>
