@@ -81,6 +81,10 @@ class TPAResource(resources.ModelResource):
     class Meta:
         model = TPA
 
+class VisaCategoryResource(resources.ModelResource):
+    class Meta:
+        model = VisaCategory
+
 class NetworkAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     search_fields = ['network']
     resource_classes = [NetworkResource]
@@ -172,6 +176,9 @@ class MessageTypeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 class MessageTemplatesAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [MessageTemplatesResource]
 
+class VisaCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [VisaCategoryResource]
+
 
 admin.site.register(Area_Of_Cover, Area_Of_CoverAdmin)
 admin.site.register(DiagnosticsCopay,DiagnosticsCopayAdmin)
@@ -193,6 +200,6 @@ admin.site.register(PaymentFrequency, PaymentFrequencyAdmin)
 admin.site.register(Emirate)
 admin.site.register(ConsultationCopay,ConsultationCopayAdmin)
 admin.site.register(PharmacyCopay,PharmacyCopayAdmin)
-admin.site.register(VisaCategory)
+admin.site.register(VisaCategory, VisaCategoryAdmin)
 admin.site.register(MessageTemplates, MessageTemplatesAdmin)
 admin.site.register(MessageType, MessageTypeAdmin)
