@@ -96,7 +96,8 @@ INSTALLED_APPS = [
     'healthinsurance',
     'healthinsurance_shared',
     'healthinsurance_form',
-    'healthinsurance_quote'
+    'healthinsurance_quote',
+    'import_export'
 ]
 
 MIDDLEWARE = [
