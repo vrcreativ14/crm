@@ -1,8 +1,9 @@
 from django.contrib import admin
 from healthinsurance_shared.admin_form import ProductAdminModelForm
-
-# Register your models here.
 from .models import *
+from import_export import resources
+from import_export.admin import ImportExportActionModelAdmin
+
 
 class NetworkAdmin(admin.ModelAdmin):
     search_fields = ['network']
@@ -33,9 +34,36 @@ class PharmacyCopayAdmin(admin.ModelAdmin):
 
 class PreExistingCoverAdmin(admin.ModelAdmin):
     search_fields = ['cover']
-    
 
-class PlanAdmin(admin.ModelAdmin):
+
+class MessageTemplatesResource(resources.ModelResource):
+    class Meta:
+        model = MessageTemplates
+
+class MessageTemplatesAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [MessageTemplatesResource]
+
+class MessageTypeResource(resources.ModelResource):
+    class Meta:
+        model = MessageType
+
+class MessageTypeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [MessageTypeResource]
+
+
+class InsurerResource(resources.ModelResource):
+    class Meta:
+        model = Insurer
+
+class InsurerAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [InsurerResource]
+
+
+class PlanResource(resources.ModelResource):
+    class Meta:
+        model = Plan
+
+class PlanAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     form = ProductAdminModelForm
     def is_active(self, obj):
         return obj.is_active
@@ -44,6 +72,7 @@ class PlanAdmin(admin.ModelAdmin):
     autocomplete_fields = ['network','annual_limit','dental_benefits','physiotherapy','alternative_medicine','consultation_copay','diagnostics_copay','pharmacy_copay','pre_existing_cover']
     list_display = ['insurer', 'name', 'code','is_active']
     list_filter = ['is_active']
+    resource_classes = [PlanResource]
     # class Media:
     #         css = {
     #         'all': ('healthinsurance_shared/css/product-attribute-multi-widget.css',)
@@ -55,7 +84,7 @@ admin.site.register(Deductible)
 admin.site.register(Network, NetworkAdmin)
 admin.site.register(TPA)
 admin.site.register(Plan, PlanAdmin)
-admin.site.register(Insurer)
+admin.site.register(Insurer, InsurerAdmin)
 admin.site.register(InsurerDetails)
 admin.site.register(AnnualLimit, AnnualLimitAdmin)
 admin.site.register(Physiotherapy, PhysiotherapyAdmin)
@@ -71,7 +100,5 @@ admin.site.register(Emirate)
 admin.site.register(ConsultationCopay,ConsultationCopayAdmin)
 admin.site.register(PharmacyCopay,PharmacyCopayAdmin)
 admin.site.register(VisaCategory)
-admin.site.register(MessageTemplates)
-admin.site.register(MessageType)
-
-
+admin.site.register(MessageTemplates, MessageTemplatesAdmin)
+admin.site.register(MessageType, MessageTypeAdmin)
