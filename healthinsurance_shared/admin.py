@@ -5,59 +5,144 @@ from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 
 
-class NetworkAdmin(admin.ModelAdmin):
-    search_fields = ['network']
-
-class PhysiotherapyAdmin(admin.ModelAdmin):
-    search_fields = ['sessions']
-
-class AlternativeMedicineAdmin(admin.ModelAdmin):
-    search_fields = ['medicine']
-
-class MaternityBenefitsAdmin(admin.ModelAdmin):
-    search_fields = ['benefit']
-
-class AnnualLimitAdmin(admin.ModelAdmin):
-    search_fields = ['limit']
-
-class DentalBenefitAdmin(admin.ModelAdmin):
-    search_fields = ['benefit']
-
-class ConsultationCopayAdmin(admin.ModelAdmin):
-    search_fields = ['copayment']
-
-class DiagnosticsCopayAdmin(admin.ModelAdmin):
-    search_fields = ['copayment']
-
-class PharmacyCopayAdmin(admin.ModelAdmin):
-    search_fields = ['copayment']
-
-class PreExistingCoverAdmin(admin.ModelAdmin):
-    search_fields = ['cover']
-
-
 class MessageTemplatesResource(resources.ModelResource):
     class Meta:
         model = MessageTemplates
-
-class MessageTemplatesAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    resource_classes = [MessageTemplatesResource]
 
 class MessageTypeResource(resources.ModelResource):
     class Meta:
         model = MessageType
 
-class MessageTypeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    resource_classes = [MessageTypeResource]
-
-
 class InsurerResource(resources.ModelResource):
     class Meta:
         model = Insurer
 
-class InsurerAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
-    resource_classes = [InsurerResource]
+class NetworkResource(resources.ModelResource):
+    class Meta:
+        model = Network
 
+class PhysiotherapyResource(resources.ModelResource):
+    class Meta:
+        model = Physiotherapy
+
+class AlternativeMedicineResource(resources.ModelResource):
+    class Meta:
+        model = AlternativeMedicine
+
+class MaternityBenefitsResource(resources.ModelResource):
+    class Meta:
+        model = MaternityBenefits
+
+class MaternityWaitingPeriodResource(resources.ModelResource):
+    class Meta:
+        model = MaternityWaitingPeriod
+
+class Area_Of_CoverResource(resources.ModelResource):
+    class Meta:
+        model = Area_Of_Cover
+
+class AnnualLimitResource(resources.ModelResource):
+    class Meta:
+        model = AnnualLimit
+
+class DentalBenefitResource(resources.ModelResource):
+    class Meta:
+        model = DentalBenefit
+
+class OpticalBenefitResource(resources.ModelResource):
+    class Meta:
+        model = OpticalBenefit
+
+class WellnessBenefitResource(resources.ModelResource):
+    class Meta:
+        model = WellnessBenefit
+
+class ConsultationCopayResource(resources.ModelResource):
+    class Meta:
+        model = ConsultationCopay
+
+class DiagnosticsCopayResource(resources.ModelResource):
+    class Meta:
+        model = DiagnosticsCopay
+
+class PharmacyCopayResource(resources.ModelResource):
+    class Meta:
+        model = PharmacyCopay
+
+class PaymentFrequencyResource(resources.ModelResource):
+    class Meta:
+        model = PaymentFrequency
+
+class PreExistingCoverResource(resources.ModelResource):
+    class Meta:
+        model = PreExistingCover
+        
+class TPAResource(resources.ModelResource):
+    class Meta:
+        model = TPA
+
+class NetworkAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['network']
+    resource_classes = [NetworkResource]
+
+class PhysiotherapyAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['sessions']
+    resource_classes = [PhysiotherapyResource]
+
+class AlternativeMedicineAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['medicine']
+    resource_classes = [AlternativeMedicineResource]
+
+class MaternityBenefitsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['benefit']
+    resource_classes = [MaternityBenefitsResource]
+
+class MaternityWaitingPeriodAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['period']
+    resource_classes = [MaternityWaitingPeriodResource]
+
+class Area_Of_CoverAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['area']
+    resource_classes = [Area_Of_CoverResource]
+
+class TPAAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):    
+    resource_classes = [TPAResource]
+
+class AnnualLimitAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['limit']
+    resource_classes = [AnnualLimitResource]
+
+class DentalBenefitAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['benefit']
+    resource_classes = [DentalBenefitResource]
+
+class OpticalBenefitAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['benefit']
+    resource_classes = [OpticalBenefitResource]
+
+class WellnessBenefitAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['benefit']
+    resource_classes = [WellnessBenefitResource]
+
+class ConsultationCopayAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['copayment']
+    resource_classes = [ConsultationCopayResource]
+
+class DiagnosticsCopayAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['copayment']
+    resource_classes = [DiagnosticsCopayResource]
+
+class PharmacyCopayAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['copayment']
+    resource_classes = [PharmacyCopayResource]
+
+class PaymentFrequencyAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['frequency']
+    resource_classes = [PaymentFrequencyResource]
+
+class PreExistingCoverAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['cover']
+    resource_classes = [PreExistingCoverResource]
 
 class PlanResource(resources.ModelResource):
     class Meta:
@@ -78,11 +163,20 @@ class PlanAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     #         'all': ('healthinsurance_shared/css/product-attribute-multi-widget.css',)
     #     }
 
-admin.site.register(Area_Of_Cover)
+class InsurerAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [InsurerResource]
+
+class MessageTypeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [MessageTypeResource]
+
+class MessageTemplatesAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [MessageTemplatesResource]
+
+
+admin.site.register(Area_Of_Cover, Area_Of_CoverAdmin)
 admin.site.register(DiagnosticsCopay,DiagnosticsCopayAdmin)
-admin.site.register(Deductible)
 admin.site.register(Network, NetworkAdmin)
-admin.site.register(TPA)
+admin.site.register(TPA, TPAAdmin)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(Insurer, InsurerAdmin)
 admin.site.register(InsurerDetails)
@@ -90,12 +184,12 @@ admin.site.register(AnnualLimit, AnnualLimitAdmin)
 admin.site.register(Physiotherapy, PhysiotherapyAdmin)
 admin.site.register(PreExistingCover, PreExistingCoverAdmin)
 admin.site.register(AlternativeMedicine, AlternativeMedicineAdmin)
-admin.site.register(MaternityBenefits)
-admin.site.register(MaternityWaitingPeriod)
+admin.site.register(MaternityBenefits, MaternityBenefitsAdmin)
+admin.site.register(MaternityWaitingPeriod, MaternityWaitingPeriodAdmin)
 admin.site.register(DentalBenefit, DentalBenefitAdmin)
-admin.site.register(WellnessBenefit)
-admin.site.register(OpticalBenefit)
-admin.site.register(PaymentFrequency)
+admin.site.register(WellnessBenefit, WellnessBenefitAdmin)
+admin.site.register(OpticalBenefit, OpticalBenefitAdmin)
+admin.site.register(PaymentFrequency, PaymentFrequencyAdmin)
 admin.site.register(Emirate)
 admin.site.register(ConsultationCopay,ConsultationCopayAdmin)
 admin.site.register(PharmacyCopay,PharmacyCopayAdmin)
