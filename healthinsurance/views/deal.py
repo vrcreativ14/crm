@@ -686,13 +686,6 @@ class DealEditBaseView(LoginRequiredMixin, PermissionRequiredMixin):
             for attachment in attachments
         ]
 
-    def get_auto_quotable_insurers(self):
-        return [
-            {"pk": insurer.pk, "name": insurer.name}
-            for insurer in self.request.company.quotable_motor_insurers.all().order_by(
-                "name"
-            )
-        ]
 
 def get_allowed_insurers(self, **kwargs):
         insurers = dict()
@@ -857,7 +850,7 @@ def get_quote_data(quote, order=None):
     pass
 
 class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = ('auth.create_motor_quotes', 'auth.update_motor_quotes')
+    permission_required = ('auth.create_health_quotes', 'auth.update_health_quotes')
     model = Deal
 
     def get(self, request, *args, **kwargs):
@@ -1080,7 +1073,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
 
 
 class DealGetProductsAjax(DealEditBaseView, CompanyAttributesMixin, View):
-    permission_required = 'auth.list_motor_deals'
+    permission_required = 'auth.list_health_deals'
 
     def get(self, *args, **kwargs):
         return JsonResponse(self.serialize_products())
@@ -1724,7 +1717,7 @@ class BasicHealthPlans(View):
 
 
 class GetPlanDetails(DealEditBaseView, CompanyAttributesMixin, View):
-    permission_required = 'auth.list_motor_deals'
+    permission_required = 'auth.list_health_deals'
     
     def get(self, *args, **kwargs):
         data = dict()

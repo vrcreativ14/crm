@@ -297,20 +297,20 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             print(e)
             success = False
 
-        if request.POST.get('send_sms', None) and deal.customer.phone and sms_content:
+        if request.POST.get('send_sms', None) and deal.primary_member.phone and sms_content:
             sms = SMSService()
             sms.send_sms(
-                deal.customer.phone,
+                deal.primary_member.phone,
                 sms_content
             )
 
-        if request.POST.get('send_wa_msg', None) and deal.customer.phone and wa_msg_content:
-                wa = WhatsappService()
-                wa.send_whatsapp_msg(
-                    deal.customer.phone,
-                    wa_msg_content,
-                    app_name = 'health-insurance'
-                )
+        if request.POST.get('send_wa_msg', None) and deal.primary_member.phone and wa_msg_content:
+            wa = WhatsappService()
+            wa.send_whatsapp_msg(
+                deal.primary_member.phone,
+                wa_msg_content,
+                app_name = 'health-insurance'
+            )
 
         return JsonResponse({'success': success, 'email_type': email_type})
 

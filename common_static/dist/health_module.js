@@ -1454,13 +1454,16 @@ var __HEALTH_DEALS;
                 form.find('button.send-email').addClass('loader');
 
                 let formData = new FormData()
-
                 form.find('input').each((i, elem) => {
                     console.log(elem)
                     if (elem.type == 'file')
                         formData.append(elem.name, elem.files[0])
                     else if(elem.type == 'text')
                         formData.append(elem.name, elem.value)
+                })
+
+                form.find('textarea').each((i, elem) => {                    
+                    formData.append(elem.name, elem.value)
                 })
 
                 $.ajax({
