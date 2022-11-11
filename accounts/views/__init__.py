@@ -97,8 +97,8 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             'profile_form': ProfileForm(instance=profile),
             'profile': profile
         }
-        if request.GET.get('entity') == "mortgage":
-            ctx['entity'] = "mortgage"
+        if request.GET.get('entity'):
+            ctx['entity'] = request.GET.get('entity')
 
         log_user_activity(self.request.user, self.request.path)
 

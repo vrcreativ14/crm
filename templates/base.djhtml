@@ -160,7 +160,7 @@
                                     <span class=""> <i class="ti-angle-down font-10"></i> </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                    <a class="dropdown-item" href="{% url 'accounts:profile' %}{% if entity == 'mortgage' %}?entity=mortgage{% endif %}">
+                                    <a class="dropdown-item" href="{% url 'accounts:profile' %}{% if entity %}?entity={{entity}}{% endif %}">
                                         <i class="ti-id-badge text-muted"></i> Profile
                                     </a>
 

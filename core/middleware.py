@@ -83,10 +83,21 @@ class WorkSpaceMiddleware:
                                         return HttpResponseBadRequest(f'''
                                         You are not allowed to view this page.
                                         <a href={reverse('accounts:dashboard')}> Click to go back </a>''', status=403)
+
+                                elif request.GET.get('entity') == "health":
+                                        if "HI" in spaces:
+                                            ...
+                                        else:
+                                            return HttpResponseBadRequest(f'''
+                                            You are not allowed to view this page.
+                                            <a href={reverse('accounts:dashboard')}> Click to go back </a>''', status=403)
+
                                 else:
-                                    if not "MT" in spaces:
+                                    if not "MT" in spaces and not 'HI' in spaces:
                                         return HttpResponseBadRequest(f'''You are not allowed to view this page
                                         <a href={reverse('accounts:dashboard')}?entity=mortgage> Click to go back </a>''', status=403)
+                                    else:
+                                        ...
 
                         if requested_app == 'motorinsurance':
                             if not "MT" in spaces:
@@ -106,7 +117,7 @@ class WorkSpaceMiddleware:
                             if not "HI" in spaces:
                                 if "MT" in spaces:
                                     return redirect(reverse('motorinsurance:deals'))
-                                else:
+                                elif "MG" in spaces:
                                     return redirect(reverse('mortgage:deals'))
                         else:
                             # All 3 modules present have been included in the above conditions
