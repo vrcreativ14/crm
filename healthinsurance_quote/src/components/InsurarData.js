@@ -52,7 +52,7 @@ export const columnTitle = {
     "dental_benefits":"Dental Benefits",
     "optical_benefits":"Optical",
 
-    "inpatient":"In Patient Deductible / Coinsurance",
+    "inpatient_deductible":"In Patient Deductible / Coinsurance",
 
     "maf":"Cover",
     "table_of_benefits":"Table of Benefits",
@@ -94,7 +94,7 @@ export const InsurarTableData = ({data,selectedInsurar,keyIndex,comparison}) => 
                     Pharmacy Copay: <PrepareColumn keyIndex={'pharmacy_copay'} value={data[selectedInsurar]['pharmacy_copay']}/>
                 </td>
                 :
-                <td><PrepareColumn keyIndex={keyIndex} value={(keyIndex=='inpatient') ? 'Nil':(data[selectedInsurar][keyIndex]) ? data[selectedInsurar][keyIndex]:' N/A '}/></td>
+                <td><PrepareColumn keyIndex={keyIndex} value={(keyIndex=='inpatient_deductible') ? (data[selectedInsurar][keyIndex]) ? data[selectedInsurar][keyIndex]:'Nil':(data[selectedInsurar][keyIndex]) ? data[selectedInsurar][keyIndex]:' N/A '}/></td>
                 }
             </tr>
             :
@@ -115,7 +115,7 @@ export const InsurarTableData = ({data,selectedInsurar,keyIndex,comparison}) => 
                         if(data[comparisonIndex]['is_repatriation_benefit_enabled'] && customColRepat.includes(keyIndex)){
                             return <td key={'compare-td-'+keyIndex+index}>{data[comparisonIndex]['repatriation_benefits'][keyIndex]}</td>
                         }
-                        if(!customCol.includes(keyIndex))return <td key={'compare-td-'+keyIndex+index}>N/A</td>
+                        if(!customCol.includes(keyIndex))return <td key={'compare-td-'+keyIndex+index}>{(keyIndex=='inpatient_deductible') ? 'Nill':'N/A'}</td>
                     }
                     return(
                         <td key={'compare-td-'+keyIndex+index}>
@@ -126,7 +126,7 @@ export const InsurarTableData = ({data,selectedInsurar,keyIndex,comparison}) => 
                                 Pharmacy Copay: <PrepareColumn keyIndex={'pharmacy_copay'} value={data[comparisonIndex]['pharmacy_copay']}/>
                             </>
                             :
-                            <PrepareColumn key={'compare-index'+comparisonIndex} keyIndex={keyIndex} value={(keyIndex=='inpatient') ? 'Nil':data[comparisonIndex][keyIndex]}/>}
+                            <PrepareColumn key={'compare-index'+comparisonIndex} keyIndex={keyIndex} value={(keyIndex=='inpatient_deductible') ? (data[comparisonIndex][keyIndex]) ? data[comparisonIndex][keyIndex]:'Nil':data[comparisonIndex][keyIndex]}/>}
                         </td>
                     )
                 })}       

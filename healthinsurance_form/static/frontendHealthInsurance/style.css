@@ -219,11 +219,19 @@ form .form-parent-div.radio label.active .check{
 form .form-parent-div.radio label.active .uncheck{
     display: none!important;
 }
+.react-datepicker__input-container input{
+    background-color: transparent;
+    cursor: pointer;
+}
 form .form-parent-div .calender-icon{
     position: absolute;
     top: 0.75rem;
     right: 1rem;
     cursor: pointer;
+    z-index: -1;
+}
+.member-dob{
+    z-index: 11;
 }
 form .form-parent-div.flag button{
     padding-left: 1rem;

@@ -16,7 +16,7 @@ const Details = ({data,selectedInsurar,setShowDetails = false,comparison = false
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="annual_limit"/>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="geographical_cover"/>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="outpatient"/>
-                    <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="inpatient"/>
+                    <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="inpatient_deductible"/>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="pre_existing_cover"/>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="maternity_benefits"/>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="dental_benefits"/>
