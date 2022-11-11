@@ -229,6 +229,7 @@ class Plan(models.Model):
     is_payment_frequency_fixed = models.BooleanField(default=False)
     area_of_cover = models.ManyToManyField(Area_Of_Cover)
     is_area_of_cover_fixed = models.BooleanField(default=False)
+    inpatient_deductible = models.CharField(max_length=200, blank=True, null=True)
     copay_mode = models.CharField(max_length=30, choices=COPAY_MODE, default=VARIABLE)
     consultation_copay = models.ManyToManyField(ConsultationCopay)
     is_consultation_copay_fixed = models.BooleanField(default=False)

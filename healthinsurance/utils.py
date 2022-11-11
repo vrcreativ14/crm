@@ -201,6 +201,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "insurer_name":qp.plan.insurer.name,
                     "insurer_logo":qp.plan.insurer.logo.url,
                     "annual_limit":qp.annual_limit.limit,
+                    "inpatient_deductible":qp.plan.inpatient_deductible,
                     "geographical_cover":qp.area_of_cover.area if qp.area_of_cover else '',
                     "consultation_copay":qp.consultation_copay.copayment if qp.consultation_copay else '',
                     "diagnostics_copay":qp.diagnostics_copay.copayment if qp.diagnostics_copay else '',
