@@ -100,7 +100,7 @@ def CreateBasicQuote(request, deal):
                 return quote
 
 
-class DealsList(LoginRequiredMixin, TemplateView):
+class DealsList(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = "healthinsurance/deals/deals_list.djhtml"
     permission_required = 'auth.list_health_deals'
 
@@ -111,6 +111,9 @@ class DealsList(LoginRequiredMixin, TemplateView):
         ctx = super(DealsList, self).get_context_data(**kwargs)
         self.request.session['selected_product_line'] = 'health-insurance'
         deals = Deal.objects.all().exclude(status = STATUS_DELETED).order_by('-created_on')
+        if self.request.user.userprofile.has_producer_role():
+            deals = deals.filter(Q(user = self.request.user) | Q(referrer = self.request.user))
+        
         ctx['deal_form'] = DealForm()
         ctx['deals'] = deals
         ctx['entity'] = 'health'
@@ -138,9 +141,12 @@ class PolicyList(LoginRequiredMixin, TemplateView, CompanyAttributesMixin):
         print('sd')
         return ctx
 
-class NewHealthDeal(LoginRequiredMixin, View):
+class NewHealthDeal(View):
     def post(self, request):
         user = request.user
+        if not request.POST.get('referrer', None) and not request.user.is_authenticated:
+            return redirect('accounts/login/')
+
         additional_members = request.POST.get('additional_members')
         if additional_members:
             additional_members = json.loads(additional_members)
@@ -850,7 +856,7 @@ def get_quote_data(quote, order=None):
     pass
 
 class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = ('auth.create_health_quotes', 'auth.update_health_quotes')
+    permission_required = ('auth.create_health_quotes')
     model = Deal
 
     def get(self, request, *args, **kwargs):
@@ -868,7 +874,6 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'plan_logo': quoted_plan.plan.insurer.logo.url,
                     'plan_name': quoted_plan.plan.name,
                     'premium': "{:,}".format(quoted_plan.total_premium),
-                    #'insurer_quote_reference': quoted_plan.insurer_quote_reference,
                     'payment_frequency': quoted_plan.payment_frequency,
                     'area_of_cover': quoted_plan.area_of_cover,
                     'copayment': quoted_plan.copayment,
@@ -900,7 +905,6 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'plan_name': qp.plan.name,                    
                     'total_premium': "{:,}".format(qp.total_premium),
                     'currency': qp.plan.currency,
-                    #'insurer_quote_reference': qp.insurer_quote_reference,
                     'payment_frequency': qp.payment_frequency.id if qp.payment_frequency else '',
                     'area_of_cover': qp.area_of_cover.id if qp.area_of_cover else '',
                     'copay_mode': qp.plan.copay_mode,
@@ -1583,54 +1587,6 @@ class PolicyView(View):
         return JsonResponse({
             'success':True            
         })
-
-class PolicyJsonView(LoginRequiredMixin, HasPermissionsMixin, DetailView):
-    model = HealthPolicy
-    def get(self, request, *args, **kwargs):
-        policy = self.get_object()
-        deal = policy.deal
-        order = None
-        if deal:
-            order = Order.objects.filter(deal = deal)
-            order = order[0] if order else None
-        if order:
-            logo_url = order.selected_plan.plan.get_logo() if order else '' #policy.product.get_logo()
-        else:
-            logo_url = ''
-        selected_plan = deal.selected_plan.name if deal and deal.selected_plan else None
-        policy_files = PolicyFiles.objects.filter(policy = policy)
-        files_type = ['receipt_of_payment','tax_invoice','certificate_of_insurance','medical_card','confirmation_of_cover']
-        
-        response = {
-            'source_deal_id': deal.pk if deal else '',
-            'source_deal_title': f'{deal}' if deal else '',
-            # 'renewal_deal_id': renewal_deal.pk if renewal_deal else '',
-            # 'renewal_deal_title': f'{renewal_deal}' if renewal_deal else '',
-            'insurer': deal.selected_plan.insurer.name if deal and deal.selected_plan else None,
-            'selected_plan': selected_plan,
-            'deal_members_count': deal.primary_member.additional_members.all().count() + 1 if deal else '',
-            'consultant': policy.referrer.get_full_name() if policy.referrer else '',
-            'policy_number': policy.policy_number,
-            'policy_start_date': policy.start_date,
-            'policy_expiry_date': policy.expiry_date,
-            'policy_status': policy.get_policy_expiry_status(),
-            #'insurance_type': policy.get_insurance_type_display(),            
-            'customer': policy.customer.name,
-            'primary_member_name': deal.primary_member.name if deal else '',            
-            'currency': deal.selected_plan.currency if deal and deal.selected_plan else request.company.companysettings.get_currency_display(),
-            'premium': '{:,}'.format(policy.total_premium_vat_inc) if policy.total_premium_vat_inc else '',            
-            'commission': '{:,}'.format(policy.commission) if policy.commission else '',
-            'product_logo_url': logo_url,
-            'policy_created_on': localtime(policy.created_on).strftime("%d %b, %Y"),
-            'policy_updated_on': localtime(policy.updated_on).strftime("%d %b, %Y"),            
-        }
-
-        for type in files_type:
-            file = policy_files.filter(type = type)
-            response[type] = file[0].file.url if file.exists() else ''
-
-        
-        return JsonResponse(response, safe=False)
 
 
 class HealthPlans(LoginRequiredMixin, View):

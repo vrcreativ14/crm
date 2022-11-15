@@ -57,6 +57,10 @@ permissions = {
     'list_health_insurers': True,
     'update_health_deals': True,
 
+    #Health-Insurance Quotes
+    'create_health_quotes': True,
+    'update_health_quotes': True,
+
     #Health-Insurance Policies
     'create_health_policies': True,
     'update_health_policies': True,
@@ -156,7 +160,6 @@ producer_not_allowed_to = {
     'search_mortgage_issued': False,
 
 }
-
 
 def get_role_permissions(permissions_not_allowed=None):
     if permissions_not_allowed is None:

@@ -23,10 +23,11 @@ from core.utils import log_user_activity
 from core.views import DeleteAttachmentView
 
 from customers.models import Customer
-from healthinsurance.forms.policy import PolicySearchAndOrderingForm, NewPolicyForm
+from healthinsurance.forms.policy import PolicySearchAndOrderingForm
+from healthinsurance.forms.deal import HealthPolicyForm, CustomerForm
 from healthinsurance.models.deal import Deal
-from healthinsurance.models.quote import Quote, QuotedPlan
-from healthinsurance.models.policy import HealthPolicy
+from healthinsurance.models.quote import Quote, QuotedPlan, Order
+from healthinsurance.models.policy import HealthPolicy, PolicyFiles
 from django.contrib.auth.models import User
 
 
@@ -96,14 +97,12 @@ class PolicyListView(PolicyBaseView, TemplateView):
         policies = HealthPolicy.objects.all().order_by('-start_date')
         filters = ''
         if self.request.user.userprofile.has_producer_role():
-            filters = "owner_id:{user_id}".format(user_id=self.request.user.pk)
+            policies = policies.filter(user_id=self.request.user.pk)
 
-        # ctx['algolia_secured_search_api_key'] = Algolia().get_secured_search_api_key(
-        #     filters=filters
-        # )
+        
         ctx['policies'] = policies
         ctx['search_form'] = self.get_search_and_ordering_form()
-        ctx['policy_form'] = NewPolicyForm(company=self.request.company)
+        #ctx['policy_form'] = NewPolicyForm(company=self.request.company)
         ctx['expiry'] = self.request.GET.get('expiry') or 'all'
 
         ctx['page'] = self.request.GET.get('page') or 1
@@ -118,9 +117,54 @@ class PolicyListView(PolicyBaseView, TemplateView):
         return ctx
 
 
-class PolicyAddView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+class PolicyAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = 'auth.create_health_policies'
-    form_class = NewPolicyForm
+    
+    def post(self, request):
+        updated_request = request.POST.copy()
+        reference_number = ''
+        updated_request.update({'company':self.request.company,        
+        'user':self.request.user,
+        })
+        customer_id = request.POST.get('customer')
+        customer_name = request.POST.get('name')
+        if customer_id:
+            customer = Customer.objects.filter(pk = customer_id)
+            if customer.exists():
+                customer = customer[0]
+        else:
+            customer_form = CustomerForm(updated_request)
+            if customer_form.is_valid():
+                customer = customer_form.save()
+            else:
+                return JsonResponse({
+                    "success": False, "errors": customer_form.errors
+                })
+        
+        start_date = request.POST.get('start_date', None)
+        start_date = datetime.datetime.strptime(start_date, "%d/%m/%Y") if start_date else None
+        expiry_date = request.POST.get('expiry_date',None)
+        expiry_date = datetime.datetime.strptime(expiry_date, "%d/%m/%Y") if expiry_date else None
+        updated_request.update({
+        'customer':customer,
+        'start_date':start_date,
+        'expiry_date':expiry_date
+        })
+        
+        policy_form = HealthPolicyForm(updated_request)
+        if policy_form.is_valid():
+            policy = policy_form.save()
+            for file in request.FILES:
+                PolicyFiles.objects.create(file = request.FILES[file], type=file, policy = policy)
+        else:
+            print(policy_form.errors)
+            return JsonResponse({
+                    "success": False, "errors": policy_form.errors
+                })
+        
+        return JsonResponse({
+            'success':True            
+        })
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -210,54 +254,50 @@ class PolicyExportView(PolicyBaseView, AdminAllowedMixin, AjaxListViewMixin, Vie
 
 
 class PolicySingleView(LoginRequiredMixin, HasPermissionsMixin, DetailView):
-    required_permission = 'update_health_policies'
+    required_permission = 'list_health_policies'
     model = HealthPolicy
 
     def get(self, request, *args, **kwargs):
         policy = self.get_object()
-
         deal = policy.deal
-        order = deal.get_order() if deal else None
-
-        try:
-            renewal_deal = policy.deal_policy_renewed_for.first()
-        except Deal.DoesNotExist:
-            renewal_deal = None
-            pass
-
-        if order or policy.product:
-            logo_url = order.selected_product.product.get_logo() if order else policy.product.get_logo()
+        order = None
+        if deal:
+            order = Order.objects.filter(deal = deal)
+            order = order[0] if order else None
+        if order:
+            logo_url = order.selected_plan.plan.get_logo() if order else '' #policy.product.get_logo()
         else:
             logo_url = ''
-
+        selected_plan = deal.selected_plan.name if deal and deal.selected_plan else None
+        policy_files = PolicyFiles.objects.filter(policy = policy)
+        files_type = ['receipt_of_payment','tax_invoice','certificate_of_insurance','medical_card','confirmation_of_cover']
+        
         response = {
             'source_deal_id': deal.pk if deal else '',
             'source_deal_title': f'{deal}' if deal else '',
-            'renewal_deal_id': renewal_deal.pk if renewal_deal else '',
-            'renewal_deal_title': f'{renewal_deal}' if renewal_deal else '',
-            'policy_title': policy.get_title(),
-            'policy_number': policy.reference_number,
-            'policy_start_date': policy.policy_start_date,
-            'policy_expiry_date': policy.policy_expiry_date,
+            'insurer': deal.selected_plan.insurer.name if deal and deal.selected_plan else None,
+            'selected_plan': selected_plan,
+            'deal_members_count': deal.primary_member.additional_members.all().count() + 1 if deal else '',
+            'consultant': policy.referrer.get_full_name() if policy.referrer else '',
+            'policy_number': policy.policy_number,
+            'policy_start_date': policy.start_date,
+            'policy_expiry_date': policy.expiry_date,
             'policy_status': policy.get_policy_expiry_status(),
-            'insurance_type': policy.get_insurance_type_display(),
-            'agency_repair': policy.agency_repair,
             'customer': policy.customer.name,
-            'vehicle': policy.get_car_title(),
-            'sum_insured': '{:,}'.format(policy.insured_car_value),
-            'currency': request.company.companysettings.get_currency_display(),
-            'premium': '{:,}'.format(policy.premium),
-            'deductible': '{:,}'.format(policy.deductible),
-            'deductible_extras': policy.deductible_extras,
-            'mortgage': policy.mortgage_by,
-            'add_ons': policy.paid_add_ons,
-            'default_add_ons': policy.default_add_ons,
-            'policy_document_url': policy.get_policy_document_url() if policy.policy_document else '',
+            'primary_member_name': deal.primary_member.name if deal else '',            
+            'currency': deal.selected_plan.currency if deal and deal.selected_plan else request.company.companysettings.get_currency_display(),
+            'premium': '{:,}'.format(policy.total_premium_vat_inc) if policy.total_premium_vat_inc else '',            
+            'commission': '{:,}'.format(policy.commission) if policy.commission else '',
             'product_logo_url': logo_url,
             'policy_created_on': localtime(policy.created_on).strftime("%d %b, %Y"),
-            'policy_updated_on': localtime(policy.created_on).strftime("%d %b, %Y"),
+            'policy_updated_on': localtime(policy.updated_on).strftime("%d %b, %Y"),            
         }
 
+        for type in files_type:
+            file = policy_files.filter(type = type)
+            response[type] = file[0].file.url if file.exists() else ''
+
+        
         return JsonResponse(response, safe=False)
 
 
