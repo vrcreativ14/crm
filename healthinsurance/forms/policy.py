@@ -44,8 +44,6 @@ class PolicySearchAndOrderingForm(forms.Form):
     search_term = forms.CharField(label='Search for', required=False,
                                   widget=forms.TextInput(attrs={'placeholder': 'Search by name, email or policy number'}))
 
-    #products = forms.ModelChoiceField(queryset=Customer.objects.none(), required=False)
-
     created_on_after = forms.DateField(input_formats=['%d-%m-%Y'], label='Created on or after', required=False,
                                        widget=forms.TextInput(attrs={'class': 'form-control datepicker'}))
     created_on_before = forms.DateField(input_formats=['%d-%m-%Y'], label='Created on or before', required=False,

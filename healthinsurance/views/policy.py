@@ -80,7 +80,7 @@ class PolicyBaseView(LoginRequiredMixin, PermissionRequiredMixin, AjaxListViewMi
 
         roles = get_user_roles(self.request.user)
         if Producer in roles:
-            qs = qs.filter(owner=self.request.user)
+            qs = qs.filter(user=self.request.user)
 
         return qs
 
@@ -94,11 +94,7 @@ class PolicyListView(PolicyBaseView, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(PolicyListView, self).get_context_data(**kwargs)
         self.request.session['selected_product_line'] = 'health-insurance'
-        policies = HealthPolicy.objects.all().order_by('-start_date')
-        filters = ''
-        if self.request.user.userprofile.has_producer_role():
-            policies = policies.filter(user_id=self.request.user.pk)
-
+        policies = self.get_queryset()
         
         ctx['policies'] = policies
         ctx['search_form'] = self.get_search_and_ordering_form()

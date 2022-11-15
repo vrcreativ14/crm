@@ -30,16 +30,6 @@ class RenewalView(PolicyBaseView,TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-
-        filters = ''
-        if self.request.user.userprofile.has_producer_role():
-            filters = "owner_id:{user_id}".format(user_id=self.request.user.pk)
-
-        #ctx['search_form'] = RenewalsSearchAndOrderingForm(data=self.request.GET)
-
-        # ctx['algolia_secured_search_api_key'] = Algolia().get_secured_search_api_key(
-        #     filters=filters
-        # )
         ctx['policies'] = self.get_queryset()
         ctx['page'] = self.request.GET.get('page') or 1
         ctx['sort_by'] = self.request.GET.get('sort_by') or 'policy_expiry_date_asc'
