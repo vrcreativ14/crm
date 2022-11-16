@@ -155,7 +155,7 @@ export const PrepareColumn = ({value,keyIndex}) => {
         )
     }
     return(
-        <>{(isDoc.includes(keyIndex)) ? (value && value!=' - ') ? <a href={value} target="_blank">Download<i className="text-golden ms-2 fas fa-arrow-alt-circle-down"></i></a>:'N/A':value}</>
+        <>{(isDoc.includes(keyIndex)) ? (value && value!=' - ' && value!=' N/A ') ? <a href={value} target="_blank">Download<i className="text-golden ms-2 fas fa-arrow-alt-circle-down"></i></a>:'N/A':value}</>
     )
 }
 

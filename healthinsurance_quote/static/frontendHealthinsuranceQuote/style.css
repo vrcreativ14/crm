@@ -1121,15 +1121,18 @@ main .message.active{
 
 .basic-plan-pop-up{
     position: fixed;
-    width: 100%;
+    width: 100% !important;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     z-index: 1111;
     top: 0;
     left: 0;
+}
+.basic-plan-pop-up .btn-nexus{
+    width: auto !important;
 }
 .basic-plan-pop-up .text-end{
     position: absolute;

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Orient from '../assets/orient.svg'
 import { CurrencyFormat } from '../helper/Utils'
 import ActionButton from './ActionButton'
+import BasicPopUpPlanDetails from './BasicPopUpPlanDetails'
 
 const InsurerHead = ({data, comparison,image = true}) => {
     const[showBasicPopup,setShowBasicPopup] = useState(false)
