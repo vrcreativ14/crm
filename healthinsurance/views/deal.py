@@ -49,6 +49,7 @@ from healthinsurance.views.email import StageEmailNotification
 import io
 import zipfile
 from healthinsurance.tasks import email_notification
+#from core.utils import log_user_activity
 
 api_logger = logging.getLogger("api.amplitude")
 
@@ -242,6 +243,7 @@ class NewHealthDeal(View):
                 if request.POST.get('referrer') and deal.primary_member.email:
                     email_notification(deal, 'new deal', deal.primary_member.email)
                     
+                #log_user_activity(self.request.user, self.request.path, 'C', deal)
                 return JsonResponse(response)
             else:
                 return JsonResponse({"success": False, "errors": deal_form.errors})
@@ -2106,7 +2108,7 @@ class DealBaseView(LoginRequiredMixin, PermissionRequiredMixin, AjaxListViewMixi
 
         roles = get_user_roles(self.request.user)
         if Producer in roles:
-            qs = qs.filter(owner=self.request.user)
+            qs = qs.filter(user=self.request.user)
 
         return qs
 

@@ -66,7 +66,7 @@ class WorkSpaceMiddleware:
                                     #     <a href={reverse('accounts:dashboard')}> Click to go back </a>''', status=403)
                                 elif request.GET.get('entity') == "health" and "HI" in spaces:
                                     if deal:
-                                        return redirect(reverse('health:deals'))
+                                        return redirect(reverse('health-insurance:deals'))
                                     else:
                                         if not request.path == reverse('accounts:dashboard'):
                                             return redirect(reverse('accounts:dashboard')+"?entity=health")
