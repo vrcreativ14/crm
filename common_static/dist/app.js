@@ -1288,7 +1288,7 @@ var __DEALS;
                 if('whatsapp_msg_content' in response && response.whatsapp_msg_content) {
 
                     form.find('.show-when-wa-msg').removeClass('hide');
-                    form.find('#id_send_wa_msg').val(response.whatsapp_msg_content);
+                    form.find('#id_wa_msg_content').val(response.whatsapp_msg_content);
 
                     form.find('#id_send_wa_msg').change(function() {
                         form.find('.msg_container').addRemoveClass(!$(this).is(':checked'), 'hide');
