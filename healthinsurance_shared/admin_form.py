@@ -73,9 +73,12 @@ class InsurerAdminForm(forms.ModelForm):
             if maf or census or bor:
                 insurer_plans = Plan.objects.filter(insurer = self.instance)
                 for plan in insurer_plans:
-                    plan.maf = maf if maf else ...
-                    plan.census = census if census else ...
-                    plan.bor = bor if bor else ...
+                    if maf:
+                        plan.maf = maf
+                    if census:
+                        plan.census = census
+                    if bor:
+                        plan.bor = bor
                     plan.save(from_insurer_admin = True)
         return super(InsurerAdminForm, self).save(commit=False)
     class Meta:
