@@ -1,6 +1,6 @@
 from django import forms
 
-from healthinsurance_shared.models import Plan
+from healthinsurance_shared.models import Plan, Insurer
 
 
 class ProductAttributeMultiWidget(forms.MultiWidget):
@@ -24,8 +24,6 @@ class ProductAttributeMultiWidget(forms.MultiWidget):
         print(value)
         if value is None:
             return [None for key in ['is_benefit_only_for_home_country', 'is_accomodation_cost_covered', 'do_repatriation_when_screened_blood_inavailable', 'accomodation_cost_cover','accompanying_person_expense', 'family_members_travel_expense', 'members_with_critical_patient_travel_expense','help_text']]
-        if type(value) == int:
-            return ''
         return [value.get(key, '') for key in ['is_benefit_only_for_home_country', 'is_accomodation_cost_covered', 'do_repatriation_when_screened_blood_inavailable', 'accomodation_cost_cover', 'accompanying_person_expense', 'family_members_travel_expense','members_with_critical_patient_travel_expense','help_text']]
         
 
@@ -61,4 +59,25 @@ class ProductAdminModelForm(forms.ModelForm):
     repatriation_benefits = ProductAttributeMultiField()
     class Meta:
         model = Plan
+        fields = '__all__'
+
+class InsurerAdminForm(forms.ModelForm):
+    replace_existing_documents_in_plans = forms.BooleanField(required=False)
+    
+    def save(self, *args, **kwargs):
+        replace_existing_documents =  self.cleaned_data.get('replace_existing_documents_in_plans', None)        
+        if replace_existing_documents == True:
+            maf =  self.cleaned_data.get('maf', None)
+            census =  self.cleaned_data.get('census', None)
+            bor =  self.cleaned_data.get('bor', None)
+            if maf or census or bor:
+                insurer_plans = Plan.objects.filter(insurer = self.instance)
+                for plan in insurer_plans:
+                    plan.maf = maf if maf else ...
+                    plan.census = census if census else ...
+                    plan.bor = bor if bor else ...
+                    plan.save(from_insurer_admin = True)
+        return super(InsurerAdminForm, self).save(commit=False)
+    class Meta:
+        model = Insurer
         fields = '__all__'

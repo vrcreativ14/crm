@@ -1,5 +1,5 @@
 from django.contrib import admin
-from healthinsurance_shared.admin_form import ProductAdminModelForm
+from healthinsurance_shared.admin_form import ProductAdminModelForm, InsurerAdminForm
 from .models import *
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
@@ -168,6 +168,7 @@ class PlanAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     #     }
 
 class InsurerAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    form = InsurerAdminForm
     resource_classes = [InsurerResource]
 
 class MessageTypeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):

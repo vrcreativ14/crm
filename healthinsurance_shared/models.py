@@ -173,6 +173,9 @@ class Insurer(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        super(Insurer, self).save(*args, **kwargs)
+
     def get_insurer_logo(self):
         return self.logo.url if self.logo else static("images/avatar.jpg")
 
@@ -272,7 +275,7 @@ class Plan(models.Model):
     objects = PlanManager()
     is_active.short_description = 'Status'
     class Meta:
-        ordering = ['-created_on']    
+        ordering = ['-created_on']
 
     @classmethod
     def validate_product_attribute(cls, attribute):
@@ -297,9 +300,11 @@ class Plan(models.Model):
     #                 raise ValidationError({field_name: validation_response[1]})
 
     def save(self, *args, **kwargs):
-        self.maf = self.insurer.maf if self.insurer.maf else self.maf
-        self.census = self.insurer.census if self.insurer.census else self.census
-        self.bor = self.insurer.bor if self.insurer.bor else self.bor
+        from_insurer_admin_save = kwargs.pop('from_insurer_admin', None)
+        if not from_insurer_admin_save:
+            self.maf = self.insurer.maf if self.insurer.maf else self.maf
+            self.census = self.insurer.census if self.insurer.census else self.census
+            self.bor = self.insurer.bor if self.insurer.bor else self.bor
         if not self.logo:
             self.logo = self.insurer.logo
         if not self.code:
