@@ -188,10 +188,10 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "wellness_benefits":qp.wellness_benefits.id if qp.wellness_benefits else '',
                     "alternative_medicine":qp.alternative_medicine.id if qp.alternative_medicine else '',
                     "physiotherapy":qp.physiotherapy.id if qp.physiotherapy else '',
-                    "total_premium":qp.total_premium,                
+                    "total_premium":qp.total_premium,
                     "is_renewal":qp.is_renewal_plan,
                     "currency":qp.plan.currency,
-                    "is_repatriation_benefit_enabled":qp.plan.is_repatriation_benefit_enabled,
+                    "is_repatriation_benefit_enabled":qp.is_repatriation_benefit_enabled,
                 }
             else:
                 plan_data = {
@@ -200,8 +200,8 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "plan_name":qp.plan.name,
                     "insurer_name":qp.plan.insurer.name,
                     "insurer_logo":qp.plan.insurer.logo.url,
-                    "annual_limit":qp.annual_limit.limit,
-                    "inpatient_deductible":qp.plan.inpatient_deductible,
+                    "annual_limit":qp.annual_limit.limit if qp.annual_limit else '',
+                    "inpatient_deductible":qp.inpatient_deductible.deductible if qp.inpatient_deductible else '',
                     "geographical_cover":qp.area_of_cover.area if qp.area_of_cover else '',
                     "consultation_copay":qp.consultation_copay.copayment if qp.consultation_copay else '',
                     "diagnostics_copay":qp.diagnostics_copay.copayment if qp.diagnostics_copay else '',
@@ -217,14 +217,15 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "physiotherapy":qp.physiotherapy.sessions if qp.physiotherapy else '',
                     "total_premium":qp.total_premium,
                     "is_renewal":qp.is_renewal_plan,
-                    "network_list":qp.plan.network_list.url if qp.plan.network_list else '' if qp.area_of_cover else '',
+                    "network_list_inpatient":qp.plan.network_list_inpatient.url if qp.plan.network_list_inpatient else '',
+                    "network_list_outpatient":qp.plan.network_list_outpatient.url if qp.plan.network_list_outpatient else '',
                     "policy_wording":qp.plan.policy_wording.url if qp.plan.table_of_benefits else '',
                     "table_of_benefits":qp.plan.table_of_benefits.url if qp.plan.table_of_benefits else '',
                     "maf":qp.plan.maf.url if qp.plan.maf else '',
                     "census":qp.plan.census.url if qp.plan.census else '',
                     "bor":qp.plan.bor.url if qp.plan.bor else '',
                     "currency":qp.plan.currency,
-                    "is_repatriation_benefit_enabled":qp.plan.is_repatriation_benefit_enabled,
+                    "is_repatriation_benefit_enabled":qp.is_repatriation_benefit_enabled,
                 }
                 if qp.plan.is_repatriation_benefit_enabled:
                     plan_data.update({
@@ -288,7 +289,8 @@ def GetSelectedPlanDetails(qp):
                     "physiotherapy":qp.physiotherapy.sessions if qp.physiotherapy else '',
                     "total_premium":qp.total_premium,
                     "policy_wording":qp.plan.policy_wording.url if qp.plan.policy_wording else "",
-                    "network_list":qp.plan.network_list.url if qp.plan.network_list else "",
+                    "network_list_inpatient":qp.plan.network_list_inpatient.url if qp.plan.network_list_inpatient else '',
+                    "network_list_outpatient":qp.plan.network_list_outpatient.url if qp.plan.network_list_outpatient else '',
                     "table_of_benefits":qp.plan.table_of_benefits.url if qp.plan.table_of_benefits else "",
                     "maf":qp.plan.maf.url if qp.plan.maf else "",
                     "census":qp.plan.census.url if qp.plan.census else "",
@@ -355,8 +357,10 @@ def get_deal_visa(visa):
             return 'Non UAE resident'
     elif visa and (visa == 'abudhabi'):
             return 'Abu Dhabi'
+    elif visa and (visa == 'dubai'):
+            return 'Dubai'
     else:
-            return 'Northern Emirates & Dubai'
+            return 'Northern Emirates'
             
 
 def get_email_type(stage):

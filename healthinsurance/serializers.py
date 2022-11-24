@@ -28,7 +28,7 @@ class PharmacyCopaySerializer(serializers.ModelSerializer):
 
 class DeductibleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Deductible
+        model = InpatientDeductible
         fields = '__all__'
 
 class AnnualLimitSerializer(serializers.ModelSerializer):
@@ -86,6 +86,11 @@ class PreExistingCoverSerializer(serializers.ModelSerializer):
         model = PreExistingCover
         fields = '__all__'
 
+class InpatientDeductibleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InpatientDeductible
+        fields = '__all__'
+
 class QuotedPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuotedPlan
@@ -107,6 +112,7 @@ class PlanSerializer(serializers.ModelSerializer):
     maternity_benefits = serializers.SerializerMethodField()
     maternity_waiting_period = serializers.SerializerMethodField()
     pre_existing_cover = serializers.SerializerMethodField()
+    inpatient_deductible = serializers.SerializerMethodField()
     
     def get_area_of_cover(self, instance):
         qs = instance.area_of_cover.all().order_by('area')
@@ -167,6 +173,10 @@ class PlanSerializer(serializers.ModelSerializer):
     def get_pre_existing_cover(self, instance):
         qs = instance.pre_existing_cover.all().order_by('cover')
         return PreExistingCoverSerializer(qs, many = True).data
+
+    def get_inpatient_deductible(self, instance):
+        qs = instance.inpatient_deductible.all().order_by('deductible')
+        return InpatientDeductibleSerializer(qs, many = True).data
 
     class Meta:
         model = Plan

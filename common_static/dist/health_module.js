@@ -50,7 +50,6 @@ const STAGES = {
 
 
 function updateQuoteForm(e, action, id=""){
-    debugger
     let plan_id = e.value
     data = {}
     if(!plan_id){
@@ -67,7 +66,6 @@ $.ajax({
             method: 'GET',
             data: data,
             success: function( result ) {
-                debugger
                 console.log(result)
                 window.products_data = result
                 let saved_am = ''
@@ -365,7 +363,6 @@ function validatePrepare(elem){
     }
     
     elem.closest('form').querySelectorAll('input').forEach(i => {
-        debugger
         let type = i.type
         if(i.classList.contains('required')){
             $(i.parentElement).find('.error').remove();
@@ -445,7 +442,6 @@ function saveForm(formData, email_type){
         data: formData,
         async: false,
         success: function(response){
-            debugger
             if(response['saved']){
                 next_substage = response['next_sub_stage']
                 deal_status = response['status']
@@ -477,7 +473,6 @@ function saveForm(formData, email_type){
 }
 
 function fetchEmailDetails(type){
-    debugger
     $('[data-felix-modal="modal_send_custom_email_health"]').click();
     let url = `/health-insurance/deals/${_deal_id}/email/${type}/`
         $.ajax({
@@ -485,7 +480,6 @@ function fetchEmailDetails(type){
             url: url,
             data: '',
             success: function(response){
-                debugger
             console.log(response)
             updateEmailForm(response)
             },
@@ -498,7 +492,6 @@ function fetchEmailDetails(type){
 }
 
 function downloadAllPolicyFiles(type, id){
-    debugger
     let url = DjangoUrls['health-insurance:download-zipfile'](id,type)    
     url = url.replace('11', id)    
     url = url.replace('22', type)    
@@ -529,7 +522,6 @@ document.onclick = function(event) {
         
     }
     if (element.includes('next-substage')){
-        debugger
         let formData = new FormData()
         event.preventDefault()
         formData = validatePrepare(event.target)
@@ -539,7 +531,6 @@ document.onclick = function(event) {
         saveForm(formData)
     }
     else if(element.includes('fetch-email')){
-        debugger
         event.preventDefault()
         let formData = new FormData()
        
@@ -596,8 +587,7 @@ document.onclick = function(event) {
 
 document.oninput = function(event){
     let element = event.target.className;
-    if(element.includes('member_premium')){
-        debugger           
+    if(element.includes('member_premium')){           
         let total_premium = 0
         document.querySelectorAll('.member_premium').forEach(elem => {
             let temp = !elem.value  ? 0 : parseFloat(elem.value)
@@ -660,7 +650,6 @@ function saveForm(formData, email_type){
         data: formData,
         async: false,
         success: function(response){
-            debugger
             if(response['saved']){
                 let reload = response['reload']
                 if (reload) location.reload()
@@ -802,7 +791,6 @@ var __HEALTH_DEALS;
                         url: url,
                         data: {'deal':_deal_id},
                         success: function(response){
-                            debugger
                         $('#id_product').val('')
                         $('.products-container input').val('')
                         response['plans'].forEach(i => {
@@ -821,14 +809,12 @@ var __HEALTH_DEALS;
             })
 
             _deal_stage_container.on('click','.reactivate-quote',function(e){
-                debugger
                 let url = DjangoUrls['health-insurance:quote-reactivate'](_deal_id)
                 $.ajax({
                     method: 'POST',
                     url: url,
                     async: false,
                     success: function(response){
-                        debugger
                         if(response['success']){                            
                             Utilities.Notify.success(response['message'], 'Success');
                             $('.reactivate-quote').parent().remove()
@@ -841,7 +827,6 @@ var __HEALTH_DEALS;
             });
 
             _deal_stage_container.on('change','.consultation_copay select' ,function(){
-                debugger
                 if($('#copay_mode_id').val() != 'variable'){
                     let consultation_copays = products_data['data']['consultation_copay']
                     for(let i in consultation_copays){
@@ -890,7 +875,6 @@ var __HEALTH_DEALS;
 
             _deal_stage_container.on('click', '.quote-submit', function() {
                 //if($(this).hasClass(_show_loader_class)) return;
-                debugger
                 var current_product_length = $('.products-preview .products .row.product').length;
                 $(this).attr('disabled',true)
                 if(!current_product_length) {
@@ -1086,7 +1070,6 @@ var __HEALTH_DEALS;
         },
 
         _triggerCustomEmailModal: function(email_type) {
-            debugger
             var url = DjangoUrls['health-insurance:deal-email-content'](_deal_id, email_type);
             $('#custom_email_form').css({'opacity': '.7'});
 
@@ -1247,7 +1230,6 @@ var __HEALTH_DEALS;
 
         _validatePrepare: function(elem){
             if(!elem) return
-            debugger
             let formData = new FormData()
             elem.form.querySelectorAll('.error').forEach(elem => {elem.remove()})
             let errorCount = 0
@@ -1325,7 +1307,6 @@ var __HEALTH_DEALS;
                 data: formData,
                 async: false,
                 success: function(response){
-                    debugger
                     if(response['saved']){
                         next_substage = response['next_sub_stage']
                         let next = SUB_STAGES[current_stage][next_substage]
@@ -1460,9 +1441,12 @@ var __HEALTH_DEALS;
                         formData.append(elem.name, elem.files[0])
                     else if(elem.type == 'text')
                         formData.append(elem.name, elem.value)
+                    else if(elem.type == 'checkbox'){
+                        formData.append(elem.name, elem.checked ? true : '')
+                    }
                 })
 
-                form.find('textarea').each((i, elem) => {                    
+                form.find('textarea').each((i, elem) => {
                     formData.append(elem.name, elem.value)
                 })
 
@@ -1472,7 +1456,6 @@ var __HEALTH_DEALS;
                     data: formData,
                     async: false,
                     success: function(response){
-                        debugger
                         Utilities.Notify.success('Email sent successfully.', 'Success');
                             $('#modal_send_custom_email_health').hide();
 
@@ -1556,7 +1539,7 @@ var __HEALTH_DEALS;
                 if('whatsapp_msg_content' in response && response.whatsapp_msg_content) {
 
                     form.find('.show-when-wa-msg').removeClass('hide');
-                    form.find('#id_send_wa_msg').val(response.whatsapp_msg_content);
+                    form.find('#id_wa_msg_content').val(response.whatsapp_msg_content);
 
                     form.find('#id_send_wa_msg').change(function() {
                         form.find('.msg_container').addRemoveClass(!$(this).is(':checked'), 'hide');
@@ -1754,21 +1737,22 @@ var __HEALTH_DEALS;
 
         _set_quoted_product_data : function(result){
             if(result){
-                _this._set_selected_plan_dropdown(result['insurer_id'])
+                if (result['insurer_id'])
+                    _this._set_selected_plan_dropdown(result['insurer_id'])
                 updateQuoteForm('','',result['product_id'])
-                $("#id_insurer_quote_reference").val(result['insurer_quote_reference'])
                 $("#id_total_premium").val(result['total_premium'])
                 if(result['network'])      
                 $(".network select").val(result['network'])
-                if(result['deductible'])
-                $(".deductible select").val(result['deductible'])
+                if(result['inpatient_deductible'])
+                $(".inpatient_deductible select").val(result['inpatient_deductible'])
                 if(result['payment_frequency'])
                 $(".payment_frequency select").val(result['payment_frequency'])
                 if(result['consultation_copay'])
                 $(".consultation_copay select").val(result['consultation_copay'])
 
                 let consultation_copays = products_data['data']['consultation_copay']
-                if(result['copay_mode'].toLowerCase() != 'variable'){
+                let copay_mode = result['copay_mode']
+                if(copay_mode && copay_mode.toLowerCase() != 'variable'){
                     for(let i in consultation_copays){
                         if(result['consultation_copay'] && consultation_copays[i]['id'] == result['consultation_copay']){
                             $(".pharmacy_copay select").val(consultation_copays[i]['pharmacy_copay'])
@@ -1802,6 +1786,8 @@ var __HEALTH_DEALS;
                 $(".maternity_benefits select").val(result['maternity_benefits'])
                 if(result['pre_existing_cover'])
                 $(".pre_existing_cover select").val(result['pre_existing_cover'])
+                if(result['pre_existing_cover'])
+                $(".pre_existing_cover select").val(result['pre_existing_cover'])
 
                 $("#id_primary_member_premium").val(result['primary_member_premium'])
                 $(".additional_member").each(function(){
@@ -1815,6 +1801,12 @@ var __HEALTH_DEALS;
                 else{
                     $('.renewal_details input[type="checkbox"]').prop('checked', false)
                     $('.renewal_document').toggleClass('hide', true)
+                }
+                if(result['is_repatriation_enabled']){
+                    $('.enable_repatriation input[type="checkbox"]').prop('checked', true)                    
+                }
+                else{
+                    $('.enable_repatriation input[type="checkbox"]').prop('checked', false)                    
                 }
                 $('.renewal_details .renewal_document input[type="file"]').next().remove()
                 if(result['renewal_document'])                    
@@ -1958,16 +1950,6 @@ var __HEALTH_DEALS;
             });
         },
 
-        // _dealStagesToggle: function() {
-        //     if(_deal_stages_breadcrumb.length) {
-        //         _deal_stages_breadcrumb.find('li').click(function() {
-        //             if(!$(this).data('item') || $('.' + $(this).data('item')).is(':visible')) return;
-        //             _this._loadDealStage($(this).data('id'));
-        //             _deal_stages_breadcrumb.find('li').removeClass('selected');
-        //             $(this).addClass('selected');
-        //         });
-        //     }
-        // },
 
         _setDealsQuoteOutdated: function() {
             var quote_stage_container = $('.deal-stages-breadcrumb [data-id="quote"]');
@@ -1996,7 +1978,6 @@ var __HEALTH_DEALS;
 
         _addProduct: function() {
             $('body').on('click', '.add-another-product', function() {
-                debugger
                 $('#modal_quote_insurers').modal('toggle');
                 $('.deal-overview .new-deal').removeClass('display');
                 $('.deal-overview .deal-form').addClass('display');
@@ -2020,7 +2001,6 @@ var __HEALTH_DEALS;
             });
             //for add product button while creating quote
             _deal_stage_container.on('click', '.add-product', function() {
-                debugger
                 // Validation
                 var error = false;
                 $('.error').remove();
@@ -2041,8 +2021,6 @@ var __HEALTH_DEALS;
 
                 $('.renewal_details').addClass('hide')
                 var product = window.products_data['data'];
-                var premium = $('#id_premium').val();                
-                var deductible = $('#id_deductible').val();                
                 var data = {
                     'product_id': $('#id_product').val(),
                     'plan_name': product.name,
@@ -2050,10 +2028,8 @@ var __HEALTH_DEALS;
                     'currency': product.currency,
                     'default_add_ons': $('#id_default_add_ons').val() || [],
                     'total_premium' : $('#id_total_premium').val(),
-                    'deductible': deductible,
-                    'deductible_extras': $('#id_deductible_extras').val(),
+                    'inpatient_deductible': $('.inpatient_deductible select').val(),
                     'insurer_quote_reference': $('#id_insurer_quote_reference').val(),
-                    'premium': premium,                    
                     'payment_frequency': $('.payment_frequency select').val(),
                     'area_of_cover': $('.area_of_cover select').val(),
                     'consultation_copay': $(".consultation_copay select").val(),
@@ -2073,6 +2049,7 @@ var __HEALTH_DEALS;
                     'maternity_waiting_period': $(".maternity_waiting_period select").val(),
                     'alternative_medicine': $(".alternative_medicine select").val(),
                     'physiotherapy': $(".physiotherapy select").val(),
+                    'is_repatriation_enabled': $("#enable_repatriation_checkbox").is(':checked'),
                     'is_renewal' : $('#is_renewal_checkbox').is(':checked'),
                     'renewal_document' : !$('.renewal_document_file')[0].files[0] ? '' : $('.renewal_document_file')[0].files[0],
                     'published': true,
@@ -2100,6 +2077,7 @@ var __HEALTH_DEALS;
                     $.each(_quoted_products_data['products'], function(k, v) {
                         if(k == parseInt($('#edited_id').val())) {
                             data['id'] = _quoted_products_data['products'][k]['id']
+                            data['insurer_id'] = _quoted_products_data['products'][k]['insurer_id']
                             _quoted_products_data['products'][k] = data;
                         }
                     });
@@ -2143,7 +2121,6 @@ var __HEALTH_DEALS;
             _deal_stage_container.on('click', '.product-edit', function() {
                 var index = $(this).data('id');
                 var qp_id = $(this).data('qp-id');
-                debugger
                 var product = _quoted_products_data['products'][index];
                 $('#edited_qp_id').val(qp_id);
                 $('#edited_id').val(index);

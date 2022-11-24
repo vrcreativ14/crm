@@ -199,14 +199,6 @@
                                     
                                 </div>
                             </div> -->
-                            <!--Deductible-->
-                            <!-- <div class="col-lg-4">
-                                <div class="form-group">
-                                    <div class="label m-b-5">Deductible</div>
-                                    <input type="text" name="deductible" class="form-control auto-format-money-field" id="id_deductible"  />  
-                                </div>
-                            </div> -->
-    
                             <!--Area Of Cover-->
                             <div class="col-lg-4 area_of_cover plan_dependent hide">
                                 <div class="form-group">
@@ -369,10 +361,26 @@
                                     
                                 </div>
                             </div>
-    
+
+                             <!--Deductible-->
+                             <div class="col-lg-4 inpatient_deductible hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Inpatient Deductible</div>
+                                    <select class="form-control" name="inpatient_deductible" id="id_inpatient_deductible">                                    
+                                        <option value="" disabled selected>Select Inpatient Deductible</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 enable_repatriation hide">
+                                <div class="form-check" style="margin-top: 25px;">
+                                    <input class="form-check-input" type="checkbox" value="" id="enable_repatriation_checkbox">
+                                    <label class="form-check-label" for="enable_repatriation_checkbox">
+                                      Enable Repatriation Benefits
+                                    </label>
+                                  </div>
+                            </div>
                             
-                            
-    
 
     
                            
@@ -495,22 +503,22 @@
                             }
     
                             
-                            // let deductibles = result['data']['deductible']
-                            //     $(".deductible select option").remove();
-                            //     for (let i in deductibles) {
-                            //     $(".deductible select").append($("<option></option>")
-                            //     .attr("value", deductibles[i]['id']).text(deductibles[i]['deductible']));
+                            let deductibles = result['data']['inpatient_deductible']
+                                $(".inpatient_deductible select option").remove();
+                                for (let i in deductibles) {
+                                $(".inpatient_deductible select").append($("<option></option>")
+                                .attr("value", deductibles[i]['id']).text(deductibles[i]['deductible']));
     
-                            //     if(result['data']['is_deductible_fixed'])
-                            //         $(".deductible select").val(deductibles[i]['id'])
-                            // }
+                                if(result['data']['is_consultation_copay_fixed'])
+                                    $(".deductible select").val(deductibles[i]['id'])
+                            }
     
-                            // if( ! result['data']['is_deductible_fixed']){
-                            //     $(".deductible").toggleClass("hide", false);                            
-                            // }
-                            // else{
-                            //     $(".deductible").toggleClass("hide", true)                          
-                            // }
+                            if( ! result['data']['is_inpatient_deductible_fixed']){
+                                $(".inpatient_deductible").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".inpatient_deductible").toggleClass("hide", true)                          
+                            }
     
                             $(".pre_existing_cover select option").remove();
                             let covers = result['data']['pre_existing_cover']
@@ -589,10 +597,6 @@
 
 
                             $(".consultation_copay select option").remove();
-                            if(copay_mode != 'variable'){
-                                //$(".diagnostics_copay select option").remove();
-                                //$(".pharmacy_copay select option").remove();
-                            }
                             let copayments = result['data']['consultation_copay']
                                 for (let i in copayments) {
                                     $(".consultation_copay select").append($("<option></option>")
@@ -747,6 +751,12 @@
                             else{
                                 $(".wellness_benefits").toggleClass("hide", true)                            
                             }
+                            
+                            $(".enable_repatriation input").prop('checked', false)
+                            if(result['data']['is_repatriation_benefit_enabled'])
+                                $(".enable_repatriation").toggleClass("hide", false)
+                            else
+                                $(".enable_repatriation").toggleClass("hide", true)
                         },
                         error: function(data){
                             //Utilities.Notify.error('Note not deleted', 'Error');

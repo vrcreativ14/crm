@@ -49,7 +49,7 @@ from healthinsurance.views.email import StageEmailNotification
 import io
 import zipfile
 from healthinsurance.tasks import email_notification
-#from core.utils import log_user_activity
+from core.utils import log_user_activity
 
 api_logger = logging.getLogger("api.amplitude")
 
@@ -145,15 +145,17 @@ class PolicyList(LoginRequiredMixin, TemplateView, CompanyAttributesMixin):
 class NewHealthDeal(View):
     def post(self, request):
         user = request.user
-        if not request.POST.get('referrer', None) and not request.user.is_authenticated:
-            return redirect('accounts/login/')
+        if not request.user.is_authenticated:
+            referrer = request.POST.get('referrer', None)
+            if not referrer:
+                return redirect('accounts/login/')
+            else:
+                user = User.objects.filter(pk = referrer)
+                user = user[0] if user.exists() else None
 
         additional_members = request.POST.get('additional_members')
         if additional_members:
             additional_members = json.loads(additional_members)
-        primary_member_name = request.POST.get('name')
-        primary_email = request.POST.get('email')        
-        primary_phone = request.POST.get('phone')
         updated_request = request.POST.copy()
         primary_member_dob = request.POST.get('dob', None)
         salary_band = request.POST.get('salary_band', None)
@@ -243,7 +245,7 @@ class NewHealthDeal(View):
                 if request.POST.get('referrer') and deal.primary_member.email:
                     email_notification(deal, 'new deal', deal.primary_member.email)
                     
-                #log_user_activity(self.request.user, self.request.path, 'C', deal)
+                log_user_activity(user, self.request.path, 'C', deal)
                 return JsonResponse(response)
             else:
                 return JsonResponse({"success": False, "errors": deal_form.errors})
@@ -700,7 +702,7 @@ def get_allowed_insurers(self, **kwargs):
         visa = kwargs.get('visa')
         plan_applicable_visa = get_deal_visa(visa)
         
-        for plan in Plan.objects.all().order_by('insurer__name'):            
+        for plan in Plan.objects.all().order_by('insurer__name'):
             if plan.insurer.is_active and plan.applicable_visa.all().filter(name = plan_applicable_visa).exists():
                 insurer_id = plan.insurer_id
                 if insurer_id not in insurers:
@@ -879,7 +881,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'payment_frequency': quoted_plan.payment_frequency,
                     'area_of_cover': quoted_plan.area_of_cover,
                     'copayment': quoted_plan.copayment,
-                    'deductible': quoted_plan.deductible,
+                    'inpatient_deductible': quoted_plan.inpatient_deductible,
                     'network': quoted_plan.network,
                     'annual_limit': quoted_plan.annual_limit,
                     'physiotherapy': quoted_plan.physiotherapy,
@@ -889,10 +891,12 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'dental_benefits': quoted_plan.dental_benefits,
                     'wellness_benefits': quoted_plan.wellness_benefits,
                     'optical_benefits': quoted_plan.optical_benefits,
-                    'is_renewal': quoted_plan.is_renewal_plan,
                     'pre_existing_cover': qp.pre_existing_cover,
                     'renewal_document': quoted_plan.plan_renewal_document,
-                    'premium_breakdown' : quoted_plan.premium_info if quoted_plan.premium_info else dict() 
+                    'premium_breakdown' : quoted_plan.premium_info if quoted_plan.premium_info else dict(),
+                    'is_renewal': quoted_plan.is_renewal_plan,
+                    'is_repatriation_enabled': quoted_plan.is_repatriation_benefit_enabled,
+
                 })
                 return JsonResponse(response, safe=False)
 
@@ -913,7 +917,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     "consultation_copay":qp.consultation_copay.id if qp.consultation_copay else '',
                     "diagnostics_copay":qp.diagnostics_copay.id if qp.diagnostics_copay else '',
                     "pharmacy_copay":qp.pharmacy_copay.id if qp.pharmacy_copay else '',
-                    'deductible': qp.deductible.id if qp.deductible else '',
+                    'inpatient_deductible': qp.inpatient_deductible.id if qp.inpatient_deductible else '',
                     "network":qp.network.id if qp.network else '',
                     "annual_limit":qp.annual_limit.id if qp.annual_limit else '',
                     'physiotherapy': qp.physiotherapy.id if qp.physiotherapy else '',
@@ -925,6 +929,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'optical_benefits': qp.optical_benefits.id if qp.optical_benefits else '',
                     'pre_existing_cover': qp.pre_existing_cover.id if qp.pre_existing_cover else '',
                     'is_renewal': qp.is_renewal_plan,
+                    'is_repatriation_enabled': qp.is_repatriation_benefit_enabled,
                     'renewal_document': qp.plan_renewal_document.url if qp.plan_renewal_document else '',
                     'renewal_document_name': qp.renewal_filename if qp.plan_renewal_document else '',
                 }
@@ -992,12 +997,14 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                             existing_qp.maternity_waiting_period_id = rqp.get('maternity_waiting_period')
                             existing_qp.dental_benefits_id = rqp.get('dental_benefits')
                             existing_qp.wellness_benefits_id = rqp.get('wellness_benefits')
-                            existing_qp.optical_benefits_id = rqp.get('optical_benefits')
-                            existing_qp.is_renewal_plan = rqp.get('is_renewal')
+                            existing_qp.optical_benefits_id = rqp.get('optical_benefits')                            
                             existing_qp.consultation_copay_id = rqp.get('consultation_copay')
                             existing_qp.diagnostics_copay_id = rqp.get('diagnostics_copay')
                             existing_qp.pharmacy_copay_id = rqp.get('pharmacy_copay')
                             existing_qp.pre_existing_cover_id = rqp.get('pre_existing_cover')
+                            existing_qp.inpatient_deductible_id = rqp.get('inpatient_deductible')
+                            existing_qp.is_renewal_plan = rqp.get('is_renewal')
+                            existing_qp.is_repatriation_benefit_enabled = rqp.get('is_repatriation_enabled')
                             existing_qp.premium_info = data
                             if request.FILES and request.FILES.get(rqp.get('product_id')):
                                 existing_qp.plan_renewal_document = request.FILES.get(rqp.get('product_id'))
@@ -1030,8 +1037,10 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                             annual_limit_id = rqp.get('annual_limit'), physiotherapy_id = rqp.get('physiotherapy'),
                             alternative_medicine_id = rqp.get('alternative_medicine'), maternity_benefits_id = rqp.get('maternity_benefits'),
                             maternity_waiting_period_id = rqp.get('maternity_waiting_period'), dental_benefits_id = rqp.get('dental_benefits'),
-                            wellness_benefits_id = rqp.get('wellness_benefits'), optical_benefits_id = rqp.get('optical_benefits'), pre_existing_cover_id = rqp.get('pre_existing_cover'),
-                            is_renewal_plan = rqp.get('is_renewal'), plan_renewal_document = request.FILES.get(rqp.get('product_id')) if request.FILES and request.FILES.get(rqp.get('product_id')) else None,
+                            wellness_benefits_id = rqp.get('wellness_benefits'), optical_benefits_id = rqp.get('optical_benefits'), 
+                            pre_existing_cover_id = rqp.get('pre_existing_cover'),inpatient_deductible_id = rqp.get('inpatient_deductible'),
+                            is_renewal_plan = rqp.get('is_renewal'),is_repatriation_benefit_enabled = rqp.get('is_repatriation_enabled'),
+                            plan_renewal_document = request.FILES.get(rqp.get('product_id')) if request.FILES and request.FILES.get(rqp.get('product_id')) else None,
                             premium_info = data
                             )
                             if rqp.get('published'):
@@ -1643,7 +1652,7 @@ class BasicHealthPlans(View):
                     "consultation_copay":qp.consultation_copay.id if qp.consultation_copay else '',
                     "diagnostics_copay":qp.diagnostics_copay.id if qp.diagnostics_copay else '',
                     "pharmacy_copay":qp.pharmacy_copay.id if qp.pharmacy_copay else '',
-                    'deductible': qp.deductible.id if qp.deductible else '',
+                    'deductible': qp.inpatient_deductible.id if qp.inpatient_deductible else '',
                     "network":qp.network.id if qp.network else '',
                     "annual_limit":qp.annual_limit.id if qp.annual_limit else '',
                     'physiotherapy': qp.physiotherapy.id if qp.physiotherapy else '',
@@ -1681,49 +1690,14 @@ class GetPlanDetails(DealEditBaseView, CompanyAttributesMixin, View):
         data = dict()
         pk = kwargs.get('pk')
         action = self.request.GET.get('action')
-        
-
-
         plans = Plan.objects.all()
         plan = Plan.objects.filter(pk = pk)
         if plan.exists():
             plan = plan[0]
 
-        area_of_cover = []
-        consultation_copay = []
-        pharmacy_copay = []
-        diagnostics_copay = []
-        annual_limits = []
-        alternative_medicines = []
-        physiotherapy = []
-        #serialized_qs = serializers.serialize('json', queryset)
-        #for plan in plans:
-        for area in plan.area_of_cover.all():
-            area_of_cover.append(area)
-
-        for copayment in plan.consultation_copay.all():
-            consultation_copay.append(copayment)
-
-        for copayment in plan.pharmacy_copay.all():
-            pharmacy_copay.append(copayment)
-
-        for copayment in plan.diagnostics_copay.all():
-            diagnostics_copay.append(copayment)
-
-        for limit in plan.annual_limit.all():
-            annual_limits.append(limit)
-
-        for copayment in plan.alternative_medicine.all():
-            alternative_medicines.append(copayment)
-
-        for session in plan.physiotherapy.all():
-            physiotherapy.append(session)
-
         plan_serializer = PlanSerializer(plan)
         plan_data = plan_serializer.data
         plan_data['plan_logo'] = plan.insurer.logo.url
-
-        
         if action == 'edit':
             quoted_plan = QuotedPlan.objects.filter(plan = plan)
             quoted_plan = quoted_plan[0] if quoted_plan.exists() else None
