@@ -149,66 +149,49 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         email_type = kwargs.get('email_type')
         deal = kwargs.get('deal')
         quote = kwargs.get('quote')
-        emailer = SendHealthInsuranceEmail(Company.objects.last())    
+        emailer = SendHealthInsuranceEmail(Company.objects.last())
     
         quote = Quote.objects.filter(deal = deal)
         quote = quote[0] if quote.exists() else None
     
         if email_type == 'new_deal' or email_type == 'new' or email_type == 'new deal':
             setattr(deal, 'company', Company.objects.last())
-            subject, content = emailer.prepare_email_content_for_new_deal(deal)
+            message = emailer.prepare_email_content_for_new_deal(deal)
     
         elif email_type == 'quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
-            subject, content = emailer.prepare_email_content_for_quote(deal,quote, updated)
+            message = emailer.prepare_email_content_for_quote(deal,quote, updated)
 
         elif email_type == 'order_confirmation':
-            subject, content = emailer.prepare_email_content_for_order_summary(deal)
+            message = emailer.prepare_email_content_for_order_summary(deal)
 
         elif email_type == 'final_quote':
-            subject, content = emailer.prepare_email_content_for_final_quote(deal, quote)
-
-            sms_content = 'Hi {}, your mortgage valuationfinal quote is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The valuation process has been initiated and we will have the report within few days.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_final_quote(deal, quote)
+            sms_content = ''
+            
         elif email_type == 'final_quote_submitted':
-            subject, content = emailer.prepare_email_content_for_final_quote_submitted(deal)            
+            message = emailer.prepare_email_content_for_final_quote_submitted(deal)            
 
         elif email_type == 'payment':
-            subject, content = emailer.prepare_email_content_for_payment(deal, quote)
-
-            sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The details for the method of Payment are ready.' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_payment(deal, quote)
+            sms_content = ''
+            
 
         elif email_type == 'payment_confirmation':  #proof of payment shared
-            subject, content = emailer.prepare_email_content_for_payment_confirmation(deal)
-
-            sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The details for the method of Payment are ready.' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_payment_confirmation(deal)
+            sms_content = ''
+            
 
         elif email_type == 'policy_issuance':
-            subject, content = emailer.prepare_email_content_for_policy_issuance(deal)
-
-            sms_content = 'Hi {}, your health insurance policy is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'Thanks for submitting the details.\n' \
-                            'We will now proceed with the house keeping process to finalize the deal.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_policy_issuance(deal, quote)
+            sms_content = ''
+            
 
         elif email_type == 'basic_plan_selected':
-            subject, content = emailer.prepare_email_content(deal, 'basic_plan_selected')
+            message = emailer.prepare_email_content(deal, 'basic_plan_selected')
             
     
-        return subject, content
+        return message
     
     def post(self, request, *args, **kwargs):
         deal = self.get_object()
@@ -228,7 +211,9 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         for file in request.FILES:
             attachments.append((request.FILES[file].name, request.FILES.get(file)))
         if not subject or not content:
-            subject, content = self.GetEmailContent(email_type = email_type,deal=deal)
+            message = self.GetEmailContent(email_type = email_type,deal=deal)
+            subject = message.get('subject')
+            content = message.get('email_content')
         if not to:
             to = deal.primary_member.email if deal and deal.primary_member else ''
         validation_errors = self._validate_fields()
@@ -297,14 +282,14 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             print(e)
             success = False
 
-        if request.POST.get('send_sms', None) and deal.primary_member.phone and sms_content:
+        if bool(request.POST.get('send_sms', None)) and deal.primary_member.phone and sms_content:
             sms = SMSService()
             sms.send_sms(
                 deal.primary_member.phone,
                 sms_content
             )
 
-        if request.POST.get('send_wa_msg', None) and deal.primary_member.phone and wa_msg_content:
+        if bool(request.POST.get('send_wa_msg', None)) and deal.primary_member.phone and wa_msg_content:
             wa = WhatsappService()
             wa.send_whatsapp_msg(
                 deal.primary_member.phone,
@@ -336,30 +321,42 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         if email_type == 'new_deal' or email_type == 'new':
             setattr(deal, 'company', Company.objects.last())
-            subject, content = emailer.prepare_email_content_for_new_deal(deal)
+            message = emailer.prepare_email_content_for_new_deal(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content') 
             sms_content = f'Thank you for requesting health-insurance quotes from. ' \
                           f'We\'re preparing some options for you and will send you an email soon!'
-            wa_msg_content = sms_content
+            if not wa_msg_content:
+                wa_msg_content = sms_content
 
         elif email_type == 'quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
-            subject, content = emailer.prepare_email_content_for_quote(deal,quote, updated)
+            message = emailer.prepare_email_content_for_quote(deal,quote, updated)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
             quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
             sms_content = 'Hi {}, your health-insurance quotes are ready'.format(deal.customer.name)
-            wa_msg_content = 'Hi {},\nWe\'ve updated your health-insurance quote. Click here to check them out:\n{}\n' \
-                                'If the link doesn’t work, simply reply to this message, and try the link again.\n'  \
-                                'Thanks,\n' \
-                                'Nexus Insurance Brokers'.format(deal.customer.name, quote_url)
+            if not wa_msg_content:
+                wa_msg_content = 'Hi {},\nWe\'ve updated your health-insurance quote. Click here to check them out:\n{}\n' \
+                                    'If the link doesn’t work, simply reply to this message, and try the link again.\n'  \
+                                    'Thanks,\n' \
+                                    'Nexus Insurance Brokers'.format(deal.customer.name, quote_url)
             if updated:
                 sms_content = 'Hi {}, we\'ve updated your quote. Click here to check them out:\n{}'.format(
                     deal.customer.name, quote_url
                 )
 
         elif email_type == 'renewal deal multiple quotes':
-            subject, content = emailer.prepare_email_content_for_renewal_deal(deal,quote, updated)
+            message = emailer.prepare_email_content_for_renewal_deal(deal,quote, updated)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
             quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
             sms_content = 'Hi {}, your health-insurance quotes are ready'.format(deal.customer.name)
-            wa_msg_content = 'Hi {},\nWe\'ve updated your health-insurance quote. Click here to check them out:\n{}\n' \
+            if not wa_msg_content:
+                wa_msg_content = 'Hi {},\nWe\'ve updated your health-insurance quote. Click here to check them out:\n{}\n' \
                                 'If the link doesn’t work, simply reply to this message, and try the link again.\n'  \
                                 'Thanks,\n' \
                                 'Nexus Insurance Brokers'.format(deal.customer.name, quote_url)
@@ -370,71 +367,63 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
 
         elif email_type == 'documents':
-            subject, content = emailer.prepare_email_content_for_documents(deal)
-
+            message = emailer.prepare_email_content_for_documents(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
             sms_content = 'Hi {}, your health-insurance documents is ready'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'We have sent you an email, please check to find out more.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            
 
         elif email_type == 'final_quote':
-            subject, content = emailer.prepare_email_content_for_final_quote(deal, quote)
-
-            sms_content = 'Hi {}, your mortgage valuationfinal quote is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The valuation process has been initiated and we will have the report within few days.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_final_quote(deal, quote)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
+            sms_content = ''
+            
         
         elif email_type == 'payment':
-            subject, content = emailer.prepare_email_content_for_payment(deal, quote)
-
+            message = emailer.prepare_email_content_for_payment(deal, quote)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
             sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                             'The details for the method of Payment are ready.' \
-                             'Thanks,\n' \
-                             'Nexus Insurance Brokers'.format(deal.customer.name)
+            
         
         elif email_type == 'payment_confirmation':
-            subject, content = emailer.prepare_email_content_for_payment_confirmation(deal, quote)
-
-            sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                             'The details for the method of Payment are ready.' \
-                             'Thanks,\n' \
-                             'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_payment_confirmation(deal, quote)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
+            sms_content = ''
+            
 
         elif email_type == 'policy_issuance':
-            subject, content = emailer.prepare_email_content_for_policy_issuance(deal, quote)
-
+            message = emailer.prepare_email_content_for_policy_issuance(deal, quote)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
             sms_content = 'Hi {}, your health insurance policy is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'Thanks for submitting the details.\n' \
-                            'We will now proceed with the house keeping process to finalize the deal.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            
 
         elif email_type == 'housekeeping':
-            subject, content = emailer.prepare_email_content_for_housekeeping(deal)
-
-            sms_content = 'Hi {}, your mortgage loan disbursal is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'We inform you that seller mortgage settlement is completed, and we will now wait for the bank to release the original property documents.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_housekeeping(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')            
 
         elif email_type == 'closed':
-            subject, content = emailer.prepare_email_content_for_deal_won(deal)
-            wa_msg_content = 'Dear {},\n' \
-                             'Property documents are received, and we will now book the trustee office for the property transfer.\n' \
-                             'Thanks,\n' \
-                             'Nexus Insurance Brokers'.format(deal.customer.name)
-
-            sms_content = 'Hi {}, your mortgage property transfer is ready.'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_deal_won(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
+            sms_content = ''
 
         else:
-            subject, content = emailer.prepare_email_content(deal, 'basic')
+            message = emailer.prepare_email_content(deal, 'basic')
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
 
         bcc_emails = list()
         cc_emails = list()
@@ -500,7 +489,7 @@ class StageEmailNotification(AuditTrailMixin):
 
         self.to_email = recipient if recipient else deal.customer.email
         self.attachments = attachments
-        self.user = deal.user
+        self.user = deal.user if deal.user else None
 
     def GetEmailContent(self, **kwargs):
         email_type = self.email_type
@@ -513,63 +502,56 @@ class StageEmailNotification(AuditTrailMixin):
     
         if email_type == 'new_deal' or email_type == 'new' or email_type == 'new deal':
             setattr(deal, 'company', Company.objects.last())
-            subject, content = emailer.prepare_email_content_for_new_deal(deal)
+            message = emailer.prepare_email_content_for_new_deal(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')            
     
         elif email_type == 'quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
-            subject, content = emailer.prepare_email_content_for_quote(deal,quote, updated)
+            message = emailer.prepare_email_content_for_quote(deal,quote, updated)
+            subject = message.get('subject'),
+            content = message.get('email_content')            
 
         elif email_type == 'order_confirmation':
-            subject, content = emailer.prepare_email_content_for_order_summary(deal)
+            message = emailer.prepare_email_content_for_order_summary(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
 
         elif email_type == 'final_quote':
-            subject, content = emailer.prepare_email_content_for_final_quote(deal)
-
-            sms_content = 'Hi {}, your mortgage valuationfinal quote is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The valuation process has been initiated and we will have the report within few days.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_final_quote(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
         
         elif email_type == 'final_quote_submitted':
-            subject, content = emailer.prepare_email_content_for_final_quote_submitted(deal)            
+            message = emailer.prepare_email_content_for_final_quote_submitted(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')           
 
         elif email_type == 'payment':
-            subject, content = emailer.prepare_email_content_for_payment(deal, quote)
-
-            sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The details for the method of Payment are ready.' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_payment(deal, quote)
+            subject = message.get('subject'),
+            content = message.get('email_content')            
 
         elif email_type == 'payment_confirmation':  #proof of payment shared
-            subject, content = emailer.prepare_email_content_for_payment_confirmation(deal)
-
-            sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'The details for the method of Payment are ready.' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_payment_confirmation(deal)
+            subject = message.get('subject'),
+            content = message.get('email_content')
+            
 
         elif email_type == 'policy_issuance':
-            subject, content = emailer.prepare_email_content_for_policy_issuance(deal)
-
-            sms_content = 'Hi {}, your health insurance policy is ready.'.format(deal.customer.name)
-            wa_msg_content = 'Dear {},\n' \
-                            'Thanks for submitting the details.\n' \
-                            'We will now proceed with the house keeping process to finalize the deal.\n' \
-                            'Thanks,\n' \
-                            'Nexus Insurance Brokers'.format(deal.customer.name)
+            message = emailer.prepare_email_content_for_policy_issuance(deal, quote)
+            subject = message.get('subject'),
+            content = message.get('email_content')
         else:
-            subject, content = emailer.prepare_email_content(deal, email_type)
+            message = emailer.prepare_email_content(deal, email_type)
+            subject = message.get('subject'),
+            content = message.get('email_content')
         
         return subject, content
 
     def stage_propagation_email(self, stage=True):
         if not self.send_email:
             ...
-        
         from_email = HandleEmailContent._get_from_email_for_deal(self.deal)
         reply_to = HandleEmailContent._get_reply_to_for_deal(self.deal)
         cleaned_to = clean_and_validate_email_addresses(self.to_email)
