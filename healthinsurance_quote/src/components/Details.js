@@ -32,7 +32,8 @@ const Details = ({data,selectedInsurar,setShowDetails = false,comparison = false
                 </CollapseDetails>
                 <CollapseDetails title="Plan Documents" defaultTab={true}>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="table_of_benefits"/>
-                    <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="network_list"/>
+                    <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="network_list_inpatient"/>
+                    <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="network_list_outpatient"/>
                     <InsurarTableData data={data} selectedInsurar={selectedInsurar} comparison={comparison} keyIndex="policy_wording"/>
                 </CollapseDetails>
                 {((comparison && is_repart) || (selectedInsurar!==false && 'is_repatriation_benefit_enabled' in data[selectedInsurar] && data[selectedInsurar].is_repatriation_benefit_enabled)) &&

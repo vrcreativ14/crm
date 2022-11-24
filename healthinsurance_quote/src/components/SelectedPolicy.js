@@ -56,7 +56,8 @@ const SelectedPolicy = ({data,insurer,type = 1}) => {
                             <li className='d-flex'><i className="me-2 fas fa-check"></i><span>Pharmacy Copay: {insurer.pharmacy_copay}</span></li>
                         </ul>
                     </span>
-                    <span><b>Network List: </b>{(insurer.network_list) ? <a target="_blank" className="text-fade-grey" href={decodeURI(insurer.network_list).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
+                    <span><b>Network List In-Patient: </b>{(insurer.network_list_inpatient) ? <a target="_blank" className="text-fade-grey" href={decodeURI(insurer.network_list_inpatient).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
+                    <span><b>Network List Outpatient: </b>{(insurer.network_list_outpatient) ? <a target="_blank" className="text-fade-grey" href={decodeURI(insurer.network_list_outpatient).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
                     <span><b>Table of Benefits: </b>{(insurer.table_of_benefits) ? <a target="_blank" className="text-fade-grey" href={decodeURI(insurer.table_of_benefits).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
                     <span className='no-border'><b>Policy Wording: </b>{(insurer.policy_wording) ? <a target="_blank" className="text-fade-grey" href={decodeURI(insurer.policy_wording).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
                 </li>

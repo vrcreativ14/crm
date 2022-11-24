@@ -58,6 +58,8 @@ export const columnTitle = {
     "table_of_benefits":"Table of Benefits",
     "policy_wording":"Policy Wording",
     "network_list":"Network List",
+    "network_list_outpatient":"Network List Outpatient",
+    "network_list_inpatient":"Network List In-Patient",
 
     "Maternity_waiting_period":"Maternity Waiting Period",
     "maternity_benefits":"Maternity Benefits",
@@ -76,7 +78,7 @@ export const columnTitle = {
     "members_with_critical_patient_travel_expense":"Travel costs of insured members to be with a family member who is at persil of death or who has died"
 }
 
-const isDoc = ['maf','table_of_benefits','policy_wording','network_list']
+const isDoc = ['maf','table_of_benefits','policy_wording','network_list','network_list_inpatient','network_list_outpatient']
 const customCol = ['inpatient','outpatient']
 const customColRepat = ['accompanying_person_expense','family_members_travel_expense','members_with_critical_patient_travel_expense']
 

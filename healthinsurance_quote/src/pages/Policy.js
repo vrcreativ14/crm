@@ -106,7 +106,8 @@ const Policy = () => {
                             <span><b>Policy Number</b><br/>{('policy' in data) ? data.policy.policy_number:'N/A'}</span>
                         </li>
                         <li className='large-column multiple-column-mobile align-top three-col'>
-                            <span><b>Network List: </b>{(data.selected_plan.network_list) ? <a target="_blank" className="text-fade-grey d-inline-block" href={decodeURI(data.selected_plan.network_list).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
+                            <span><b>Network List In-Patient: </b>{(data.selected_plan.network_list_inpatient) ? <a target="_blank" className="text-fade-grey d-inline-block" href={decodeURI(data.selected_plan.network_list_inpatient).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
+                            <span><b>Network List Outpatient: </b>{(data.selected_plan.network_list_outpatient) ? <a target="_blank" className="text-fade-grey d-inline-block" href={decodeURI(data.selected_plan.network_list_outpatient).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
                             <span><b>Table of Benefits: </b>{(data.selected_plan.table_of_benefits) ? <a target="_blank" className="text-fade-grey d-inline-block" href={decodeURI(data.selected_plan.table_of_benefits).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
                             <span><b>Policy Wording: </b>{(data.selected_plan.policy_wording) ? <a target="_blank" className="text-fade-grey d-inline-block" href={decodeURI(data.selected_plan.policy_wording).replace(/&amp;/g, "&")}>Download <i className="text-golden fas fa-arrow-circle-down"></i></a>:''}</span>
                         </li>

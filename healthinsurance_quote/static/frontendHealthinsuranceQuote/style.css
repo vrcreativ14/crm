@@ -774,8 +774,9 @@ main .file-upload i.fa-arrow-circle-down{
 }
 .insurer-info .quote-short-detail .outpatient{
     list-style: none;
-    padding-left: 0;
+    padding-left: 15px;
     margin-bottom: 0;
+    display: block !important;
 }
 .insurer-info .quote-short-detail .outpatient li{
     margin-bottom: 0.5rem;
@@ -989,7 +990,7 @@ main .message.active{
 .policy-page.selected-policy .large-column > span{
     border: unset;
 }
-.policy-page.selected-policy .large-column > span:first-child,.policy-page.selected-policy .three-col > span:nth-child(2){
+.policy-page.selected-policy .large-column > span:first-child,.policy-page.selected-policy .three-col > span:nth-child(2),.policy-page.selected-policy .three-col > span:nth-child(3){
     border-bottom: 1px solid #F1F1F1;
 }
 .selected-policy.policy-page .large-column > span{
