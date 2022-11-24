@@ -86,7 +86,7 @@ class ConsultationCopay(models.Model):
         else:
             return f'{self.copayment}'
 
-class Deductible(models.Model):
+class InpatientDeductible(models.Model):
     deductible = models.CharField(max_length=200)
 
     def __str__(self):
@@ -97,7 +97,7 @@ class Network(models.Model):
 
     def __str__(self):
         return f'{self.network}'
- 
+
 class AnnualLimit(models.Model):
      limit = models.CharField(max_length=200)
      
@@ -192,7 +192,6 @@ class InsurerDetails(models.Model):
         return self.insurer.name
 
 
-
 class Emirate(models.Model):
     name = models.CharField(max_length=100)
     geographical_category = models.CharField(max_length=100)
@@ -232,7 +231,8 @@ class Plan(models.Model):
     is_payment_frequency_fixed = models.BooleanField(default=False)
     area_of_cover = models.ManyToManyField(Area_Of_Cover)
     is_area_of_cover_fixed = models.BooleanField(default=False)
-    inpatient_deductible = models.CharField(max_length=200, blank=True, null=True)
+    inpatient_deductible = models.ManyToManyField(InpatientDeductible)
+    is_inpatient_deductible_fixed = models.BooleanField(default=False)
     copay_mode = models.CharField(max_length=30, choices=COPAY_MODE, default=VARIABLE)
     consultation_copay = models.ManyToManyField(ConsultationCopay)
     is_consultation_copay_fixed = models.BooleanField(default=False)
@@ -263,7 +263,8 @@ class Plan(models.Model):
     is_optical_benefit_fixed = models.BooleanField(default=False)
     can_auto_quote = models.BooleanField(default=False)
     currency = models.CharField(max_length=20, choices=CURRENCIES, default='AED')
-    network_list = models.FileField(upload_to=get_document_upload_path, blank=True)
+    network_list_outpatient = models.FileField(upload_to=get_document_upload_path, blank=True)
+    network_list_inpatient = models.FileField(upload_to=get_document_upload_path, blank=True)
     policy_wording = models.FileField(upload_to=get_document_upload_path, blank=True)
     table_of_benefits = models.FileField(upload_to=get_document_upload_path, blank=True)
     maf = models.FileField(upload_to=get_document_upload_path, blank=True)
@@ -290,21 +291,13 @@ class Plan(models.Model):
     def __str__(self):
         return f'{self.code}'
 
-    # def clean(self):
-    #     super(Product, self).clean()
-
-    #     for field_name in self.PRODUCT_ATTRIBUTES:
-    #         if getattr(self, field_name):
-    #             validation_response = self.validate_product_attribute(getattr(self, field_name))
-    #             if not validation_response[0]:
-    #                 raise ValidationError({field_name: validation_response[1]})
 
     def save(self, *args, **kwargs):
         from_insurer_admin_save = kwargs.pop('from_insurer_admin', None)
         if not from_insurer_admin_save:
-            self.maf = self.insurer.maf if self.insurer.maf else self.maf
-            self.census = self.insurer.census if self.insurer.census else self.census
-            self.bor = self.insurer.bor if self.insurer.bor else self.bor
+            self.maf = self.insurer.maf if not self.maf else self.maf
+            self.census = self.insurer.census if not self.census else self.census
+            self.bor = self.insurer.bor if not self.bor else self.bor
         if not self.logo:
             self.logo = self.insurer.logo
         if not self.code:
@@ -349,10 +342,3 @@ class MessageTemplates(models.Model):
             return f'{self.type.name} - {self.subject} - {self.insurer}'
         else:
             return f'{self.type.name} - {self.subject}'
-
-# class EmailAttachments(models.Model):
-#     template = models.ForeignKey(MessageTemplates, on_delete=models.PROTECT)
-
-#     def __str__(self):
-#         return f'{self.template.type.name} + {self.template.subject}'
-

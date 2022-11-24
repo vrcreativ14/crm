@@ -85,6 +85,15 @@ class VisaCategoryResource(resources.ModelResource):
     class Meta:
         model = VisaCategory
 
+class InpatientDeductibleResource(resources.ModelResource):
+    class Meta:
+        model = InpatientDeductible
+
+
+class InpatientDeductibleAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    search_fields = ['deductible']
+    resource_classes = [InpatientDeductibleResource]
+
 class NetworkAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     search_fields = ['network']
     resource_classes = [NetworkResource]
@@ -182,7 +191,6 @@ class VisaCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 
 
 admin.site.register(Area_Of_Cover, Area_Of_CoverAdmin)
-admin.site.register(DiagnosticsCopay,DiagnosticsCopayAdmin)
 admin.site.register(Network, NetworkAdmin)
 admin.site.register(TPA, TPAAdmin)
 admin.site.register(Plan, PlanAdmin)
@@ -200,7 +208,9 @@ admin.site.register(OpticalBenefit, OpticalBenefitAdmin)
 admin.site.register(PaymentFrequency, PaymentFrequencyAdmin)
 admin.site.register(Emirate)
 admin.site.register(ConsultationCopay,ConsultationCopayAdmin)
+admin.site.register(DiagnosticsCopay,DiagnosticsCopayAdmin)
 admin.site.register(PharmacyCopay,PharmacyCopayAdmin)
+admin.site.register(InpatientDeductible,InpatientDeductibleAdmin)
 admin.site.register(VisaCategory, VisaCategoryAdmin)
 admin.site.register(MessageTemplates, MessageTemplatesAdmin)
 admin.site.register(MessageType, MessageTypeAdmin)
