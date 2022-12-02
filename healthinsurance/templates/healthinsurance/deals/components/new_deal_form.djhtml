@@ -249,7 +249,7 @@ button > .multiselect-selected-text{
                             <label class="">Visa *</label>
                         </div>
                         <div class="col-lg-6">
-                            <select class="form-control" name="visa">                                
+                            <select class="form-control" name="visa" {% if quote %} disabled {% endif %}>                                
                                 <option value="Dubai" {% if deal.primary_member.visa in 'Dubai' %} selected {% endif %}>Dubai</option>                                                                
                                 <option value="Abu Dhabi" {% if deal.primary_member.visa in 'Abu Dhabi' %} selected {% endif %}>Abu Dhabi</option>
                                 <option value="Sharjah" {% if deal.primary_member.visa in 'Sharjah' %} selected {% endif %}>Sharjah</option>
