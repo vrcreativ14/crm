@@ -660,18 +660,20 @@ a{
                 <div class="card info-container m-b-20 flex">
                     <div class="title">
                         <div class="initials rounded-circle">
-                            {{ deal.primary_member.get_initials }}
+                            {{ deal.customer.get_initials }}
                         </div>
                         <div class="deal-title">                           
                            <div class="heading">Primary Member Details</div>
                         </div>
+                        <a class="font-12 fw-400" href="{% url 'customers:edit' pk=deal.customer.pk %}">
+                            View Customer</a>
                     </div>
 
                     <div class="info-table ">
                         <div class="row editable">
                             <div class="col col-lg-4 label p-l-20 p-r-0">Name</div>
                             <div class="col col-lg-8 ">
-                                <span>{{ deal.primary_member.name }}</span>
+                                <span>{{ deal.customer.name }}</span>
                             </div>
                         </div>
                         <div class="row editable">
@@ -683,14 +685,14 @@ a{
                             </a>
                             </div>
                             <div class="col col-lg-8 editable-icon">                                
-                                   <span>{% if deal.primary_member.phone %} {{ deal.primary_member.phone }} {% else %} - {% endif %}</span>                                
+                                   <span>{% if deal.customer.phone %} {{ deal.customer.phone }} {% else %} - {% endif %}</span>                                
                             </div>
                         </div>
 
                         <div class="row editable">
                             <div class="col col-lg-4 label p-l-20 p-r-0">Email</div>
                             <div class="col col-lg-8 editable-icon">                                
-                                   <span>{{ deal.primary_member.email }}</span>
+                                   <span>{{ deal.customer.email }}</span>
                             </div>
                         </div>
                         <br/>
