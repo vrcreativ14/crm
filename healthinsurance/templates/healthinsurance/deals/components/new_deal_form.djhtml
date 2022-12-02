@@ -126,7 +126,7 @@ button > .multiselect-selected-text{
                                     type="text"
                                     data-url="{% url 'customers:customers-search' %}" 
                                     data-target="id_customer"
-                                    class="autocomplete-field form-control required" 
+                                    class="form-control required"
                                     id="id_customer_name" 
                                     name="name" autocomplete="off"
                                     value='{{deal.primary_member.name}}' />
