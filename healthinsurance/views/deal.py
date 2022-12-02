@@ -183,7 +183,7 @@ class NewHealthDeal(View):
                 primary_member.save()
             deal = Deal(primary_member = primary_member, user = user)
             post = request.POST.copy()
-            post['primary_member'] = primary_member                   
+            post['primary_member'] = primary_member
             request.POST = post
             customer = request.POST.get('customer')
             if customer:
@@ -318,16 +318,16 @@ class EditDeal(LoginRequiredMixin, View):
             additional_members = json.loads(additional_members)
         request.POST = post
         updated_request = request.POST.copy()
-        customer = Customer.objects.filter(email = primary_email, phone = primary_phone)
-        if customer.exists():
-                customer = customer[0]
+        customer = deal.customer
+        updated_request['company'] = self.request.company
+        if customer:
+                customer_form = CustomerForm(updated_request, instance = customer)
         else:
-                updated_request['company'] = self.request.company
                 customer_form = CustomerForm(updated_request)
-                if customer_form.is_valid():
-                    customer = customer_form.save()
-                else:
-                    return JsonResponse({"success": False, "errors": customer_form.errors})
+        if customer_form.is_valid():
+            customer = customer_form.save()
+        else:
+            return JsonResponse({"success": False, "errors": customer_form.errors})
         
         updated_request['customer'] = customer
         updated_request['start_date'] = start_date
