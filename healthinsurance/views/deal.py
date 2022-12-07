@@ -101,6 +101,77 @@ def CreateBasicQuote(request, deal):
                 return quote
 
 
+class DealEditBaseView(LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = None
+
+    def get_object(self, **kwargs):
+        try:
+            filters = {
+                "pk": self.kwargs["pk"],
+            }
+            deal = Deal.objects.select_related().get(**filters)
+            if self.request.user.userprofile.has_producer_role() and (
+                deal.referrer != self.request.user
+            ):
+                raise Http404()
+
+            return deal
+        except Deal.DoesNotExist:
+            raise Http404()
+
+    def serialize_insurers(self):
+        data = dict()
+
+        for insurer in Insurer.objects.all().order_by("name"):
+            data[insurer.insurer_id] = {
+                "insurer_id": insurer.insurer_id,
+                "name": insurer.name,
+                "logo": insurer.logo,                
+            }
+
+        return data
+
+    def get_related_attachments(self):
+        deal = self.get_object()
+        attachments = self.serialize_attachments(
+            deal.customer.get_attachments(),
+            deal.customer.name,
+            reverse("customers:edit", kwargs=dict(pk=deal.customer.pk)),
+        )
+
+        deals = Deal.objects.filter(customer=deal.customer).exclude(id=deal.pk)
+
+        for deal in deals:
+            attachments = attachments + self.serialize_attachments(
+                deal.get_attachments(),
+                reverse("health-insurance:edit-deal", kwargs=dict(pk=deal.pk)),
+            )
+
+        return attachments
+
+    def serialize_attachments(self, attachments, location_label="", location_url=""):
+        return [
+            {
+                "id": attachment.id,
+                "pk": attachment.id,
+                "label": attachment.label,
+                "url": attachment.get_file_url(),
+                "can_preview": attachment.can_preview_in_frontend(),
+                "extension": attachment.get_file_extension().upper(),
+                "added_by": attachment.added_by.get_full_name() if attachment.added_by else "",
+                "created_on": attachment.created_on.strftime("%Y-%m-%d"),
+                "location_label": location_label,
+                "location_url": location_url,
+                "update_url": reverse(
+                    "core:update-attachment", kwargs={"pk": attachment.id}
+                ),
+                "url_for_linking": attachment.get_url_for_linking_in_frontend(),
+            }
+            for attachment in attachments
+        ]
+
+
+
 class DealsList(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     template_name = "healthinsurance/deals/deals_list.djhtml"
     permission_required = 'auth.list_health_deals'
@@ -227,7 +298,11 @@ class NewHealthDeal(View):
                     additional_benefit = AdditionalBenefit.objects.filter(benefit__iexact = benefit.replace('_',' '))
                     if additional_benefit.exists():
                         deal.additional_benefits.add(additional_benefit[0])
-                        deal.save()
+
+                if self.request.user.userprofile.has_producer_role():
+                    deal.referrer = self.request.user
+
+                deal.save()
                 
                 response = {
                         "success": True,
@@ -462,7 +537,7 @@ class DealReopenView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
         return JsonResponse({'success': False})
 
 
-class DealDetails(LoginRequiredMixin, View):
+class DealDetails(DealEditBaseView, View):
     def get(self, request,pk):
         deal = Deal.objects.filter(pk = pk)
         insurers = Insurer.objects.all()
@@ -624,77 +699,6 @@ def delete_note(request, *args, **kwargs):
     from core.models import Note
     Note.objects.get(pk=kwargs.get("pk")).delete()
     return JsonResponse({"success":True})
-
-
-class DealEditBaseView(LoginRequiredMixin, PermissionRequiredMixin):
-    permission_required = None
-
-    def get_object(self, **kwargs):
-        try:
-            filters = {
-                "pk": self.kwargs["pk"],
-            }
-            deal = Deal.objects.select_related().get(**filters)
-            if self.request.user.userprofile.has_producer_role() and (
-                deal.referrer != self.request.user
-            ):
-                raise Http404()
-
-            return deal
-        except Deal.DoesNotExist:
-            raise Http404()
-
-    def serialize_banks(self):
-        data = dict()
-
-        for insurer in Insurer.objects.all().order_by("name"):
-            data[insurer.insurer_id] = {
-                "insurer_id": insurer.insurer_id,
-                "name": insurer.name,
-                "logo": insurer.logo,                
-            }
-
-        return data
-
-    def get_related_attachments(self):
-        deal = self.get_object()
-        attachments = self.serialize_attachments(
-            deal.customer.get_attachments(),
-            deal.customer.name,
-            reverse("customers:edit", kwargs=dict(pk=deal.customer.pk)),
-        )
-
-        deals = Deal.objects.filter(customer=deal.customer).exclude(id=deal.pk)
-
-        for deal in deals:
-            attachments = attachments + self.serialize_attachments(
-                deal.get_attachments(),
-                deal.get_car_title(),
-                reverse("mortgage:deal-edit", kwargs=dict(pk=deal.pk)),
-            )
-
-        return attachments
-
-    def serialize_attachments(self, attachments, location_label="", location_url=""):
-        return [
-            {
-                "id": attachment.id,
-                "pk": attachment.id,
-                "label": attachment.label,
-                "url": attachment.get_file_url(),
-                "can_preview": attachment.can_preview_in_frontend(),
-                "extension": attachment.get_file_extension().upper(),
-                "added_by": attachment.added_by.get_full_name() if attachment.added_by else "",
-                "created_on": attachment.created_on.strftime("%Y-%m-%d"),
-                "location_label": location_label,
-                "location_url": location_url,
-                "update_url": reverse(
-                    "core:update-attachment", kwargs={"pk": attachment.id}
-                ),
-                "url_for_linking": attachment.get_url_for_linking_in_frontend(),
-            }
-            for attachment in attachments
-        ]
 
 
 def get_allowed_insurers(self, **kwargs):
@@ -1160,7 +1164,7 @@ class DeleteAttachedFile(DeleteAttachmentView):
             return self.request.GET['next']
 
         return "{}#tab_documents".format(
-            reverse('health-insurance:deal-edit', kwargs={'pk': attached_obj.deal.pk})
+            reverse('health-insurance:edit-deal', kwargs={'pk': attached_obj.deal.pk})
         )
     def post(self, request, *args, **kwargs):
         deal = get_object_or_404(Deal, pk=kwargs.get("pk"))
@@ -1205,7 +1209,6 @@ def SubStageProcessor(*args, **kwargs):
         substage.save()
 
     pass
-        
 
 class SubStageView(View):
     def save_file(self, **kwargs):
@@ -1718,27 +1721,8 @@ class GetPlanDetails(DealEditBaseView, CompanyAttributesMixin, View):
                 ]))
 
 
-class DealEditBaseView(LoginRequiredMixin, PermissionRequiredMixin):
-    permission_required = None
-
-    def get_object(self, **kwargs):
-        try:
-            filters = {
-                "pk": self.kwargs["pk"],
-            }
-            deal = Deal.objects.select_related().get(**filters)
-            if self.request.user.userprofile.has_producer_role() and (
-                deal.referrer != self.request.user
-            ):
-                raise Http404()
-
-            return deal
-        except Deal.DoesNotExist:
-            raise Http404()
-
-
 class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
-    permission_required = 'auth.list_mortgage_deals'
+    permission_required = 'auth.list_health_deals'
     
     def get(self, *args, **kwargs):
         type = self.request.GET.get('type')        

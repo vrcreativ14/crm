@@ -322,7 +322,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         if email_type == 'new_deal' or email_type == 'new':
             setattr(deal, 'company', Company.objects.last())
             message = emailer.prepare_email_content_for_new_deal(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content') 
             sms_content = f'Thank you for requesting health-insurance quotes from. ' \
@@ -333,7 +333,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         elif email_type == 'quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
             message = emailer.prepare_email_content_for_quote(deal,quote, updated)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
@@ -350,7 +350,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         elif email_type == 'renewal deal multiple quotes':
             message = emailer.prepare_email_content_for_renewal_deal(deal,quote, updated)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
@@ -368,7 +368,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         elif email_type == 'documents':
             message = emailer.prepare_email_content_for_documents(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             sms_content = 'Hi {}, your health-insurance documents is ready'.format(deal.customer.name)
@@ -376,7 +376,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         elif email_type == 'final_quote':
             message = emailer.prepare_email_content_for_final_quote(deal, quote)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             sms_content = ''
@@ -384,7 +384,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         
         elif email_type == 'payment':
             message = emailer.prepare_email_content_for_payment(deal, quote)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             sms_content = 'Hi {}, The details for the method of Payment are ready.'.format(deal.customer.name)
@@ -392,7 +392,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         
         elif email_type == 'payment_confirmation':
             message = emailer.prepare_email_content_for_payment_confirmation(deal, quote)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             sms_content = ''
@@ -400,7 +400,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         elif email_type == 'policy_issuance':
             message = emailer.prepare_email_content_for_policy_issuance(deal, quote)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             sms_content = 'Hi {}, your health insurance policy is ready.'.format(deal.customer.name)
@@ -408,20 +408,20 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
         elif email_type == 'housekeeping':
             message = emailer.prepare_email_content_for_housekeeping(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')            
 
         elif email_type == 'closed':
             message = emailer.prepare_email_content_for_deal_won(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
             sms_content = ''
 
         else:
             message = emailer.prepare_email_content(deal, 'basic')
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
 
@@ -495,7 +495,7 @@ class StageEmailNotification(AuditTrailMixin):
         email_type = self.email_type
         deal = self.deal
         quote = kwargs.get('quote')
-        emailer = SendHealthInsuranceEmail(Company.objects.last())    
+        emailer = SendHealthInsuranceEmail(Company.objects.last())
     
         quote = Quote.objects.filter(deal = deal)
         quote = quote[0] if quote.exists() else None
@@ -503,48 +503,48 @@ class StageEmailNotification(AuditTrailMixin):
         if email_type == 'new_deal' or email_type == 'new' or email_type == 'new deal':
             setattr(deal, 'company', Company.objects.last())
             message = emailer.prepare_email_content_for_new_deal(deal)
-            subject = message.get('subject'),
-            content = message.get('email_content')            
+            subject = message.get('subject')
+            content = message.get('email_content')
     
         elif email_type == 'quote' or email_type == 'quote_updated':
             updated = email_type == 'quote_updated'
             message = emailer.prepare_email_content_for_quote(deal,quote, updated)
-            subject = message.get('subject'),
-            content = message.get('email_content')            
+            subject = message.get('subject')
+            content = message.get('email_content')
 
         elif email_type == 'order_confirmation':
             message = emailer.prepare_email_content_for_order_summary(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
 
         elif email_type == 'final_quote':
             message = emailer.prepare_email_content_for_final_quote(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
         
         elif email_type == 'final_quote_submitted':
             message = emailer.prepare_email_content_for_final_quote_submitted(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')           
 
         elif email_type == 'payment':
             message = emailer.prepare_email_content_for_payment(deal, quote)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')            
 
         elif email_type == 'payment_confirmation':  #proof of payment shared
             message = emailer.prepare_email_content_for_payment_confirmation(deal)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
             
 
         elif email_type == 'policy_issuance':
             message = emailer.prepare_email_content_for_policy_issuance(deal, quote)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
         else:
             message = emailer.prepare_email_content(deal, email_type)
-            subject = message.get('subject'),
+            subject = message.get('subject')
             content = message.get('email_content')
         
         return subject, content
