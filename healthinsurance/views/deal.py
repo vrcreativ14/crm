@@ -538,6 +538,7 @@ class DealReopenView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
 
 
 class DealDetails(DealEditBaseView, View):
+    permission_required = 'auth.update_health_deals'
     def get(self, request,pk):
         deal = Deal.objects.filter(pk = pk)
         insurers = Insurer.objects.all()
