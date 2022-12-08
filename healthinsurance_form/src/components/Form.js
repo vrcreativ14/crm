@@ -32,7 +32,7 @@ const Form = () => {
                 dealData['country_of_stay'] = quoteData.primary_member.country_of_stay
                 dealData['nationality'] = quoteData.primary_member.nationality
                 dealData['salary_band'] = quoteData.primary_member.salary_band
-                dealData['visa'] = (visa.filter(emirates => emirates.label.toLowerCase()==quoteData.primary_member.visa.toLowerCase())) ? visa.filter(emirates => emirates.label.toLowerCase()==quoteData.primary_member.visa.toLowerCase())[0].value:''
+                dealData['visa'] = (quoteData.primary_member.visa && visa.filter(emirates => emirates.label.toLowerCase()==quoteData.primary_member.visa.toLowerCase())) ? visa.filter(emirates => emirates.label.toLowerCase()==quoteData.primary_member.visa.toLowerCase())[0].value:''
 
                 dealData['geographical_coverage'] = quoteData.deal.geographical_coverage.toLowerCase()
                 dealData['indicative_budget'] = (quoteData.deal.indicative_budget.toLowerCase()).replace(" ","")
@@ -220,14 +220,14 @@ const Form = () => {
         if(deal_id){
             const { data: res } = await api.post('/health-insurance/deals/edit/'+deal_id,rawData)
             if(res.success)return window.location.href = "https://forms.nexusadvice.com/thank-you/";
-            return Notification('Response',(res.success) ? 'Success':'Error',(res.success) ? 'success':'danger')
+            return Notification((res.success) ? '':'Response',(res.success) ? 'Response: Success!':'Error',(res.success) ? 'success':'danger')
         }
         const { data: res } = await api.post('/health-insurance/deals/add',rawData)
         // if(res.success){
         //     await api.post('/health-insurance/deals/'+res.deal+'/email/new deal/',rawData)
         // }
 
-        Notification('Response',(res.success) ? 'Success':'Error',(res.success) ? 'success':'danger')
+        Notification((res.success) ? '':'Response',(res.success) ? 'Response: Success!':'Error',(res.success) ? 'success':'danger')
         setSubmitting(false)
         if(res.success && formData.indicative_budget=='below1k')return window.location.href = "/health-insurance-quote/"+res.quote_reference_number+'/'+res.deal;
         if(res.success)return window.location.href = "https://forms.nexusadvice.com/thank-you/";
