@@ -273,7 +273,7 @@ class Plan(models.Model):
     is_repatriation_benefit_enabled = models.BooleanField(default=False)
     repatriation_benefits = JSONField(help_text='repatriation_benefits', blank = True, null=True)
     popup_template = models.TextField(blank=True, null=True)
-    objects = PlanManager()
+    #objects = PlanManager()
     is_active.short_description = 'Status'
     class Meta:
         ordering = ['-created_on']
