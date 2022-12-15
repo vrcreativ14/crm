@@ -97,8 +97,9 @@ def CreateBasicQuote(request, deal):
                 pre_existing_cover = rqp.pre_existing_cover.all().first(),
                 )
                 new_qp.save(user=request.user)
-                quote.save(user = request.user)
-                return quote
+                
+        quote.save(user = request.user)
+        return quote
 
 
 class DealEditBaseView(LoginRequiredMixin, PermissionRequiredMixin):
@@ -299,7 +300,7 @@ class NewHealthDeal(View):
                     if additional_benefit.exists():
                         deal.additional_benefits.add(additional_benefit[0])
 
-                if self.request.user.userprofile.has_producer_role():
+                if hasattr(self.request.user,'userprofile') and self.request.user.userprofile.has_producer_role():
                     deal.referrer = self.request.user
 
                 deal.save()
@@ -318,7 +319,10 @@ class NewHealthDeal(View):
                     if quote:
                         response['quote_reference_number'] = quote.reference_number
                 if request.POST.get('referrer') and deal.primary_member.email:
-                    email_notification(deal, 'new deal', deal.primary_member.email)
+                    # if deal.stage == STAGE_BASIC:
+                    #     email_notification(deal, 'basic new deal', deal.primary_member.email)
+                    # else:
+                        email_notification(deal, 'new deal', deal.primary_member.email)
                     
                 log_user_activity(user, self.request.path, 'C', deal)
                 return JsonResponse(response)
@@ -393,6 +397,7 @@ class EditDeal(LoginRequiredMixin, View):
             additional_members = json.loads(additional_members)
         request.POST = post
         updated_request = request.POST.copy()
+        #customer = Customer.objects.filter(email = primary_email, phone = primary_phone)
         customer = deal.customer
         updated_request['company'] = self.request.company
         if customer:
@@ -442,6 +447,7 @@ class EditDeal(LoginRequiredMixin, View):
         
         updated_request['primary_member'] = primary_member.pk
         deal_form = DealSaveForm(updated_request,instance=deal)
+        is_basic = True if deal.stage == STAGE_BASIC else False
         if deal_form.is_valid():
             deal_form.save()
             if additional_benefits:
@@ -452,6 +458,10 @@ class EditDeal(LoginRequiredMixin, View):
                             deal.additional_benefits.add(additional_benefit[0])
                             deal.save()
             
+            if is_basic and request.POST.get('referrer') and deal.stage == STAGE_NEW:
+                existing_basic_quote = deal.get_quote()
+                if existing_basic_quote:
+                    existing_basic_quote.delete()
             
                 return JsonResponse({
                     "success": True,
@@ -801,14 +811,18 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
 
 
         elif stage == STAGE_FINAL_QUOTE:
-            self.template_name = 'healthinsurance/deals/components/final_quote_stage.djhtml' 
+            self.template_name = 'healthinsurance/deals/components/final_quote_stage.djhtml'
+            # order = deal.get_order()
+            # if order and order.selected_plan.is_renewal_plan:
+            #     ctx['plan_renewal_document'] = order.selected_plan.plan_renewal_document
+            #     ctx['plan_renewal_document_name'] = order.selected_plan.plan_renewal_document.name.split('/')[-1]
         
         elif stage == STAGE_PAYMENT:
             #ctx["extended_expiry_date"]
             self.template_name = 'healthinsurance/deals/components/payment_stage.djhtml'
-            order = Order.objects.filter(deal=deal)
-            if order.exists():
-                insurer_details = InsurerDetails.objects.filter(insurer = order[0].selected_plan.plan.insurer)
+            order = deal.get_order()
+            if order:
+                insurer_details = InsurerDetails.objects.filter(insurer = order.selected_plan.plan.insurer)
                 bank_name = insurer_details[0].bank_name if insurer_details.exists() else ""
                 iban = insurer_details[0].iban if insurer_details.exists() else ""
                 ctx['bank_name'] = bank_name
@@ -829,14 +843,13 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
             
         elif stage == STAGE_WON:
             self.template_name = 'healthinsurance/deals/components/deal_won.djhtml' 
-            order = Order.objects.filter(deal = deal)
-            if order.exists():
-                order = order[0]
+            order = deal.get_order()
             policy = HealthPolicy.objects.filter(deal = deal)
             policy = policy[0] if policy.exists() else None
             ctx['order'] = order
             ctx['policy'] = policy
-            ctx['is_policy_link_active'] = policy.get_policy_link_status()
+            if policy:
+                ctx['is_policy_link_active'] = policy.get_policy_link_status()
             
         if stage in closed_stages:
             ctx['has_closed'] = deal.stage in closed_stages
@@ -1276,6 +1289,12 @@ class SubStageView(View):
                 substage.world_check_approved = approved_by_compliance.lower()
                 substage.save()
                 if approved_by_compliance == 'yes':
+                    # order = deal.get_order()
+                    # if order and order.selected_plan.is_renewal_plan:
+                    #     to_stage = STAGE_FINAL_QUOTE
+                    #     to_sub_stage = FINAL_QUOTE_SEND_TO_CLIENT
+                    #     status = STATUS_INSURER
+                    # else:
                     to_sub_stage = DOCUMENTS_SEND_TO_INSURER
                 else:
                     next_sub_stage = 2
@@ -1301,6 +1320,9 @@ class SubStageView(View):
                 total_premium = request.POST.get('total_premium')
                 final_quote_document = request.FILES.get('final_quote_document')
                 deal_file = DealFiles.objects.filter(deal = deal, type="final_quote")
+                # order = deal.get_order()
+                # if not final_quote_document and order and order.selected_plan.is_renewal_plan:
+                #     final_quote_document = order.selected_plan.plan_renewal_document
                 if deal_file.exists():
                     deal_file[0].delete()
                     deal_file = DealFiles.objects.create(deal = deal, type="final_quote", file = final_quote_document)
@@ -1427,7 +1449,7 @@ class SubStageView(View):
             'status': status
         })
         return JsonResponse(response)
-        
+
 
 class StageProcessView(View):
     def post(self, request, *args, **kwargs):
@@ -1454,6 +1476,9 @@ class StageProcessView(View):
                         if form.is_valid():
                             order = form.save()
                             deal.status = STATUS_CLIENT
+                            # if selected_plan.is_renewal_plan:
+                            #     deal.deal_type = DEAL_TYPE_RENEWAL
+
                             #PDF generation when order is created
                             # try:
                             #     source = order.get_pdf_url()
