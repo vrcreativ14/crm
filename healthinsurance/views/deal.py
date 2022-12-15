@@ -1754,7 +1754,7 @@ class DealJsonAttributesList(DealEditBaseView, CompanyAttributesMixin, View):
         type = self.request.GET.get('type')        
         response = {}
         if type == 'assigned_to':
-            response = self.get_company_user_admin_list()
+            response = self.get_health_app_user_admin_list()
         elif type == 'agents':
             response = self.get_company_agents_list()
         elif type == 'producers':
