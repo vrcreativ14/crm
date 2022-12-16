@@ -7,7 +7,7 @@
         </label>
     </td>
     <td class="capitalize">{% if deal.stage == "policy_issuance" %} Policy Issuance {% elif deal.stage == "final_quote" %} Final Quote {% else %} {{ deal.stage }} {% endif %}</td>
-    <td>{% if deal.stage == 'lost' %} - {% else %}<span class="badge badge-{{deal.status_badge}} badge-font-light badge">{{deal.status_text}}</span>{% endif %}</td>
+    <td>{% if deal.stage == 'lost' or deal.stage == 'won' %} - {% else %}<span class="badge badge-{{deal.status_badge}} badge-font-light badge">{{deal.status_text}}</span>{% endif %}</td>
     
     <td class="link" data-sort="{{ deal.created_on | date:'Ymd' }}" data-search="{{ deal.created_on | date:'Ymd' }}" {{ deal.created_on }}>
         {{ deal.deal_timeinfo }} {% if deal.deal_timeinfo == 'Today' or deal.deal_timeinfo == 'Yesterday' %} at {{deal.created_on|time:"H:i"}} {% endif %}   
