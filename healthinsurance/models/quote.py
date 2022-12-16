@@ -106,7 +106,7 @@ class Quote(AuditTrailMixin, models.Model):
         return self.products.all()
 
     def get_editable_quoted_plans(self):
-        qp = QuotedPlan.objects.filter(quote = self)
+        qp = QuotedPlan.objects.filter(quote = self).order_by('-is_renewal_plan')
         return qp.exclude(status=QuotedPlan.STATUS_DELETED)
 
     def get_active_quoted_products(self):
