@@ -31,6 +31,7 @@ from rest_framework.generics import ListAPIView
 from accounts.pagination import UserPagination
 from collections import OrderedDict
 from accounts.permissions import HasAdminRolePermission
+from healthinsurance_shared.models import Insurer
 
 logger = logging.getLogger('api.typeform')
 
@@ -66,6 +67,7 @@ class DashboardView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
             self.request.session["selected_product_line"] = "health-insurance"
             ctx['params'] = self.request.get_full_path().replace(self.request.path,'').replace('?','')
             ctx['filtertype'] = self.request.GET.get('filtertype')
+            ctx['insurers'] = Insurer.objects.all()
             if self.request.GET.get('start_date'):
                 if parse_datetime(self.request.GET.get('start_date')):
                     ctx['start_date'] = parse_datetime(self.request.GET.get('start_date')).date().strftime("%m/%d/%Y") 
@@ -149,21 +151,13 @@ class ProfilePasswordChangeView(LoginRequiredMixin, TemplateView):
 class LockView(TemplateView):
     template_name = "accounts/lock.djhtml"
 
-class SearchResultAgentView(LoginRequiredMixin,ListAPIView):
+class SearchResultAgentView(ListAPIView):
         #required_permission = 'list_users'
         default_order_by = 'user__first_name'
         page_size = 30
         pagination_class = UserPagination
         serializer_class = UserProfileSerializer
-        #permission_classes = []
-
-        def get_permissions(self):
-            profile = self.request.GET.get('up')
-            user_profile = UserProfile.objects.filter(pk = profile)
-            # permissions_list = [HasAdminRolePermission] 
-            
-            # return [permission() for permission in permissions_list]
-            
+        permission_classes = [HasAdminRolePermission,]
 
         def get_queryset(self):
             qs = UserProfile.objects.filter(company=self.request.company, user__is_active=True).order_by(self.default_order_by)
