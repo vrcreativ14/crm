@@ -45,9 +45,9 @@ right: 15px;
                
                 
                 <div class="d-block">
-                    {% if stage_number < 8 %}
+                    {% if stage_number < 8 or request.user.userprofile.has_user_role or request.user.userprofile.has_admin_role %}
                         <div action="/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/" class="upload-file" id="upload_{{data_type}}">
-                        <span class="heading">{{name}}</span> 
+                        <span class="heading">{{name}}</span>
                             <span class="icon-container">
                                 <i class="upload-icon"></i>
                             </span>   <br/>
@@ -70,7 +70,13 @@ right: 15px;
                                     {% if deal_file.type == data_type %}
                                         <tr class="member-file" id="div_file_{{deal_file.filename}}">
                                             <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
-                                            {% if stage_number < 8 %}
+                                            {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                {% endif %}
+                                            {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            {% elif stage_number < 8 %}
                                             <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
                                             {% endif %}
                                         </tr>
@@ -91,9 +97,15 @@ right: 15px;
                             {% for deal_file in policy_documents %}                                
                                     {% if deal_file.type == data_type %}
                                         <tr class="policy-file" id="div_file_{{deal_file.filename}}">
-                                            <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
-                                            {% if stage_number < 8 %}
-                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}} {{data_type}}</td>
+                                            {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                {% endif %}
+                                            {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            {% elif stage_number < 8 %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
                                             {% endif %}
                                         </tr>
                                     {% endif %}
@@ -103,8 +115,15 @@ right: 15px;
                                     {% if deal_file.type == data_type %}
                                         <tr class="policy-file" id="div_file_{{deal_file.filename}}">
                                             <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
-                                            {% if stage_number < 8 %}
-                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                {% endif %}                                            
+                                            {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            {% elif stage_number < 8 %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            
                                             {% endif %}
                                         </tr>
                                     {% endif %}
@@ -125,10 +144,15 @@ right: 15px;
                             {% for deal_file in deal_files %}
                                 {% if deal_file.type == data_type %}
                                     <tr class="other-file" id="div_file_{{deal_file.filename}}">
-                                    
                                         <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
-                                        {% if stage_number < 8 %}
-                                        <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                        {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                {% endif %}
+                                        {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                        {% elif stage_number < 8 %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
                                         {% endif %}
                                     </tr>
                                 {% endif %}
