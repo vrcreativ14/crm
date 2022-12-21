@@ -68,11 +68,19 @@ class SendHealthInsuranceEmail:
     def get_backend(self):
         # if settings.DEBUG:
         #     return Console()
-
         if POSTMARK_TOKEN:
             return Postmark(self.company)
         else:
             return Mailgun(self.company)
+
+    def render_context(self, message, ctx):        
+        template = Template(message.get('email_content'))
+        message['email_content'] = template.render(Context(ctx))
+        template = Template(message.get('subject'))
+        message['subject'] = template.render(Context(ctx))
+        template = Template(message.get('wa_msg_content'))
+        message['wa_msg_content'] = template.render(Context(ctx))
+        return message
 
     def send_general_email(self, to_email, subject, content, from_email, cc_emails=None, bcc_emails=None,
                            attachments=None, reply_to=None):
@@ -113,17 +121,14 @@ class SendHealthInsuranceEmail:
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name if deal.customer and deal.customer.name else deal.primary_member.name,
         }
-
-        message = self.get_message_templates(type = 'new deal')
+        if deal.stage == 'basic':
+            message = self.get_message_templates(type = 'basic new deal')
+        else:
+            message = self.get_message_templates(type = 'new deal')
         #subject = 'Thank you for trusting Nexus Brokers with your Health Insurance needs'
         #text_template = get_template('email/health_insurance_lead_received.html')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
+        
 
     def prepare_email_content_for_quote(self, deal,quote,updated=False):
 
@@ -140,14 +145,8 @@ class SendHealthInsuranceEmail:
             message = self.get_message_templates(type = 'quote updated')
         else:
             message = self.get_message_templates(type = 'new quote')
-        #text_template = get_template('email/health_insurance_quote_generated.html')        
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        #text_template = get_template('email/health_insurance_quote_generated.html')
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_renewal_deal(self, deal,quote,updated=False):
     
@@ -163,14 +162,7 @@ class SendHealthInsuranceEmail:
             ctx.update({'referrer':deal.referrer})
 
         message = self.get_message_templates(type = 'renewal deal multiple quotes')
-        #text_template = get_template('email/health_insurance_quote_generated.html')        
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_documents(self, deal):
         ctx = {
@@ -179,57 +171,47 @@ class SendHealthInsuranceEmail:
             "upload_url" : "/mortgage-quote/"+str(deal.mortgage_quote_deals.reference_number)+"/"+str(deal.pk)+"/"
         }
         message = self.get_message_templates(type = 'documents')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
-    def prepare_email_content_for_order_summary(self, deal):
+    def prepare_email_content_for_order_summary(self, deal, email_type = ''):
+        order = deal.get_order()
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
-            'customer_name': deal.customer.name
+            'customer_name': deal.customer.name,
+            'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
+            'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
-        message = self.get_message_templates(type = 'order')               
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        if 'team notification' in email_type.lower():
+            ctx['deal_url'] = '{}/health-insurance/deals/{}'.format(settings.DOMAIN, deal.pk)
+            message = self.get_message_templates(type = 'order confirmation team notification')
+        else:
+            message = self.get_message_templates(type = 'order')
+        
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_final_quote(self, deal, quote):
+        order = deal.get_order()
         quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name,
             'quote_url' : quote_url,
+            'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
+            'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
         message = self.get_message_templates(type = 'Final Quote')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_final_quote_submitted(self, deal):
+        order = deal.get_order()
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
-            'customer_name': deal.customer.name
+            'customer_name': deal.customer.name,
+            'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
+            'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
         message = self.get_message_templates(type = 'Final Quote Submitted')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_payment(self, deal, quote):
         order = deal.get_order()
@@ -248,13 +230,7 @@ class SendHealthInsuranceEmail:
 
         message = self.get_message_templates(type = 'payment')
         #text_template = get_template('email/heath_insurance_final_quote.html')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
     
     def prepare_email_content_for_payment_confirmation(self, deal):
         order = deal.get_order()
@@ -264,13 +240,7 @@ class SendHealthInsuranceEmail:
             'customer_name': deal.primary_member.name,            
         }
         message = self.get_message_templates(type = 'payment confirmation')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_policy_issuance(self, deal, quote):
         quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
@@ -283,13 +253,7 @@ class SendHealthInsuranceEmail:
         insurer = order.selected_plan.plan.insurer if order else ''
         message = self.get_message_templates(type = 'policy issuance', insurer = insurer)
         #text_template = get_template('email/heath_insurance_policy_issuance.html')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
     def prepare_email_content_for_housekeeping(self, deal):
         ctx = {
@@ -298,13 +262,7 @@ class SendHealthInsuranceEmail:
         }
 
         message = self.get_message_templates(type = 'housekeeping')
-        template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
 
     def prepare_email_content_for_deal_won(self, deal):
@@ -315,12 +273,7 @@ class SendHealthInsuranceEmail:
 
         message = self.get_message_templates(type = 'deal won')
         template = Template(message.get('email_content'))
-        message['email_content'] = template.render(Context(ctx))
-        template = Template(message.get('subject'))
-        message['subject'] = template.render(Context(ctx))
-        template = Template(message.get('wa_msg_content'))
-        message['wa_msg_content'] = template.render(Context(ctx))
-        return message
+        return self.render_context(message, ctx)
 
     def append_required_helpers_in_content(self, content):
         required_helpers = "{% load humanize %}{% load motorinsurance %}"

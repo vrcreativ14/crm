@@ -497,10 +497,9 @@ class StageEmailNotification(AuditTrailMixin):
         quote = kwargs.get('quote')
         emailer = SendHealthInsuranceEmail(Company.objects.last())
     
-        quote = Quote.objects.filter(deal = deal)
-        quote = quote[0] if quote.exists() else None
+        quote = deal.get_quote()
     
-        if email_type == 'new_deal' or email_type == 'new' or email_type == 'new deal':
+        if email_type == 'new_deal' or email_type == 'new' or email_type == 'new deal' or email_type == 'basic new deal':
             setattr(deal, 'company', Company.objects.last())
             message = emailer.prepare_email_content_for_new_deal(deal)
             subject = message.get('subject')
@@ -512,8 +511,8 @@ class StageEmailNotification(AuditTrailMixin):
             subject = message.get('subject')
             content = message.get('email_content')
 
-        elif email_type == 'order_confirmation':
-            message = emailer.prepare_email_content_for_order_summary(deal)
+        elif email_type == 'order_confirmation' or email_type == 'order confirmation team notification':
+            message = emailer.prepare_email_content_for_order_summary(deal, email_type)
             subject = message.get('subject')
             content = message.get('email_content')
 
@@ -525,7 +524,7 @@ class StageEmailNotification(AuditTrailMixin):
         elif email_type == 'final_quote_submitted':
             message = emailer.prepare_email_content_for_final_quote_submitted(deal)
             subject = message.get('subject')
-            content = message.get('email_content')           
+            content = message.get('email_content')
 
         elif email_type == 'payment':
             message = emailer.prepare_email_content_for_payment(deal, quote)

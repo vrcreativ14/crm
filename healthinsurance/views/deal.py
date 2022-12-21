@@ -319,9 +319,10 @@ class NewHealthDeal(View):
                     if quote:
                         response['quote_reference_number'] = quote.reference_number
                 if request.POST.get('referrer') and deal.primary_member.email:
-                    # if deal.stage == STAGE_BASIC:
-                    #     email_notification(deal, 'basic new deal', deal.primary_member.email)
-                    # else:
+                    email_notification(deal, 'new deal internal notification', 'solutions@nexusadvice.com')
+                    if deal.stage == STAGE_BASIC:
+                        email_notification(deal, 'basic new deal', deal.primary_member.email)
+                    else:
                         email_notification(deal, 'new deal', deal.primary_member.email)
                     
                 log_user_activity(user, self.request.path, 'C', deal)
@@ -1523,7 +1524,7 @@ class StageProcessView(View):
                 #1. sending order confirmation email to customer
                 email_notification(deal, 'order_confirmation', deal.primary_member.email)
                 #2. sending order confirmation email to ind.medical
-                email_notification(deal, 'order confirmation team notification', 'ind.medical@nexusadvice.com')
+                email_notification(deal, 'order confirmation team notification', 'solutions@nexusadvice.com')
                 email_sent = True
             
         elif stage == STAGE_FINAL_QUOTE:
@@ -1539,6 +1540,7 @@ class StageProcessView(View):
             deal.status = STATUS_US
             if deal.primary_member.email:
                 email_notification(deal, 'final_quote_submitted', deal.primary_member.email)
+                email_notification(deal, 'final quote signed internal notification', 'solutions@nexusadvice.com')
                 email_sent = True
         
         elif stage == STAGE_PAYMENT:
@@ -1556,6 +1558,7 @@ class StageProcessView(View):
             deal.status = STATUS_US
             if deal.primary_member.email:
                 email_notification(deal, 'payment_confirmation', deal.primary_member.email)
+                email_notification(deal, 'payment proof uploaded internal notification', 'solutions@nexusadvice.com')
                 email_sent = True
         
         
