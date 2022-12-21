@@ -4,9 +4,11 @@
 data-toggle="modal" class="health-policy-row">    
     <td class="capitalize"><span class="stage-icon status-{{policy.get_policy_expiry_status}}"></span>{{policy.get_policy_expiry_status}}</td>
     <td class="link capitalize">{{ policy.policy_number }}</td>
-    <td class="link capitalize">{{ policy.health_policy_deal }}</td>
+    <td class="link capitalize">
+        {% if policy.deal %}{{ policy.deal }}{% else %} - {% endif %}
+    </td>
     <td class="link capitalize">{{ policy.customer.name }}</td>
-    <td class="link capitalize">{% if policy.user %}{{ policy.user }} {% else %} - {% endif %}</td>
+    <td class="link capitalize">{% if policy.referrer %}{{ policy.referrer }} {% else %} - {% endif %}</td>
     <td class="link capitalize">{{ policy.health_policy_deal.selected_plan }}</td>
     <td class="link capitalize">{{ policy.total_premium_vat_inc }} {% if policy.health_policy_deal %} {{policy.health_policy_deal.selected_plan.currency}} {% else %} AED {% endif %}</td>    
     <td class="link capitalize" data-sort="{{ policy.start_date | date:'Ymd' }}" data-search="{{ policy.start_date | date:'Ymd' }}" {{ policy.start_date }}>
@@ -15,9 +17,5 @@ data-toggle="modal" class="health-policy-row">
     <td class="link capitalize" data-sort="{{ policy.start_date | date:'Ymd' }}" data-search="{{ policy.start_date | date:'Ymd' }}" {{ policy.start_date }}>
         {{ policy.expiry_date }}       
     </td>
-    
-     
-    
-    
 </tr>
 {% endfor %}
