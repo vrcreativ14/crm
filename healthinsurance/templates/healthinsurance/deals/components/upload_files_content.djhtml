@@ -10,8 +10,8 @@
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="confirmation_of_cover" name="Confirmation of Cover" doc_name="confirmation of cover" upload_type="policy_documents" %}
         {% if not is_producer %}
             {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="credit_note" name="Credit Note" doc_name="credit note" upload_type="policy_documents" %}
+            {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other_document" name="Other Documents" doc_name="other document" upload_type="policy_documents" %}
         {% endif %}
-        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other_document" name="Other Documents" doc_name="other document" upload_type="policy_documents" %}
     </div>
     <script>
         function downloadAllPolicyDocuments(e){

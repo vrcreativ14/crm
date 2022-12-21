@@ -54,8 +54,8 @@ right: 15px;
                                     <span class="icon-text">Drag and Drop or Browse</span>
                         </div>
                     {% else %}
-                        <div class="upload-file" >
-                            <span class="heading">{{name}}</span><br/>                                 
+                        <div class="upload-file">
+                            <span class="heading">{{name}}</span><br/>
                         </div>
                     {% endif %}
                 <i><div id="uploading_progress_{{data_type}}" class="text-center"></div></i>

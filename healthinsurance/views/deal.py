@@ -1967,7 +1967,9 @@ class DocumentsZipFile(View):
             zip_filename = 'deal_{0}_documents_{1}.zip'.format(type,deal.primary_member.name.lower())
         
         if type == 'policy':
-            policy_documents = ['receipt_of_payment','tax_invoice','certificate_of_insurance','medical_card','confirmation_of_cover','credit_note','other_document']            
+            policy_documents = ['receipt_of_payment','tax_invoice','certificate_of_insurance','medical_card','confirmation_of_cover']
+            if not request.user.userprofile.has_producer_role():
+                policy_documents.extend(['credit_note','other_document'])
             policy = HealthPolicy.objects.filter(deal = deal)
             policy = policy[0] if policy.exists() else None
             policy_files = None
