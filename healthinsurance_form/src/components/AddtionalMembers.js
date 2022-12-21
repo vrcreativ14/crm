@@ -68,16 +68,16 @@ const AddtionalMemebers = ({formData,setFormData}) => {
                         <h4 className='mb-4'>Member {index+1}</h4>
                         <div className='bg-white p-2 p-md-4'>
                             <div className='select-member'><FormFields index={index} indexName={"relation"} updateStateData={updateStateData} type="radio" name={"member-relation"} options={members} formData={(index in memberData) ? memberData[index]:{}}/></div>
-                            <FormFields index={index} indexName="name" updateStateData={updateStateData} type="text" name={"member-name"} labelName="Full Name" placeholder="Enter First name and Last name" formData={(index in memberData) ? memberData[index]:{}}/>
-                            <FormFields index={index} indexName="dob" updateStateData={updateStateData} type="date" name={"member-dob"} labelName="Date of Birth" formData={(index in memberData) ? memberData[index]:{}}/>
+                            <FormFields index={index} indexName="name" updateStateData={updateStateData} type="text" name={"member-name"} labelName="Full name" placeholder="Enter first name and last name" formData={(index in memberData) ? memberData[index]:{}}/>
+                            <FormFields index={index} indexName="dob" updateStateData={updateStateData} type="date" name={"member-dob"} labelName="Date of birth" formData={(index in memberData) ? memberData[index]:{}}/>
                             <FormFields index={index} indexName="nationality" updateStateData={updateStateData} type="flag" name={"member-nationality"} labelName="Nationality" placeholder="Select the country" defaultValue={('nationality' in formData) ? formData.nationality:false} formData={(index in memberData) ? memberData[index]:{}}/>
-                            <FormFields index={index} indexName="country_of_stay" updateStateData={updateStateData} type="flag" name={"member-country_of_stay"} labelName="Country of Residence" placeholder="Select the country" defaultValue={('country_of_stay' in formData) ? formData.country_of_stay:false} formData={(index in memberData) ? memberData[index]:{}}/>
+                            <FormFields index={index} indexName="country_of_stay" updateStateData={updateStateData} type="flag" name={"member-country_of_stay"} labelName="Country of residence" placeholder="Select the country" defaultValue={('country_of_stay' in formData) ? formData.country_of_stay:false} formData={(index in memberData) ? memberData[index]:{}}/>
                         </div>
                     </div>
                 </div>
             )
         }):null}
-        <button type="button" className="btn-nexus btn-golden mt-2" onClick={() => handleAddMembers()}>Add {(totalMembers>0) && 'another '}Member</button>
+        <button type="button" className="btn-nexus btn-golden mt-2" onClick={() => handleAddMembers()}>Add {(totalMembers>0) && 'another '}member</button>
         </>
     )
 }

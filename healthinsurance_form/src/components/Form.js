@@ -246,17 +246,17 @@ const Form = () => {
                     <form onSubmit={(event) => handleSubmit(event)} action='' method='post'>
                         <div ref={primaryRef} onClick={() => setCurrentSection(1)}>
                             <h4 className="sub-title">Primary member details</h4>
-                            <FormFields type="text" name="name" labelName="Full Name" placeholder="Enter First Name and Last Name" formData={formData} setFormData={setFormData}/>
-                            <FormFields type="text" name="phone" labelName="Phone" placeholder="Enter Phone Number" formData={formData} setFormData={setFormData}/>
-                            <FormFields type="email" name="email" labelName="Email" placeholder="Enter Email Address" formData={formData} setFormData={setFormData}/>
+                            <FormFields type="text" name="name" labelName="Full name" placeholder="Enter first name and last name" formData={formData} setFormData={setFormData}/>
+                            <FormFields type="text" name="phone" labelName="Phone" placeholder="Enter phone number" formData={formData} setFormData={setFormData}/>
+                            <FormFields type="email" name="email" labelName="Email" placeholder="Enter email address" formData={formData} setFormData={setFormData}/>
                             <FormFields type="select" name="gender" labelName="Gender" options={gender} formData={formData} setFormData={setFormData}/>
-                            <FormFields type="select" name="marital_status" labelName="Marital Status" options={status} formData={formData} setFormData={setFormData}/>
-                            <FormFields type="date" name="dob" labelName="Date of Birth" formData={formData} setFormData={setFormData}/>
+                            <FormFields type="select" name="marital_status" labelName="Marital status" options={status} formData={formData} setFormData={setFormData}/>
+                            <FormFields type="date" name="dob" labelName="Date of birth" formData={formData} setFormData={setFormData}/>
                             <FormFields type="flag" name="nationality" labelName="Nationality" placeholder="Select the country" formData={formData} setFormData={setFormData} defaultValue={('nationality' in formData) ? formData.nationality:false}/>
                             {/* <FormFields country_of_stay={true} type="flag" name="country_of_stay" labelName="Country of Residence" placeholder="Select the country" formData={formData} setFormData={setFormData}/> */}
-                            <FormFields type="flag" name="country_of_stay" labelName="Country of Residence" placeholder="Select the country" formData={formData} setFormData={setFormData} defaultValue={('country_of_stay' in formData) ? formData.country_of_stay:false}/>
+                            <FormFields type="flag" name="country_of_stay" labelName="Country of residence" placeholder="Select the country" formData={formData} setFormData={setFormData} defaultValue={('country_of_stay' in formData) ? formData.country_of_stay:false}/>
                             {(!formData || !('country_of_stay' in formData) || ('country_of_stay' in formData && formData.country_of_stay=='AE')) && <FormFields type="select" name="visa" labelName="Visa" options={visa} formData={formData} setFormData={setFormData}/>}
-                            <FormFields type="select" name="salary_band" labelName="Salary Band" options={('country_of_stay' in formData && formData.country_of_stay in salary) ? salary[formData.country_of_stay]:salary['AE']} formData={formData} setFormData={setFormData}/>
+                            <FormFields type="select" name="salary_band" labelName="Salary band" options={('country_of_stay' in formData && formData.country_of_stay in salary) ? salary[formData.country_of_stay]:salary['AE']} formData={formData} setFormData={setFormData}/>
                         </div>
                         <div ref={memberRef} className="mb-5 mt-5 pt-3 pb-4" onClick={() => setCurrentSection(2)}>
                             <h4 className="sub-title mb-2">Any additional members to be added?</h4>
@@ -266,10 +266,10 @@ const Form = () => {
                             <h4 className="sub-title">Policy coverage</h4>
                             {(deal_id) ? <div className='outline-highlight'><FormFields type="select" name="level_of_cover" labelName="Type of Cover" options={cover} formData={formData} setFormData={setFormData}/></div>:<FormFields type="select" name="level_of_cover" labelName="Type of Cover" options={cover} formData={formData} setFormData={setFormData}/>
                             }
-                            <FormFields type="select" name="geographical_coverage" labelName="Geographical Coverage" options={geo} formData={formData} setFormData={setFormData}/>
-                            <FormFields isRequired={false} type="multipleSelect" name="additional_benefits" labelName="Additional Benefits" options={benefits} formData={formData} setFormData={setFormData} isMultiple={true}/>
-                            {('additional_benefits' in formData && formData.additional_benefits.filter((benefits) => benefits == 'other').length>0) && <FormFields type="text" name="other_benefits" labelName="Other Benefits" formData={formData} setFormData={setFormData} placeholder="Enter other benefits"/>}
-                            {(deal_id) ? <div className='outline-highlight'><FormFields type="select" name="indicative_budget" labelName="Indicative Budget" options={buget} formData={formData} setFormData={setFormData}/></div>:<FormFields type="select" name="indicative_budget" labelName="Indicative Budget" options={buget} formData={formData} setFormData={setFormData}/>}
+                            <FormFields type="select" name="geographical_coverage" labelName="Geographical coverage" options={geo} formData={formData} setFormData={setFormData}/>
+                            <FormFields isRequired={false} type="multipleSelect" name="additional_benefits" labelName="Additional benefits" options={benefits} formData={formData} setFormData={setFormData} isMultiple={true}/>
+                            {('additional_benefits' in formData && formData.additional_benefits.filter((benefits) => benefits == 'other').length>0) && <FormFields type="text" name="other_benefits" labelName="Other benefits" formData={formData} setFormData={setFormData} placeholder="Enter other benefits"/>}
+                            {(deal_id) ? <div className='outline-highlight'><FormFields type="select" name="indicative_budget" labelName="Indicative budget" options={buget} formData={formData} setFormData={setFormData}/></div>:<FormFields type="select" name="indicative_budget" labelName="Indicative budget" options={buget} formData={formData} setFormData={setFormData}/>}
                             <FormFields isRequired={false} type="date" name="start_date" labelName="When would you like the policy to start" formData={formData} setFormData={setFormData}/>
                             <FormFields isRequired={false} type="textarea" name="preferred_hospitals" placeholder='Please seperate hospital or clinic name by comma for multiple values.' labelName="Preferred Hospitals/ Clinics" formData={formData} setFormData={setFormData}/>
                         </div>

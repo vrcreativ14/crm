@@ -4,6 +4,7 @@ import Header from './Header';
 import ContentHeader from './ContentHeader';
 import BGImage from '../assets/bg-img.svg'
 import Message from '../assets/Message.svg'
+import ContactForm from '../components/ContactForm';
 
 const Layout = ({children,currentTab,name,stepContent,comparison = false}) => {
 	return(
@@ -24,7 +25,9 @@ const Layout = ({children,currentTab,name,stepContent,comparison = false}) => {
 			</div>
 			<div className={comparison ? 'message active':'message active'}>
 				<a href="tel:97142378294"><img src={Message}/></a>
+				{/* <a href="tel:97142378294" data-toggle="modal" data-target="#exampleModal"><img src={Message}/></a> */}
 			</div>
+			<ContactForm />
 		</main>
 		</>
 	)

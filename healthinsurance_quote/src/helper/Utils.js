@@ -2,6 +2,7 @@ import React from 'react'
 import { Countries } from './Countries'
 
 export const CurrencyFormat = (num,noDecimal = false,currentSymbol = 'AED') => {
+    if(isNaN(num))return num
     const price = parseFloat(num)
     let isInt = false
     if (Number.isInteger(num)) {
