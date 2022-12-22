@@ -69,17 +69,18 @@ def CreateBasicQuote(request, deal):
         deal.status = STATUS_CLIENT
         deal.stage = STAGE_BASIC
         sub_stage = deal.current_sub_stage
+        plan_applicable_visa = get_deal_visa(deal.primary_member.visa)
         plans = Plan.objects.filter(coverage_type = 'basic')
         if not sub_stage:
             substage = SubStage.objects.create(deal = deal, stage = STAGE_BASIC, sub_stage = BASIC_QUOTED)
         else:
             substage.stage = STAGE_BASIC
             substage.sub_stage = BASIC_QUOTED
-
+        '''basic plan premium is being fetched from plan model as a string field
+           so it is not saved here in QuotedPlan'''
         for rqp in plans:
-            if rqp:
-                new_qp = QuotedPlan(quote=quote, plan_id=rqp.id,                            
-                total_premium = rqp.basic_plan_premium,
+            if rqp and rqp.applicable_visa.all().filter(name = plan_applicable_visa).exists():
+                new_qp = QuotedPlan(quote=quote, plan_id=rqp.id,
                 area_of_cover = rqp.area_of_cover.all().first(),
                 consultation_copay = rqp.consultation_copay.all().first(),
                 pharmacy_copay = rqp.pharmacy_copay.all().first(),
@@ -319,7 +320,7 @@ class NewHealthDeal(View):
                     if quote:
                         response['quote_reference_number'] = quote.reference_number
                 if request.POST.get('referrer') and deal.primary_member.email:
-                    email_notification(deal, 'new deal internal notification', 'solutions@nexusadvice.com')
+                    email_notification(deal, 'new deal internal notification', 'ind.medical@nexusadvice.com')
                     if deal.stage == STAGE_BASIC:
                         email_notification(deal, 'basic new deal', deal.primary_member.email)
                     else:
@@ -928,7 +929,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'insurer_id' : qp.plan.insurer.id,
                     'plan_logo': qp.plan.insurer.logo.url,
                     'plan_name': qp.plan.name,                    
-                    'total_premium': "{:,}".format(qp.total_premium),
+                    'total_premium': qp.total_premium if type(qp.total_premium) == str else "{:,}".format(qp.total_premium),
                     'currency': qp.plan.currency,
                     'payment_frequency': qp.payment_frequency.id if qp.payment_frequency else '',
                     'area_of_cover': qp.area_of_cover.id if qp.area_of_cover else '',
@@ -1477,6 +1478,8 @@ class StageProcessView(View):
                         if form.is_valid():
                             order = form.save()
                             deal.status = STATUS_CLIENT
+                            #sending order confirmation email to ind.medical
+                            email_notification(deal, 'order confirmation team notification', 'ind.medical@nexusadvice.com')
                             # if selected_plan.is_renewal_plan:
                             #     deal.deal_type = DEAL_TYPE_RENEWAL
 
@@ -1523,8 +1526,6 @@ class StageProcessView(View):
             if deal.primary_member.email:
                 #1. sending order confirmation email to customer
                 email_notification(deal, 'order_confirmation', deal.primary_member.email)
-                #2. sending order confirmation email to ind.medical
-                email_notification(deal, 'order confirmation team notification', 'solutions@nexusadvice.com')
                 email_sent = True
             
         elif stage == STAGE_FINAL_QUOTE:
@@ -1540,7 +1541,7 @@ class StageProcessView(View):
             deal.status = STATUS_US
             if deal.primary_member.email:
                 email_notification(deal, 'final_quote_submitted', deal.primary_member.email)
-                email_notification(deal, 'final quote signed internal notification', 'solutions@nexusadvice.com')
+                email_notification(deal, 'final quote signed internal notification', 'ind.medical@nexusadvice.com')
                 email_sent = True
         
         elif stage == STAGE_PAYMENT:
@@ -1558,7 +1559,7 @@ class StageProcessView(View):
             deal.status = STATUS_US
             if deal.primary_member.email:
                 email_notification(deal, 'payment_confirmation', deal.primary_member.email)
-                email_notification(deal, 'payment proof uploaded internal notification', 'solutions@nexusadvice.com')
+                email_notification(deal, 'payment proof uploaded internal notification', 'ind.medical@nexusadvice.com')
                 email_sent = True
         
         
