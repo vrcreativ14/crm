@@ -153,12 +153,14 @@ producer_not_allowed_to = {
     'create_banks': False,
     'delete_banks': False,
     'edit_banks' : False,
-    "search_mortgage_deals":False,
+    "search_mortgage_deals": False,
 
     #issued
-    'list_mortgage_issued':False,
+    'list_mortgage_issued': False,
     'search_mortgage_issued': False,
 
+    #health-insurance policies
+    'list_health_policies': False
 }
 
 def get_role_permissions(permissions_not_allowed=None):
