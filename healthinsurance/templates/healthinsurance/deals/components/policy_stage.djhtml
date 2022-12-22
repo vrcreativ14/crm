@@ -2,7 +2,7 @@
 {% load humanize %}
 
 <div class="container">
-    
+    {% if not request.user.userprofile.has_producer_role %}
     {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
 
     <div class="heading m-b-5">Policy Details</div>
@@ -118,5 +118,5 @@
         ed.value = date.toISOString().split("T")[0];
     })
 </script>
+{% endif %}
 </div>
-

@@ -2,13 +2,11 @@
 {% load humanize %}
 
 <div class="container">
+    {% if not request.user.userprofile.has_producer_role %}
     {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
     
     <div class="row">
         <div class="col-lg-6">
-
-       
-    
 </div>
 </div>
 <!-- <div class="heading m-b-5">Sub Stages</div> -->
@@ -49,6 +47,7 @@
 </div>
 
 {% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
+{% endif %}
 </div>
     <div>
         <!-- <button class="loader-blue quote-submit m-r-10 float-right btn btn-nexus-golden btn-md btn-wide-deal">
