@@ -35,7 +35,7 @@
     <div class="row">
             <div class="product col-lg-2 col-md-2 m-l-30" data-id={{ index }}>
         
-                <div class="product-logo-container ">
+                <div class="product-logo-container">
                     <span class="spacer"></span>
                     <img src="{{  order.selected_plan.plan.insurer.logo.url }}" style="width:100px;height:100px;">
                 </div>
@@ -71,7 +71,7 @@
 
 
 <div class="tab-pane fade substage_2 {% if sub_stage_number == 1 or sub_stage_number == 2 %}show active {% endif %}" role="tabpanel" aria-labelledby="world-check-tab">
-    <form action="POST" class="">
+    <form action="POST">
     <div class="row">
         <div class="col-lg-3">
            <label>Upload world check proof</label>
@@ -81,6 +81,16 @@
         </div>
     </div>
     <br/>
+    <div class="row">
+        <div class="col-lg-3">Documents Verified?</div>
+        <div class="col-lg-3">
+            <input type="radio" id="document_verified" name="is_document_verified" class="required" value="1" />
+            <label for="document_verified">Yes</label>
+
+            <input class="m-l-20" type="radio" id="document_not_verified" name="is_document_verified" class="required" value="0"/>
+            <label for="document_not_verified">No</label>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-3">Was there a hit?</div>
         <div class="col-lg-3">
@@ -110,6 +120,7 @@
 </div>
 
 <div class="tab-pane fade substage_3 {% if sub_stage_number == 3 %}show active {% endif %}" role="tabpanel" aria-labelledby="send-tab">
+    {% if not request.user.userprofile.has_producer_role %}
     <form action="POST" class="">
     <div class="row m-b-5">
     
@@ -117,7 +128,7 @@
             <div class="form-check">
             <input class="form-check-input required" type="checkbox" value="" name="documents_verified" id="documents_verified" required>
             <label class="form-check-label">
-                Documents have been verified and sent to the insurer?
+                Documents have been sent to the insurer?
             </label>
         </div>
         </div>
@@ -126,10 +137,28 @@
     </div>
     {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' action='next-substage' class="btn-nexus btn-nexus-blue next-substage float-right" %}
 </form>
+{% endif %}
 </div>
 
 </div>
- 
+ <script>
+    $('.next-substage').on('click', function(){
+        debugger
+        if ($('#document_not_verified').prop('checked') == true){
+            Utilities.Notify.error('Please verify documents to proceed further', 'Error');
+            return false
+        }
+        else
+        $('.ui-pnotify-container').addClass('hide')
+        is_approved = $('input[name="approved_by_compliance"]:checked').val()
+        if(is_approved == 'no' || is_approved == 'pending'){
+            Utilities.Notify.info('Please contact the compliance team', 'Stage not updated');
+            return false
+        }
+        else
+        $('.ui-pnotify-container').addClass('hide')
+    })
+ </script>
     
 </div>
 {% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
