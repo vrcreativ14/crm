@@ -666,7 +666,10 @@ a{
                            <div class="heading">Primary Member Details</div>
                         </div>
                         <a class="font-12 fw-400" href="{% url 'customers:edit' pk=deal.customer.pk %}">
-                            View Customer</a>
+                            {% if user|can:'list_customers' %}
+                                View Customer 
+                            {% endif %}
+                        </a>
                     </div>
 
                     <div class="info-table ">
@@ -938,11 +941,19 @@ a{
                                 Reopen
                             </button>
                             {% else %}
-                            <button type="button" data-id="{{ deal.pk }}"
-                                    class="m-b-20 btn-sm btn btn-outline-danger float-right btn-fit open-lost-deal">
-                                Mark as Lost
-                            </button>
-                            
+                            {% if request.user.userprofile.has_producer_role %}
+                                {% if stage_number <= 3 and sub_stage_number <= 2 %}
+                                <button type="button" data-id="{{ deal.pk }}"
+                                        class="m-b-20 btn-sm btn btn-outline-danger float-right btn-fit open-lost-deal">
+                                    Mark as Lost
+                                </button>
+                                {% endif %}
+                            {% else %}
+                                <button type="button" data-id="{{ deal.pk }}"
+                                        class="m-b-20 btn-sm btn btn-outline-danger float-right btn-fit open-lost-deal">
+                                    Mark as Lost
+                                </button>
+                            {% endif %}
                             {% endif %}
                         </div>
                     </div>
