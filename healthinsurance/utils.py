@@ -215,7 +215,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "wellness_benefits":qp.wellness_benefits.benefit if qp.wellness_benefits else '',
                     "alternative_medicine":qp.alternative_medicine.medicine if qp.alternative_medicine else '',
                     "physiotherapy":qp.physiotherapy.sessions if qp.physiotherapy else '',
-                    "total_premium":qp.total_premium,
+                    "total_premium": qp.plan.basic_plan_premium if quote.deal.stage == STAGE_BASIC else qp.total_premium,
                     "is_renewal":qp.is_renewal_plan,
                     "network_list_inpatient":qp.plan.network_list_inpatient.url if qp.plan.network_list_inpatient else '',
                     "network_list_outpatient":qp.plan.network_list_outpatient.url if qp.plan.network_list_outpatient else '',
@@ -227,7 +227,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "currency":qp.plan.currency,
                     "is_repatriation_benefit_enabled":qp.is_repatriation_benefit_enabled,
                 }
-                if qp.plan.is_repatriation_benefit_enabled:
+                if qp.is_repatriation_benefit_enabled and qp.plan.is_repatriation_benefit_enabled:
                     plan_data.update({
                         'repatriation_benefits': qp.plan.repatriation_benefits
                     })
