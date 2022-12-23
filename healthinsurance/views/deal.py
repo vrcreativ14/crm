@@ -1540,8 +1540,8 @@ class StageProcessView(View):
             to_sub_stage = FINAL_QUOTE_SEND_TO_INSURER
             deal.status = STATUS_US
             if deal.primary_member.email:
-                email_notification(deal, 'final_quote_submitted', deal.primary_member.email)
-                email_notification(deal, 'final quote signed internal notification', 'ind.medical@nexusadvice.com')
+                email_notification(deal, 'final_quote_submitted', deal.primary_member.email, cc_emails=['ind.medical@nexusadvice.com'])
+                #email_notification(deal, 'final quote signed internal notification', 'ind.medical@nexusadvice.com')   #CC Emails to ind.medical instead of different email
                 email_sent = True
         
         elif stage == STAGE_PAYMENT:
@@ -1558,8 +1558,8 @@ class StageProcessView(View):
             to_sub_stage = PAYMENT_SEND_TO_INSURER
             deal.status = STATUS_US
             if deal.primary_member.email:
-                email_notification(deal, 'payment_confirmation', deal.primary_member.email)
-                email_notification(deal, 'payment proof uploaded internal notification', 'ind.medical@nexusadvice.com')
+                email_notification(deal, 'payment_confirmation', deal.primary_member.email, cc_emails=['ind.medical@nexusadvice.com'])
+                #email_notification(deal, 'payment proof uploaded internal notification', 'ind.medical@nexusadvice.com')  #CC Emails to ind.medical instead of different email
                 email_sent = True
         
         
