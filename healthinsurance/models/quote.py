@@ -32,28 +32,19 @@ class PaymentDetails(models.Model):
 class Quote(AuditTrailMixin, models.Model):
     STATUS_PUBLISHED = 'published'
     STATUS_UNPUBLISHED = 'unpublished'
-
     STATUSES = (
         (STATUS_PUBLISHED, 'Published'),
         (STATUS_UNPUBLISHED, 'Unpublished'),
     )
-
     company = models.ForeignKey('accounts.Company', on_delete=models.CASCADE, related_name='health_insurance_company')
     deal = models.OneToOneField(Deal, on_delete=models.CASCADE, related_name="health_quote_deals")
-
-    status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=STATUSES)    
-
+    status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=STATUSES)
     outdated = models.BooleanField(default=False)
-
     is_deleted = models.BooleanField(default=False)
-
     reference_number = models.CharField(max_length=FIELD_LENGTHS['reference_numbers'])
     selected_plan_details = JSONField(default=None, null=True)
-
     note = models.TextField(blank=True)
-
     number_of_views = models.PositiveIntegerField(default=0)
-
     expiry_date = models.DateField(default=default_expiry_date)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -191,11 +182,9 @@ class QuotedPlan(AuditTrailMixin, models.Model):
         (STATUS_PUBLISHED, 'Published'),
         (STATUS_DELETED, 'Deleted')
     )
-
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE, related_name='health_insurance_quote')
-
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE, related_name='health_quoted_plan')
-    total_premium = models.DecimalField(max_digits=10, decimal_places=2)
+    total_premium = models.DecimalField(max_digits=10, decimal_places=2, blank = True, default=0)
     #insurer_quote_reference = models.CharField(max_length=FIELD_LENGTHS['reference_numbers'], blank=True)
     payment_frequency = models.ForeignKey(PaymentFrequency, on_delete=models.SET_NULL, null=True, related_name="qp_payment_fequency")
     area_of_cover = models.ForeignKey(Area_Of_Cover, on_delete=models.SET_NULL, null=True, related_name="qp_area_of_cover")
@@ -239,23 +228,15 @@ class Order(AuditTrailMixin, models.Model):
         (STATUS_PAID, 'Paid'),
         (STATUS_UNPAID, 'Unpaid'),
     )
-
     status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=STATUSES, default=STATUS_UNPAID)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-
     is_void = models.BooleanField(default=False)
-
     deal = models.ForeignKey(Deal, on_delete=models.CASCADE, related_name="health_order")
     selected_plan = models.ForeignKey(QuotedPlan, on_delete=models.CASCADE)
-    
-
     policy_start_date = models.DateField(blank=True)
-    
-
     payment_amount = models.DecimalField(max_digits=9, decimal_places=2, blank = True)
     discount = models.DecimalField(max_digits=9, decimal_places=2, default=0, blank = True)
-
     created_by_agent = models.BooleanField(default=True)
 
     def __str__(self):
@@ -271,10 +252,6 @@ class Order(AuditTrailMixin, models.Model):
         #         raise IntegrityError('There can only be one non-void order per deal')
 
         super(Order, self).save(*args, **kwargs)
-
-
-
- 
 
     def get_pdf_url(self):
         return "https://{}{}".format(

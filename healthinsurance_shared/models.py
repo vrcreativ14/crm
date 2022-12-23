@@ -221,7 +221,7 @@ class Plan(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     coverage_type = models.CharField(max_length=15,choices = LEVEL_OF_COVER, default=COMPREHENSIVE, blank=True)
     basic_plan_url = models.CharField(max_length=500,blank=True, null=True)
-    basic_plan_premium = models.FloatField(blank=True, default=0.00)
+    basic_plan_premium = models.CharField(max_length=100,blank=True, null=True)
     insurer = models.ForeignKey(Insurer, on_delete=models.CASCADE, related_name="health_insurance_plan")
     logo = models.ImageField(upload_to='product-logos', storage=PUBLIC_STORAGE, blank = True)
     code = models.CharField(max_length=50, unique=True, blank = True)
@@ -274,7 +274,7 @@ class Plan(models.Model):
     repatriation_benefits = JSONField(help_text='repatriation_benefits', blank = True, null=True)
     popup_template = models.TextField(blank=True, null=True)
     #objects = PlanManager()
-    is_active.short_description = 'Status'
+    
     class Meta:
         ordering = ['-created_on']
 
