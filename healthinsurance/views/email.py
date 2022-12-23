@@ -475,7 +475,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
 
 class StageEmailNotification(AuditTrailMixin):
 
-    def __init__(self, deal, email_type, recipient, attachments=[], bcc_addresses=[],  request=None):
+    def __init__(self, deal, email_type, recipient, attachments=[], cc_addresses=[], bcc_addresses=[],  request=None):
         company = Company.objects.last()
         self.emailer = SendHealthInsuranceEmail(company)
         self.deal = deal
@@ -483,6 +483,7 @@ class StageEmailNotification(AuditTrailMixin):
         self.request = request
         self.context = {"customer_name": deal.customer.name if hasattr(deal, "customer") else ''}
         self.send_email = False
+        self.cc_addresses = cc_addresses
         self.bcc_addresses = bcc_addresses
         if not deal.customer.email:
             raise ValidationError("Email is required")
@@ -555,10 +556,15 @@ class StageEmailNotification(AuditTrailMixin):
         reply_to = HandleEmailContent._get_reply_to_for_deal(self.deal)
         cleaned_to = clean_and_validate_email_addresses(self.to_email)
         subject, content = self.GetEmailContent()
+        cc_addresses = self.cc_addresses
         try:
+            if len(cc_addresses):
+                cc_emails = ', '.join(
+                set(sorted(cc_addresses, key=lambda v: v, reverse=True)))
+
             self.emailer.send_general_email(
                 self.to_email, subject, content, from_email,
-                # cc_emails=clean_and_validate_email_addresses(cc_emails),
+                cc_emails=clean_and_validate_email_addresses(cc_emails),
                 # bcc_emails=clean_and_validate_email_addresses(bcc_emails),
                 reply_to=reply_to,
                 attachments=self.attachments
@@ -582,7 +588,7 @@ class StageEmailNotification(AuditTrailMixin):
                 text=content,
                 html=content,
                 deal = self.deal,
-                cc_addresses=[],
+                cc_addresses=cc_addresses,
                 # cc_addresses = ArrayField(base_field=models.EmailField()),
                 bcc_addresses=[],
                 # bcc_addresses = ArrayField(base_field=models.EmailField()),

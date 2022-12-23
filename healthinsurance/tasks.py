@@ -5,8 +5,8 @@ from celery import shared_task
 import time 
 
 @app.task
-def email_notification(deal, email_type, recipient):
+def email_notification(deal, email_type, recipient, cc_emails = []):
     logger = logging.getLogger('workers')
     logger.info('Sending an email notification to customer')
-    stage_email = StageEmailNotification(deal, email_type, recipient)
+    stage_email = StageEmailNotification(deal, email_type, recipient, cc_addresses = cc_emails)
     stage_email.stage_propagation_email()
