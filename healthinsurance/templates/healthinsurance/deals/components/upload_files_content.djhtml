@@ -207,7 +207,7 @@
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="world_check_proof" name="World Check Proof" doc_name="world check proof" upload_type="world_check_proof" %}
     {% endif %}
     {% if order and order_pdf_link and stage_number > 2 %}
-        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="order_confirmation" name="order confirmation" doc_name="order_confirmation" upload_type="order_confirmation" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="order_confirmation" name="Order Confirmation" doc_name="order_confirmation" upload_type="order_confirmation" %}
     {% endif %}
 </div>
     <script>

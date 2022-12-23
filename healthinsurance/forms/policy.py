@@ -42,7 +42,7 @@ class PolicyForm(forms.ModelForm):
 
 class PolicySearchAndOrderingForm(forms.Form):
     search_term = forms.CharField(label='Search for', required=False,
-                                  widget=forms.TextInput(attrs={'placeholder': 'Search by name, email or policy number'}))
+                                  widget=forms.TextInput(attrs={'placeholder': 'Search by policy number or customer name'}))
 
     created_on_after = forms.DateField(input_formats=['%d-%m-%Y'], label='Created on or after', required=False,
                                        widget=forms.TextInput(attrs={'class': 'form-control datepicker'}))

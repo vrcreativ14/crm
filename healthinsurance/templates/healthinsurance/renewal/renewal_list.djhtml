@@ -178,9 +178,6 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
           input[switch]:checked + label {
     background-color: #2f8ee0 !important;
 }
-.hidden{
-    display: none;
-}
 
 .felix-table-container{
         overflow: auto !important;
@@ -324,6 +321,9 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
     .table-filters form{
         width: 1830px;
     }
+    .table-filters .open-search-field input[type=text] {
+        width: 275px !important;
+    }
 </style>
 
 
@@ -365,6 +365,12 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
                         </span>
                     </div>                
             </div>
+            <div class="table-filters float-right m-r-25">
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+            </div>
         </div>
         <div class="clear"></div>
         {% include 'healthinsurance/deals/components/policy_modal.djhtml' %}
@@ -399,7 +405,7 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
                                 <th
                                     data-name="owner_name"
                                     class="">
-                                    Owner
+                                    Referrer
                                 </th>
                                 <th
                                     data-name="insurer"
@@ -451,6 +457,21 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
         });
 
         $('.ranges li').last().hide()
+
+        $('#id_search_term').on('change keyup',function(){
+            $('#id_assigned_to').val('');
+            $('#id_assigned_to_chosen .chosen-single span').html('Select user to filter/All users');
+            $('.quick-filters label').removeClass('active');
+            filtered = []
+            table.search($(this).val()).draw();
+        });
+
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        let searchTerm = $('#id_search_term').val()
+       if (~data[2].toLowerCase().indexOf(searchTerm)) return true;
+       if (~data[4].toLowerCase().indexOf(searchTerm)) return true;
+       return false;
+   })
 });
     </script>
 {% endblock %}
