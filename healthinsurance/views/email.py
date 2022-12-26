@@ -557,18 +557,28 @@ class StageEmailNotification(AuditTrailMixin):
         cleaned_to = clean_and_validate_email_addresses(self.to_email)
         subject, content = self.GetEmailContent()
         cc_addresses = self.cc_addresses
+        cc_emails = list()
         try:
             if len(cc_addresses):
                 cc_emails = ', '.join(
                 set(sorted(cc_addresses, key=lambda v: v, reverse=True)))
 
-            self.emailer.send_general_email(
-                self.to_email, subject, content, from_email,
-                cc_emails=clean_and_validate_email_addresses(cc_emails),
-                # bcc_emails=clean_and_validate_email_addresses(bcc_emails),
-                reply_to=reply_to,
-                attachments=self.attachments
-            )
+            if cc_emails:
+                self.emailer.send_general_email(
+                    self.to_email, subject, content, from_email,
+                    cc_emails=clean_and_validate_email_addresses(cc_emails),
+                    # bcc_emails=clean_and_validate_email_addresses(bcc_emails),
+                    reply_to=reply_to,
+                    attachments=self.attachments
+                )
+            else:
+                self.emailer.send_general_email(
+                    self.to_email, subject, content, from_email,
+                    # bcc_emails=clean_and_validate_email_addresses(bcc_emails),
+                    reply_to=reply_to,
+                    attachments=self.attachments
+                )
+
             success = True
 
             # if (email_type == 'new_quote' or email_type == 'quote_updated') and not deal.quote_sent:
