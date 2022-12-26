@@ -398,7 +398,7 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
                                 </th>
                                 <th>Renewal Deal</th>
                                 <th
-                                    data-name="customer__name"
+                                    data-name="primary_member__name"
                                     class="">
                                     Customer
                                 </th>

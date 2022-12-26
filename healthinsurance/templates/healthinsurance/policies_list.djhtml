@@ -392,6 +392,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .table-filters form{
         width: 1830px;
     }
+    .table-filters .open-search-field input[type=text] {
+        width: 275px !important;
+    }
 </style>
 
 
