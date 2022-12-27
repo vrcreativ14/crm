@@ -183,7 +183,7 @@ document.addEventListener('click',function(e){
          data: data,   
          contentType: "application/json; charset=utf-8",
          dataType: "json",
-         success: function(data){             
+         success: function(data){
              let res = data['results'];
              let len = res.length;
              let count = data['count']
@@ -219,7 +219,7 @@ document.addEventListener('click',function(e){
 
                 table_content += `<tr id='tr_${res[j]['id']}' data-url='${edit_url}'><td>`
                 table_content += `${res[j]['user']['first_name']} ${res[j]['user']['last_name']}<div class="text-muted font-12">${res[j]['user']['username']}</div></td>`
-                workspace = `${res[j]['allowed_workspaces']}`
+                workspace = res[j]['allowed_workspaces']
                 role = `${res[j]['role']}`
                 table_content += `<td>${workspace.length}</td>`
                 if (role && role != 'null')
