@@ -219,7 +219,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "is_renewal":qp.is_renewal_plan,
                     "network_list_inpatient":qp.plan.network_list_inpatient.url if qp.plan.network_list_inpatient else '',
                     "network_list_outpatient":qp.plan.network_list_outpatient.url if qp.plan.network_list_outpatient else '',
-                    "policy_wording":qp.plan.policy_wording.url if qp.plan.table_of_benefits else '',
+                    "policy_wording":qp.plan.policy_wording.url if qp.plan.policy_wording else '',
                     "table_of_benefits":qp.plan.table_of_benefits.url if qp.plan.table_of_benefits else '',
                     "maf":qp.plan.maf.url if qp.plan.maf else '',
                     "census":qp.plan.census.url if qp.plan.census else '',
