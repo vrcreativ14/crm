@@ -71,7 +71,7 @@
 
 
 <div class="tab-pane fade substage_2 {% if sub_stage_number == 1 or sub_stage_number == 2 %}show active {% endif %}" role="tabpanel" aria-labelledby="world-check-tab">
-    {% if not request.user.userprofile.has_producer_role %}    
+    {% if not request.user.userprofile.has_producer_role %}
         <form action="POST">
             <div class="row">
                 <div class="col-lg-3">

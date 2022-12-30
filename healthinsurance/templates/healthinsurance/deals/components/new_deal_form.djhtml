@@ -179,8 +179,8 @@ button > .multiselect-selected-text{
                         </div>
                         <div class="col-lg-6">
                             <select class="form-control" name="marital_status" required value="{{deal.primary_member.marital_status}}">
+                                <option value="single" {% if deal.primary_member.marital_status == 'single' %} selected {% endif %}>Single</option>
                                 <option value="married" {% if deal.primary_member.marital_status == 'married' %} selected {% endif %}>Married</option>
-                                <option value="single" {% if deal.primary_member.marital_status == 'single' %} selected {% endif %}>Unmarried</option>
                             </select>
                         </div>
                     </div>
@@ -726,8 +726,8 @@ button > .multiselect-selected-text{
                         <div class="col-lg-6">
                             <select class="form-control" name="marital_status" required>
                                 <option value="" selected disabled>Please select Marital Status</option>
+                                <option value="single">Single</option>
                                 <option value="married">Married</option>
-                                <option value="single">Unmarried</option>
                             </select>
                         </div>
                     </div>
