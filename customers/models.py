@@ -34,7 +34,7 @@ class Customer(AuditTrailMixin, models.Model):
 
     dob = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=GENDER_CHOICES, blank=True)
-    marital_status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=MARITAL_STATUS_LIST, blank=True)
+    marital_status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=MARITAL_STATUS_LIST, blank=True, null=True)
     nationality = models.CharField(max_length=2, choices=COUNTRIES, blank=True)
 
     created_on = models.DateTimeField(auto_now_add=True)
@@ -54,10 +54,13 @@ class Customer(AuditTrailMixin, models.Model):
         return "{} - {}".format(self.name, self.email)
 
     def save(self, entity=None, *args, **kwargs):
-        super(Customer, self).save(*args, **kwargs)
         self.entity = entity
+        if self.nationality and len(self.nationality) > 2:
+            searched_list = list(filter(lambda country: country[1] in self.nationality, COUNTRIES))
+            self.nationality = searched_list[0][0] if len(searched_list) > 0 else ''
         if hasattr( self, 'customer_mortgage_profiles'):
             self.entity = "Mortgage"
+        super(Customer, self).save(*args, **kwargs)
         Algolia().upsert_customer_record(self)
 
     def get_motor_deals(self):
