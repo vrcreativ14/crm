@@ -271,7 +271,7 @@ const Form = () => {
                             {('additional_benefits' in formData && formData.additional_benefits.filter((benefits) => benefits == 'other').length>0) && <FormFields type="text" name="other_benefits" labelName="Other benefits" formData={formData} setFormData={setFormData} placeholder="Enter other benefits"/>}
                             {(deal_id) ? <div className='outline-highlight'><FormFields type="select" name="indicative_budget" labelName="Indicative budget" options={buget} formData={formData} setFormData={setFormData}/></div>:<FormFields type="select" name="indicative_budget" labelName="Indicative budget" options={buget} formData={formData} setFormData={setFormData}/>}
                             <FormFields isRequired={false} type="date" name="start_date" labelName="When would you like the policy to start" formData={formData} setFormData={setFormData}/>
-                            <FormFields isRequired={false} type="textarea" name="preferred_hospitals" placeholder='Please seperate hospital or clinic name by comma for multiple values.' labelName="Preferred Hospitals/ Clinics" formData={formData} setFormData={setFormData}/>
+                            <FormFields isRequired={false} type="textarea" name="preferred_hospitals" placeholder='Please separate hospital or clinic name by comma for multiple values.' labelName="Preferred Hospitals/ Clinics" formData={formData} setFormData={setFormData}/>
                         </div>
                         <input type="hidden" name="referrer" value={(id) ? id:''}/>
                         {submitting ? <button type="button" className="btn-nexus btn-golden">Submit<i class="ms-1 fas fa-circle-notch fa-spin"></i></button>:
