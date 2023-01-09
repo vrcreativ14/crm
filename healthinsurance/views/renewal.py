@@ -31,6 +31,7 @@ class RenewalView(PolicyBaseView,TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx['policies'] = self.get_queryset()
+        ctx['search_form'] = self.get_search_and_ordering_form()
         ctx['page'] = self.request.GET.get('page') or 1
         ctx['sort_by'] = self.request.GET.get('sort_by') or 'policy_expiry_date_asc'
         ctx['to_date'] = self.request.GET.get('to_date') or ''
@@ -38,9 +39,7 @@ class RenewalView(PolicyBaseView,TemplateView):
         ctx['current_timestamp'] = datetime.datetime.today()
         ctx['entity'] = 'health'
         self.request.session['selected_product_line'] = 'health-insurance'
-
         log_user_activity(self.request.user, self.request.path)
-
         return ctx
 
 
@@ -154,11 +153,11 @@ class CreateRenewalDealView(LoginRequiredMixin, PermissionRequiredMixin, View):
                         deal = Deal(                            
                             customer=policy.customer,                            
                             deal_type=DEAL_TYPE_RENEWAL,                       
-                            primary_member=primary_member,                       
+                            primary_member=primary_member,
                         )
                         deal.save(user=self.request.user)
                         policy.deal = deal
-                        policy.save()                   
+                        policy.save()
                             
 
                     if not error_occurred:
