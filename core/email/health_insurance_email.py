@@ -124,7 +124,7 @@ class SendHealthInsuranceEmail:
         if deal.stage == 'basic':
             quote = deal.get_quote()
             if quote:
-                quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/" 
+                quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/" 
                 ctx['quote_url'] = quote_url
             message = self.get_message_templates(type = 'basic new deal')
         else:
@@ -135,9 +135,8 @@ class SendHealthInsuranceEmail:
         
 
     def prepare_email_content_for_quote(self, deal,quote,updated=False):
-
-        quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         
+        quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"        
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.primary_member.name,
@@ -156,7 +155,7 @@ class SendHealthInsuranceEmail:
         if deal:
             quote = deal.get_quote()
             if quote:
-                quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+                quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         policy = deal.get_policy()
         policy_number = policy.policy_number if policy else ''
         ctx = {
@@ -201,7 +200,7 @@ class SendHealthInsuranceEmail:
 
     def prepare_email_content_for_final_quote(self, deal, quote):
         order = deal.get_order()
-        quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+        quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name,
@@ -226,7 +225,7 @@ class SendHealthInsuranceEmail:
     def prepare_email_content_for_payment(self, deal, quote):
         order = deal.get_order()
         payment_details = deal.get_payment_details()
-        quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+        quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.primary_member.name,
@@ -253,7 +252,7 @@ class SendHealthInsuranceEmail:
         return self.render_context(message, ctx)
 
     def prepare_email_content_for_policy_issuance(self, deal, quote):
-        quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+        quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name,
