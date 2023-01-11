@@ -1,6 +1,6 @@
 import logging
 from felix.celery_app import app
-from .views.email import StageEmailNotification
+from healthinsurance.views.email import StageEmailNotification
 from celery import shared_task
 import time 
 
