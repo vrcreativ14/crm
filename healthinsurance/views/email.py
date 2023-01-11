@@ -540,7 +540,7 @@ class StageEmailNotification(AuditTrailMixin):
         elif email_type == 'payment':
             message = emailer.prepare_email_content_for_payment(deal, quote)
             subject = message.get('subject')
-            content = message.get('email_content')            
+            content = message.get('email_content')
 
         elif email_type == 'payment_confirmation':  #proof of payment shared
             message = emailer.prepare_email_content_for_payment_confirmation(deal)
@@ -567,17 +567,23 @@ class StageEmailNotification(AuditTrailMixin):
         cleaned_to = clean_and_validate_email_addresses(self.to_email)
         subject, content = self.GetEmailContent()
         cc_addresses = self.cc_addresses
+        bcc_addresses = self.bcc_addresses
         cc_emails = list()
+        bcc_emails = list()
         try:
             if len(cc_addresses):
                 cc_emails = ', '.join(
                 set(sorted(cc_addresses, key=lambda v: v, reverse=True)))
+                
+            if len(bcc_addresses):
+                bcc_emails = ', '.join(
+                set(sorted(bcc_addresses, key=lambda v: v, reverse=True)))
 
-            if cc_emails:
+            if cc_emails and bcc_emails:
                 self.emailer.send_general_email(
                     self.to_email, subject, content, from_email,
                     cc_emails=clean_and_validate_email_addresses(cc_emails),
-                    # bcc_emails=clean_and_validate_email_addresses(bcc_emails),
+                    bcc_emails=clean_and_validate_email_addresses(bcc_emails),
                     reply_to=reply_to,
                     attachments=self.attachments
                 )
