@@ -2,7 +2,7 @@ import logging
 from felix.celery_app import app
 from healthinsurance.views.email import StageEmailNotification
 from celery import shared_task
-import time 
+import time
 
 @app.task
 def email_notification(deal, email_type, recipient, cc_emails = [], bcc_emails = []):
