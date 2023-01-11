@@ -51,6 +51,9 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         'housekeeping',
         'closed',
         'basic',
+        'renewal_deal_single_quote',
+        'renewal_deal_multiple_quotes',
+        'renewal_basic',
     ]
 
     @classmethod
@@ -128,8 +131,13 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         if deal_stage >= 2:
             allowed_templates['quote'] = 'Quote'
             allowed_templates['quote_updated'] = 'Quote Updated'
+            if deal and deal.deal_type == DEAL_TYPE_RENEWAL:
+                allowed_templates['renewal_deal_single_quote'] = 'Renewal Deal Single Quote'
+                allowed_templates['renewal_deal_multiple_quotes'] = 'Renewal Deal Multiple Quotes'
         if deal.stage == 'basic':
             allowed_templates['basic'] = 'Basic'
+            if deal and deal.deal_type == DEAL_TYPE_RENEWAL:
+                allowed_templates['renewal_basic'] = 'Renewal Basic'
             return allowed_templates
         if deal_stage >= 4:
             allowed_templates['final_quote'] = 'Final Quote'
@@ -203,8 +211,8 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         to = request.POST.get('email')
         subject = request.POST.get('subject')
         content = request.POST.get('content')
-        # cc_emails = request.POST['cc_emails']
-        # bcc_emails = request.POST['bcc_emails']
+        cc_emails = request.POST['cc_emails']
+        bcc_emails = request.POST['bcc_emails']
         sms_content = request.POST.get('sms_content')
         wa_msg_content = request.POST.get('wa_msg_content')
         attachments = []
@@ -235,8 +243,8 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         try:
             emailer.send_general_email(
                 cleaned_to, subject, content, from_email,
-                # cc_emails=clean_and_validate_email_addresses(cc_emails),
-                # bcc_emails=clean_and_validate_email_addresses(bcc_emails),
+                cc_emails=clean_and_validate_email_addresses(cc_emails),
+                bcc_emails=clean_and_validate_email_addresses(bcc_emails),
                 reply_to=reply_to,
                 attachments=attachments
             )
@@ -348,12 +356,14 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
                     deal.customer.name, quote_url
                 )
 
-        elif email_type == 'renewal deal multiple quotes':
-            message = emailer.prepare_email_content_for_renewal_deal(deal,quote, updated)
+        elif email_type == 'renewal_deal_multiple_quotes' or email_type == 'renewal_deal_single_quote' or email_type == 'renewal_basic':
+            type = email_type.replace('_', ' ')
+            message = emailer.prepare_email_content_for_renewal_deal(deal, type)
             subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
-            quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+            if quote:
+                quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
             sms_content = 'Hi {}, your health-insurance quotes are ready'.format(deal.customer.name)
             if not wa_msg_content:
                 wa_msg_content = 'Hi {},\nWe\'ve updated your health-insurance quote. Click here to check them out:\n{}\n' \
