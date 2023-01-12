@@ -1195,6 +1195,7 @@ class DeleteAttachedFile(DeleteAttachmentView):
         print(type)
         print(request.path,'\n')
         files = request.FILES.getlist("file")
+        response = {}
         deal_files = DealFiles.objects.filter(deal=deal,type=type)
         for file in deal_files:
             if file.filename == file_name:
@@ -2138,7 +2139,7 @@ class DealExportView(DealBaseView, View):
             referrer = ''
             order = deal.get_order()
             selected_plan = ''
-            insurer = ''            
+            insurer = ''
             total_premium = ''
             if order:
                     selected_plan = order.selected_plan.plan
