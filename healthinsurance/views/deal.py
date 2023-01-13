@@ -448,6 +448,8 @@ class EditDeal(LoginRequiredMixin, View):
                     primary_member.save()
         
         updated_request['primary_member'] = primary_member.pk
+        updated_request['referrer'] = deal.referrer
+        updated_request['user'] = deal.user
         deal_form = DealSaveForm(updated_request,instance=deal)
         is_basic = True if deal.stage == STAGE_BASIC else False
         if deal_form.is_valid():
