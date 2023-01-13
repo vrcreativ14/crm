@@ -25,7 +25,7 @@ from healthinsurance.models.deal import Deal
 class TaskBaseView(LoginRequiredMixin, CompanyAttributesMixin,
                    PermissionRequiredMixin, AjaxListViewMixin, TemplateView):
     template_name = "healthinsurance/tasks_list.html"
-    permission_required = 'auth.list_health_tasks'
+    permission_required = 'auth.list_tasks'
     default_order_by = 'due_datetime'
     default_filter = 'todo'
 
@@ -164,7 +164,7 @@ class DealTaskListView(TaskBaseView):
 
 
 class TaskSingleView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = 'auth.update_health_tasks'
+    permission_required = 'auth.update_tasks'
     model = Task
 
     def get(self, request, *args, **kwargs):
@@ -188,19 +188,19 @@ class TaskSingleView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
 
 
 class AddEditTaskView(CoreAddEditTaskView):
-    permission_required = 'auth.create_health_tasks'
+    permission_required = 'auth.create_tasks'
     model = Task
     attached_model = Deal
 
  
 class TaskDeleteView(DeleteTaskView):
-    permission_required = 'auth.update_health_tasks'
+    permission_required = 'auth.update_tasks'
     model = Task
     attached_model = Deal
 
 
 class TasksMarkAsDoneView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'auth.update_health_tasks'
+    permission_required = 'auth.update_tasks'
     model = Task
 
     def post(self, request, *args, **kwargs):
@@ -212,7 +212,7 @@ class TasksMarkAsDoneView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
 
 class TaskUpdateFieldView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'auth.update_health_tasks'
+    permission_required = 'auth.update_tasks'
 
     def get_object(self, **kwargs):
         try:

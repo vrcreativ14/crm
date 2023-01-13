@@ -320,11 +320,16 @@ class NewHealthDeal(View):
                     if quote:
                         response['quote_reference_number'] = quote.reference_number
                 if request.POST.get('referrer') and deal.primary_member.email:
+                    cc_email = []
+                    bcc_email = []
+                    if deal.referrer and deal.referrer.email:
+                        cc_email.append(deal.referrer.email)
+                    bcc_email.append('ind.medical@nexusadvice.com')
                     email_notification(deal, 'new deal internal notification', 'ind.medical@nexusadvice.com')
                     if deal.stage == STAGE_BASIC:
-                        email_notification(deal, 'basic new deal', deal.primary_member.email)
+                        email_notification(deal, 'basic new deal', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email)
                     else:
-                        email_notification(deal, 'new deal', deal.primary_member.email)
+                        email_notification(deal, 'new deal', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email)
                     
                 log_user_activity(user, self.request.path, 'C', deal)
                 return JsonResponse(response)
@@ -1192,6 +1197,7 @@ class DeleteAttachedFile(DeleteAttachmentView):
         print(type)
         print(request.path,'\n')
         files = request.FILES.getlist("file")
+        response = {}
         deal_files = DealFiles.objects.filter(deal=deal,type=type)
         for file in deal_files:
             if file.filename == file_name:
@@ -1287,6 +1293,9 @@ class SubStageView(View):
                 reload = True
                 status = STATUS_US
             elif current_sub_stage == 2:
+                # if request.POST.get('is_document_verified') == '0':
+                #     response['message'] = 'Please contact the compliance team'
+                #     return JsonResponse(response)
                 world_check_hit = request.POST.get('is_world_check_done')
                 approved_by_compliance = request.POST.get('approved_by_compliance')
                 substage.world_check_hit = True if world_check_hit == '1' else False
@@ -1467,6 +1476,11 @@ class StageProcessView(View):
         message = "stage updated"
         to_sub_stage = ''
         email_sent = False
+        cc_email = []
+        bcc_email = []
+        if deal.referrer and deal.referrer.email:
+            cc_email.append(deal.referrer.email)
+        bcc_email.append('ind.medical@nexusadvice.com')
         if stage == STAGE_QUOTE or stage == STAGE_BASIC:
                 if request.POST.get("plan"):
                         selected_plan = get_object_or_404(QuotedPlan, pk=request.POST.get("plan"))
@@ -1527,7 +1541,7 @@ class StageProcessView(View):
             deal.status = STATUS_US
             if deal.primary_member.email:
                 #1. sending order confirmation email to customer
-                email_notification(deal, 'order_confirmation', deal.primary_member.email)
+                email_notification(deal, 'order_confirmation', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email)
                 email_sent = True
             
         elif stage == STAGE_FINAL_QUOTE:
@@ -1542,7 +1556,8 @@ class StageProcessView(View):
             to_sub_stage = FINAL_QUOTE_SEND_TO_INSURER
             deal.status = STATUS_US
             if deal.primary_member.email:
-                email_notification(deal, 'final_quote_submitted', deal.primary_member.email, cc_emails=['ind.medical@nexusadvice.com'])
+                email_notification(deal, 'final_quote_submitted', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email)
+                #email_notification(deal, 'final_quote_submitted', deal.primary_member.email, cc_emails=['ind.medical@nexusadvice.com'])
                 #email_notification(deal, 'final quote signed internal notification', 'ind.medical@nexusadvice.com')   #CC Emails to ind.medical instead of different email
                 email_sent = True
         
@@ -1560,7 +1575,7 @@ class StageProcessView(View):
             to_sub_stage = PAYMENT_SEND_TO_INSURER
             deal.status = STATUS_US
             if deal.primary_member.email:
-                email_notification(deal, 'payment_confirmation', deal.primary_member.email, cc_emails=['ind.medical@nexusadvice.com'])
+                email_notification(deal, 'payment_confirmation', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email) #BCC to ind.medical instead of CC
                 #email_notification(deal, 'payment proof uploaded internal notification', 'ind.medical@nexusadvice.com')  #CC Emails to ind.medical instead of different email
                 email_sent = True
         
@@ -2126,7 +2141,7 @@ class DealExportView(DealBaseView, View):
             referrer = ''
             order = deal.get_order()
             selected_plan = ''
-            insurer = ''            
+            insurer = ''
             total_premium = ''
             if order:
                     selected_plan = order.selected_plan.plan
