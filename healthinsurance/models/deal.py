@@ -55,7 +55,7 @@ class PrimaryMember(models.Model):
     phone = models.CharField(max_length=FIELD_LENGTHS['phone'], blank=True)
     dob = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=GENDER_CHOICES, blank=True)
-    marital_status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=MARITAL_STATUS_LIST, blank=True)
+    marital_status = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=MARITAL_STATUS_LIST, blank=True, null=True)
     nationality = models.CharField(max_length=10, choices=COUNTRIES, blank=True)
     country_of_stay = models.CharField(max_length=10, choices=COUNTRIES, blank=True)
     visa = models.CharField(max_length=20, choices=EMIRATES_LIST, blank=True)
