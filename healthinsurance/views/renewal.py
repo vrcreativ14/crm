@@ -124,7 +124,6 @@ class CreateRenewalDealView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 response = []
                 errors = []
                 policies = HealthPolicy.objects.filter(id__in=policy_ids.split(','), company=request.company)
-
                 for policy in policies:
                     error_occurred = False
                     primary_member = PrimaryMember.objects.create(
@@ -142,7 +141,6 @@ class CreateRenewalDealView(LoginRequiredMixin, PermissionRequiredMixin, View):
                         # create a new deal from an existing one.
                         
                         deal.stage = STAGE_NEW
-                        deal.renewal_for_policy = policy
                         deal.quote_sent = False
                         deal.is_deleted = False
                         deal.deal_type = DEAL_TYPE_RENEWAL
@@ -158,7 +156,6 @@ class CreateRenewalDealView(LoginRequiredMixin, PermissionRequiredMixin, View):
                         deal.save(user=self.request.user)
                         policy.deal = deal
                         policy.save()
-                            
 
                     if not error_occurred:
                         response.append({
@@ -170,6 +167,8 @@ class CreateRenewalDealView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 return JsonResponse({'success': True, 'new_deals_data': response, 'errors': errors})
 
         except Exception as e:
+            api_logger.error('Error while creting "health renewal deal" Source: %s, Error: %s',
+                                         'renewal', e)
             errors.append('Unable to create renewal deal for policy [{}]. Contact support'.format(
                                       policy.reference_number))
             return JsonResponse({'success': False, 'message': 'Please select one or more policy records'})
