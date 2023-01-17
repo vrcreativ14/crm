@@ -17,6 +17,10 @@ class InsurerResource(resources.ModelResource):
     class Meta:
         model = Insurer
 
+class InsurerDetailsResource(resources.ModelResource):
+    class Meta:
+        model = InsurerDetails
+
 class NetworkResource(resources.ModelResource):
     class Meta:
         model = Network
@@ -180,6 +184,9 @@ class InsurerAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     form = InsurerAdminForm
     resource_classes = [InsurerResource]
 
+class InsurerDetailsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):    
+    resource_classes = [InsurerDetailsResource]
+
 class MessageTypeAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [MessageTypeResource]
 
@@ -195,7 +202,7 @@ admin.site.register(Network, NetworkAdmin)
 admin.site.register(TPA, TPAAdmin)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(Insurer, InsurerAdmin)
-admin.site.register(InsurerDetails)
+admin.site.register(InsurerDetails, InsurerDetailsAdmin)
 admin.site.register(AnnualLimit, AnnualLimitAdmin)
 admin.site.register(Physiotherapy, PhysiotherapyAdmin)
 admin.site.register(PreExistingCover, PreExistingCoverAdmin)
