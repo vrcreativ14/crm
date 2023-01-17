@@ -29,6 +29,9 @@ from healthinsurance.models.deal import Deal
 from healthinsurance.models.quote import Quote, QuotedPlan, Order
 from healthinsurance.models.policy import HealthPolicy, PolicyFiles
 from django.contrib.auth.models import User
+from healthinsurance.constants import DEAL_TYPE_RENEWAL
+from django.urls import reverse
+import math
 
 
 class PolicyBaseView(LoginRequiredMixin, PermissionRequiredMixin, AjaxListViewMixin, View):
@@ -378,3 +381,111 @@ class PolicyImportEmailView(LoginRequiredMixin, View):
         )
 
         return JsonResponse({'success': True}, safe=False)
+
+def GetPolicyQueryset(param, **kwargs):
+    today = datetime.date.today()
+    range = kwargs.get('range')
+    expiry_date = ''
+    if param == 'range_expiry':
+        if range:
+            range = range.lower()
+            if range == 'today':
+                expiry_date = today
+            elif range == 'tomorrow':
+                expiry_date = today + datetime.timedelta(days=1)
+            elif range == 'next 7 days':
+                expiry_date = today + datetime.timedelta(days=7)
+            elif range == 'next 30 days':
+                expiry_date = today + datetime.timedelta(days=30)
+            elif range == 'next 60 days':
+                expiry_date = today + datetime.timedelta(days=60)
+            elif range == 'this month':
+                start_date = today.replace(day=1)
+                next_month = today.replace(day=28) + datetime.timedelta(days=4)
+                end_date = next_month - datetime.timedelta(days=next_month.day)
+                qs = HealthPolicy.objects.filter(
+                expiry_date__gte = start_date, expiry_date__lte=end_date)
+            elif range == 'next month':
+                next_month = today.replace(day=28) + datetime.timedelta(days=4)
+                start_date = today.replace(day=1,month=next_month.month)                
+                end_date = next_month - datetime.timedelta(days=next_month.day)
+                qs = HealthPolicy.objects.filter(
+                expiry_date__gte = start_date, expiry_date__lte=end_date)
+            elif range == 'next 12 months':
+                next_year = today.replace(month=12) + datetime.timedelta(days=31)               
+                end_date = next_year.replace(month = today.month)
+                qs = HealthPolicy.objects.filter(
+                expiry_date__gte = today, expiry_date__lte=end_date)
+        if filter and filter == 'hide_renewal':
+            qs = qs.exclude(deal__deal_type = DEAL_TYPE_RENEWAL)
+        if expiry_date:
+            qs = HealthPolicy.objects.filter(
+                expiry_date__gte=today, expiry_date__lte=expiry_date)
+
+        return qs
+    
+
+def PolicyJsonView(request):
+        data = []
+        start = request.GET.get('start')
+        length = request.GET.get('length')
+        if start and length:
+            start = int(start)
+            length = int(length)
+            page = math.ceil(start / length) + 1
+            per_page = length
+        search_term = request.GET.get('search[value]')
+        range_expiry = request.GET.get('range_expiry')
+        hide_renewals = request.GET.get('hide_renewals')
+        if(search_term):
+            policies = HealthPolicy.objects.filter(Q(policy_number__icontains = search_term) | Q(customer__name__icontains = search_term))
+            recordsTotal= policies.count()
+            policies = policies[start:start + length]
+        elif range_expiry:
+            policies = GetPolicyQueryset('range_expiry', range = range_expiry)
+            recordsTotal= policies.count()
+            policies = policies[start:start + length]
+        elif hide_renewals:
+            policies = GetPolicyQueryset('hide_renewals', range = range_expiry)
+            recordsTotal= policies.count()
+            policies = policies[start:start + length]
+        else:
+            policies = HealthPolicy.objects.order_by()[start:start + length]
+            recordsTotal= HealthPolicy.objects.all().count()
+        checkbox = '''<td class="link"><label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{}" value="{}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>'''
+        deal_link = ''
+        for policy in policies:
+            if policy.deal and policy.deal.deal_type == 'renewal':
+                deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
+                deal_link = f'''<a href="{deal_url}" class="link limit-text">{policy.deal.customer.name}</a>
+                <span class="policy-renewal-badge badge badge-default badge-font-light 
+                badge-{policy.deal.status_badge}">{policy.deal.deal_stage_text}</span>'''
+            if policy.customer:
+                customer_link = f'''<a class="link"
+                href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
+            p = {
+                'id' : policy.pk,
+                'checkbox' : checkbox.format(policy.pk, policy.pk),
+                'status' : policy.status,
+                'policy_number' : policy.policy_number,
+                'deal' : deal_link,
+                'customer': customer_link,
+                'referrer':policy.referrer.get_full_name() if policy.referrer else '',
+                'expiring_insurer':policy.deal.selected_plan.insurer.name if policy.deal and policy.deal.selected_plan else '',
+                'total_premium':policy.total_premium_vat_inc,
+                'expiry_date':policy.expiry_date.strftime('%b. %d %Y'),                
+            }
+            data.append(p)
+        
+        resp = {
+            'data' : data,
+            'page': page,
+            'per_page' : per_page,
+            'recordsTotal':recordsTotal,
+            'recordsFiltered': recordsTotal,
+        }
+        return JsonResponse(resp, safe=False)

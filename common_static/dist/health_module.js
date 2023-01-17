@@ -1016,29 +1016,22 @@ var __HEALTH_DEALS;
                 debugger
                 $('.felix-table').addClass('opacity')
                 range = $(this).data('range-key')
+                $('.ranges li.active').removeClass('active')
+                $(this).addClass('active')
                 current_range = $('#renewal_date_filter').html()
 
                 if(range != current_range && range.toLowerCase()){
                     let url = DjangoUrls['health-insurance:renewals-filter']();
-                    $.get(url, {'range':range}, function(response){                        
-                        let table = $('.felix-table').DataTable();
-                        let column1 = `<label class="felix-checkbox">
-                        <input class="select-record" type="checkbox" data-id="{{ policy.pk }}" value="{{ policy.pk }}" />
-                        <span class="checkmark"></span>
-                    </label>`
-                        table.clear()
-                        response['qs'].forEach(i => {
-                            table.row.add([`${column1}`,i['status'],i['policy_number'],i['deal'],i['customer'],i['owner'],i['insurer'],i['premium'],i['expiry_date']]).draw().nodes().to$().attr('id',`tr_${i['tr_id']}`)
-                        })
-                        $('table.felix-table tr').addClass('health-policy-row')
-                        $('table.felix-table tr').attr('data-target','#modal_view_policy')
-                        $('table.felix-table tr').attr('data-toggle','modal')
-                        if(response['qs'].length == 0){
-                            table.clear()
-                            table.draw()
-                        }
-                        $('.felix-table').removeClass('opacity')
-                    })
+                    // $.get(url, {'range':range}, function(response){
+                    let table = $('.felix-table').DataTable();
+                    //     let column1 = `<label class="felix-checkbox">
+                    //     <input class="select-record" type="checkbox" data-id="{{ policy.pk }}" value="{{ policy.pk }}" />
+                    //     <span class="checkmark"></span>
+                    // </label>`
+                    table.clear()
+                    table.draw()                    
+                    $('.felix-table').removeClass('opacity')
+                    //$(this).removeClass('clicked')
                 }
             })
 
@@ -1048,24 +1041,27 @@ var __HEALTH_DEALS;
                 filter = {}
                 if(this.checked)
                     filter = {'filter':'hide_renewal'}
-                let url = DjangoUrls['health-insurance:renewals-filter']();
-                
-                $.get(url, filter, function(response){                    
-                    let table = $('.felix-table').DataTable();
-                    let column1 = `<label class="felix-checkbox">
-                    <input class="select-record" type="checkbox" data-id="{{ policy.pk }}" value="{{ policy.pk }}" />
-                    <span class="checkmark"></span>
-                </label>`
-                    table.clear()
-                    response['qs'].forEach(i => {
-                        table.row.add([`${column1}`,i['status'],i['policy_number'],i['deal'],i['customer'],i['owner'],i['insurer'],i['premium'],i['expiry_date']]).draw()
-                    })
-                    if(response['qs'].length == 0){
-                        table.clear()
-                        table.draw()
-                    }
-                    $('.felix-table').removeClass('opacity')
-                })
+                let url = DjangoUrls['health-insurance:policies-list']();
+                let table = $('.felix-table').DataTable();
+                table.clear()
+                table.draw()
+                $('.felix-table').removeClass('opacity')
+                // $.get(url, filter, function(response){
+                //     let table = $('.felix-table').DataTable();
+                //     let column1 = `<label class="felix-checkbox">
+                //     <input class="select-record" type="checkbox" data-id="{{ policy.pk }}" value="{{ policy.pk }}" />
+                //     <span class="checkmark"></span>
+                // </label>`
+                //     table.clear()
+                //     response['qs'].forEach(i => {
+                //         table.row.add([`${column1}`,i['status'],i['policy_number'],i['deal'],i['customer'],i['owner'],i['insurer'],i['premium'],i['expiry_date']]).draw()
+                //     })
+                //     if(response['qs'].length == 0){
+                //         table.clear()
+                //         table.draw()
+                //     }
+                //     $('.felix-table').removeClass('opacity')
+                // })
             })
         },
 

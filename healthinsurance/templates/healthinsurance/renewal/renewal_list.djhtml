@@ -363,7 +363,7 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
                                 <span class="checkmark big"></span>
                             </label>
                         </span>
-                    </div>                
+                    </div>
             </div>
             <div class="table-filters float-right m-r-25">
                         <div class="open-search-field">
@@ -422,7 +422,7 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
                             </tr>
                         </thead>
                         <tbody class="felix-table-body">
-                            {% include 'handlebars/health_renewal_list.html' %}
+                            
                         </tbody>
                     </table>
                 </div>
@@ -435,7 +435,7 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
             </div> <!-- end col -->
         </div> <!-- end row -->
     </div>
-    {% include 'handlebars/renewals_list.html' %}
+    
     {% include 'handlebars/pagination.html' %}    
     {% include 'handlebars/health_policy_modal.html' %}
 
@@ -450,10 +450,40 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
     
     $(document).ready( function (){
         var table = $('.felix-table').DataTable({
-            columnDefs: [{
-    "defaultContent": "-",
-    "targets": "_all"
-  }]
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url : '/health-insurance/policy/json/',
+                type: 'GET',
+                data: function(d){
+                    d.range_expiry = $('.ranges li.active').data('range-key');
+                    // if($('#hide-renewal-deals').is(":checked"))
+                    //     d.hide_renewals = true
+                    // else
+                    //     d.hide_renewals = false
+                    // Retrieve dynamic parameters
+                    var range = $('.ranges li.clicked').data('range-key');
+                    // Add dynamic parameters to the data object sent to the server
+                    if(range){ $.extend(d, range); }
+                }
+            },
+            "columns": [
+                {"data": "checkbox"},
+                {"data": "status"},
+                {"data": "policy_number"},
+                {"data": "deal"},
+                {"data": "customer"},
+                {"data": "referrer"},
+                {"data": "expiring_insurer"},
+                {"data": "total_premium"},
+                {"data": "expiry_date"},
+      ],
+      createdRow: function (row, data, dataIndex) {
+            $(row).attr('data-target', '#modal_view_policy');
+            $(row).attr('data-toggle', 'modal');
+            $(row).attr('id', `tr_${data['id']}`);
+            $(row).addClass('health-policy-row');
+        }
         });
 
         $('.ranges li').last().hide()
