@@ -48,9 +48,9 @@ const Details = ({data,selectedInsurar,setShowDetails = false,comparison = false
             {(!comparison) &&
             <div className='text-end d-flex w-100 justify-content-end'>
                 <button className="btn-nexus btn-grey" onClick={() => setShowDetails(false)}>Close</button>
-                {('coverage_type' in data[selectedInsurar] && data[selectedInsurar].coverage_type=='basic') ? <button className='ms-2 btn-nexus btn-golden me-3 me-md-0' onClick={() => setShowBasicPopup(true)}>{CurrencyFormat(data[selectedInsurar].total_premium,true,data[selectedInsurar].currency)}<br/>Yearly</button>
+                {('coverage_type' in data[selectedInsurar] && data[selectedInsurar].coverage_type=='basic') ? <button className='ms-2 btn-nexus btn-golden me-3 me-md-0 fw-bold' onClick={() => setShowBasicPopup(true)}>Select <br/> {CurrencyFormat(data[selectedInsurar].total_premium,true,data[selectedInsurar].currency)}<br/>Yearly</button>
                 :
-                <ActionButton customClass="ms-2" url={'summary/'+data[selectedInsurar].id} text={CurrencyFormat(data[selectedInsurar].total_premium,true,data[selectedInsurar].currency)+'<br/>Yearly'}/>
+                <ActionButton customClass="ms-2 fw-bold" url={'summary/'+data[selectedInsurar].id} text={CurrencyFormat(data[selectedInsurar].total_premium,true,data[selectedInsurar].currency)+'<br/>Yearly'}/>
                 }
             </div>
             }
