@@ -561,6 +561,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 
 var filtered = [];
+var table = $('.felix-table').DataTable();
+function UpdateCount(){
+    const stages = ['open', 'new', 'quote', 'documents', 'Final Quote', 'payment', 'Policy Issuance','basic','housekeeping',  'won', 'lost'];
+    stages.forEach(element => {
+        let count = 0;
+        table.rows({order:'index', search:'applied'}).data().map((row, index) => {
+            if(element=='open'){
+                    if(row[1].toLowerCase() == 'lost') return
+                    count++;
+            }
+            if(row[1].toLowerCase()==element.toLowerCase()){                
+                count++;
+            }
+        });
+        const elementClassName = (element.toLowerCase()).replace(" ","-");
+        if(count==0){
+            $('.'+elementClassName+'-count').parent().addClass('disabled');
+        }
+        else
+            $('.'+elementClassName+'-count').parent().removeClass('disabled');
+        
+        $('.'+elementClassName+'-count').html(count);
+    });
+}
+
 $(document).ready( function () {
 
     $('input[name="daterange"]').daterangepicker({
@@ -569,11 +594,12 @@ $(document).ready( function () {
                 $('#min-date').val(start.format('YYYYMMDD'));
                 $('#max-date').val(end.format('YYYYMMDD'));
                 table.draw();
+                UpdateCount()
             });
 
     $('.felix-table').removeClass('opacity');
     
-    var table = $('.felix-table').DataTable();
+    
 
     $('#id_search_term').on('change keyup',function(){
                 $('#id_assigned_to').val('');
@@ -581,17 +607,17 @@ $(document).ready( function () {
                 $('.quick-filters label').removeClass('active');
                 filtered = []
                 table.search($(this).val()).draw();
+                UpdateCount()
             });
 
     $('#id_assigned_to').on('change', function() {
-        debugger
         var val = $(this).val();
         filtered = []
         table.search(val).draw();
+        UpdateCount()
     });
 
     $('#id_filter_deal_status').on('change', function() {
-        debugger
         var val = $(this).val();
         filtered = []
         if(val == 'all')
@@ -599,11 +625,11 @@ $(document).ready( function () {
         else
         filtered=[val]
         table.column(2).search(filtered).draw();
+        UpdateCount()
     });
     
 
     $('.quick-filter-radio').on('change', function() {
-                debugger
                 $('#id_assigned_to').val('');
                 $('#id_assigned_to_chosen .chosen-single span').html('Select user to filter/All users');
                 $('.quick-filters label').removeClass('active');
@@ -621,37 +647,17 @@ $(document).ready( function () {
                     filtered = [val]
                 }
                 table.column(1).search(filtered).draw();
+                UpdateCount()
             });
 
     
             const stages = ['open', 'new', 'quote', 'documents', 'Final Quote', 'payment', 'Policy Issuance','basic','housekeeping',  'won', 'lost'];
 
-setTimeout(function(){
-    debugger
-    stages.forEach(element => {
-        debugger
-        let count = 0;
-        table.rows({order:'index', search:'applied'}).data().map((row, index) => {
-            if(element=='open'){
-                    if(row[1].toLowerCase() == 'lost') return
-                    count++;
-            }
-            if(row[1].toLowerCase()==element.toLowerCase()){                
-                count++;
-            }
-        });
-        const elementClassName = (element.toLowerCase()).replace(" ","-");
-        if(count==0){
-            return $('.'+elementClassName+'-count').parent().addClass('disabled');
-        }
-        $('.'+elementClassName+'-count').html(count);
-    });
-},500);
+setTimeout(UpdateCount(), 500);
 
 
 $.fn.dataTable.ext.search.push(
                 function( settings, data, dataIndex ) {
-                    debugger
                     var min = parseInt($('#min-date').val());
                     var max = parseInt($('#max-date').val());
                     var created_on = parseFloat( data[3] ) || 0; 
@@ -682,7 +688,6 @@ $.fn.dataTable.ext.search.push(
                             
                             else if(event.target.value == 'all' && searchData[1].toLowerCase() == 'lost')
                                 return false;
-                            
                         }
                          return true;
                     }

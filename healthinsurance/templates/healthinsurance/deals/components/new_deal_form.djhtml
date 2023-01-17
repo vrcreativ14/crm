@@ -179,6 +179,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <select class="form-control" name="marital_status" required value="{{deal.primary_member.marital_status}}">
+                                    <option disabled {% if not deal.primary_member.marital_status %} selected {% endif %}>Select Marital Status</option>
                                     <option value="single" {% if deal.primary_member.marital_status == 'single' %} selected {% endif %}>Single</option>
                                     <option value="married" {% if deal.primary_member.marital_status == 'married' %} selected {% endif %}>Married</option>
                                 </select>
@@ -215,7 +216,7 @@
                             <div class="col-lg-6">
     
                                 <select class="form-control" name="nationality" id="id_nationality" required>
-                                    <option value="" selected disabled>Please select Nationality</option>
+                                    <option value="" disabled {% if not deal.primary_member.nationality %} selected {% endif %}>Please select Nationality</option>
                                     {% for country in countries %}
                                     {% if deal.primary_member.nationality == country.1 %}
                                     <option value="{{country.0}}" selected>{{country.1}}</option>
@@ -233,7 +234,7 @@
                             <div class="col-lg-6">
     
                                 <select class="form-control required" name="country_of_stay" id="id_country_of_stay">
-                                    <option value="" disabled>Please select Country of Residence</option>                                                              
+                                    <option value="" disabled {% if not deal.primary_member.country_of_stay %} selected {% endif %}>Please select Country of Residence</option>                                                              
                                     {% for country in countries %}
                                     {% if deal.primary_member.country_of_stay == country.1 %}
                                     <option value="{{country.0}}" selected>{{country.1}}</option>
@@ -250,6 +251,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <select class="form-control" name="visa" {% if quote %} disabled {% endif %}>
+                                    <option disabled {% if not deal.primary_member.visa %} selected {% endif %}>Please Select Visa</option>
                                     <option value="Dubai" {% if 'Dubai' in deal.primary_member.visa  %} selected {% endif %}>Dubai</option>                                                                
                                     <option value="Abu Dhabi" {% if 'Abu Dhabi' in deal.primary_member.visa %} selected {% endif %}>Abu Dhabi</option>
                                     <option value="Sharjah" {% if 'Sharjah' in deal.primary_member.visa  %} selected {% endif %}>Sharjah</option>

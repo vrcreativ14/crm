@@ -81,7 +81,7 @@ font-size: 12px;
                         <label> Preferred Start Date </label>
                     </div>
                     <div class="col-lg-3 bg-color">
-                        <span>{{deal.start_date}}</span>
+                        <span>{% if deal.start_date %} {{deal.start_date}} {% endif %}</span>
                     </div>
                 </div>
 
@@ -90,7 +90,7 @@ font-size: 12px;
                         <label> Date Of Birth </label>
                     </div>
                     <div class="col-lg-3 bg-color">
-                        <span> {{deal.customer.dob}} </span>
+                        <span> {% if deal.customer.dob %} {{deal.customer.dob}} {% endif %}</span>
                     </div>
                     
                     <div class="col-lg-3">
@@ -102,24 +102,24 @@ font-size: 12px;
                 </div>
                 <div class="row">
                 </div>
-                <div class="row">
-                    <div class="col-lg-3 bg-color">
+                <div class="row capitalize">
+                    <div class="col-lg-3">
                         <label>Country of Residence</label>
                     </div>
-                    <div class="col-lg-3 bg-color">
+                    <div class="col-lg-3">
                         <span class="capitalize"> {{deal.primary_member.country_of_stay}} </span>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 bg-color">
                         <label> Visa </label>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3 bg-color">
                         <span>  {{deal.primary_member.visa}} </span>
                     </div>
                     
                 </div>
                 <div class="row">
                 </div>
-                <div class="row">
+                <div class="row capitalize">
                     <div class="col-lg-3 bg-color">
                         <label> Gender </label>
                     </div>
@@ -130,6 +130,12 @@ font-size: 12px;
                         <span>Female</span>
                         {% endif %}
                         
+                    </div>
+                    <div class="col-lg-3">
+                        <label> Marital Status </label>
+                    </div>
+                    <div class="col-lg-3">
+                        <span>  {% if deal.primary_member.marital_status %} {{deal.primary_member.marital_status}} {% endif %}</span>
                     </div>
                 </div>
                 <br/>
