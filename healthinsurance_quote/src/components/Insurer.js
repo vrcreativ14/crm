@@ -26,9 +26,9 @@ const Insurer = ({data,insurer,index,handleComparison,comparison}) => {
                 <InsurerData insurer={insurer} keyIndex={'dental_benefits'} type="small"/>
                 <InsurerData insurer={insurer} keyIndex={'optical_benefits'} type="small"/>
                 <li className='action-column d-flex d-md-table-cell justify-content-center'>
-                    {('coverage_type' in insurer && insurer.coverage_type=='basic') ? <button className='w-100 btn-nexus btn-golden me-3 me-md-0 fw-bold' onClick={() => setShowBasicPopup(true)}>Select<br/>{CurrencyFormat(insurer.total_premium,true,insurer.currency)}<br/>Yearly</button>
+                    {('coverage_type' in insurer && insurer.coverage_type=='basic') ? <button className='w-100 btn-nexus btn-golden me-3 me-md-0 fw-bold ps-1 pe-1' onClick={() => setShowBasicPopup(true)}>Select<br/>{CurrencyFormat(insurer.total_premium,true,insurer.currency)}<br/>Yearly</button>
                     :
-                    <ActionButton customClass="w-100 me-3 me-md-0 fw-bold" url={'summary/'+insurer.id} text={'Select<br/>'+CurrencyFormat(insurer.total_premium,true,insurer.currency)+'<br/>Yearly'}/>
+                    <ActionButton customClass="w-100 me-3 me-md-0 fw-bold ps-1 pe-1" url={'summary/'+insurer.id} text={'Select<br/>'+CurrencyFormat(insurer.total_premium,true,insurer.currency)+'<br/>Yearly'}/>
                     }
                     <button className="w-100 btn-nexus btn-grey ps-1 pe-1" onClick={() => setShowDetails(!showDetails)}>Click here for more details</button>
                     <div className='d-none d-md-block'><label className='d-flex align-items-center mt-1 justify-content-center'><span>Compare</span><input onChange={(event) => handleComparison(event,index)} className='ms-2' type="checkbox" checked={(comparison && comparison.includes(index)) ? true:false}/></label></div>
