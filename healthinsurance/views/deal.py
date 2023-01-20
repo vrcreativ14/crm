@@ -455,7 +455,6 @@ class EditDeal(LoginRequiredMixin, View):
         updated_request['primary_member'] = primary_member.pk
         updated_request['referrer'] = deal.referrer
         updated_request['user'] = deal.user
-        
         deal_form = DealSaveForm(updated_request,instance=deal)
         is_basic = True if deal.stage == STAGE_BASIC else False
         if deal_form.is_valid():
@@ -1411,10 +1410,30 @@ class SubStageView(View):
             'is_policy_link_active':True
             })
             
-            policy_form = HealthPolicyForm(updated_request)
+            existing_policy = None
+            if not deal.deal_type == DEAL_TYPE_RENEWAL:
+                policy_number = updated_request.get('policy_number')
+                policy = HealthPolicy.objects.filter(policy_number = policy_number)
+                if policy.exists():
+                    return JsonResponse({
+                    "saved":False,
+                    "errors": 'Policy with this policy number already exists'
+                })
+            policy_kwargs = {
+                'data': updated_request
+            }
+            try:
+                policy_kwargs['instance'] = deal.get_policy()
+                creating = False
+            except Exception as e:
+                pass
+
+            form = PolicyForm(**policy_kwargs)
+            
+            policy_form = HealthPolicyForm(**policy_kwargs)
             if policy_form.is_valid():
-                policy = policy_form.save()                    
-                for file in request.FILES:                    
+                policy = policy_form.save()
+                for file in request.FILES:
                     PolicyFiles.objects.create(policy = policy, file = request.FILES[file], type=file)
                 to_stage = STAGE_HOUSE_KEEPING
                 status = STATUS_US

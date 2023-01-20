@@ -257,12 +257,16 @@
                 contentType: false,
                 success: function(response) {
                     e.target.querySelector('button[type="submit"]').disabled = false
+                    e.target.querySelector('button[type="submit"]').classList.remove('loader')
                     if(response.success) {
                         Utilities.Notify.success('Policy Created Successfully', 'Success');
                         $(this).find('button[type=submit]').removeClass('loader');                        
                         window.location = redirect_url;                        
                     }
                     else if(response.errors){
+                        if(typeof(response.errors) == 'string')
+                            return Utilities.Notify.error(response.errors, 'Error');
+                        
                         let errors = ''
                         for(let i in response.errors){
                             errors += response.errors[i] + '\n'
