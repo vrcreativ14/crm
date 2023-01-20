@@ -1460,7 +1460,8 @@ class SubStageView(View):
             if status:
                 deal.status = status
             deal.save()
-            reload = True
+            if not deal.stage == STAGE_HOUSE_KEEPING:
+                reload = True
             is_saved = True
             if substage:
                 substage.stage = to_stage
