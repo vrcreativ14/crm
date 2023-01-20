@@ -1041,7 +1041,7 @@ var __HEALTH_DEALS;
                 filter = {}
                 if(this.checked)
                     filter = {'filter':'hide_renewal'}
-                let url = DjangoUrls['health-insurance:policies-list']();
+                let url = DjangoUrls['health-insurance:renewals-list']();
                 let table = $('.felix-table').DataTable();
                 table.clear()
                 table.draw()
