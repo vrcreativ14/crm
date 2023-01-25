@@ -1423,7 +1423,12 @@ class SubStageView(View):
                 'data': updated_request
             }
             try:
-                policy_kwargs['instance'] = deal.get_policy()
+                existing_policy = deal.get_policy()
+                if existing_policy and deal.deal_type == DEAL_TYPE_RENEWAL:
+                    updated_request.update({'is_policy_link_active':True,
+                        'policy_link_reactivated_on':timezone.now()
+                    })
+                policy_kwargs['instance'] = existing_policy
                 creating = False
             except Exception as e:
                 pass
@@ -1456,7 +1461,7 @@ class SubStageView(View):
             status = STATUS_US
 
         if to_stage:
-            deal.stage = to_stage            
+            deal.stage = to_stage
             if status:
                 deal.status = status
             deal.save()
@@ -2162,7 +2167,7 @@ class DealExportView(DealBaseView, View):
             referrer = ''
             order = deal.get_order()
             selected_plan = ''
-            insurer = ''
+            insurer = ''            
             total_premium = ''
             if order:
                     selected_plan = order.selected_plan.plan
