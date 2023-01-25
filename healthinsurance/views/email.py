@@ -657,7 +657,6 @@ class StageEmailNotification(AuditTrailMixin):
 
 
 class ProcessedEmailView(View):
-
     def get(self, request, *args, **kwargs):
         data = {}
         email = ProcessEmail.objects.get(pk=kwargs.get('pk'))
