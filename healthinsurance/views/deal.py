@@ -1506,7 +1506,10 @@ class StageProcessView(View):
         bcc_email = []
         if deal.referrer and deal.referrer.email:
             cc_email.append(deal.referrer.email)
-        bcc_email.append('ind.medical@nexusadvice.com')
+        if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
+            bcc_email.append('auhpls.hotline@nexusadvice.com')
+        else:
+            bcc_email.append('ind.medical@nexusadvice.com')
         if stage == STAGE_QUOTE or stage == STAGE_BASIC:
                 if request.POST.get("plan"):
                         selected_plan = get_object_or_404(QuotedPlan, pk=request.POST.get("plan"))
