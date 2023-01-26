@@ -7,7 +7,7 @@ import SelectListLabel from './SelectListLable';
 import { useParams } from 'react-router-dom'
 
 const Form = () => {
-    const[formData, setFormData] = useState({})
+    const[formData, setFormData] = useState({"is_customer_insurance":"true"})
     const[currentSection, setCurrentSection] = useState(1)
     const[submitting, setSubmitting] = useState(false)
     const primaryRef = useRef(null)
@@ -235,6 +235,11 @@ const Form = () => {
 
     // console.log(formData.additional_members)
 
+    const insuranceSelf = [
+        {label:'Yes',value:'true'},
+        {label:'No',value:'false'},
+    ]
+
     return(
         <div className="row">
             <div className="col-12 col-md-7">
@@ -249,10 +254,17 @@ const Form = () => {
                             <FormFields type="text" name="name" labelName="Full name" placeholder="Enter first name and last name" formData={formData} setFormData={setFormData}/>
                             <FormFields type="text" name="phone" labelName="Phone" placeholder="Enter phone number" formData={formData} setFormData={setFormData}/>
                             <FormFields type="email" name="email" labelName="Email" placeholder="Enter email address" formData={formData} setFormData={setFormData}/>
+                            <div className="member-parent-div bg-white pt-0 pb-0 ps-2"><div className='select-member'><FormFields index={999} indexName={"is_customer_insurance"} type="radio" name="is_customer_insurance" labelName="Do you need insurance for yourself?" options={insuranceSelf} formData={formData} setFormData={setFormData}/></div></div>
                             <FormFields type="select" name="gender" labelName="Gender" options={gender} formData={formData} setFormData={setFormData}/>
                             <FormFields type="select" name="marital_status" labelName="Marital status" options={status} formData={formData} setFormData={setFormData}/>
+                            {('is_customer_insurance' in formData && formData.is_customer_insurance=='yes')
+                            ?
+                            <>
                             <FormFields type="date" name="dob" labelName="Date of birth" formData={formData} setFormData={setFormData}/>
                             <FormFields type="flag" name="nationality" labelName="Nationality" placeholder="Select the country" formData={formData} setFormData={setFormData} defaultValue={('nationality' in formData) ? formData.nationality:false}/>
+                            </>:
+                            ''
+                            }
                             {/* <FormFields country_of_stay={true} type="flag" name="country_of_stay" labelName="Country of Residence" placeholder="Select the country" formData={formData} setFormData={setFormData}/> */}
                             <FormFields type="flag" name="country_of_stay" labelName="Country of residence" placeholder="Select the country" formData={formData} setFormData={setFormData} defaultValue={('country_of_stay' in formData) ? formData.country_of_stay:false}/>
                             {(!formData || !('country_of_stay' in formData) || ('country_of_stay' in formData && formData.country_of_stay=='AE')) && <FormFields type="select" name="visa" labelName="Visa" options={visa} formData={formData} setFormData={setFormData}/>}
@@ -293,6 +305,7 @@ const Form = () => {
                                     {('name' in formData && formData.name) && <span><strong>Name: </strong>{formData.name}</span>}
                                     {('phone' in formData && formData.phone) && <span><strong>Phone: </strong>{formData.phone}</span>}
                                     {('email' in formData && formData.email) && <span><strong>Email: </strong>{formData.email}</span>}
+                                    {('is_customer_insurance' in formData && formData.is_customer_insurance) && <span><strong>Insurance self: </strong>{(formData.is_customer_insurance == 'true') ? 'Yes':'No'}</span>}
                                     {('gender' in formData && formData.gender) && <span><strong>Gender: </strong>{(formData.gender=='f') ? 'Female':'Male'}</span>}
                                     {('marital_status' in formData && formData.marital_status) && <span><strong>Marital status: </strong>{(formData.marital_status=='single') ? 'Single':'Married'}</span>}
                                     {('dobs' in formData && formData.dobs) && <span><strong>DOB: </strong>{formData.dobs}</span>}

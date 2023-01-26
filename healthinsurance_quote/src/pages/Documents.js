@@ -131,6 +131,12 @@ const Documents = () => {
 
     const selectedPlan = data.quoted_plans.filter((plan) => plan.id==data.selected_plan.id)
 
+    let planDoc = false
+
+    if(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected)planDoc = true
+    if(data.selected_plan.census)planDoc = true
+    if(data.selected_plan.bor)planDoc = true
+
     return(
         <Layout currentTab={currentTab} name={name} stepContent={stepContent}>
             <p className="fs-6 fw-light-bold mb-4">Please upload the documents mentioned below for all members:</p>
@@ -142,13 +148,15 @@ const Documents = () => {
                             <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Emirates ID (both sides)" filekey="primary_emiratesid" desc=''/>
                             <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Visa" filekey="primary_visa" desc=''/>
                             <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Previous Medical Insurance (Card / Certificate)" filekey="primary_previousinsurance" desc='If any' required={false}/>
-                            <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Other Documents" filekey="primary_other" desc='If any' required={false}/>
+                            <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Other Documents" filekey="primary_other" desc='If any' required={false} info="Please upload any other documents (Signed renewal terms, Policy Census...)"/>
                         </DocumentSection>
-                        <DocumentSection title="Plan Documents" defaultTab={true}>
-                            <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Medical Application Form" filekey="primary_maf" info="Please download the Medical Application Form (MAF) using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].maf).replace(/&amp;/g, "&")+'">Download MAF <i className="fas fa-arrow-circle-down"></i></a></p>'}/>
-                            {(data.selected_plan.census) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Census" filekey="plan_census" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.census).replace(/&amp;/g, "&")+'">Download Census <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
-                            {(data.selected_plan.bor) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bor" filekey="plan_bor" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.bor).replace(/&amp;/g, "&")+'">Download Bor <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
-                        </DocumentSection>
+                        {planDoc &&
+                            <DocumentSection title="Plan Documents" defaultTab={true}>
+                                {(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Medical Application Form" filekey="primary_maf" info="Please download the Medical Application Form (MAF) using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].maf).replace(/&amp;/g, "&")+'">Download MAF <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                                {(data.selected_plan.census) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Census" filekey="plan_census" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.census).replace(/&amp;/g, "&")+'">Download Census <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                                {(data.selected_plan.bor) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bor" filekey="plan_bor" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.bor).replace(/&amp;/g, "&")+'">Download Bor <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                            </DocumentSection>
+                        }
                         {data.additional_members.length>0 && data.additional_members.map((member,index) => {
                             return(
                                 <DocumentSection key={'members-documents-'+index} title={"Dependent: <b class='text-capitalize'>"+member.name+"</b> (<small>"+member.relation+"</small>)"} defaultTab={true}>

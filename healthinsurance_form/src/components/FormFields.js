@@ -72,23 +72,26 @@ const FormFields = ({country_of_stay = false,type,name,placeholder = "",labelNam
                     case 'checkbox':
                     case 'radio':
                         return(
-                            <ul className="mb-0">
-                                {/* {console.log(name,formData[name],'sdaf')} */}
-                                {(options) && options.map((value,index) => {
-                                    return(
-                                        <li key={name+'-'+index}>
-                                            <div className="input-select">
-                                                <label className={(indexName in formData && formData[indexName]==value.value) ? 'active':'deactive'}>
-                                                    <span><i className="uncheck far fa-circle"></i></span>
-                                                    <span><i className="check fas fa-dot-circle"></i></span>
-                                                    <input type={type} name={name} value={value.value} checked={(indexName in formData && formData[indexName]==value.value) ? true:(inputValue && inputValue==value.value) ? true:false} onChange={(event) => onChangeFetch(event.target.value)} required={(isRequired) ? isRequired:false}/>
-                                                    <span className='ms-1'>{value.label}</span>
-                                                </label>
-                                            </div>
-                                        </li>
-                                    )
-                                })}
-                            </ul>
+                            <>
+                                {name=='is_customer_insurance' && <label>{labelName}<sup>*</sup></label>}
+                                <ul className="mb-0">
+                                    {/* {console.log(name,formData[name],'sdaf')} */}
+                                    {(options) && options.map((value,index) => {
+                                        return(
+                                            <li key={name+'-'+index}>
+                                                <div className="input-select">
+                                                    <label className={(indexName in formData && formData[indexName]==value.value) ? 'active':'deactive'}>
+                                                        <span><i className="uncheck far fa-circle"></i></span>
+                                                        <span><i className="check fas fa-dot-circle"></i></span>
+                                                        <input type={type} name={name} value={value.value} checked={(indexName in formData && formData[indexName]==value.value) ? true:(inputValue && inputValue==value.value) ? true:false} onChange={(event) => onChangeFetch(event.target.value)} required={(isRequired) ? isRequired:false}/>
+                                                        <span className='ms-1'>{value.label}</span>
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </>
                         )
                         break;
 
@@ -225,7 +228,7 @@ const FormFields = ({country_of_stay = false,type,name,placeholder = "",labelNam
                         break;
                 }
             })()}
-            <label>{labelName}{(isRequired && name!='member-relation') && <sup>*</sup>}</label>
+            {name!='is_customer_insurance' && <label>{labelName}{(isRequired && name!='member-relation') && <sup>*</sup>}</label>}
         </div>
     )
 }

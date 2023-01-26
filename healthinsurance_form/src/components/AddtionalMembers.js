@@ -3,11 +3,17 @@ import FormFields from './FormFields';
 import { Notification } from './Notification';
 
 const AddtionalMemebers = ({formData,setFormData}) => {
-    const[totalMembers, setTotalMembers] = useState(('total_members' in formData) ? formData.total_members:0)
+    const[totalMembers, setTotalMembers] = useState(('total_members' in formData) ? formData.total_members:(formData.is_customer_insurance && formData.is_customer_insurance=='false' && totalMembers==0) ? 1:0)
     const[memberData,setMemberData] = useState(('additional_members' in formData ) ? formData.additional_members:[])
 
     useEffect(() => {
-        setTotalMembers(('total_members' in formData) ? formData.total_members:totalMembers)
+        if(formData.is_customer_insurance && formData.is_customer_insurance=='false' && totalMembers==0){
+            setTotalMembers(1)
+        }
+    },[formData])
+
+    useEffect(() => {
+        setTotalMembers(('total_members' in formData) ? formData.total_members:(formData.is_customer_insurance && formData.is_customer_insurance=='false' && totalMembers==0) ? 1:totalMembers)
         setMemberData(('additional_members' in formData) ? formData.additional_members:memberData)
     })
 
