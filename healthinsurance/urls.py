@@ -68,5 +68,6 @@ urlpatterns = [
     path("renewals/create-deal/", CreateRenewalDealView.as_view(), name="create-renewals-deals"),
     path("renewals/count/", RenewalCountView.as_view(), name="renewals-count"),
     path("renewals/filter/", RenewalListFilter.as_view(), name="renewals-filter"),
-    path("policy/json/",PolicyJsonView, name="policies-list")
+    path("policy/json/",PolicyJsonView, name="policies-list"),
+    path("renewals/json/", RenewalPolicyJsonView, name="renewals-list")
 ]

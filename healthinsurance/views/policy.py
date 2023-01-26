@@ -127,6 +127,14 @@ class PolicyAddView(LoginRequiredMixin, PermissionRequiredMixin, View):
         })
         customer_id = request.POST.get('customer')
         customer_name = request.POST.get('name')
+        policy_num = request.POST.get('policy_number')
+        policy = HealthPolicy.objects.filter(policy_number = policy_num)
+        if policy.exists():
+            return JsonResponse({
+                    "success": False, 
+                    "errors": 'Policy with this policy number already exists'
+                })
+
         if customer_id:
             customer = Customer.objects.filter(pk = customer_id)
             if customer.exists():
@@ -385,6 +393,7 @@ class PolicyImportEmailView(LoginRequiredMixin, View):
 def GetPolicyQueryset(param, **kwargs):
     today = datetime.date.today()
     range = kwargs.get('range')
+    policies = kwargs.get('policies')
     expiry_date = ''
     if param == 'range_expiry':
         if range:
@@ -403,14 +412,22 @@ def GetPolicyQueryset(param, **kwargs):
                 start_date = today.replace(day=1)
                 next_month = today.replace(day=28) + datetime.timedelta(days=4)
                 end_date = next_month - datetime.timedelta(days=next_month.day)
-                qs = HealthPolicy.objects.filter(
+                if policies and policies.count() > 0:
+                    qs = policies.filter(
                 expiry_date__gte = start_date, expiry_date__lte=end_date)
+                else:
+                    qs = HealthPolicy.objects.filter(
+                    expiry_date__gte = start_date, expiry_date__lte=end_date)
             elif range == 'next month':
                 next_month = today.replace(day=28) + datetime.timedelta(days=4)
                 start_date = today.replace(day=1,month=next_month.month)                
                 end_date = next_month - datetime.timedelta(days=next_month.day)
-                qs = HealthPolicy.objects.filter(
+                if policies and policies.count() > 0:
+                    qs = policies.filter(
                 expiry_date__gte = start_date, expiry_date__lte=end_date)
+                else:
+                    qs = HealthPolicy.objects.filter(
+                    expiry_date__gte = start_date, expiry_date__lte=end_date)
             elif range == 'next 12 months':
                 next_year = today.replace(month=12) + datetime.timedelta(days=31)               
                 end_date = next_year.replace(month = today.month)
@@ -422,8 +439,7 @@ def GetPolicyQueryset(param, **kwargs):
             qs = HealthPolicy.objects.filter(
                 expiry_date__gte=today, expiry_date__lte=expiry_date)
 
-        return qs
-    
+    return qs
 
 def PolicyJsonView(request):
         data = []
@@ -437,49 +453,43 @@ def PolicyJsonView(request):
         search_term = request.GET.get('search[value]')
         range_expiry = request.GET.get('range_expiry')
         hide_renewals = request.GET.get('hide_renewals')
+        policies = None
         if(search_term):
             policies = HealthPolicy.objects.filter(Q(policy_number__icontains = search_term) | Q(customer__name__icontains = search_term))
             recordsTotal= policies.count()
             policies = policies[start:start + length]
         elif range_expiry:
-            policies = GetPolicyQueryset('range_expiry', range = range_expiry)
+            policies = GetPolicyQueryset('range_expiry', range = range_expiry, policies = policies)
             recordsTotal= policies.count()
             policies = policies[start:start + length]
-        elif hide_renewals:
-            policies = GetPolicyQueryset('hide_renewals', range = range_expiry)
+        elif hide_renewals == 'true':
+            policies = GetPolicyQueryset('hide_renewals', range = range_expiry, policies = policies)
             recordsTotal= policies.count()
             policies = policies[start:start + length]
         else:
             policies = HealthPolicy.objects.order_by()[start:start + length]
             recordsTotal= HealthPolicy.objects.all().count()
-        checkbox = '''<td class="link"><label class="felix-checkbox">
-            <input class="select-record" type="checkbox" data-id="{}" value="{}" />
-            <span class="checkmark"></span>
-        </label>
-    </td>'''
-        deal_link = ''
+        
         for policy in policies:
-            if policy.deal and policy.deal.deal_type == 'renewal':
-                deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
-                deal_link = f'''<a href="{deal_url}" class="link limit-text">{policy.deal.customer.name}</a>
-                <span class="policy-renewal-badge badge badge-default badge-font-light 
-                badge-{policy.deal.status_badge}">{policy.deal.deal_stage_text}</span>'''
+            status = f'''<td><span class="stage-icon status-{policy.get_policy_expiry_status()}">
+                </span>{policy.get_policy_expiry_status()}</td>'''
+                #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
             if policy.customer:
-                customer_link = f'''<a class="link"
-                href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
-            p = {
-                'id' : policy.pk,
-                'checkbox' : checkbox.format(policy.pk, policy.pk),
-                'status' : policy.status,
-                'policy_number' : policy.policy_number,
-                'deal' : deal_link,
-                'customer': customer_link,
-                'referrer':policy.referrer.get_full_name() if policy.referrer else '',
-                'expiring_insurer':policy.deal.selected_plan.insurer.name if policy.deal and policy.deal.selected_plan else '',
-                'total_premium':policy.total_premium_vat_inc,
-                'expiry_date':policy.expiry_date.strftime('%b. %d %Y'),                
-            }
-            data.append(p)
+                # customer_link = f'''<a class="link"
+                # href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
+                p = {
+                    'id' : policy.pk,
+                    'status' : status,
+                    'policy_number' : policy.policy_number,
+                    'deal' : policy.deal.customer.name if policy.deal else '',
+                    'customer': policy.customer.name,
+                    'referrer': policy.referrer.get_full_name() if policy.referrer else '',
+                    'selected_plan': policy.deal.selected_plan.name if policy.deal and policy.deal.selected_plan else '',
+                    'total_premium': policy.total_premium_vat_inc,
+                    'start_date': policy.start_date.strftime('%b. %d %Y'),
+                    'expiry_date': policy.expiry_date.strftime('%b. %d %Y'),
+                }
+                data.append(p)
         
         resp = {
             'data' : data,

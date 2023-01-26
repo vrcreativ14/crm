@@ -453,7 +453,7 @@ background: #E9ECEF 0% 0% no-repeat padding-box;
             "processing": true,
             "serverSide": true,
             "ajax": {
-                url : '/health-insurance/policy/json/',
+                url : '/health-insurance/renewals/json/',
                 type: 'GET',
                 data: function(d){
                     d.range_expiry = $('.ranges li.active').data('range-key');

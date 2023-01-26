@@ -253,13 +253,15 @@ class SendHealthInsuranceEmail:
 
     def prepare_email_content_for_policy_issuance(self, deal, quote):
         quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+        insurer = deal.selected_plan.insurer if deal and deal.selected_plan else None
+        policy = deal.get_policy()
         ctx = {
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name,
             'quote_url' : quote_url,
+            'insurer_name': insurer.name if insurer else '',
+            'policy_number': policy.policy_number if policy else '',
         }
-        order = deal.get_order()
-        insurer = order.selected_plan.plan.insurer if order else ''
         message = self.get_message_templates(type = 'policy issuance', insurer = insurer)
         #text_template = get_template('email/heath_insurance_policy_issuance.html')
         return self.render_context(message, ctx)

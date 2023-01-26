@@ -99,7 +99,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             elif deal.stage == STAGE_POLICY_ISSUANCE:
                 kwargs['type'] = 'policy_issuance'
             elif deal.stage == STAGE_HOUSE_KEEPING or deal.stage == STAGE_WON:
-                kwargs['type'] = 'housekeeping'
+                kwargs['type'] = 'policy_issuance'
             elif deal.stage == STAGE_BASIC:
                 kwargs['type'] = 'basic'            
 
@@ -439,7 +439,10 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         cc_emails = list()
         if deal.user and deal.user.email:
             bcc_emails.append(deal.user.email)
-        bcc_emails.append('ind.medical@nexusadvice.com')
+        if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
+            bcc_emails.append('auhpls.hotline@nexusadvice.com')
+        else:
+            bcc_emails.append('ind.medical@nexusadvice.com')
 
         if deal.referrer and deal.referrer.email:
             cc_emails.append(deal.referrer.email)
@@ -654,7 +657,6 @@ class StageEmailNotification(AuditTrailMixin):
 
 
 class ProcessedEmailView(View):
-
     def get(self, request, *args, **kwargs):
         data = {}
         email = ProcessEmail.objects.get(pk=kwargs.get('pk'))

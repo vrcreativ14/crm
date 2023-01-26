@@ -392,9 +392,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .table-filters form{
         width: 1830px;
     }
-    .table-filters .open-search-field input[type=text] {
-        width: 275px !important;
-    }
 </style>
 
 
@@ -441,7 +438,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                         </span>
                         <span class="date-ranger float-right">                            
                             <img src="{% static 'icons/calenders.svg' %}" />
-                            <input type="text" class="" name="daterange" value="{% now "m/d/Y" %} - {% now "m/d/Y" %}" />
+                            <input type="text" class="date-filter" name="daterange" value="{% now "m/d/Y" %} - {% now "m/d/Y" %}" />
                             <input id="max-date" type="hidden" value=""/>
                             <input id="min-date" type="hidden" value=""/>
                         </span>
@@ -570,7 +567,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                             </tr>
                         </thead>
                         <tbody class="felix-table-body">
-                            {% include 'handlebars/health_policy_list.html' %}
+                            
                         </tbody>
                     </table>
                 </div>
@@ -615,7 +612,41 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 $(document).ready( function () {
 debugger
-var table = $('.felix-table').DataTable();
+var table = $('.felix-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url : '/health-insurance/policy/json/',
+                type: 'GET',
+                data: function(d){
+                    d.range_expiry = $('.ranges li.active').data('range-key');
+                    d.status = $('label.btn-sm.btn.btn-white.active').text()
+                    if($('input[name="daterange"]').val())
+                    d.daterange = $('input[name="daterange"]').val()
+                    // Retrieve dynamic parameters
+                    var range = $('.ranges li.clicked').data('range-key');
+                    // Add dynamic parameters to the data object sent to the server
+                    if(range){ $.extend(d, range); }
+                }
+            },
+            "columns": [
+                {"data": "status"},
+                {"data": "policy_number"},
+                {"data": "deal"},
+                {"data": "customer"},
+                {"data": "referrer"},
+                {"data": "selected_plan"},
+                {"data": "total_premium"},
+                {"data": "start_date"},
+                {"data": "expiry_date"},
+      ],
+      createdRow: function (row, data, dataIndex) {
+            $(row).attr('data-target', '#modal_view_policy');
+            $(row).attr('data-toggle', 'modal');
+            $(row).attr('id', `tr_${data['id']}`);
+            $(row).addClass('health-policy-row');
+        }
+        });
 
 $('input[name="daterange"]').daterangepicker({
             opens: 'left'
@@ -638,7 +669,6 @@ $('#id_search_term').on('change keyup',function(){
             filtered = []
             table.search($(this).val()).draw();
         });
-
 
 
 
@@ -691,14 +721,6 @@ $.fn.dataTable.ext.search.push(
             );
 
 });
-
-
-
-
-
-
-
-
 </script>
 
 

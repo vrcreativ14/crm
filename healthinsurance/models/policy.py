@@ -48,7 +48,7 @@ class HealthPolicy(AuditTrailMixin, models.Model):
     customer = models.ForeignKey('customers.Customer', on_delete=models.CASCADE, related_name='health_policy_customer')
     plan = models.ForeignKey('healthinsurance_shared.Plan', on_delete=models.CASCADE, null=True, blank=True)
     referrer = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="health_policy_referrer")
-    policy_number = models.CharField(max_length=100, unique=True)
+    policy_number = models.CharField(max_length=100)
     commission = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
     basmah_charges = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     total_premium_vat_inc = models.DecimalField(max_digits=10, decimal_places=2, default=0)

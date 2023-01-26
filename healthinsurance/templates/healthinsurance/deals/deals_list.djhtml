@@ -696,13 +696,11 @@ $.fn.dataTable.ext.search.push(
             );
 });
 
-
 document.querySelector('#countries-button').addEventListener('click', function(){
             $('.flagstrap').flagStrap({
                 buttonSize: "btn-md",
             });
         })
-
 
 </script>
 

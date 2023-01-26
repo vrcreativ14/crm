@@ -455,7 +455,6 @@ class EditDeal(LoginRequiredMixin, View):
         updated_request['primary_member'] = primary_member.pk
         updated_request['referrer'] = deal.referrer
         updated_request['user'] = deal.user
-        
         deal_form = DealSaveForm(updated_request,instance=deal)
         is_basic = True if deal.stage == STAGE_BASIC else False
         if deal_form.is_valid():
@@ -1411,10 +1410,35 @@ class SubStageView(View):
             'is_policy_link_active':True
             })
             
-            policy_form = HealthPolicyForm(updated_request)
+            existing_policy = None
+            if not deal.deal_type == DEAL_TYPE_RENEWAL:
+                policy_number = updated_request.get('policy_number')
+                policy = HealthPolicy.objects.filter(policy_number = policy_number)
+                if policy.exists():
+                    return JsonResponse({
+                    "saved":False,
+                    "errors": 'Policy with this policy number already exists'
+                })
+            policy_kwargs = {
+                'data': updated_request
+            }
+            try:
+                existing_policy = deal.get_policy()
+                if existing_policy and deal.deal_type == DEAL_TYPE_RENEWAL:
+                    updated_request.update({'is_policy_link_active':True,
+                        'policy_link_reactivated_on':timezone.now()
+                    })
+                policy_kwargs['instance'] = existing_policy
+                creating = False
+            except Exception as e:
+                pass
+
+            form = PolicyForm(**policy_kwargs)
+            
+            policy_form = HealthPolicyForm(**policy_kwargs)
             if policy_form.is_valid():
-                policy = policy_form.save()                    
-                for file in request.FILES:                    
+                policy = policy_form.save()
+                for file in request.FILES:
                     PolicyFiles.objects.create(policy = policy, file = request.FILES[file], type=file)
                 to_stage = STAGE_HOUSE_KEEPING
                 status = STATUS_US
@@ -1437,11 +1461,12 @@ class SubStageView(View):
             status = STATUS_US
 
         if to_stage:
-            deal.stage = to_stage            
+            deal.stage = to_stage
             if status:
                 deal.status = status
             deal.save()
-            reload = True
+            if not deal.stage == STAGE_HOUSE_KEEPING:
+                reload = True
             is_saved = True
             if substage:
                 substage.stage = to_stage
@@ -1481,7 +1506,10 @@ class StageProcessView(View):
         bcc_email = []
         if deal.referrer and deal.referrer.email:
             cc_email.append(deal.referrer.email)
-        bcc_email.append('ind.medical@nexusadvice.com')
+        if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
+            bcc_email.append('auhpls.hotline@nexusadvice.com')
+        else:
+            bcc_email.append('ind.medical@nexusadvice.com')
         if stage == STAGE_QUOTE or stage == STAGE_BASIC:
                 if request.POST.get("plan"):
                         selected_plan = get_object_or_404(QuotedPlan, pk=request.POST.get("plan"))
@@ -2142,7 +2170,7 @@ class DealExportView(DealBaseView, View):
             referrer = ''
             order = deal.get_order()
             selected_plan = ''
-            insurer = ''
+            insurer = ''            
             total_premium = ''
             if order:
                     selected_plan = order.selected_plan.plan
