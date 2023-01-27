@@ -199,7 +199,9 @@ const Form = () => {
             return Notification('Country of stay is required.','Error','danger')
         }
         if(!('nationality' in formData) || !formData.nationality){
-            return Notification('Nationality is required.','Error','danger')
+            if(!('is_customer_insurance' in formData) || formData.is_customer_insurance!='false'){
+                return Notification('Nationality is required.','Error','danger')
+            }
         }
 
         if(deal_id && (formData.level_of_cover=='basic' || formData.indicative_budget=='below1k')){
