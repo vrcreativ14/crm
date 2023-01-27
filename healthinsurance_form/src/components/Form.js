@@ -257,7 +257,7 @@ const Form = () => {
                             <div className="member-parent-div bg-white pt-0 pb-0 ps-2"><div className='select-member'><FormFields index={999} indexName={"is_customer_insurance"} type="radio" name="is_customer_insurance" labelName="Do you need insurance for yourself?" options={insuranceSelf} formData={formData} setFormData={setFormData}/></div></div>
                             <FormFields type="select" name="gender" labelName="Gender" options={gender} formData={formData} setFormData={setFormData}/>
                             <FormFields type="select" name="marital_status" labelName="Marital status" options={status} formData={formData} setFormData={setFormData}/>
-                            {('is_customer_insurance' in formData && formData.is_customer_insurance=='yes')
+                            {('is_customer_insurance' in formData && formData.is_customer_insurance=='true')
                             ?
                             <>
                             <FormFields type="date" name="dob" labelName="Date of birth" formData={formData} setFormData={setFormData}/>
