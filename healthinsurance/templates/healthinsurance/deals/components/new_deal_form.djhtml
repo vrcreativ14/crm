@@ -99,7 +99,6 @@
     </style>
     <div>
     {% if deal %}
-    
     <div class="felix-modal-container" id="modal_edit_deal">
         <div class="felix-modal">
             <h1>Edit Primary Member Details</h1>
@@ -117,7 +116,7 @@
                          </div> -->
                         <br/>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Name *</label>
                             </div>
                             <div class="col-lg-6">
@@ -136,7 +135,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Phone Number</label>
                             </div>
                             <div class="col-lg-6">
@@ -145,7 +144,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Email *</label> 
                             </div>
                             <div class="col-lg-6">
@@ -153,8 +152,24 @@
                             </div>
                         </div>
                         <br>
+                        <div class="row">
+                            <div class="col-lg-4 p-0" style="width: 110%;">
+                                <label class="">Primary Member to be insured? *</label> 
+                            </div>
+                            <div class="col-lg-2 radio-button">
+                                <input type="radio" name="is_customer_insurance" id="yes" value="true" {% if deal.is_customer_insurance == True %} checked {% endif %}/>
+                                <label for="yes">Yes</label>
+                            </div>
+                          <div class="col-lg-1">
+                          </div>
+                            <div class="col-lg-2 radio-button">
+                                <input type="radio" name="is_customer_insurance" id="no" value="false" {% if deal.is_customer_insurance == False %} checked {% endif %}/>
+                                <label for="no">No</label>
+                            </div>
+                        </div>
+                        <br/>
                         <div class="row select_gender_row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Gender *</label>
                             </div>
                             <div class="col-lg-2 radio-button">
@@ -174,7 +189,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Marital Status</label>
                             </div>
                             <div class="col-lg-6">
@@ -187,7 +202,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Date of Birth *</label>
                             </div>
                             <div class="col-lg-6">
@@ -196,7 +211,7 @@
                         </div>
                         <br>
                         <div class="row info-container">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Level of Cover</label>
                             </div>
                             <div class="col-lg-3 radio-button">
@@ -210,11 +225,10 @@
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Nationality *</label>
                             </div>
                             <div class="col-lg-6">
-    
                                 <select class="form-control" name="nationality" id="id_nationality" required>
                                     <option value="" disabled {% if not deal.primary_member.nationality %} selected {% endif %}>Please select Nationality</option>
                                     {% for country in countries %}
@@ -228,7 +242,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Country of Residence *</label>
                             </div>
                             <div class="col-lg-6">
@@ -246,7 +260,7 @@
                         </div>
                         <br>
                         <div id="row_visa" class="row {% if deal.primary_member.country_of_stay != 'United Arab Emirates' %}hide{% endif %}">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Visa *</label>
                             </div>
                             <div class="col-lg-6">
@@ -264,7 +278,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Salary Band</label>
                             </div>
                             <div class="col-lg-6">
@@ -280,7 +294,6 @@
                             <div class="col-lg-3">
                                 <span class="font-15 fw-500">Policy Coverage</span>
                                 </div>
-                               
                         </div>
                         <br/>
                         <div class="row">
@@ -667,7 +680,7 @@
                         </div>
                         <br/>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Name *</label>
                             </div>
                             <div class="col-lg-6">
@@ -684,7 +697,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Phone Number</label> 
                             </div>
                             <div class="col-lg-6">
@@ -693,7 +706,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Email *</label> 
                             </div>
                             <div class="col-lg-6">
@@ -701,8 +714,25 @@
                             </div>
                         </div>
                         <br>
+                        <div class="row">
+                            <div class="col-lg-4 p-0" style="width: 110%;">
+                                <label class="">Primary Member to be insured? *</label> 
+                            </div>
+                            <div class="col-lg-2 radio-button">
+                                <input type="radio" name="is_customer_insurance" id="yes" value="true" checked/>
+                                <label for="yes">Yes</label>
+                            </div>
+                          <div class="col-lg-1">
+    
+                          </div>
+                            <div class="col-lg-2 radio-button">
+                                <input type="radio" name="is_customer_insurance" id="no" value="false" />
+                                <label for="no">No</label>
+                            </div>
+                        </div>
+                        <br>
                         <div class="row select_gender_row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Gender *</label>
                             </div>
                             <div class="col-lg-2 radio-button">
@@ -722,7 +752,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Marital Status</label>
                             </div>
                             <div class="col-lg-6">
@@ -734,8 +764,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row">
-                            <div class="col-lg-3 p-0">
+                        <div class="row" id="dob-row">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Date of Birth *</label>
                             </div>
                             <div class="col-lg-6">
@@ -744,7 +774,7 @@
                         </div>
                         <br>
                         <div class="row info-container">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Level of Cover</label>
                             </div>
                             <div class="col-lg-3 radio-button">
@@ -760,8 +790,8 @@
                         </div>
                         <br />
                         <br />
-                        <div class="row">
-                            <div class="col-lg-3 p-0">
+                        <div class="row" id="nationality-row">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Nationality *</label>
                             </div>
                             
@@ -776,7 +806,7 @@
                         </div>
                         <br />
                         <div class="row">
-                                <div class="col-lg-3 p-0">
+                                <div class="col-lg-4 p-0">
                                     <label class="">Country of Residence *</label>
                                 </div>
                                 
@@ -791,7 +821,7 @@
                         </div>
                         <br />
                         <div class="row" id="row_visa">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Visa *</label>
                             </div>
                             <div class="col-lg-6">
@@ -810,7 +840,7 @@
                          </div>
                         <br>
                         <div class="row">
-                            <div class="col-lg-3 p-0">
+                            <div class="col-lg-4 p-0">
                                 <label class="">Salary Band</label>
                             </div>
                             <div class="col-lg-6">
@@ -1031,7 +1061,6 @@
     
             
             $('#health_deal_form').submit(function(e){
-            debugger            
             e.preventDefault()
             e.target.querySelector('button[type="submit"]').disabled = true
             var loader = '<div class="ball-spinner"></div>';
@@ -1041,7 +1070,18 @@
             let errorCount = 0
             $('.error').hide()
             let radioList = ['gender']
-            this.querySelectorAll('.required').forEach(i => {
+            if($('input[name="is_customer_insurance"]:checked').val() == 'false'){
+                let count = 0
+                document.querySelectorAll('.additional-member').forEach(i =>{
+                    count += i.value
+                })
+                if (count == 0){
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    return Utilities.Notify.error('Please add any additional member(s)', 'Error');
+                }
+            }
+            this.querySelectorAll('.required').forEach(i => {        
             if(i.type == 'radio' && i.checked){
                     radioList.pop()
                 }
@@ -1097,6 +1137,22 @@
                         e.target.querySelector('button[type="submit"]').disabled = false
                     }
         });
+        })
+    
+        $('input[name="is_customer_insurance"]').on('change', function(){
+            debugger
+            if(this.value == 'true'){
+                $('#nationality-row').removeClass('hide')
+            $('#dob-row').removeClass('hide')
+            $('#nationality-row .required').addClass('required')
+            $('#dob-row .required').addClass('required')        
+            }
+            else{
+                $('#nationality-row').addClass('hide')
+            $('#dob-row').addClass('hide')
+            $('#nationality-row .required').removeClass('required')
+            $('#dob-row .required').removeClass('required')
+            }
         })
             
             </script>

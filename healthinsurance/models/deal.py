@@ -117,6 +117,7 @@ class Deal(AuditTrailMixin, models.Model):
     deal_type = models.CharField(max_length=FIELD_LENGTHS['char_choices'], choices=DEAL_TYPES, default=DEAL_TYPE_NEW, blank=True)
     quote_sent = models.BooleanField(default=False)
     total_premium = models.FloatField(blank=True, default=0.00)
+    is_customer_insurance = models.BooleanField(default=True)
     primary_member = models.OneToOneField(PrimaryMember, on_delete=models.CASCADE, related_name="deal_member")
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="health_deal_user")
     referrer = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="health_deal_referrer")
@@ -129,6 +130,8 @@ class Deal(AuditTrailMixin, models.Model):
     notes = GenericRelation('core.Note')
     tasks = GenericRelation('core.Task')
     customer = models.ForeignKey('customers.Customer', null=True, on_delete=models.SET_NULL, related_name="health_deal_customer")
+    renewal_for_policy = models.ForeignKey(
+        'healthinsurance.HealthPolicy', null=True, blank=True, on_delete=models.SET_NULL, related_name='deal_policy_renewed_for')
     def __str__(self):
         return self.primary_member.name
   
@@ -141,8 +144,6 @@ class Deal(AuditTrailMixin, models.Model):
                 return 'Yesterday'
             else:
                 return self.created_on.date()
-            
-            
 
     @property
     def deal_stage_text(self):
@@ -372,8 +373,4 @@ class SubStage(models.Model):
 
     class Meta:
         unique_together = ['deal','stage', 'sub_stage']
-
-
-
-
 

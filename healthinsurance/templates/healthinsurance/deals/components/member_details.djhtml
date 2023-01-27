@@ -138,6 +138,20 @@ font-size: 12px;
                         <span>  {% if deal.primary_member.marital_status %} {{deal.primary_member.marital_status}} {% endif %}</span>
                     </div>
                 </div>
+
+                <div class="row capitalize">
+                    <div class="col-lg-3 bg-color">
+                        <label> Primary Member to be insured? </label>
+                    </div>
+                    <div class="col-lg-3 bg-color">
+                        {% if deal.is_customer_insurance == True %}
+                        <span>Yes</span>
+                        {% else %}
+                        <span>No</span>
+                        {% endif %}
+                    </div>
+                    
+                </div>
                 <br/>
                 
                 
