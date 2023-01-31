@@ -300,7 +300,7 @@ class DealFiles(models.Model):
         ("credit_note","credit_note"),
         ("other_document","other_document"),
         ("primary_passport","primary_passport"),
-        ("primary_visa","primary_visa"),        
+        ("primary_visa","primary_visa"),
         ("primary_emiratesid","primary_emiratesid"),
         ("primary_maf","primary_maf"),
         ("primary_previousinsurance","primary_previousinsurance"),
@@ -313,6 +313,8 @@ class DealFiles(models.Model):
         ("other_documents","other_documents"),
         ("additional_document","additional_document"),
         ("order_confirmation","order_confirmation"),
+        ("plan_census","plan_census"),
+        ("plan_bor","plan_bor"),
     ]
     deal = models.ForeignKey(Deal,on_delete=models.CASCADE)
     type = models.CharField(choices=ATTACHMENT_TYPE,default='final-quote',max_length=100)

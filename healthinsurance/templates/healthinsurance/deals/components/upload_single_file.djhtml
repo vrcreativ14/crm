@@ -42,11 +42,13 @@ right: 15px;
         
         <div class="d-flex parent-div">
             <div class="w-100 action">
-               
-                
                 <div class="d-block">
                     {% if stage_number < 8 or request.user.userprofile.has_user_role or request.user.userprofile.has_admin_role %}
+                    {% if member_counter %}
+                        <div action="/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/" class="upload-file" id="upload_{{data_type}}_{{member_counter}}">
+                    {% else %}
                         <div action="/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/" class="upload-file" id="upload_{{data_type}}">
+                    {% endif %}
                         <span class="heading">{{name}}</span>
                             <span class="icon-container">
                                 <i class="upload-icon"></i>
@@ -61,8 +63,7 @@ right: 15px;
                 <i><div id="uploading_progress_{{data_type}}" class="text-center"></div></i>
                 
                 {% if upload_type == "member_documents" %}
-
-                <div class="w-100 p-2 already-exist" id="fileslist_{{data_type}}">
+                <div class="w-100 p-2 already-exist" id="fileslist_{{data_type}}_{{member_counter}}">
                     <table class="table mb-0">
                         <tbody>
                             {% for deal_file in member_documents %}
@@ -72,12 +73,12 @@ right: 15px;
                                             <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
                                             {% if request.user.userprofile.has_producer_role %}
                                                 {% if stage_number <= 3 and sub_stage_number < 3 %}
-                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-member="{{member}}" data-document="{{upload_type}}">Delete</a></td>
                                                 {% endif %}
                                             {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
-                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-member="{{member}}" data-document="{{upload_type}}">Delete</a></td>
                                             {% elif stage_number < 8 %}
-                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-member="{{member}}" data-document="{{upload_type}}">Delete</a></td>
                                             {% endif %}
                                         </tr>
                                     {% endif %}
@@ -111,7 +112,7 @@ right: 15px;
                                     {% endif %}
                                 
                             {% endfor %}
-                            {% for deal_file in deal_files %}                                
+                            {% for deal_file in deal_files %}
                                     {% if deal_file.type == data_type %}
                                         <tr class="policy-file" id="div_file_{{deal_file.filename}}">
                                             <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
@@ -127,7 +128,6 @@ right: 15px;
                                             {% endif %}
                                         </tr>
                                     {% endif %}
-                                
                             {% endfor %}
                                                    
                     </tbody>
@@ -182,23 +182,35 @@ $(document).ready(function() {
     Dropzone.autoDiscover = false;
     var cookie = document.cookie;
     $(function() {
-        var the_preview_container = $('#fileslist_{{data_type}}');
-        
         var uploading_progress = $("#uploading_progress_{{data_type}}"); 
         console.log(document.querySelector('div#upload_{{data_type}}'))
-        
-        var myDrop = new Dropzone("div#upload_{{data_type}}", {            
+        {% if upload_type == 'member_documents' %}
+        var the_preview_container = $('#fileslist_{{data_type}}_{{member_counter}}');
+        var myDrop = new Dropzone("div#upload_{{data_type}}_{{member_counter}}", {
+
             url: "/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/?type={{data_type}}&member={{member}}",
             method: "post",
             previewsContainer: null,
-            previewsTemplate:'#fileslist_{{data_type}}'         
+            previewsTemplate:'#fileslist_{{data_type}}'
             });
+        {% else %}
+        var the_preview_container = $('#fileslist_{{data_type}}');
+        var myDrop = new Dropzone("div#upload_{{data_type}}", {
+            url: "/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/?type={{data_type}}&member={{member}}",
+            method: "post",
+            previewsContainer: null,
+            previewsTemplate:'#fileslist_{{data_type}}'
+            });
+        {% endif %}
 
             myDrop.on("success", function(file, data) {
                 debugger
                 uploading_progress.html('');
-                // let delete_file_button = `<div class="div-remove-file" id="${data.file}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>` 
-                let delete_file_button = `<a class="w-50 div-remove-file font-11 text-danger text-right" name="{{data_type}}" id=${data.file} style="margin-left:10px;">Delete</a>` 
+                // let delete_file_button = `<div class="div-remove-file" id="${data.file}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>`
+                let delete_file_button = `<a class="w-50 div-remove-file font-11 text-danger text-right" name="{{data_type}}" id=${data.file} style="margin-left:10px;">Delete</a>`
+                if (data['doc_type'] && data['doc_type'] == 'member_documents' && data['member']){
+                    delete_file_button = `<a class="w-50 div-remove-file font-11 text-danger text-right" name="{{data_type}}" id=${data.file} data-document='member_documents' data-member=${data['member']} style="margin-left:10px;">Delete</a>`
+                }
                 var new_file = `
                 <div id="div_file_${data.file}" class="flex pt-1 pb-1">
                 <span class="w-100" style="font-size:15.2px;">
@@ -211,7 +223,6 @@ $(document).ready(function() {
                 the_preview_container.prepend(new_file)
                 //the_preview_container.append(delete_file_button)
                 $( ".div-remove-file" ).click(function(event) {
-                debugger
                 event.stopPropagation();
                 event.stopImmediatePropagation();
                 DeleteAttachedFile(event)
@@ -226,18 +237,23 @@ $(document).ready(function() {
                 check_doc_files_health()
             });
 
-            function DeleteAttachedFile(event){                
+            function DeleteAttachedFile(event){
                 console.log(event.target)
                 console.log($(event.target).parent().closest('div')[0])
                 let type = event.target.name;
                 let file_name = event.target.id;
+                let member = event.target.getAttribute("data-member")
+                let url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}`   // request url
+                if(event.target.getAttribute("data-document") == 'member_documents')
+                    url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}&member=${member}&member_document=1`
+                
                 console.log(file_name)
-                $.post(`/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}`,   // request url
+                $.post(url,
                     {
                         success: function (data, status, xhr) {// success callback function
                             
                     }
-                }).done(function(response){                                               
+                }).done(function(response){
                             if(response){
                                 if (response['success'] == true){
                             console.log(file_name)

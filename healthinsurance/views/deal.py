@@ -455,6 +455,7 @@ class EditDeal(LoginRequiredMixin, View):
         updated_request['primary_member'] = primary_member.pk
         updated_request['referrer'] = deal.referrer
         updated_request['user'] = deal.user
+        updated_request['renewal_for_policy'] = deal.renewal_for_policy
         deal_form = DealSaveForm(updated_request,instance=deal)
         is_basic = True if deal.stage == STAGE_BASIC else False
         if deal_form.is_valid():
@@ -1160,14 +1161,17 @@ class DealAddAttachment(View):
         #self.get_permission()
         doc_type = kwargs.get('type', None)
         deal = get_object_or_404(Deal, pk=kwargs.get("pk"))
-        type = request.GET.getlist('type',"general")[0]   
+        type = request.GET.getlist('type',"general")[0]
         member_id = request.GET.getlist('member',"")[0]
         files = request.FILES.getlist("file")
+        response = {}
         if doc_type == 'member_documents':
             deal_member = AdditionalMember.objects.filter(pk = member_id)
             if deal_member.exists():
                 deal_member = deal_member[0]
                 new_deal_file = MemberDocuments(file=request.FILES['file'],deal=deal,type=type, member = deal_member)
+                response['doc_type'] = 'member_documents'
+                response['member'] = deal_member.pk
         else:
             new_deal_file = DealFiles(file=request.FILES['file'],deal=deal,type=type)
         new_deal_file.save()
@@ -1194,11 +1198,16 @@ class DeleteAttachedFile(DeleteAttachmentView):
         #type = request.GET.getlist('data_type',"general")
         type = kwargs.get("type")
         file_name = request.GET.get("file")
-        print(type)
-        print(request.path,'\n')
+        is_member_document = request.GET.get("member_document", None)
+        member_id = request.GET.get("member", None)
         files = request.FILES.getlist("file")
         response = {}
-        deal_files = DealFiles.objects.filter(deal=deal,type=type)
+        if member_id and is_member_document == '1':
+            member_obj = get_object_or_404(AdditionalMember, pk=member_id)
+            deal_files = MemberDocuments.objects.filter(deal=deal,type=type,member=member_obj)
+        else:
+            deal_files = DealFiles.objects.filter(deal=deal,type=type)
+        
         for file in deal_files:
             if file.filename == file_name:
                 file.delete()
@@ -1208,7 +1217,7 @@ class DeleteAttachedFile(DeleteAttachmentView):
                 break
             else:
                 response = {
-                    "success":False,                    
+                    "success":False,
                 }
         return JsonResponse(response)
 
@@ -1864,11 +1873,9 @@ class QuoteAPIView(View):
     def get(request, *args, **kwargs):
         pk = kwargs.get("pk")
         deal = get_object_or_404(Deal, pk=pk)
-        
         sub_stage = ''
         quote = Quote.objects.filter(deal = deal)
         quote = quote[0] if quote.exists() else None
-
         plans_detail = GetQuotedPlanDetails(quote)
         deal_details = model_to_dict(deal)
         deal_details['additional_benefits'] = [model_to_dict(benefit) for benefit in deal.additional_benefits.all()]
@@ -1902,6 +1909,20 @@ class QuoteAPIView(View):
                     order = order[0]
                     selected_plan = order.selected_plan
                     sp = GetSelectedPlanDetails(selected_plan)
+                    if deal.deal_type == DEAL_TYPE_RENEWAL:
+                        policy = deal.renewal_for_policy if deal.renewal_for_policy else ''
+                        if policy:
+                            d = policy.deal
+                            previous_plan = d.selected_plan if d else None
+                            previous_plan_insurer = d.selected_plan.insurer if d else None
+                            if previous_plan and previous_plan_insurer:
+                                if selected_plan.plan == previous_plan and previous_plan_insurer == selected_plan.plan.insurer:
+                                    sp['is_previous_plan_selected'] = True
+                                else:
+                                    sp['is_previous_plan_selected'] = False
+                    elif selected_plan.is_renewal_plan:
+                        sp['is_previous_plan_selected'] = True
+
                     response["data"]["selected_plan"] = sp
             if stage_number == 4:
                 quote_file = DealFiles.objects.filter(deal = deal, type = "final_quote")

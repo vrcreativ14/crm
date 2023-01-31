@@ -1191,7 +1191,7 @@ a{
                                             <a class="collapse-html"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
                                             </div>
                                             <div class="mt-2 w-100" id="member_{{member.order}}_{{member.relation}}_documents" style="display:none;">
-                                                {% include 'healthinsurance/deals/components/upload_files_content.djhtml' with type="member_documents" member=member.pk %}
+                                                {% include 'healthinsurance/deals/components/upload_files_content.djhtml' with type="member_documents" member=member.pk counter=forloop.counter %}
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -1283,7 +1283,7 @@ a{
             {% include 'handlebars/helpscout_conversation.html' %}
         {% endif %}
 
-      <button data-felix-modal="modal_send_custom_email_health" 
+      <button data-felix-modal="modal_send_custom_email_health"
                 class="hide btn btn-info-container btn-primary btn-sm"></button>
                 </div>
 
@@ -1300,10 +1300,8 @@ a{
     var current_stage = document.getElementById('deal_stage_id').value
     var current_sub_stage = document.getElementById('current_sub_stage').value
     var total_premium = 0
-            document.querySelectorAll('.member_premium').forEach(elem => function(elem){
-                debugger
-                elem.addEventListener('change', function(elem){         
-                    debugger           
+    document.querySelectorAll('.member_premium').forEach(elem => function(elem){
+                elem.addEventListener('change', function(elem){
                     let premium = parseFloat(elem.value)
                     total_premium += premium
                     document.querySelector('#id_total_premium').value = total_premium
@@ -1424,9 +1422,6 @@ a{
     }
     
 
-    
-
- 
     $('.next-substage').on('click', function(e){
         debugger
         let formData = new FormData()
@@ -1437,8 +1432,6 @@ a{
         let url = `/health-insurance/deals/${_deal_id}/substage`
         saveForm(formData)
     })
-
-
 
         $( document ).ready(function(){
             document.cookie = "email-trigger=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";            
@@ -2001,7 +1994,7 @@ a{
                     self.parents('.parent-div').find('a').show();
                     self.parents('.parent-div').find('form').hide();
                     self.parents('.parent-div').find('.file-name').show();
-                    Utilities.Notify.success('File Uploaded.', 'Success'); 
+                    Utilities.Notify.success('File Uploaded.', 'Success');
                 })
                 .catch(error => Utilities.Notify.error('Please check the file format.', 'Error'));
             });

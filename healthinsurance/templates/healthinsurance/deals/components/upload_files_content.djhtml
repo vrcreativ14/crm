@@ -8,7 +8,7 @@
         
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="medical_card" name="Medical Card" doc_name="medical card" upload_type="policy_documents" %}
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="confirmation_of_cover" name="Confirmation of Cover" doc_name="confirmation of cover" upload_type="policy_documents" %}
-        {% if not is_producer %}
+        {% if not request.user.userprofile.has_producer_role %}
             {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="credit_note" name="Credit Note" doc_name="credit note" upload_type="policy_documents" %}
             {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other_document" name="Other Documents" doc_name="other document" upload_type="policy_documents" %}
         {% endif %}
@@ -69,6 +69,8 @@
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_visa" name="Visa" doc_name="visa" upload_type="visa" %}        
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_emiratesid" name="Emirates ID" doc_name="emirates id front" upload_type="emiratesid" %}
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_maf" name="Medical Application Form" doc_name="maf" upload_type="maf" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="plan_census" name="Census" doc_name="census" upload_type="census" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="plan_bor" name="BOR" doc_name="bor" upload_type="bor" %}
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_other" name="Other Documents" doc_name="other documents" upload_type="other_documents" %}
     </div>
 
@@ -123,13 +125,13 @@
     {% elif type == 'member_documents'%}
     <div class="row upload-files">
        
-        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with  data_type="passport" name="Passport" doc_name="passport" upload_type="member_documents" member=member %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with  data_type="passport" name="Passport" doc_name="passport" upload_type="member_documents" member=member member_counter=counter %}
        
-        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="visa" name="Visa" doc_name="visa" upload_type="member_documents" member=member %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="visa" name="Visa" doc_name="visa" upload_type="member_documents" member=member member_counter=counter %}
         
-        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="emiratesid" name="Emirates ID" doc_name="emirates id front" upload_type="member_documents" member=member %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="emiratesid" name="Emirates ID" doc_name="emirates id front" upload_type="member_documents" member=member member_counter=counter %}
         
-        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other" name="Other Documents" doc_name="other documents" upload_type="member_documents" member=member %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other" name="Other Documents" doc_name="other documents" upload_type="member_documents" member=member member_counter=counter %}
     
     </div>
 

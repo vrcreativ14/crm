@@ -201,7 +201,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row">
+                        <div class="row" id="dob-row">
                             <div class="col-lg-4 p-0">
                                 <label class="">Date of Birth *</label>
                             </div>
@@ -224,7 +224,7 @@
                             </div>
                         </div>
                         <br />
-                        <div class="row">
+                        <div class="row" id="nationality-row">
                             <div class="col-lg-4 p-0">
                                 <label class="">Nationality *</label>
                             </div>
@@ -543,11 +543,38 @@
     </div>
     </div>
     <script>
+    $('input[name="is_customer_insurance"]').on('change', function(){
+            debugger
+            if(this.value == 'true'){
+                $('#nationality-row').removeClass('hide')
+            $('#dob-row').removeClass('hide')
+            $('#nationality-row .required').addClass('required')
+            $('#dob-row .required').addClass('required')        
+            }
+            else{
+                $('#nationality-row').addClass('hide')
+            $('#dob-row').addClass('hide')
+            $('#nationality-row .required').removeClass('required')
+            $('#dob-row .required').removeClass('required')
+            }
+        })
+    
         $('#edit_members_form').submit(function(e){
                 debugger
                 e.preventDefault()
                 e.target.querySelector('button[type="submit"]').disabled = true
                 let errorCount = 0
+                if($('input[name="is_customer_insurance"]:checked').val() == 'false'){
+                let count = 0
+                document.querySelectorAll('.additional-member').forEach(i =>{
+                    count += parseInt(i.value)
+                })
+                if (count == 0){
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    return Utilities.Notify.error('Please add any additional member(s)', 'Error');
+                }
+            }
                 this.querySelectorAll('input.required').forEach(i => {
                         if (! i.value) {
                         $(i).after('<span class="error">This field is required</span>');
@@ -601,6 +628,17 @@
             let errorCount = 0
             $('.error').hide()
             let radioList = ['gender']
+            if($('input[name="is_customer_insurance"]:checked').val() == 'false'){
+                let count = 0
+                document.querySelectorAll('.additional-member').forEach(i =>{
+                    count += parseInt(i.value)
+                })
+                if (count == 0){
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    return Utilities.Notify.error('Please add any additional member(s)', 'Error');
+                }
+            }
             this.querySelectorAll('.required').forEach(i => {
             if(i.type == 'radio' && i.checked){
                     radioList.pop()
@@ -1073,7 +1111,7 @@
             if($('input[name="is_customer_insurance"]:checked').val() == 'false'){
                 let count = 0
                 document.querySelectorAll('.additional-member').forEach(i =>{
-                    count += i.value
+                    count += parseInt(i.value)
                 })
                 if (count == 0){
                     $(this).find('button[type=submit]').removeClass('loader');
