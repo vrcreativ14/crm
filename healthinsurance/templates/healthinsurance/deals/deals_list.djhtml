@@ -394,7 +394,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                 <option value="New Deal">New Deal</option>
                             </select>
                         </span>
-                        {% if request.user.is_superuser or request.user.has_admin_role or request.user.has_user_role %}
+                        {% if not request.user.has_producer_role %}
                         <span class="user-filter pl-1">
                             <select name="assigned_to" id="id_assigned_to">
                                 <option value="" selected="">Select User/Referrer to filter/All users</option>
