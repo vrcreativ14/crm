@@ -312,7 +312,7 @@ class NewHealthDeal(View):
                         'redirect_url': reverse('health-insurance:deal-details', kwargs=dict(pk=deal.pk)),
                     }
                 
-                if request.POST.get('referrer') and deal.indicative_budget == 'Below 1k':
+                if not deal.primary_member.visa == EMIRATE_ABU_DHABI and request.POST.get('referrer') and deal.indicative_budget == 'Below 1k':
                     quote = CreateBasicQuote(request, deal)
                     deal.status = STATUS_CLIENT
                     deal.stage = STAGE_BASIC
@@ -971,148 +971,154 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
         return JsonResponse(response, safe=False)
 
     def post(self, request, **kwargs):
-        deal = self.get_object()
-        creating = True
-        deleted = False
-        request_data = json.loads(request.POST.get('data',''))
-        primary_member = deal.primary_member
-        quote = Quote.objects.filter(deal = deal)
-        substage = deal.current_sub_stage        
-        if not substage:
-            substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
-        
-        if not quote.exists():
-            quote = Quote.objects.create(deal=deal, company=request.company,                                 
-                                 status=Quote.STATUS_PUBLISHED)            
-            deal.status = STATUS_CLIENT
-        else:
-            quote = quote[0]
+        try:
+            deal = self.get_object()
+            creating = True
+            deleted = False
+            request_data = json.loads(request.POST.get('data',''))
+            primary_member = deal.primary_member
+            quote = Quote.objects.filter(deal = deal)
+            substage = deal.get_current_sub_stage(substage = STAGE_QUOTE)
+            if not substage:
+                substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
+            
+            if not quote.exists():
+                quote = Quote.objects.create(deal=deal, company=request.company,                                 
+                                    status=Quote.STATUS_PUBLISHED)
+                deal.status = STATUS_CLIENT
+            else:
+                quote = quote[0]
 
-        basic_plan_count = 0
-        total_plans = len(request_data.get('products'))
-        for request_qp in request_data['products']:
-            if request_qp:
-                rqp = request_qp  # shortform
-                total_premium = rqp['total_premium'].replace(',', '')
-                total_premium = float(total_premium) if total_premium else 0.00
-                if request_qp.get('id'):
-                    existing_qp = QuotedPlan.objects.filter(pk = rqp.get('id'))
-                    if existing_qp.exists():
-                            existing_qp = existing_qp[0]
-                            data = {'primary_member_premium' : rqp.get('primary_member_premium')}
-                            for member in deal.primary_member.additional_members.all():
-                                key = 'member_{0}_premium'.format(member.id)
-                                data[key] = rqp.get(key)
+            basic_plan_count = 0
+            total_plans = len(request_data.get('products'))
+            for request_qp in request_data['products']:
+                if request_qp:
+                    rqp = request_qp  # shortform
+                    total_premium = rqp['total_premium'].replace(',', '')
+                    total_premium = float(total_premium) if total_premium else 0.00
+                    if request_qp.get('id'):
+                        existing_qp = QuotedPlan.objects.filter(pk = rqp.get('id'))
+                        if existing_qp.exists():
+                                existing_qp = existing_qp[0]
+                                data = {'primary_member_premium' : rqp.get('primary_member_premium')}
+                                for member in deal.primary_member.additional_members.all():
+                                    key = 'member_{0}_premium'.format(member.id)
+                                    data[key] = rqp.get(key)
 
-                            if rqp.get('deleted'):
-                                existing_qp.status = QuotedPlan.STATUS_DELETED
-                                total_plans -= 1
-                            elif rqp.get('published'):
-                                existing_qp.status = QuotedPlan.STATUS_PUBLISHED
-                            elif not rqp.get('published'):
-                                existing_qp.status = QuotedPlan.STATUS_UNPUBLISHED
+                                if rqp.get('deleted'):
+                                    existing_qp.status = QuotedPlan.STATUS_DELETED
+                                    total_plans -= 1
+                                elif rqp.get('published'):
+                                    existing_qp.status = QuotedPlan.STATUS_PUBLISHED
+                                elif not rqp.get('published'):
+                                    existing_qp.status = QuotedPlan.STATUS_UNPUBLISHED
 
-                            existing_qp.plan_id = rqp.get('product_id')
-                            #existing_qp.insurer_quote_reference = rqp.get('insurer_quote_reference')
-                            existing_qp.total_premium = total_premium
-                            existing_qp.payment_frequency_id = rqp.get('payment_frequency')
-                            existing_qp.area_of_cover_id = rqp.get('area_of_cover')
-                            existing_qp.network_id = rqp.get('network')
-                            existing_qp.annual_limit_id = rqp.get('annual_limit')
-                            existing_qp.physiotherapy_id = rqp.get('physiotherapy')
-                            existing_qp.alternative_medicine_id = rqp.get('alternative_medicine')
-                            existing_qp.maternity_benefits_id = rqp.get('maternity_benefits')
-                            existing_qp.maternity_waiting_period_id = rqp.get('maternity_waiting_period')
-                            existing_qp.dental_benefits_id = rqp.get('dental_benefits')
-                            existing_qp.wellness_benefits_id = rqp.get('wellness_benefits')
-                            existing_qp.optical_benefits_id = rqp.get('optical_benefits')                            
-                            existing_qp.consultation_copay_id = rqp.get('consultation_copay')
-                            existing_qp.diagnostics_copay_id = rqp.get('diagnostics_copay')
-                            existing_qp.pharmacy_copay_id = rqp.get('pharmacy_copay')
-                            existing_qp.pre_existing_cover_id = rqp.get('pre_existing_cover')
-                            existing_qp.inpatient_deductible_id = rqp.get('inpatient_deductible')
-                            existing_qp.is_renewal_plan = rqp.get('is_renewal')
-                            existing_qp.is_repatriation_benefit_enabled = rqp.get('is_repatriation_enabled')
-                            existing_qp.premium_info = data
-                            if request.FILES and request.FILES.get(rqp.get('product_id')):
-                                existing_qp.plan_renewal_document = request.FILES.get(rqp.get('product_id'))
+                                existing_qp.plan_id = rqp.get('product_id')
+                                #existing_qp.insurer_quote_reference = rqp.get('insurer_quote_reference')
+                                existing_qp.total_premium = total_premium
+                                existing_qp.payment_frequency_id = rqp.get('payment_frequency')
+                                existing_qp.area_of_cover_id = rqp.get('area_of_cover')
+                                existing_qp.network_id = rqp.get('network')
+                                existing_qp.annual_limit_id = rqp.get('annual_limit')
+                                existing_qp.physiotherapy_id = rqp.get('physiotherapy')
+                                existing_qp.alternative_medicine_id = rqp.get('alternative_medicine')
+                                existing_qp.maternity_benefits_id = rqp.get('maternity_benefits')
+                                existing_qp.maternity_waiting_period_id = rqp.get('maternity_waiting_period')
+                                existing_qp.dental_benefits_id = rqp.get('dental_benefits')
+                                existing_qp.wellness_benefits_id = rqp.get('wellness_benefits')
+                                existing_qp.optical_benefits_id = rqp.get('optical_benefits')
+                                existing_qp.consultation_copay_id = rqp.get('consultation_copay')
+                                existing_qp.diagnostics_copay_id = rqp.get('diagnostics_copay')
+                                existing_qp.pharmacy_copay_id = rqp.get('pharmacy_copay')
+                                existing_qp.pre_existing_cover_id = rqp.get('pre_existing_cover')
+                                existing_qp.inpatient_deductible_id = rqp.get('inpatient_deductible')
+                                existing_qp.is_renewal_plan = rqp.get('is_renewal')
+                                existing_qp.is_repatriation_benefit_enabled = rqp.get('is_repatriation_enabled')
+                                existing_qp.premium_info = data
+                                if request.FILES and request.FILES.get(rqp.get('product_id')):
+                                    existing_qp.plan_renewal_document = request.FILES.get(rqp.get('product_id'))
                             
-                            existing_qp.save(user=request.user)
-                            quote.save(user = request.user)
-                            for member in primary_member.additional_members.all():
-                                    try:
-                                        member_premium = rqp.get('member_{0}_premium'.format(member.id))
-                                        member.premium = float(member_premium) if member_premium else 0
-                                        member.save()
-                                    except Exception as e:
-                                        pass
+                                existing_qp.save(user=request.user)
+                                quote.save(user = request.user)
+                                for member in primary_member.additional_members.all():
+                                        try:
+                                            member_premium = rqp.get('member_{0}_premium'.format(member.id))
+                                            member.premium = float(member_premium) if member_premium else 0
+                                            member.save()
+                                        except Exception as e:
+                                            pass
 
-                            basic_plan_count += 1 if existing_qp.plan.coverage_type == 'basic' else 0
+                                basic_plan_count += 1 if existing_qp.plan.coverage_type == 'basic' else 0
                 
-                else:
-                            data = {'primary_member_premium' : rqp['primary_member_premium']}
-                            for member in deal.primary_member.additional_members.all():
-                                key = 'member_{0}_premium'.format(member.id)
-                                data[key] = rqp.get(key)
+                    else:
+                                data = {'primary_member_premium' : rqp['primary_member_premium']}
+                                for member in deal.primary_member.additional_members.all():
+                                    key = 'member_{0}_premium'.format(member.id)
+                                    data[key] = rqp.get(key)
 
-                            new_qp = QuotedPlan(quote=quote, plan_id=rqp.get('product_id'),                            
-                            total_premium = total_premium,
-                            area_of_cover_id = rqp.get('area_of_cover'),
-                            consultation_copay_id = rqp.get('consultation_copay'),
-                            pharmacy_copay_id = rqp.get('pharmacy_copay'),
-                            diagnostics_copay_id = rqp.get('diagnostics_copay'),
-                            network_id = rqp.get('network'),payment_frequency_id = rqp.get('payment_frequency'),
-                            annual_limit_id = rqp.get('annual_limit'), physiotherapy_id = rqp.get('physiotherapy'),
-                            alternative_medicine_id = rqp.get('alternative_medicine'), maternity_benefits_id = rqp.get('maternity_benefits'),
-                            maternity_waiting_period_id = rqp.get('maternity_waiting_period'), dental_benefits_id = rqp.get('dental_benefits'),
-                            wellness_benefits_id = rqp.get('wellness_benefits'), optical_benefits_id = rqp.get('optical_benefits'), 
-                            pre_existing_cover_id = rqp.get('pre_existing_cover'),inpatient_deductible_id = rqp.get('inpatient_deductible'),
-                            is_renewal_plan = rqp.get('is_renewal'),is_repatriation_benefit_enabled = rqp.get('is_repatriation_enabled'),
-                            plan_renewal_document = request.FILES.get(rqp.get('product_id')) if request.FILES and request.FILES.get(rqp.get('product_id')) else None,
-                            premium_info = data
-                            )
-                            if rqp.get('published'):
-                                new_qp.status = QuotedPlan.STATUS_PUBLISHED
-                            else:
-                                new_qp.status = QuotedPlan.STATUS_UNPUBLISHED
+                                new_qp = QuotedPlan(quote=quote, plan_id=rqp.get('product_id'),                        
+                                total_premium = total_premium,
+                                area_of_cover_id = rqp.get('area_of_cover'),
+                                consultation_copay_id = rqp.get('consultation_copay'),
+                                pharmacy_copay_id = rqp.get('pharmacy_copay'),
+                                diagnostics_copay_id = rqp.get('diagnostics_copay'),
+                                network_id = rqp.get('network'),payment_frequency_id = rqp.get('payment_frequency'),
+                                annual_limit_id = rqp.get('annual_limit'), physiotherapy_id = rqp.get('physiotherapy'),
+                                alternative_medicine_id = rqp.get('alternative_medicine'), maternity_benefits_id = rqp.get('maternity_benefits'),
+                                maternity_waiting_period_id = rqp.get('maternity_waiting_period'), dental_benefits_id = rqp.get('dental_benefits'),
+                                wellness_benefits_id = rqp.get('wellness_benefits'), optical_benefits_id = rqp.get('optical_benefits'),
+                                pre_existing_cover_id = rqp.get('pre_existing_cover'),inpatient_deductible_id = rqp.get('inpatient_deductible'),
+                                is_renewal_plan = rqp.get('is_renewal'),is_repatriation_benefit_enabled = rqp.get('is_repatriation_enabled'),
+                                plan_renewal_document = request.FILES.get(rqp.get('product_id')) if request.FILES and request.FILES.get(rqp.get('product_id')) else None,
+                                premium_info = data
+                                )
+                                if rqp.get('published'):
+                                    new_qp.status = QuotedPlan.STATUS_PUBLISHED
+                                else:
+                                    new_qp.status = QuotedPlan.STATUS_UNPUBLISHED
                             
-                            new_qp.save(user=request.user)
-                            quote.save(user = request.user)
-                            for member in primary_member.additional_members.all():
-                                    try:
-                                        member_premium = rqp.get('member_{0}_premium'.format(member.id))
-                                        member.premium = float(member_premium) if member_premium else 0
-                                        member.save()
-                                    except Exception as e:
-                                        pass
+                                new_qp.save(user=request.user)
+                                quote.save(user = request.user)
+                                for member in primary_member.additional_members.all():
+                                        try:
+                                            member_premium = rqp.get('member_{0}_premium'.format(member.id))
+                                            member.premium = float(member_premium) if member_premium else 0
+                                            member.save()
+                                        except Exception as e:
+                                            pass
 
-                            basic_plan_count += 1 if new_qp.plan.coverage_type == 'basic' else 0
+                                basic_plan_count += 1 if new_qp.plan.coverage_type == 'basic' else 0
 
                             
-        if total_plans == basic_plan_count:
-            deal.stage = STAGE_BASIC
-            substage.stage = STAGE_BASIC
-            substage.sub_stage = BASIC_QUOTED
-        else:
-            deal.stage = STAGE_QUOTE
-            substage.stage = STAGE_QUOTE
-            substage.sub_stage = STAGE_QUOTE
+            if total_plans == basic_plan_count:
+                deal.stage = STAGE_BASIC
+                substage.stage = STAGE_BASIC
+                substage.sub_stage = BASIC_QUOTED
+            else:
+                deal.stage = STAGE_QUOTE
+                substage.stage = STAGE_QUOTE
+                substage.sub_stage = STAGE_QUOTE
             
             
-        if request_data['quote']['delete']:         #and not quote.get_editable_quoted_products().count()
-            deal.stage = STAGE_NEW
-            quote.is_deleted = True
-            deleted = True
-        else:
-            quote.status = Quote.STATUS_PUBLISHED if request_data['quote'].get('status') else Quote.STATUS_UNPUBLISHED
-            quote.is_deleted = False
+            if request_data['quote']['delete']:         #and not quote.get_editable_quoted_products().count()
+                deal.stage = STAGE_NEW
+                quote.is_deleted = True
+                deleted = True
+            else:
+                quote.status = Quote.STATUS_PUBLISHED if request_data['quote'].get('status') else Quote.STATUS_UNPUBLISHED
+                quote.is_deleted = False
 
-        substage.save()
-        deal.save()
-        quote.save()
-        absolute_quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
-        quote_link =  f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{{deal.pk}}/"
-        return JsonResponse({'success': True, 'creating': creating, 'deleted': deleted, 'absolute_quote_url':absolute_quote_url,'quote_link' : quote_link})
+            substage.save()
+            deal.save()
+            quote.save()
+            absolute_quote_url = f"{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+            quote_link =  f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{{deal.pk}}/"
+            return JsonResponse({'success': True, 'creating': creating, 'deleted': deleted, 'absolute_quote_url':absolute_quote_url,'quote_link' : quote_link})
+    
+        except Exception as e:
+            api_logger.error('Error while creating deal quote Source: %s, Error: %s',
+                                         'health-quote', e)
+            return JsonResponse({'success': False, 'message': 'Could not create quote for this deal'})
 
 
 class DealGetProductsAjax(DealEditBaseView, CompanyAttributesMixin, View):
