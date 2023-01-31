@@ -144,6 +144,8 @@ class SendHealthInsuranceEmail:
         }
         if deal.referrer:
             ctx.update({'referrer':deal.referrer})
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
         if updated:
             message = self.get_message_templates(type = 'quote updated')
         else:
@@ -169,6 +171,8 @@ class SendHealthInsuranceEmail:
             ctx.update({'insurer_name':insurer_name})
         if deal.referrer:
             ctx.update({'referrer':deal.referrer})
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
 
         message = self.get_message_templates(type = email_type)
         return self.render_context(message, ctx)
@@ -195,6 +199,8 @@ class SendHealthInsuranceEmail:
             message = self.get_message_templates(type = 'order confirmation team notification')
         else:
             message = self.get_message_templates(type = 'order')
+            if deal.user:
+                ctx.update({'assigned_to':deal.user})
         
         return self.render_context(message, ctx)
 
@@ -208,6 +214,8 @@ class SendHealthInsuranceEmail:
             'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
             'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
         message = self.get_message_templates(type = 'Final Quote')
         return self.render_context(message, ctx)
 
@@ -219,6 +227,8 @@ class SendHealthInsuranceEmail:
             'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
             'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
         message = self.get_message_templates(type = 'Final Quote Submitted')
         return self.render_context(message, ctx)
 
@@ -236,7 +246,8 @@ class SendHealthInsuranceEmail:
             'payment_details': payment_details,
             'quote_url' : quote_url,
         }
-
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
         message = self.get_message_templates(type = 'payment')
         #text_template = get_template('email/heath_insurance_final_quote.html')
         return self.render_context(message, ctx)
@@ -248,6 +259,8 @@ class SendHealthInsuranceEmail:
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.primary_member.name,            
         }
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
         message = self.get_message_templates(type = 'payment confirmation')
         return self.render_context(message, ctx)
 
@@ -262,6 +275,9 @@ class SendHealthInsuranceEmail:
             'insurer_name': insurer.name if insurer else '',
             'policy_number': policy.policy_number if policy else '',
         }
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+
         message = self.get_message_templates(type = 'policy issuance', insurer = insurer)
         #text_template = get_template('email/heath_insurance_policy_issuance.html')
         return self.render_context(message, ctx)
