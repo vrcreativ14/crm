@@ -231,8 +231,14 @@ const Form = () => {
 
         Notification((res.success) ? '':'Response',(res.success) ? 'Successfully Submitted!':'Error',(res.success) ? 'success':'danger')
         setSubmitting(false)
-        if(res.success && formData.indicative_budget=='below1k')return window.location.href = "/health-insurance-quote/"+res.quote_reference_number+'/'+res.deal;
+        if(res.success && formData.indicative_budget=='below1k' && (!('visa' in formData) || ('visa' in formData && formData.visa!='AD')))return window.location.href = "/health-insurance-quote/"+res.quote_reference_number+'/'+res.deal;
         if(res.success)return window.location.href = "https://forms.nexusadvice.com/thank-you/";
+    }
+
+    function fieldValidation(){
+        if('is_customer_insurance' in formData && formData.is_customer_insurance=='false' && !formData.total_members){
+            return Notification('At least one additional member information is required.','','danger')
+        }
     }
 
     // console.log(formData.additional_members)
@@ -289,7 +295,7 @@ const Form = () => {
                         </div>
                         <input type="hidden" name="referrer" value={(id) ? id:''}/>
                         {submitting ? <button type="button" className="btn-nexus btn-golden">Submit<i class="ms-1 fas fa-circle-notch fa-spin"></i></button>:
-                        <button type="submit" className="btn-nexus btn-golden">Submit</button>}
+                        <button type="submit" className="btn-nexus btn-golden" onClick={() => fieldValidation()}>Submit</button>}
                     </form>
                 </div>
             </div>
