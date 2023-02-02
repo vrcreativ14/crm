@@ -226,6 +226,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "bor":qp.plan.bor.url if qp.plan.bor else '',
                     "currency":qp.plan.currency,
                     "is_repatriation_benefit_enabled":qp.is_repatriation_benefit_enabled,
+                    "payment_frequency": qp.payment_frequency.frequency,
                 }
                 if qp.is_repatriation_benefit_enabled and qp.plan.is_repatriation_benefit_enabled:
                     plan_data.update({
@@ -295,6 +296,7 @@ def GetSelectedPlanDetails(qp):
                     "maf":qp.plan.maf.url if qp.plan.maf else "",
                     "census":qp.plan.census.url if qp.plan.census else "",
                     "bor":qp.plan.bor.url if qp.plan.bor else "",
+                    "payment_frequency": qp.payment_frequency.frequency,
                 }
 
     return plan_data
