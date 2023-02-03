@@ -627,6 +627,7 @@
             $(this).find('button[type=submit]').addClass('loader');
             let errorCount = 0
             $('.error').hide()
+            $("#edit-visa").prop('disabled', false)
             let radioList = ['gender']
             if($('input[name="is_customer_insurance"]:checked').val() == 'false'){
                 let count = 0
@@ -1386,7 +1387,6 @@
     });
         
     $('#edit_deal_form').submit(function(e){
-            debugger            
             e.preventDefault()
             e.target.querySelector('button[type="submit"]').disabled = true
             var loader = '<div class="ball-spinner"></div>';

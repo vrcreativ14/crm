@@ -978,9 +978,12 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
             request_data = json.loads(request.POST.get('data',''))
             primary_member = deal.primary_member
             quote = Quote.objects.filter(deal = deal)
-            substage = deal.get_current_sub_stage(substage = STAGE_QUOTE)
-            if not substage:
-                substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
+            substage = deal.get_current_sub_stage(stage = STAGE_QUOTE ,substage = STAGE_QUOTE)
+            try:
+                if not substage:
+                    substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
+            except Exception as e:
+                pass
             
             if not quote.exists():
                 quote = Quote.objects.create(deal=deal, company=request.company,                                 

@@ -223,9 +223,12 @@ class Deal(AuditTrailMixin, models.Model):
             return SubStage.objects.filter(deal=self,stage=self.stage).last()
 
     def get_current_sub_stage(self, **kwargs):
+        stage_name = kwargs.get('stage', None)
         substage_name = kwargs.get('substage', None)
-        if substage_name:
-            substage_obj = SubStage.objects.filter(deal=self,stage=self.stage, sub_stage = substage_name)
+        if stage_name and substage_name:
+            substage_obj = SubStage.objects.filter(deal=self,stage=stage_name, sub_stage=substage_name)
+        elif substage_name:
+            substage_obj = SubStage.objects.filter(deal=self,stage=self.stage, sub_stage=substage_name)
         else:
             substage_obj = SubStage.objects.filter(deal=self,stage=self.stage)
         if substage_obj.exists():
