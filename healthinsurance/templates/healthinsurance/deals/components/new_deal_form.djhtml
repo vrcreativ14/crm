@@ -264,7 +264,7 @@
                                 <label class="">Visa *</label>
                             </div>
                             <div class="col-lg-6">
-                                <select class="form-control" name="visa" {% if quote %} disabled {% endif %}>
+                                <select class="form-control" name="visa" id="edit-visa" {% if quote %} disabled {% endif %}>
                                     <option disabled {% if not deal.primary_member.visa %} selected {% endif %}>Please Select Visa</option>
                                     <option value="Dubai" {% if 'Dubai' in deal.primary_member.visa  %} selected {% endif %}>Dubai</option>                                                                
                                     <option value="Abu Dhabi" {% if 'Abu Dhabi' in deal.primary_member.visa %} selected {% endif %}>Abu Dhabi</option>
