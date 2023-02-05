@@ -14,7 +14,7 @@ const InsurerHead = ({data, comparison,image = true}) => {
                 <div key={(image) ? 'compare-header-image'+index:'compare-header'+index} className='right-header d-inline-block'>
                     <div className='d-flex flex-column justify-content-end h-100 align-items-start d-md-block ps-4'>
                         {image && <div className='renewal-parent'><img src={plan.insurer_logo} />{plan.is_renewal && <span className='renewel'>Renewal</span>}</div>}
-                        <div className='text-golden price-highlight'>{CurrencyFormat(plan.total_premium,true,plan.currency)} <small>Yearly</small></div>
+                        <div className='text-golden price-highlight'>{CurrencyFormat(plan.total_premium,true,plan.currency)} <small>{('payment_frequency' in plan && plan.payment_frequency) ? plan.payment_frequency:'Yearly'}</small></div>
                         {('coverage_type' in plan && plan.coverage_type=='basic') ? <button className='btn-nexus btn-golden me-3 me-md-0 fw-bold' onClick={() => setShowBasicPopup(plan.id)}>Select</button>
                         :
                         <ActionButton customClass='fw-bold' url={'summary/'+plan.id} text={'Select'}/>
