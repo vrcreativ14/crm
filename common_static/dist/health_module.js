@@ -50,6 +50,7 @@ const STAGES = {
 
 
 function updateQuoteForm(e, action, id=""){
+    debugger
     let plan_id = e.value
     data = {}
     if(!plan_id){
@@ -66,6 +67,7 @@ $.ajax({
             method: 'GET',
             data: data,
             success: function( result ) {
+                debugger
                 console.log(result)
                 window.products_data = result
                 let saved_am = ''
@@ -363,6 +365,7 @@ function validatePrepare(elem){
     }
     
     elem.closest('form').querySelectorAll('input').forEach(i => {
+        debugger
         let type = i.type
         if(i.classList.contains('required')){
             $(i.parentElement).find('.error').remove();
@@ -442,6 +445,7 @@ function saveForm(formData, email_type){
         data: formData,
         async: false,
         success: function(response){
+            debugger
             if(response['saved']){
                 next_substage = response['next_sub_stage']
                 deal_status = response['status']
@@ -473,6 +477,7 @@ function saveForm(formData, email_type){
 }
 
 function fetchEmailDetails(type){
+    debugger
     $('[data-felix-modal="modal_send_custom_email_health"]').click();
     let url = `/health-insurance/deals/${_deal_id}/email/${type}/`
         $.ajax({
@@ -480,6 +485,7 @@ function fetchEmailDetails(type){
             url: url,
             data: '',
             success: function(response){
+                debugger
             console.log(response)
             updateEmailForm(response)
             },
@@ -492,6 +498,7 @@ function fetchEmailDetails(type){
 }
 
 function downloadAllPolicyFiles(type, id){
+    debugger
     let url = DjangoUrls['health-insurance:download-zipfile'](id,type)    
     url = url.replace('11', id)    
     url = url.replace('22', type)    
@@ -522,6 +529,7 @@ document.onclick = function(event) {
         
     }
     if (element.includes('next-substage')){
+        debugger
         let formData = new FormData()
         event.preventDefault()
         formData = validatePrepare(event.target)
@@ -531,6 +539,7 @@ document.onclick = function(event) {
         saveForm(formData)
     }
     else if(element.includes('fetch-email')){
+        debugger
         event.preventDefault()
         let formData = new FormData()
        
@@ -539,9 +548,7 @@ document.onclick = function(event) {
         saveForm(formData, true)
        
         $('[data-felix-modal="modal_send_custom_email_health"]').click();
-        let type = 'final_quote'
         request_data = {'current_stage':current_stage, 'current_sub_stage':current_sub_stage}
-        let url = `/health-insurance/deals/${_deal_id}/email/${type}/`
         __HEALTH_DEALS._triggerCustomEmailModal('latest');
 
         return
@@ -587,7 +594,8 @@ document.onclick = function(event) {
 
 document.oninput = function(event){
     let element = event.target.className;
-    if(element.includes('member_premium')){           
+    if(element.includes('member_premium')){
+        debugger           
         let total_premium = 0
         document.querySelectorAll('.member_premium').forEach(elem => {
             let temp = !elem.value  ? 0 : parseFloat(elem.value)
@@ -650,6 +658,7 @@ function saveForm(formData, email_type){
         data: formData,
         async: false,
         success: function(response){
+            debugger
             if(response['saved']){
                 let reload = response['reload']
                 if (reload) location.reload()
@@ -791,6 +800,7 @@ var __HEALTH_DEALS;
                         url: url,
                         data: {'deal':_deal_id},
                         success: function(response){
+                            debugger
                         $('#id_product').val('')
                         $('.products-container input').val('')
                         response['plans'].forEach(i => {
@@ -809,12 +819,14 @@ var __HEALTH_DEALS;
             })
 
             _deal_stage_container.on('click','.reactivate-quote',function(e){
+                debugger
                 let url = DjangoUrls['health-insurance:quote-reactivate'](_deal_id)
                 $.ajax({
                     method: 'POST',
                     url: url,
                     async: false,
                     success: function(response){
+                        debugger
                         if(response['success']){                            
                             Utilities.Notify.success(response['message'], 'Success');
                             $('.reactivate-quote').parent().remove()
@@ -827,6 +839,7 @@ var __HEALTH_DEALS;
             });
 
             _deal_stage_container.on('change','.consultation_copay select' ,function(){
+                debugger
                 if($('#copay_mode_id').val() != 'variable'){
                     let consultation_copays = products_data['data']['consultation_copay']
                     for(let i in consultation_copays){
@@ -875,6 +888,7 @@ var __HEALTH_DEALS;
 
             _deal_stage_container.on('click', '.quote-submit', function() {
                 //if($(this).hasClass(_show_loader_class)) return;
+                debugger
                 var current_product_length = $('.products-preview .products .row.product').length;
                 $(this).attr('disabled',true)
                 if(!current_product_length) {
@@ -897,6 +911,19 @@ var __HEALTH_DEALS;
                 }
                 
             });
+
+            _deal_stage_container.on('click', '.void-deal', function(){
+                debugger
+                let url = DjangoUrls['health-insurance:deal-void'](_deal_id)
+                $.post(url, function(response){
+                    debugger
+                    if(response.success)
+                        location.reload()
+                    else
+                        Utilities.Notify.error(response.message, 'Error')
+                })
+            })
+            
 
             $('body').on('click', '.email-edit', function(){
                 debugger
@@ -1066,6 +1093,7 @@ var __HEALTH_DEALS;
         },
 
         _triggerCustomEmailModal: function(email_type) {
+            debugger
             var url = DjangoUrls['health-insurance:deal-email-content'](_deal_id, email_type);
             $('#custom_email_form').css({'opacity': '.7'});
 
@@ -1226,6 +1254,7 @@ var __HEALTH_DEALS;
 
         _validatePrepare: function(elem){
             if(!elem) return
+            debugger
             let formData = new FormData()
             elem.form.querySelectorAll('.error').forEach(elem => {elem.remove()})
             let errorCount = 0
@@ -1303,6 +1332,7 @@ var __HEALTH_DEALS;
                 data: formData,
                 async: false,
                 success: function(response){
+                    debugger
                     if(response['saved']){
                         next_substage = response['next_sub_stage']
                         let next = SUB_STAGES[current_stage][next_substage]
@@ -1974,6 +2004,7 @@ var __HEALTH_DEALS;
 
         _addProduct: function() {
             $('body').on('click', '.add-another-product', function() {
+                debugger
                 $('#modal_quote_insurers').modal('toggle');
                 $('.deal-overview .new-deal').removeClass('display');
                 $('.deal-overview .deal-form').addClass('display');
@@ -1997,6 +2028,7 @@ var __HEALTH_DEALS;
             });
             //for add product button while creating quote
             _deal_stage_container.on('click', '.add-product', function() {
+                debugger
                 // Validation
                 var error = false;
                 $('.error').remove();
@@ -2115,6 +2147,7 @@ var __HEALTH_DEALS;
 
         _editProduct: function() {
             _deal_stage_container.on('click', '.product-edit', function() {
+                debugger
                 var index = $(this).data('id');
                 var qp_id = $(this).data('qp-id');
                 var product = _quoted_products_data['products'][index];
@@ -2174,10 +2207,6 @@ var __HEALTH_DEALS;
 
             $('.deal-form .form #id_product').val(product['product_id']);
             $('.deal-form .form #id_product').trigger('chosen:updated');
-
-            
-
-  
         },
 
         _renderQuotedProductsPreview: function(highlight_index) {

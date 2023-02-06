@@ -978,7 +978,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
             request_data = json.loads(request.POST.get('data',''))
             primary_member = deal.primary_member
             quote = Quote.objects.filter(deal = deal)
-            substage = deal.get_current_sub_stage(stage = STAGE_QUOTE ,substage = STAGE_QUOTE)
+            substage = deal.get_sub_stage(stage = STAGE_QUOTE ,substage = STAGE_QUOTE)
             try:
                 if not substage:
                     substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
@@ -1522,12 +1522,15 @@ class StageProcessView(View):
         email_sent = False
         cc_email = []
         bcc_email = []
+        notification_email = ''
         if deal.referrer and deal.referrer.email:
             cc_email.append(deal.referrer.email)
         if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-            bcc_email.append('auhpls.hotline@nexusadvice.com')
+            notification_email = 'auhpls.hotline@nexusadvice.com'
+            bcc_email.append(notification_email)
         else:
-            bcc_email.append('ind.medical@nexusadvice.com')
+            notification_email = 'ind.medical@nexusadvice.com'
+            bcc_email.append(notification_email)
         if stage == STAGE_QUOTE or stage == STAGE_BASIC:
                 if request.POST.get("plan"):
                         selected_plan = get_object_or_404(QuotedPlan, pk=request.POST.get("plan"))
@@ -1542,7 +1545,7 @@ class StageProcessView(View):
                             order = form.save()
                             deal.status = STATUS_CLIENT
                             #sending order confirmation email to ind.medical
-                            email_notification(deal, 'order confirmation team notification', 'ind.medical@nexusadvice.com')
+                            email_notification(deal, 'order confirmation team notification', notification_email)
                             # if selected_plan.is_renewal_plan:
                             #     deal.deal_type = DEAL_TYPE_RENEWAL
 
@@ -2220,3 +2223,25 @@ class DealExportView(DealBaseView, View):
         exporter = ExportService()
 
         return exporter.to_csv(column_labels, data, filename='deals-{}.csv'.format(datetime.today()))
+
+
+class DealVoid(View):
+    def post(self, request, pk):
+        deal = get_object_or_404(Deal, pk=pk)
+        quote = deal.get_quote()
+        deal.stage = STAGE_QUOTE
+        sub_stages = SubStage.objects.filter(deal = deal).exclude(stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
+        quote_sub_stage = deal.get_sub_stage(stage = STAGE_QUOTE, substage = STAGE_QUOTE)
+        try:
+            if not quote_sub_stage:
+                    substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
+        except Exception as e:
+                pass
+
+        for sub_stage in sub_stages:
+            sub_stage.delete()
+        deal.save()
+        return JsonResponse({
+            'success' : True,
+            'message':'Deal has been voided successfully'
+        })

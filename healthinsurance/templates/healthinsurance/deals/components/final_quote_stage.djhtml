@@ -33,12 +33,7 @@
 <div class="tab-content" id="myTabContent">
     {% if not request.user.userprofile.has_producer_role %}
     <div class="tab-pane fade substage_1 {% if sub_stage_number == 1 %}show active {% endif %}" id="send_to_client" role="tabpanel" aria-labelledby="received-tab">
-
-
-
     <div class="row m-b-5">
-    
-       
             <label class="form-check-label">
                 Once the final quote has been received from the insurer please send it to the client
             </label>
@@ -65,15 +60,19 @@
                     <input type="file" name="final_quote_additional_document" />
                 </div>
             </div>
+            <br/>
             {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Save and Send' class='btn-nexus btn-nexus-blue float-right fetch-email' %}
         </form>
+        <br/>
+        <form class="void-deal-form">
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Void Deal' class='btn-nexus btn-info btn-nexus-blue void-deal' %}
+        </form>
+        
     </div>
     <div class="tab-pane fade substage_2 {% if sub_stage_number == 2 %}show active {% endif %}" id="signed" role="tabpanel" aria-labelledby="home-tab">
         <div class="heading m-b-5">Waiting for the client to sign and upload the final quotation.</div>
         <form method="POST">
         <div class="row m-b-5">
-            
-
             <div class="col-lg-4">
                 <div class="form-check">
                 <input class="form-check-input required" type="checkbox" value="" name="final_quote_uploaded" id="final_quote_uploaded" required>

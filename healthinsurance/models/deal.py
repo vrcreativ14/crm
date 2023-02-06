@@ -222,7 +222,7 @@ class Deal(AuditTrailMixin, models.Model):
         if SubStage.objects.filter(deal=self,stage=self.stage).exists():
             return SubStage.objects.filter(deal=self,stage=self.stage).last()
 
-    def get_current_sub_stage(self, **kwargs):
+    def get_sub_stage(self, **kwargs):
         stage_name = kwargs.get('stage', None)
         substage_name = kwargs.get('substage', None)
         if stage_name and substage_name:

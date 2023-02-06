@@ -263,6 +263,7 @@ this.DjangoUrls = (function () {
               ["health-insurance:quote-reactivate", [["health-insurance/quote/reactivate/%(pk)s/", ["pk"]]]],
               ["health-insurance:download-zipfile", [["health-insurance/files/%(pk)s/%(type)s/", ["pk", "type"]]]],
               ["health-insurance:processed_emails", [["health-insurance/processed-email/%(pk)s/", ["pk"]]]],
+              ["health-insurance:deal-void", [["health-insurance/deals/void/%(pk)s/", ["pk"]]]],
               ["health-insurance:renewals-list", [["health-insurance/policy/json/", []]]],
 
               ["short-url", [["r/%(short_id)s/", ["short_id"]]]],

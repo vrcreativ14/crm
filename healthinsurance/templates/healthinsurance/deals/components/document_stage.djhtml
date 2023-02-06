@@ -59,13 +59,14 @@
             </label>
         </div>
         </div>
-        
-        
-        
     </div>
     <br/>
     {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' action='next-substage' class="btn-nexus btn-nexus-blue next-substage float-right" %}
 </form>
+<form class='void-deal-form'>
+    {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Void Deal' class='btn-nexus btn-info btn-nexus-blue void-deal' %}
+</form>
+
 </div>
 
 
@@ -115,9 +116,9 @@
                     <label for="check_no">Pending</label>
                 </div>
             </div>
-            <label>If the client was flagged, please contact the compliance team directly</label>
-            {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Submit' action='next-substage' class='btn-nexus btn-nexus-blue next-substage float-right' %}
-        </form>
+        <label>If the client was flagged, please contact the compliance team directly</label>
+        {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Submit' action='next-substage' class='btn-nexus btn-nexus-blue next-substage float-right' %}
+    </form>
     {% endif %}
 </div>
 
