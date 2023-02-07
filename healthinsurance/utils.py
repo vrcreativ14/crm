@@ -224,7 +224,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "maf":qp.plan.maf.url if qp.plan.maf else '',
                     "census":qp.plan.census.url if qp.plan.census else '',
                     "bor":qp.plan.bor.url if qp.plan.bor else '',
-                    "currency":qp.plan.currency,
+                    "currency":qp.currency.name if qp.currency else qp.plan.currency,
                     "is_repatriation_benefit_enabled":qp.is_repatriation_benefit_enabled,
                     "payment_frequency": qp.payment_frequency.frequency,
                 }
@@ -262,7 +262,6 @@ def GetAdditionalMemberDetails(primary_member):
             "country_of_stay" : member.country_of_stay,
             "order" : member.order,
             "premium" : member.premium,
-
         }
         members_data.append(data)
     

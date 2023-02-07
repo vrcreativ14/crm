@@ -91,6 +91,11 @@ class InpatientDeductibleSerializer(serializers.ModelSerializer):
         model = InpatientDeductible
         fields = '__all__'
 
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = '__all__'
+
 class QuotedPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuotedPlan
@@ -113,6 +118,7 @@ class PlanSerializer(serializers.ModelSerializer):
     maternity_waiting_period = serializers.SerializerMethodField()
     pre_existing_cover = serializers.SerializerMethodField()
     inpatient_deductible = serializers.SerializerMethodField()
+    currencies = serializers.SerializerMethodField()
     
     def get_area_of_cover(self, instance):
         qs = instance.area_of_cover.all().order_by('area')
@@ -177,6 +183,10 @@ class PlanSerializer(serializers.ModelSerializer):
     def get_inpatient_deductible(self, instance):
         qs = instance.inpatient_deductible.all().order_by('deductible')
         return InpatientDeductibleSerializer(qs, many = True).data
+    
+    def get_currencies(self, instance):
+        qs = instance.currencies.all().order_by('name')
+        return CurrencySerializer(qs, many = True).data
 
     class Meta:
         model = Plan

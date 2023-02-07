@@ -936,9 +936,9 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     'product_id': qp.plan.pk,
                     'insurer_id' : qp.plan.insurer.id,
                     'plan_logo': qp.plan.insurer.logo.url,
-                    'plan_name': qp.plan.name,                    
+                    'plan_name': qp.plan.name,
                     'total_premium': qp.total_premium if type(qp.total_premium) == str else "{:,}".format(qp.total_premium),
-                    'currency': qp.plan.currency,
+                    'currency': qp.currency.id if qp.currency else '',
                     'payment_frequency': qp.payment_frequency.id if qp.payment_frequency else '',
                     'area_of_cover': qp.area_of_cover.id if qp.area_of_cover else '',
                     'copay_mode': qp.plan.copay_mode,
@@ -1020,6 +1020,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                                 #existing_qp.insurer_quote_reference = rqp.get('insurer_quote_reference')
                                 existing_qp.total_premium = total_premium
                                 existing_qp.payment_frequency_id = rqp.get('payment_frequency')
+                                existing_qp.currency_id = rqp.get('currency')
                                 existing_qp.area_of_cover_id = rqp.get('area_of_cover')
                                 existing_qp.network_id = rqp.get('network')
                                 existing_qp.annual_limit_id = rqp.get('annual_limit')
@@ -1061,6 +1062,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
 
                                 new_qp = QuotedPlan(quote=quote, plan_id=rqp.get('product_id'),                        
                                 total_premium = total_premium,
+                                currency_id = rqp.get('currency'),
                                 area_of_cover_id = rqp.get('area_of_cover'),
                                 consultation_copay_id = rqp.get('consultation_copay'),
                                 pharmacy_copay_id = rqp.get('pharmacy_copay'),

@@ -189,6 +189,15 @@
                                 </div>
                                 </div>
                             </div>
+
+                            <div class="col-lg-4 currencies">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Currency</div>
+                                    <select class="form-control" name="currency" id="id_currency">                                    
+                                        <option value="" disabled selected>Select Currency</option>
+                                    </select>
+                                </div>
+                            </div>
     
                             <!--Premium-->
                             <!-- <div class="col-lg-4">
@@ -446,6 +455,9 @@
                 else
                 $('.renewal_document').toggleClass('hide', true)
             })
+            $('.currencies select').on('change', function(){
+                $('.plan_currency').html($(".currencies select option:selected").text())
+            })
             function updateQuoteForm(e, action, id=""){
                 debugger
                 let plan_id = e.value
@@ -468,7 +480,6 @@
                             let networks = result['data']['network']
                             let copay_mode = result['data']['copay_mode'].toLowerCase()
                             $('#copay_mode_id').val(copay_mode)
-                            $('.plan_currency').html(result['data']['currency'])
                             $(".network select option").remove();
                                 $(".network").toggleClass("hide", false);
                                 for (let i in networks) {
@@ -484,6 +495,21 @@
                             else{
                                 $(".network").toggleClass("hide", true)                            
                             }
+
+                            let currencies = result['data']['currencies']
+                            if( ! currencies.length){
+                                $(".currencies").toggleClass("hide", false);   
+                            }
+                            else{
+                                $(".currencies").toggleClass("hide", true)                            
+                            $(".currencies select option").remove();
+                                $(".currencies").toggleClass("hide", false);
+                                for (let i in currencies) {
+                                $(".currencies select").append($("<option></option>")
+                                .attr("value", currencies[i]['id']).text(currencies[i]['name']));
+                            }
+                        }
+                        $('.plan_currency').html($(".currencies select option:selected").text())
 
                             let area_of_cover = result['data']['area_of_cover']
                             $(".area_of_cover select option").remove();

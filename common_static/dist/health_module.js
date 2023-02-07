@@ -1767,6 +1767,8 @@ var __HEALTH_DEALS;
                     _this._set_selected_plan_dropdown(result['insurer_id'])
                 updateQuoteForm('','',result['product_id'])
                 $("#id_total_premium").val(result['total_premium'])
+                $(".currencies select").val(result['currency'])
+                $('.plan_currency').html($(".currencies select option:selected").text())
                 if(result['network'])      
                 $(".network select").val(result['network'])
                 if(result['inpatient_deductible'])
@@ -2053,7 +2055,8 @@ var __HEALTH_DEALS;
                     'product_id': $('#id_product').val(),
                     'plan_name': product.name,
                     'plan_logo': product.plan_logo,
-                    'currency': product.currency,
+                    //'currency': product.currency,
+                    'currency': $(".currencies select").val(),
                     'default_add_ons': $('#id_default_add_ons').val() || [],
                     'total_premium' : $('#id_total_premium').val(),
                     'inpatient_deductible': $('.inpatient_deductible select').val(),
