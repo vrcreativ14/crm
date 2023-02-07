@@ -205,6 +205,13 @@ class VisaCategory(models.Model):
         verbose_name_plural = "Visa Categories"
     def __str__(self):
         return self.name
+    
+class Currency(models.Model):
+        name = models.CharField(max_length=30)
+        class Meta:
+                verbose_name_plural = "Currencies"
+        def __str__(self):
+            return self.name
 
 # class RepatriationPlan(models.Model):
 #     name = models.CharField(max_length=100)
@@ -263,6 +270,7 @@ class Plan(models.Model):
     is_optical_benefit_fixed = models.BooleanField(default=False)
     can_auto_quote = models.BooleanField(default=False)
     currency = models.CharField(max_length=20, choices=CURRENCIES, default='AED')
+    currencies = models.ManyToManyField(Currency)
     network_list_outpatient = models.FileField(upload_to=get_document_upload_path, blank=True)
     network_list_inpatient = models.FileField(upload_to=get_document_upload_path, blank=True)
     policy_wording = models.FileField(upload_to=get_document_upload_path, blank=True)

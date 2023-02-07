@@ -185,6 +185,7 @@ class QuotedPlan(AuditTrailMixin, models.Model):
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE, related_name='health_insurance_quote')
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE, related_name='health_quoted_plan')
     total_premium = models.DecimalField(max_digits=10, decimal_places=2, blank = True, default=0)
+    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     #insurer_quote_reference = models.CharField(max_length=FIELD_LENGTHS['reference_numbers'], blank=True)
     payment_frequency = models.ForeignKey(PaymentFrequency, on_delete=models.SET_NULL, null=True, related_name="qp_payment_fequency")
     area_of_cover = models.ForeignKey(Area_Of_Cover, on_delete=models.SET_NULL, null=True, related_name="qp_area_of_cover")
