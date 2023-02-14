@@ -48,6 +48,7 @@ from felix.exporter import ExportService
 from healthinsurance.views.email import StageEmailNotification
 import io
 import zipfile
+import math
 from healthinsurance.tasks import email_notification
 from core.utils import log_user_activity
 
@@ -324,7 +325,14 @@ class NewHealthDeal(View):
                     bcc_email = []
                     if deal.referrer and deal.referrer.email:
                         cc_email.append(deal.referrer.email)
-                    bcc_email.append('ind.medical@nexusadvice.com')
+                    #bcc_email.append('ind.medical@nexusadvice.com')
+                    if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
+                        notification_email = 'auhpls.hotline@nexusadvice.com'
+                        bcc_email.append(notification_email)
+                    else:
+                        notification_email = 'ind.medical@nexusadvice.com'
+                        bcc_email.append(notification_email)
+
                     email_notification(deal, 'new deal internal notification', 'ind.medical@nexusadvice.com')
                     if deal.stage == STAGE_BASIC:
                         email_notification(deal, 'basic new deal', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email)
@@ -758,7 +766,7 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
         closed_stages = ["lost","closed"]
         ctx["deal"] = deal
         quote = Quote.objects.filter(deal = deal)
-        quote = quote[0] if quote.exists() else None    
+        quote = quote[0] if quote.exists() else None
         stage = self.request.GET.get("stage") or deal.stage
         temp_stage = self.request.GET.get("stage")
         _quoted_products_data = {'products': [], 'quote': {'status': True, 'email': False, 'delete': False}}
@@ -800,6 +808,7 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
             ctx['quoted_plans'] = quote.get_editable_quoted_plans()
             plan_details = GetQuotedPlanDetails(quote, quote_form = True)
             ctx['quoted_plan_details'] = plan_details
+            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
 
         elif stage == STAGE_BASIC:
             self.template_name = 'healthinsurance/deals/components/basic_plan_stage.djhtml'
@@ -818,10 +827,12 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
                 sub_stage = DOCUMENTS_RECEIVED
             if sub_stage == 'world check':
                 ctx.update({'substage_obj': deal.current_sub_stage})    #world_check substage compliance details
+            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
 
 
         elif stage == STAGE_FINAL_QUOTE:
             self.template_name = 'healthinsurance/deals/components/final_quote_stage.djhtml'
+            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
             # order = deal.get_order()
             # if order and order.selected_plan.is_renewal_plan:
             #     ctx['plan_renewal_document'] = order.selected_plan.plan_renewal_document
@@ -831,6 +842,7 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
             #ctx["extended_expiry_date"]
             self.template_name = 'healthinsurance/deals/components/payment_stage.djhtml'
             order = deal.get_order()
+            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
             if order:
                 insurer_details = InsurerDetails.objects.filter(insurer = order.selected_plan.plan.insurer)
                 bank_name = insurer_details[0].bank_name if insurer_details.exists() else ""
@@ -1904,6 +1916,8 @@ class QuoteAPIView(View):
         data = []
         if deal and stage:
             stage_number = deal_stages_to_number(stage)
+            if stage_number < 6:
+                deal_details['is_quote_link_active'] = deal.get_deal_quote_link_status()
             substage = SubStage.objects.filter(deal = deal, stage = deal.stage)
             response["data"] = {
                 "quote_reference_number":quote.reference_number if quote else '',
@@ -2017,12 +2031,27 @@ class QuoteAPIView(View):
 class ReactivateQuoteLink(View):
     def post(self, request, *args, **kwargs):
         deal = get_object_or_404(Deal, pk=kwargs.get("pk"))
-        policy = get_object_or_404(HealthPolicy, deal=deal)
-        policy.is_policy_link_active = True
-        policy.policy_link_reactivated_on = timezone.now()
-        policy.save()
-        return JsonResponse({'success':True,
-                    'message':'Quote link reactivated successfully'})
+        #policy = get_object_or_404(HealthPolicy, deal=deal)
+        policy = deal.get_policy()
+        stage_number = deal_stages_to_number(deal.stage) >= 7
+        response = {}
+        try:
+            if policy and deal_stages_to_number(deal.stage) >= 7:
+                policy.is_policy_link_active = True
+                policy.policy_link_reactivated_on = timezone.now()
+                policy.save()
+                response = {'success':True,
+                        'message':'Quote link reactivated successfully'}
+            elif deal_stages_to_number(deal.stage) <= 6:
+                deal.get_deal_quote_link_status = timezone.now()
+                deal.save()
+                response = {'success':True,
+                            'message':'Quote link reactivated successfully'}
+        except Exception as e:
+            response = {'success':False,
+                        'message':'Could not reactivate Quote link'}
+        
+        return JsonResponse(response)
 
 
 class HealthDealHistoryView(DealEditBaseView, CompanyAttributesMixin, TemplateView):
@@ -2205,7 +2234,7 @@ class DealExportView(DealBaseView, View):
             referrer = ''
             order = deal.get_order()
             selected_plan = ''
-            insurer = ''            
+            insurer = ''
             total_premium = ''
             if order:
                     selected_plan = order.selected_plan.plan
@@ -2247,3 +2276,63 @@ class DealVoid(View):
             'success' : True,
             'message':'Deal has been voided successfully'
         })
+
+
+def DealJsonView(request):
+        data = []
+        start = request.GET.get('start')
+        length = request.GET.get('length')
+        if start and length:
+            start = int(start)
+            length = int(length)
+            page = math.ceil(start / length) + 1
+            per_page = length
+        search_term = request.GET.get('search[value]')
+        range_expiry = request.GET.get('range_expiry')
+        hide_renewals = request.GET.get('hide_renewals')
+        policies = None
+        if(search_term):
+            policies = HealthPolicy.objects.filter(Q(policy_number__icontains = search_term) | Q(customer__name__icontains = search_term))
+            recordsTotal= policies.count()
+            policies = policies[start:start + length]
+        elif range_expiry:
+            policies = GetPolicyQueryset('range_expiry', range = range_expiry, policies = policies)
+            recordsTotal= policies.count()
+            policies = policies[start:start + length]
+        elif hide_renewals == 'true':
+            policies = GetPolicyQueryset('hide_renewals', range = range_expiry, policies = policies)
+            recordsTotal= policies.count()
+            policies = policies[start:start + length]
+        else:
+            policies = HealthPolicy.objects.order_by()[start:start + length]
+            recordsTotal= HealthPolicy.objects.all().count()
+        
+        for policy in policies:
+            status = f'''<td><span class="stage-icon status-{policy.get_policy_expiry_status()}">
+                </span>{policy.get_policy_expiry_status()}</td>'''
+                #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
+            if policy.customer:
+                # customer_link = f'''<a class="link"
+                # href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
+                p = {
+                    'id' : policy.pk,
+                    'status' : status,
+                    'policy_number' : policy.policy_number,
+                    'deal' : policy.deal.customer.name if policy.deal else '',
+                    'customer': policy.customer.name,
+                    'referrer': policy.referrer.get_full_name() if policy.referrer else '',
+                    'selected_plan': policy.deal.selected_plan.name if policy.deal and policy.deal.selected_plan else '',
+                    'total_premium': policy.total_premium_vat_inc,
+                    'start_date': policy.start_date.strftime('%b. %d %Y'),
+                    'expiry_date': policy.expiry_date.strftime('%b. %d %Y'),
+                }
+                data.append(p)
+        
+        resp = {
+            'data' : data,
+            'page': page,
+            'per_page' : per_page,
+            'recordsTotal':recordsTotal,
+            'recordsFiltered': recordsTotal,
+        }
+        return JsonResponse(resp, safe=False)

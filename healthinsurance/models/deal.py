@@ -9,6 +9,7 @@ from core.utils import get_initials_from_the_name
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 from core.mixins import AuditTrailMixin
+from django.utils.timezone import now as tz_now
 import os
 
 PUBLIC_STORAGE = default_storage
@@ -132,6 +133,8 @@ class Deal(AuditTrailMixin, models.Model):
     customer = models.ForeignKey('customers.Customer', null=True, on_delete=models.SET_NULL, related_name="health_deal_customer")
     renewal_for_policy = models.ForeignKey(
         'healthinsurance.HealthPolicy', null=True, blank=True, on_delete=models.SET_NULL, related_name='deal_policy_renewed_for')
+    deal_quote_link_reactivated_on = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return self.primary_member.name
   
@@ -203,7 +206,7 @@ class Deal(AuditTrailMixin, models.Model):
         return coverage.get(self.status, self.status)
 
     @property
-    def status_badge(self): 
+    def status_badge(self):
         if self.status == 'new':
             return 'new-deal'
         return self.status.replace(' ','-')
@@ -298,6 +301,19 @@ class Deal(AuditTrailMixin, models.Model):
         except HealthPolicy.DoesNotExist:
             return None
 
+    def get_deal_quote_link_status(self):
+        if (tz_now() - self.created_on).days > 30:  #inactive after 30 days
+                if(self.deal_quote_link_reactivated_on):
+                    if (tz_now() - self.deal_quote_link_reactivated_on).days > 30:
+                        return False
+                    else:
+                        #return self.is_deal_link_active
+                        return True
+                else:
+                    return False
+        else:
+            return True                        #active
+
 def deal_files_directory(instance,filename):
     return "deals/" + str(instance.deal.deal_id) + "/" + str(instance.type) + "/" + filename
 class DealFiles(models.Model):
@@ -336,7 +352,7 @@ class DealFiles(models.Model):
         return os.path.basename(self.file.name)
 
 class MemberDocuments(models.Model):
-    DOCUMENT_TYPE = [        
+    DOCUMENT_TYPE = [
         ("other_documents","other_documents"),     
         ("passport","passport"),
         ("visa","visa"),        
