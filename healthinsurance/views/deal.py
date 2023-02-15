@@ -2043,7 +2043,7 @@ class ReactivateQuoteLink(View):
                 response = {'success':True,
                         'message':'Quote link reactivated successfully'}
             elif deal_stages_to_number(deal.stage) <= 6:
-                deal.get_deal_quote_link_status = timezone.now()
+                deal.deal_quote_link_reactivated_on = timezone.now()
                 deal.save()
                 response = {'success':True,
                             'message':'Quote link reactivated successfully'}
@@ -2261,16 +2261,19 @@ class DealVoid(View):
         deal = get_object_or_404(Deal, pk=pk)
         quote = deal.get_quote()
         deal.stage = STAGE_QUOTE
-        sub_stages = SubStage.objects.filter(deal = deal).exclude(stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
-        quote_sub_stage = deal.get_sub_stage(stage = STAGE_QUOTE, substage = STAGE_QUOTE)
+        sub_stages = SubStage.objects.filter(deal = deal)
+        #quote_sub_stage = deal.get_sub_stage(stage = STAGE_QUOTE, substage = STAGE_QUOTE)
         try:
-            if not quote_sub_stage:
-                    substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
+            orders = Order.objects.filter(deal = deal)
+            for order in orders:
+                order.delete()
+            if sub_stages.exists():
+                for sub_stage in sub_stages:
+                    sub_stage.delete()
+            substage = SubStage.objects.create(deal = deal, stage = STAGE_QUOTE, sub_stage = STAGE_QUOTE)
         except Exception as e:
                 pass
 
-        for sub_stage in sub_stages:
-            sub_stage.delete()
         deal.save()
         return JsonResponse({
             'success' : True,
