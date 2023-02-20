@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import parse from 'html-react-parser';
+import { Notifications } from './Notifications';
 
 const UploadDoc = ({setuploadDoc,uploadDoc,name,filekey,desc,info = false,required = true,classCustom = 'col-md-6 mb-3'}) => {
     const[hasFile,setHasFile] = useState([])
@@ -11,11 +12,16 @@ const UploadDoc = ({setuploadDoc,uploadDoc,name,filekey,desc,info = false,requir
 
     function setUploadState(event){
         var newData = uploadDoc
+        console.log(event.target.files)
         Object.values(event.target.files).forEach(file => {
-            if(filekey in newData){
-                newData[filekey].push(file)
+            if(file.size<=5242880){
+                if(filekey in newData){
+                    newData[filekey].push(file)
+                }else{
+                    newData[filekey] = [file]
+                }
             }else{
-                newData[filekey] = [file]
+                return Notifications('Error','Maximum each file size can be uploaded is 5MB.','danger')
             }
         })
         setuploadDoc(newData)

@@ -14,6 +14,18 @@ const FormFields = ({country_of_stay = false,type,name,placeholder = "",labelNam
     const[initSearch, setInitSearch] = useState(false)
     const selectInput = useRef(null)
 
+    const Countries_sort = Countries.sort((a, b) => {
+        if (a.name < b.name) {
+            return -1;
+        }
+        if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
+
+    // console.log(Countries_sort)
+
     // if(type=='date' && index !== false)console.log(formData,'inputValue',inputValue)
 
     useEffect(() => {
@@ -153,7 +165,7 @@ const FormFields = ({country_of_stay = false,type,name,placeholder = "",labelNam
                             <div className='country-selection shadow-1-strong'>
                             <input ref={selectInput} autoComplete="off" placeholder='Search...' type="text" value={(search) ? search:''} onChange={(event) => setSearch(event.target.value)}/>
                             <ul>
-                                {Countries.filter((country) => (country.name.toLowerCase()).includes(search.toLowerCase())
+                                {Countries_sort.filter((country) => (country.name.toLowerCase()).includes(search.toLowerCase())
                                 ).map((country,index) => {
                                     if(index>=15 && search!='' && name!='country_of_stay')return
                                     if(country_of_stay && !(country.code in restrictedCountry))return

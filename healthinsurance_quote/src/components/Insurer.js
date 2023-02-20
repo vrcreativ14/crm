@@ -16,6 +16,7 @@ const Insurer = ({data,insurer,index,handleComparison,comparison}) => {
                     <span className='w-100 text-end text-center-desktop'>
                         <div className='d-block d-md-none'><label className='d-flex align-items-center mt-1 justify-content-end'><span>Compare</span><input onChange={(event) => handleComparison(event,index)} className='ms-2' type="checkbox" checked={(comparison && comparison.includes(index)) ? true:false}/></label></div>
                         <strong className='mt-0 mt-md-4 d-inline-block'>{insurer.insurer_name} - {insurer.plan_name}</strong>
+                        {(insurer.is_renewal) && <a href={insurer.plan_renewal_document} target="_blank" className='text-golden d-block text-center mt-1 mb-0'>Click here for Renewal Quote</a>}
                     </span>
                 </li>
                 <InsurerData insurer={insurer} keyIndex={'annual_limit'} type="small"/>

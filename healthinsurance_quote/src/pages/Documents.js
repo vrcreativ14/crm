@@ -34,7 +34,7 @@ const Documents = () => {
 
     async function handleFormSubmit(event){
         event.preventDefault()
-        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','primary_previousinsurance','primary_other','plan_census','plan_bor']
+        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','signed_renewal_document','primary_previousinsurance','primary_other','plan_census','plan_bor']
         // const docsPrimNames = {
         //     'primary_passport':'Primary member Passport',
         //     'primary_emiratesid':'Primary member Emirates ID',
@@ -76,6 +76,7 @@ const Documents = () => {
                 // }
             })
         })}
+        // return
         const { data: res } = await RequestHandler.post('health-insurance/quote-api/',rawData,{headers: { 'Content-Type': 'multipart/form-data'}})
         setLoader(false)
         if(res.success){
@@ -89,12 +90,13 @@ const Documents = () => {
     }
 
     function validateDocUpload(){
-        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','primary_previousinsurance','primary_other','plan_census','plan_bor']
+        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','signed_renewal_document','primary_previousinsurance','primary_other','plan_census','plan_bor']
         const docsPrimNames = {
             'primary_passport':'Primary member Passport documents',
             'primary_emiratesid':'Primary member Emirates ID documents',
             'primary_visa':'Primary member Visa documents',
             'primary_maf':'Plan document MAF',
+            'signed_renewal_document':'Renewal quote document',
             'plan_census':'Plan document Census',
             'plan_bor':'Plan document Bor'
         }
@@ -109,6 +111,8 @@ const Documents = () => {
         docsPrim.map((docIndex) => {
             if(!data.selected_plan.census && docIndex=='plan_census')return
             if(!data.selected_plan.bor && docIndex=='plan_bor')return
+            if(docIndex=='primary_maf' && 'is_previous_plan_selected' in data.selected_plan && data.selected_plan.is_previous_plan_selected)return
+            if(docIndex=='signed_renewal_document' && (!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected))return
 
             if(!findError && docIndex in docsPrimNames && !(docIndex in uploadDoc)){
                 Notifications('Error',docsPrimNames[docIndex]+' is required.','danger')
@@ -131,7 +135,7 @@ const Documents = () => {
 
     const selectedPlan = data.quoted_plans.filter((plan) => plan.id==data.selected_plan.id)
 
-    let planDoc = false
+    let planDoc = true
 
     if(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected)planDoc = true
     if(data.selected_plan.census)planDoc = true
@@ -153,6 +157,7 @@ const Documents = () => {
                         {planDoc &&
                             <DocumentSection title="Plan Documents" defaultTab={true}>
                                 {(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Medical Application Form" filekey="primary_maf" info="Please download the Medical Application Form (MAF) using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].maf).replace(/&amp;/g, "&")+'">Download MAF <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                                {(('is_previous_plan_selected' in data.selected_plan) && data.selected_plan.is_previous_plan_selected) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Upload the Signed Quote" filekey="signed_renewal_document" info="Please download the Renewal Quote Form using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].plan_renewal_document).replace(/&amp;/g, "&")+'">Download Renewal Quote <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
                                 {(data.selected_plan.census) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Census" filekey="plan_census" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.census).replace(/&amp;/g, "&")+'">Download Census <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
                                 {(data.selected_plan.bor) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bor" filekey="plan_bor" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.bor).replace(/&amp;/g, "&")+'">Download Bor <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
                             </DocumentSection>

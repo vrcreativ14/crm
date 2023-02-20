@@ -20,6 +20,7 @@ const InsurerHead = ({data, comparison,image = true}) => {
                         <ActionButton customClass='fw-bold' url={'summary/'+plan.id} text={'Select'}/>
                         }
                         {image && <p className='title-head'>{plan.insurer_name} - {plan.plan_name}</p>}
+                        {/* {(plan.is_renewal) && <p className='mt-1 mb-0'>Click here for Renewal Quote</p>} */}
                     </div>
                     {(showBasicPopup == plan.id) && <BasicPopUpPlanDetails data={data} plan={plan} setShowBasicPopup={setShowBasicPopup}/>}
                 </div>

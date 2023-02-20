@@ -24,6 +24,7 @@ const SelectedPolicy = ({data,insurer,type = 1}) => {
                         }
                         </><br/>
                         <strong className='mt-2 fw-bold fs-6 text-golden'>{(type==1) ? CurrencyFormat(insurer.total_premium,true,insurer.currency):CurrencyFormat(data.deal.total_premium,true,('currency' in data.deal) ? data.deal.currency:'AED')}{(type!=1) && <small> (Inc. VAT)</small>}</strong>
+                        {(type==1 && insurer.is_renewal) && <a href={insurer.plan_renewal_document} target="_blank" className='text-golden d-block text-center mt-1 mb-0'>Click here for Renewal Quote</a>}
                     </span>
                 </li>
                 <li className='large-column multiple-column-mobile'>
