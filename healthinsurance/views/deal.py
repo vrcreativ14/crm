@@ -1000,7 +1000,6 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
             if not quote.exists():
                 quote = Quote.objects.create(deal=deal, company=request.company,                                 
                                     status=Quote.STATUS_PUBLISHED)
-                deal.status = STATUS_CLIENT
             else:
                 quote = quote[0]
 
@@ -1106,7 +1105,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
 
                                 basic_plan_count += 1 if new_qp.plan.coverage_type == 'basic' else 0
 
-                            
+            deal.status = STATUS_CLIENT                
             if total_plans == basic_plan_count:
                 deal.stage = STAGE_BASIC
                 substage.stage = STAGE_BASIC
@@ -2279,63 +2278,3 @@ class DealVoid(View):
             'success' : True,
             'message':'Deal has been voided successfully'
         })
-
-
-def DealJsonView(request):
-        data = []
-        start = request.GET.get('start')
-        length = request.GET.get('length')
-        if start and length:
-            start = int(start)
-            length = int(length)
-            page = math.ceil(start / length) + 1
-            per_page = length
-        search_term = request.GET.get('search[value]')
-        range_expiry = request.GET.get('range_expiry')
-        hide_renewals = request.GET.get('hide_renewals')
-        policies = None
-        if(search_term):
-            policies = HealthPolicy.objects.filter(Q(policy_number__icontains = search_term) | Q(customer__name__icontains = search_term))
-            recordsTotal= policies.count()
-            policies = policies[start:start + length]
-        elif range_expiry:
-            policies = GetPolicyQueryset('range_expiry', range = range_expiry, policies = policies)
-            recordsTotal= policies.count()
-            policies = policies[start:start + length]
-        elif hide_renewals == 'true':
-            policies = GetPolicyQueryset('hide_renewals', range = range_expiry, policies = policies)
-            recordsTotal= policies.count()
-            policies = policies[start:start + length]
-        else:
-            policies = HealthPolicy.objects.order_by()[start:start + length]
-            recordsTotal= HealthPolicy.objects.all().count()
-        
-        for policy in policies:
-            status = f'''<td><span class="stage-icon status-{policy.get_policy_expiry_status()}">
-                </span>{policy.get_policy_expiry_status()}</td>'''
-                #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
-            if policy.customer:
-                # customer_link = f'''<a class="link"
-                # href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
-                p = {
-                    'id' : policy.pk,
-                    'status' : status,
-                    'policy_number' : policy.policy_number,
-                    'deal' : policy.deal.customer.name if policy.deal else '',
-                    'customer': policy.customer.name,
-                    'referrer': policy.referrer.get_full_name() if policy.referrer else '',
-                    'selected_plan': policy.deal.selected_plan.name if policy.deal and policy.deal.selected_plan else '',
-                    'total_premium': policy.total_premium_vat_inc,
-                    'start_date': policy.start_date.strftime('%b. %d %Y'),
-                    'expiry_date': policy.expiry_date.strftime('%b. %d %Y'),
-                }
-                data.append(p)
-        
-        resp = {
-            'data' : data,
-            'page': page,
-            'per_page' : per_page,
-            'recordsTotal':recordsTotal,
-            'recordsFiltered': recordsTotal,
-        }
-        return JsonResponse(resp, safe=False)

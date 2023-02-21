@@ -32,11 +32,6 @@
             
             
         </div>
-        <div class="" style="float: right;">
-            {% if not is_policy_link_active and not is_basic_plan_selected %}
-            <span>The link has expired, please <a href="#" class="reactivate-quote">click here</a> to re-activate the link</span>
-            {% endif %}
-        </div>
         <br/>
         <br/>
             {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' class='btn-nexus btn-nexus-blue next-substage float-right' %}

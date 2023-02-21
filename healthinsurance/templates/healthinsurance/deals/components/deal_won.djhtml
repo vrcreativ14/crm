@@ -5,9 +5,6 @@
         {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
         <br/>
     </div>
-        {% if not is_policy_link_active %}
-            <span class="m-t-5" style="align-self:end;">The link has expired, please <a href="#" class="reactivate-quote" onclick="">click here</a> to re-activate the link</span>
-        {% endif %}
         <script>
             $('.reactivate-quote').on('click',function(e){
                 debugger
@@ -18,7 +15,7 @@
                     async: false,
                     success: function(response){
                         debugger
-                        if(response['success']){                            
+                        if(response['success']){
                             Utilities.Notify.success(response['message'], 'Success');
                             $('.reactivate-quote').parent().remove()
                         }

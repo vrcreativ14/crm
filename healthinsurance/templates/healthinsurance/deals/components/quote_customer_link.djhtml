@@ -20,14 +20,19 @@
                 <a href="{{ quote_pdf_download_url }}" target="_blank" class="m-l-5 float-right"><i class="ti-download"></i></a>
             </div> {% endcomment %}
         </div>
+        
     </div>
-    {% if stage_number < 6 %}
+    
     <br/>
     <div class="">
         {% if not is_quote_link_active and not is_basic_plan_selected %}
             <span class="float-right">The link has expired, please <a href="#" class="reactivate-quote">click here</a> to re-activate the link</span>
+        
+        {% elif not is_policy_link_active and not is_basic_plan_selected %}
+            <span>The link has expired, please <a href="#" class="reactivate-quote">click here</a> to re-activate the link</span>
+            
         {% endif %}
     </div>
-    {% endif %}
+    
 </div>
 {% endif %}
