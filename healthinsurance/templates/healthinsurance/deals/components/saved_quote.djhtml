@@ -42,7 +42,7 @@
             </div>
             <div class="details col-lg-3 col-md-3 col-sm-4">
                 <div class="heading light">{{ qp.plan.name }}</div>
-                <div class="text-muted font-12">Total Premium: {{qp.plan.currency}} {{ qp.total_premium }}</div>
+                <div class="text-muted font-12">Total Premium: {% if qp.currency %}{{qp.currency.name}}{% else %}{{qp.plan.currency}}{% endif %} {{ qp.total_premium }}</div>
                 <!-- <div class="text-muted font-12">Insurer Quote Reference: {{ qp.insurer_quote_reference }}</div> -->
                 <div class="text-muted font-12">{% if qp.is_renewal_plan %}<span>Renewal <i class="fa fa-check m-l-5"></i></span>{% endif %}</div>
             </div>
