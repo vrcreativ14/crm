@@ -217,6 +217,7 @@ def GetQuotedPlanDetails(quote, **kwargs):
                     "physiotherapy":qp.physiotherapy.sessions if qp.physiotherapy else '',
                     "total_premium": qp.plan.basic_plan_premium if quote.deal.stage == STAGE_BASIC else qp.total_premium,
                     "is_renewal":qp.is_renewal_plan,
+                    "plan_renewal_document":qp.plan_renewal_document.url if qp.plan_renewal_document else '',
                     "network_list_inpatient":qp.plan.network_list_inpatient.url if qp.plan.network_list_inpatient else '',
                     "network_list_outpatient":qp.plan.network_list_outpatient.url if qp.plan.network_list_outpatient else '',
                     "policy_wording":qp.plan.policy_wording.url if qp.plan.policy_wording else '',
@@ -267,7 +268,7 @@ def GetAdditionalMemberDetails(primary_member):
     
     return members_data
 
-def GetSelectedPlanDetails(qp):    
+def GetSelectedPlanDetails(qp):
     plan_data = {
                     "id":qp.id,
                     "plan_name":qp.plan.name,
@@ -296,6 +297,8 @@ def GetSelectedPlanDetails(qp):
                     "census":qp.plan.census.url if qp.plan.census else "",
                     "bor":qp.plan.bor.url if qp.plan.bor else "",
                     "payment_frequency": qp.payment_frequency.frequency,
+                    "is_renewal": qp.is_renewal_plan,
+                    "plan_renewal_document": qp.plan_renewal_document.url if qp.plan_renewal_document else '',
                 }
 
     return plan_data
@@ -327,7 +330,7 @@ def AdditionalBenefitsText(additional_benefit):
         benefit = {
             'health_screen':'Health Screen',
             'dental':'Dental',
-            'other':'Other',            
+            'other':'Other',
         }
         return benefit.get(additional_benefit, additional_benefit)
     
