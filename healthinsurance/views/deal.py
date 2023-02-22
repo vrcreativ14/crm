@@ -1910,8 +1910,8 @@ class QuoteAPIView(View):
         data = []
         if deal and stage:
             stage_number = deal_stages_to_number(stage)
-            if stage_number < 6:
-                deal_details['is_quote_link_active'] = deal.get_deal_quote_link_status()
+            # if stage_number < 6:
+            deal_details['is_quote_link_active'] = deal.get_deal_quote_link_status()
             substage = SubStage.objects.filter(deal = deal, stage = deal.stage)
             response["data"] = {
                 "quote_reference_number":quote.reference_number if quote else '',
@@ -2030,17 +2030,17 @@ class ReactivateQuoteLink(View):
         stage_number = deal_stages_to_number(deal.stage) >= 7
         response = {}
         try:
-            if policy and deal_stages_to_number(deal.stage) >= 7:
+            if not deal.get_deal_quote_link_status():
+                deal.deal_quote_link_reactivated_on = timezone.now()
+                deal.save()
+                response = {'success':True,
+                            'message':'Quote link reactivated successfully'}
+            if not policy.get_policy_link_status():
                 policy.is_policy_link_active = True
                 policy.policy_link_reactivated_on = timezone.now()
                 policy.save()
                 response = {'success':True,
                         'message':'Quote link reactivated successfully'}
-            elif deal_stages_to_number(deal.stage) <= 6:
-                deal.deal_quote_link_reactivated_on = timezone.now()
-                deal.save()
-                response = {'success':True,
-                            'message':'Quote link reactivated successfully'}
         except Exception as e:
             response = {'success':False,
                         'message':'Could not reactivate Quote link'}
