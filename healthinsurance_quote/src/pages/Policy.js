@@ -53,7 +53,8 @@ const Policy = () => {
 
     function downloadSingleDoc(key,bulk = false){
         let files = (key=='policy_wording') ? data.selected_plan[key]:data.policy[key]
-        files.map((file,index) => {
+        if(key=='policy_wording'){
+            const file = data.selected_plan[key]
             JSZipUtils.getBinaryContent(file, function (err, dataFile) {
                 if(err) {
                     console.log(err)
@@ -61,9 +62,21 @@ const Policy = () => {
                     return
                 }
                 const fileName = (file.split('.').pop()).split('?')
-                zip.file(key+index+'.'+fileName[0], dataFile, {binary:true});
+                zip.file(key+'.'+fileName[0], dataFile, {binary:true});
             });
-        })
+        }else{
+            files.map((file,index) => {
+                JSZipUtils.getBinaryContent(file, function (err, dataFile) {
+                    if(err) {
+                        console.log(err)
+                        throw err; // or handle the error
+                        return
+                    }
+                    const fileName = (file.split('.').pop()).split('?')
+                    zip.file(key+index+'.'+fileName[0], dataFile, {binary:true});
+                });
+            })
+        }
 
         if(!bulk)
         setTimeout(() => {
@@ -189,7 +202,7 @@ const Policy = () => {
                     {data.selected_plan.policy_wording.length>0 && 
                         <li className='small-column'><strong>Policy Wordings</strong>
                             <p className="mb-0 font-size-bigger-upload">
-                                {data.selected_plan.policy_wording.length==1 ? 
+                                {data.selected_plan.policy_wording ? 
                                 <a target="_blank" className="text-fade-grey" href={decodeURI(data.selected_plan.policy_wording).replace(/&amp;/g, "&")}>
                                     Download <i className="text-golden fas fa-arrow-circle-down"></i>
                                 </a>

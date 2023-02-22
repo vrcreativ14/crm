@@ -10,7 +10,7 @@ export const GetData = async (page = false,navigate) => {
         if('data' in quoteData){
             const quote = quoteData.data
             if(secretCode==quote.quote.reference_number && !quote.quote.outdated){
-                if('deal' in quote && !quote.deal.is_quote_link_active){
+                if('deal' in quote && 'is_quote_link_active' in quote.deal && !quote.deal.is_quote_link_active){
                     return navigate('/health-insurance-quote/expired/')
                 }
                 if('policy' in quote && !quote.policy.is_policy_link_active){
