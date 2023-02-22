@@ -774,7 +774,7 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
         sub_stage = deal.current_sub_stage
         sub_stage = sub_stage.sub_stage if sub_stage else None
         quoted_products = QuotedPlan.objects.filter(quote = quote) if quote else None
-        
+        ctx['is_policy_link_active'] = True        
         if temp_stage and 'edit-quote' in temp_stage:
             stage = 'edit-quote'
             self.template_name = 'healthinsurance/deals/components/deal_quote_form.djhtml'
