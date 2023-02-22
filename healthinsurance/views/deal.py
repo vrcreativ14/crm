@@ -808,7 +808,6 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
             ctx['quoted_plans'] = quote.get_editable_quoted_plans()
             plan_details = GetQuotedPlanDetails(quote, quote_form = True)
             ctx['quoted_plan_details'] = plan_details
-            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
 
         elif stage == STAGE_BASIC:
             self.template_name = 'healthinsurance/deals/components/basic_plan_stage.djhtml'
@@ -827,12 +826,9 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
                 sub_stage = DOCUMENTS_RECEIVED
             if sub_stage == 'world check':
                 ctx.update({'substage_obj': deal.current_sub_stage})    #world_check substage compliance details
-            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
-
 
         elif stage == STAGE_FINAL_QUOTE:
             self.template_name = 'healthinsurance/deals/components/final_quote_stage.djhtml'
-            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
             # order = deal.get_order()
             # if order and order.selected_plan.is_renewal_plan:
             #     ctx['plan_renewal_document'] = order.selected_plan.plan_renewal_document
@@ -842,7 +838,6 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
             #ctx["extended_expiry_date"]
             self.template_name = 'healthinsurance/deals/components/payment_stage.djhtml'
             order = deal.get_order()
-            ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
             if order:
                 insurer_details = InsurerDetails.objects.filter(insurer = order.selected_plan.plan.insurer)
                 bank_name = insurer_details[0].bank_name if insurer_details.exists() else ""
@@ -888,7 +883,7 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
             ctx['quote_link'] = quote_link
         ctx["quote"] = quote
         ctx["quoted_products"] = quoted_products
-        
+        ctx['is_quote_link_active'] = deal.get_deal_quote_link_status()
         ctx['stage'] = stage
         ctx['sub_stage'] = sub_stage
         ctx['stage_number'] = stage_number
