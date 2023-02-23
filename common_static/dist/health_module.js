@@ -839,7 +839,6 @@ var __HEALTH_DEALS;
             });
 
             _deal_stage_container.on('change','.consultation_copay select' ,function(){
-                debugger
                 if($('#copay_mode_id').val() != 'variable'){
                     let consultation_copays = products_data['data']['consultation_copay']
                     for(let i in consultation_copays){
@@ -849,6 +848,16 @@ var __HEALTH_DEALS;
                         }
                     }
                 }
+            })
+
+            _deal_stages_breadcrumb.on('click', 'li', function(){
+                let tab_status = this.className
+                let stage = this.dataset.id
+                if(stage == 'quote'){
+                    _this._loadDealStage('quote')
+                }
+                else if(stage != 'new' && tab_status.includes('current'))
+                    _this._loadDealStage(stage)
             })
 
 

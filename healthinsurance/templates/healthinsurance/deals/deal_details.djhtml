@@ -981,8 +981,8 @@ a{
 
                         {% else %}
 
-                        <li data-id='quote' data-item="quote-overview" value="2" >
-                            <a href="javascript:">
+                        <li data-id='quote' data-item="quote-overview" value="2">
+                            <a href="#" style="cursor: pointer;">
                                 <i class="stage-warning fas fa-exclamation-triangle {% if not deal.quote.outdated %}hide{% endif %}"></i>
                                 Quote
                                 {% if deal.quote %}
@@ -1001,7 +1001,7 @@ a{
                             <label class="waiting_label_{{current_stage}} form-check-label fw-300 hide">waiting</label>
                             {% endif %}
                         </li>
-                        <li data-id='final-quote' class="final-quote no-underline" data-item="final-quote" value="4">
+                        <li data-id='final_quote' class="final-quote no-underline" data-item="final-quote" value="4">
                             <a href="#">
                                 Final Quote
                                 <span class="duration">{{ deal.valuation|naturalday|capfirst }}</span>
@@ -1018,14 +1018,13 @@ a{
                             <label class="waiting_label_{{current_stage}} form-check-label fw-300 hide">waiting</label>
                             {% endif %}
                         </li>
-                     
-                        <li data-id='policyIssuance' data-item="policy-issuance" value="6">
+                        <li data-id='policy_issuance' data-item="policy-issuance" value="6">
                             <a href="#">Policy Issuance</a>
                         </li>
 
                         {% endif %}
                        
-                        <li data-id='houseKeeping' data-item="houseKeeping" value="7">
+                        <li data-id='housekeeping' data-item="houseKeeping" value="7">
                             <a href="#">Housekeeping</a>
                         </li>
                         <li data-id='won' data-item="won" value="8">
@@ -1766,7 +1765,6 @@ a{
                 $(addElem).last().append(new_elem)
             document.querySelector(`#${relative}`).value = count
             document.getElementById('countries-button').click()
-                
         }
         
         function removeMember(elem){
@@ -1819,31 +1817,6 @@ a{
             // let collapsable = this.closest('.info-container').querySelectorAll('.collapsable')
             // collapsable.toggle()
         })
-
-        function editMortgageNote(el){
-            $("#modal_update_note textarea").val($(el).closest('li').find('.note').html())
-            $("#modal_update_note input[name='pk']").val(el.dataset.pk)
-        }
-        
-        function deleteMortgageNote(element){
-            {
-                $.ajax({
-                    url: element.dataset.deleteurl,
-                    method: 'DELETE',
-                    headers: {
-                        "X-CSRFToken":$('#delete_note_csrftoken input').val()
-                },
-                    success: function( data ) {
-                        element.closest('li').remove()
-                        Utilities.Notify.success('Note deleted', 'Success');
-                    },
-                    error: function(data){
-                        Utilities.Notify.error('Note not deleted', 'Error');
-
-                    }
-                });
-            }
-        }
 
         function default_agent_id(sec = 1000){
             const agent_id = $('body').data('agent');
@@ -1994,7 +1967,7 @@ a{
                     self.parents('.parent-div').find('a').show();
                     self.parents('.parent-div').find('form').hide();
                     self.parents('.parent-div').find('.file-name').show();
-                    Utilities.Notify.success('File Uploaded.', 'Success');
+                    Utilities.Notify.success('File Uploaded.', 'Success'); 
                 })
                 .catch(error => Utilities.Notify.error('Please check the file format.', 'Error'));
             });
