@@ -342,6 +342,8 @@ class DealFiles(models.Model):
         ("order_confirmation","order_confirmation"),
         ("plan_census","plan_census"),
         ("plan_bor","plan_bor"),
+        ("plan_renewal_document","plan_renewal_document"),
+        ("signed_renewal_document","signed_renewal_document"),
     ]
     deal = models.ForeignKey(Deal,on_delete=models.CASCADE)
     type = models.CharField(choices=ATTACHMENT_TYPE,default='final-quote',max_length=100)
