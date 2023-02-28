@@ -774,7 +774,7 @@ class HealthDealStagesView(DetailView, CompanyAttributesMixin):
         sub_stage = deal.current_sub_stage
         sub_stage = sub_stage.sub_stage if sub_stage else None
         quoted_products = QuotedPlan.objects.filter(quote = quote) if quote else None
-        ctx['is_policy_link_active'] = True        
+        ctx['is_policy_link_active'] = True
         if temp_stage and 'edit-quote' in temp_stage:
             stage = 'edit-quote'
             self.template_name = 'healthinsurance/deals/components/deal_quote_form.djhtml'
@@ -1931,19 +1931,19 @@ class QuoteAPIView(View):
                     order = order[0]
                     selected_plan = order.selected_plan
                     sp = GetSelectedPlanDetails(selected_plan)
-                    if deal.deal_type == DEAL_TYPE_RENEWAL:
-                        policy = deal.renewal_for_policy if deal.renewal_for_policy else ''
-                        if policy:
-                            d = policy.deal
-                            previous_plan = d.selected_plan if d else None
-                            previous_plan_insurer = d.selected_plan.insurer if d else None
-                            if previous_plan and previous_plan_insurer:
-                                if selected_plan.plan == previous_plan and previous_plan_insurer == selected_plan.plan.insurer:
-                                    sp['is_previous_plan_selected'] = True
-                                else:
-                                    sp['is_previous_plan_selected'] = False
-                    elif selected_plan.is_renewal_plan:
+                    if deal.deal_type == DEAL_TYPE_RENEWAL or selected_plan.is_renewal_plan:
+                        # policy = deal.renewal_for_policy if deal.renewal_for_policy else ''
+                        # if policy:
+                        # d = policy.deal
+                        # previous_plan = d.selected_plan if d else None
+                        # previous_plan_insurer = d.selected_plan.insurer if d else None
+                        # if previous_plan and previous_plan_insurer:
+                        #if selected_plan.plan == previous_plan and previous_plan_insurer == selected_plan.plan.insurer:
                         sp['is_previous_plan_selected'] = True
+                            # else:
+                            #     sp['is_previous_plan_selected'] = False
+                    # elif selected_plan.is_renewal_plan:
+                    #     sp['is_previous_plan_selected'] = True
 
                     response["data"]["selected_plan"] = sp
             if stage_number == 4:
@@ -2035,7 +2035,7 @@ class ReactivateQuoteLink(View):
                 deal.save()
                 response = {'success':True,
                             'message':'Quote link reactivated successfully'}
-            if not policy.get_policy_link_status():
+            if policy and not policy.get_policy_link_status():
                 policy.is_policy_link_active = True
                 policy.policy_link_reactivated_on = timezone.now()
                 policy.save()
