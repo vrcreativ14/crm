@@ -203,7 +203,10 @@
     {% if "signed_final_quote_additional_document" in saved_files_types %}
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="signed_final_quote_additional_document" name="Signed Final Quote Additional Document" doc_name="signed final quote additional document" upload_type="signed_final_quote_additional_document" %}
     {% endif %}
-    {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="payment_proof" name="Payment Proof" doc_name="payment proof" upload_type="payment_proof" %}    
+    {% if "signed_renewal_document" in saved_files_types %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="signed_renewal_document" name="Signed Renewal Document" doc_name="signed renewal document" upload_type="signed_renewal_document" %}
+    {% endif %}
+    {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="payment_proof" name="Payment Proof" doc_name="payment proof" upload_type="payment_proof" %}
     {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="additional_document" name="Additional Documents" doc_name="additional documents" upload_type="additional_document" %}
     {% if "world_check_proof" in saved_files_types %}
         {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="world_check_proof" name="World Check Proof" doc_name="world check proof" upload_type="world_check_proof" %}
