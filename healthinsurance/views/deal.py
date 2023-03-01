@@ -2030,7 +2030,7 @@ class ReactivateQuoteLink(View):
         stage_number = deal_stages_to_number(deal.stage) >= 7
         response = {}
         try:
-            if not deal.get_deal_quote_link_status():
+            if deal and not deal.get_deal_quote_link_status():
                 deal.deal_quote_link_reactivated_on = timezone.now()
                 deal.save()
                 response = {'success':True,
@@ -2312,7 +2312,7 @@ def DealJsonView(request):
                 <input class="select-record" type="checkbox" data-id="{deal.pk}" value="{deal.pk}" />
                 <span class="checkmark"></span>'''
                 #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
-            stage = f'<td class="capitalize">{deal.stage}</td>'
+            stage = f'<td class="capitalize">{deal.deal_stage_text}</td>'
             status = '-' if deal.stage == 'lost' or deal.stage == 'won' else f'<span class="badge badge-{deal.status_badge} badge-font-light badge">{deal.status_text}</span>'
             created_on = f'{deal.deal_timeinfo} at {deal.created_on}' if deal.deal_timeinfo == 'Today' or deal.deal_timeinfo == 'Yesterday' else f'<td class="link" data-sort="{deal.created_on}" data-search="{deal.created_on}">'
             customer = f'<div><a>{deal.primary_member.name} </a> </div>'
@@ -2338,7 +2338,7 @@ def DealJsonView(request):
                     'members': deal.primary_member.additional_members.all().count()+1,
                     'visa': deal.primary_member.visa if deal.primary_member.visa else '-',
                     'user': deal.user.get_full_name() if deal.user else '',
-                    'referrer': deal.referrer.get_full_name() if deal.user else '',
+                    'referrer': deal.referrer.get_full_name() if deal.referrer else '',
                 }
                 data.append(p)
         
