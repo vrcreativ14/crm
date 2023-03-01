@@ -70,5 +70,6 @@ urlpatterns = [
     path("renewals/filter/", RenewalListFilter.as_view(), name="renewals-filter"),
     path("policy/json/", PolicyJsonView, name="policies-list"),
     path("renewals/json/", RenewalPolicyJsonView, name="renewals-list"),
+    path("deals/json/", DealJsonView, name="deals-list"),
     path("deals/void/<int:pk>/", csrf_exempt(DealVoid.as_view()), name="deal-void"),
 ]

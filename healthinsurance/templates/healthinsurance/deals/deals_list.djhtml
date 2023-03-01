@@ -344,7 +344,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                 Final Quotes
                                 <span class="final-quote-count"></span>
                             </label>
-                            <input class="quick-filter-radio" id="final-quote" type="radio" name="deals-filter" value="final"/>
+                            <input class="quick-filter-radio" id="final-quote" type="radio" name="deals-filter" value="final_quote"/>
                             
                             <label for="payment" class="btn-sm btn btn-white">
                                 Payments
@@ -356,13 +356,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                 Policy Issuance
                                 <span class="policy-issuance-count"></span>
                             </label>
-                            <input class="quick-filter-radio" id="policy-issuance" type="radio" name="deals-filter" value="Policy Issuance"/>
+                            <input class="quick-filter-radio" id="policy-issuance" type="radio" name="deals-filter" value="policy_issuance"/>
                             
                             <label for="basic" class="btn-sm btn btn-white">
                                 Basic
                                 <span class="basic-count"></span>
                             </label>
-                            <input class="quick-filter-radio" id="basic" type="radio" name="deals-filter" value="Basic"/>
+                            <input class="quick-filter-radio" id="basic" type="radio" name="deals-filter" value="basic"/>
 
                             <label for="housekeeping" class="btn-sm btn btn-white">
                                 Housekeeping
@@ -388,22 +388,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                             <select name="assigned_to" id="id_filter_deal_status">
                                 <option value="" selected="" disabled>Select Deal Status to filter</option>
                                 <option value="all">All</option>
-                                <option value="Waiting for us">Waiting for us</option>
-                                <option value="Waiting for insurer">Waiting for insurer</option>
-                                <option value="Waiting for client">Waiting for client</option>
-                                <option value="New Deal">New Deal</option>
+                                <option value="waiting for us">Waiting for us</option>
+                                <option value="waiting for insurer">Waiting for insurer</option>
+                                <option value="waiting for client">Waiting for client</option>
+                                <option value="new">New Deal</option>
                             </select>
                         </span>
                         {% if not request.user.userprofile.has_producer_role %}
-                            <span class="user-filter pl-1">
-                                <select name="assigned_to" id="id_assigned_to">
-                                    <option value="" selected="">Select User/Referrer to filter/All users {{ request.user.has_producer_role }}</option>
-                                    <option value="None">All Unassigned</option>
-                                    {% for user in users %}
-                                    <option value="{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </span>
+                        <span class="user-filter pl-1">
+                            <select name="assigned_to" id="id_assigned_to">
+                                <option value="" selected="">Select User/Referrer to filter/All users</option>
+                                <option value="None">All Unassigned</option>
+                                {% for user in users %}
+                                <option value="{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</option>
+                                {% endfor %}
+                            </select>
+                        </span>
                         {% endif %}
                         <!-- <span class="{% if is_producer %}hide{% endif %}">
                             {{ search_form.assigned_to }}
@@ -532,7 +532,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                             </tr>
                         </thead>
                         <tbody class="felix-table-body">
-                            {% include 'handlebars/health_deals_list.html' %}
                         </tbody>
                     </table>
                 </div>
@@ -556,10 +555,52 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
     <script src="//cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
 <script type="text/javascript">
-
-
 var filtered = [];
-var table = $('.felix-table').DataTable();
+var table = $('.felix-table').DataTable({
+    "processing": true,
+    "serverSide": true,
+    "ajax": {
+                url : '/health-insurance/deals/json/',
+                type: 'GET',
+                data: function(d){
+                    debugger
+                    d.range_expiry = $('.ranges li.active').data('range-key');
+                    //d.status = $('label.btn-sm.btn.btn-white.active').text()
+                    d.stage = $('label.btn-sm.btn.btn-white.active').next('input').val()
+                    d.status = $('#id_filter_deal_status').val()
+                    d.user = $('#id_assigned_to').val()
+                    if($('input[name="daterange"]').val())
+                    d.daterange = $('input[name="daterange"]').val()
+                    // Retrieve dynamic parameters
+                    var range = $('.ranges li.clicked').data('range-key');
+                    // Add dynamic parameters to the data object sent to the server
+                    if(range){ $.extend(d, range); }
+                }
+            },
+            "columns": [
+                {"data": "checkbox"},
+                {"data": "stage"},
+                {"data": "status"},
+                {"data": "created_on"},
+                {"data": "customer"},
+                {"data": "selected_plan"},
+                {"data": "budget"},
+                {"data": "premium"},
+                {"data": "members"},
+                {"data": "visa"},
+                {"data": "user"},
+                {"data": "referrer"},
+      ],
+    createdRow: function (row, data, dataIndex) {
+            //let url_delete = DjangoUrls['health-insurance:delete-deal'](data['id'])
+            let url_delete = `/health-insurance/deals/delete-deal/${data['id']}`
+            let url_detail = `/health-insurance/deals/${data['id']}`
+            $(row).attr('data-url-delete', url_delete);
+            $(row).attr('data-url', url_detail);
+            $(row).attr('id', `tr_${data['id']}`);
+            $(row).addClass('health-deal-row');
+        }
+});
 function UpdateCount(){
     const stages = ['open', 'new', 'quote', 'documents', 'Final Quote', 'payment', 'Policy Issuance','basic','housekeeping',  'won', 'lost'];
     stages.forEach(element => {
@@ -589,8 +630,8 @@ $(document).ready( function () {
     $('input[name="daterange"]').daterangepicker({
                 opens: 'left'
             }, function(start, end, label) {                
-                $('#min-date').val(start.format('YYYYMMDD'));
-                $('#max-date').val(end.format('YYYYMMDD'));
+                $('#min-date').val(start.format('YYYY/MM/DD'));
+                $('#max-date').val(end.format('YYYY/MM/DD'));
                 table.draw();
                 UpdateCount()
             });

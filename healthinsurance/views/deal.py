@@ -2273,3 +2273,80 @@ class DealVoid(View):
             'success' : True,
             'message':'Deal has been voided successfully'
         })
+
+
+def DealJsonView(request):
+        data = []
+        start = request.GET.get('start')
+        length = request.GET.get('length')
+        if start and length:
+            start = int(start)
+            length = int(length)
+            page = math.ceil(start / length) + 1
+            per_page = length
+        search_term = request.GET.get('search[value]')
+        range_expiry = request.GET.get('range_expiry')
+        stage_filter = request.GET.get('stage')
+        status_filter = request.GET.get('status')
+        user = request.GET.get('user')
+        daterange = request.GET.get('daterange')
+        deals = Deal.objects.none()
+        if(search_term):
+            deals = deals & Deal.objects.filter(Q(customer__name__icontains = search_term))
+            orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
+            # d = []
+            # for order in orders:
+            #     deals.add(order.deal)
+        if stage_filter:
+            #policies = GetPolicyQueryset('range_expiry', range = range_expiry, policies = policies)
+            deals = deals | Deal.objects.filter(stage__icontains = stage_filter)
+        if status_filter:
+            deals = deals | Deal.objects.filter(status__icontains = status_filter)
+        if not deals:
+            deals = Deal.objects.all()
+            
+        recordsTotal= deals.count()
+        deals = deals.order_by()[start:start + length]
+        for deal in deals:
+            checkbox = f'''<label class="felix-checkbox">
+                <input class="select-record" type="checkbox" data-id="{deal.pk}" value="{deal.pk}" />
+                <span class="checkmark"></span>'''
+                #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
+            stage = f'<td class="capitalize">{deal.stage}</td>'
+            status = '-' if deal.stage == 'lost' or deal.stage == 'won' else f'<span class="badge badge-{deal.status_badge} badge-font-light badge">{deal.status_text}</span>'
+            created_on = f'{deal.deal_timeinfo} at {deal.created_on}' if deal.deal_timeinfo == 'Today' or deal.deal_timeinfo == 'Yesterday' else f'<td class="link" data-sort="{deal.created_on}" data-search="{deal.created_on}">'
+            customer = f'<div><a>{deal.primary_member.name} </a> </div>'
+            if deal.deal_type == 'renewal':
+                customer += f'<span class="m-t-15 badge badge-default badge-font-light badge-renewal-deal">Renewal Deal</span>'
+            selected_plan = deal.selected_plan.insurer.name if deal.selected_plan else '-'
+            budget = f'{deal.indicative_budget} AED' if deal.indicative_budget else '-'
+            premium = f'{deal.total_premium} {deal.selected_plan.currency}' if deal.total_premium and deal.selected_plan else '-'
+            #href="{% url 'customers:edit' deal.customer.pk %}"?entity='health'
+            if deal.customer:
+                # customer_link = f'''<a class="link"
+                # href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
+                p = {
+                    'id' : deal.pk,
+                    'checkbox' : checkbox,
+                    'stage' : stage,
+                    'status' : status,
+                    'created_on' : created_on,
+                    'customer': customer,
+                    'selected_plan': deal.selected_plan.insurer.name if deal.selected_plan else '-',
+                    'budget': f'{deal.indicative_budget} AED' if deal.indicative_budget else '-',
+                    'premium': premium,
+                    'members': deal.primary_member.additional_members.all().count()+1,
+                    'visa': deal.primary_member.visa if deal.primary_member.visa else '-',
+                    'user': deal.user.get_full_name() if deal.user else '',
+                    'referrer': deal.referrer.get_full_name() if deal.user else '',
+                }
+                data.append(p)
+        
+        resp = {
+            'data' : data,
+            'page': page,
+            'per_page' : per_page,
+            'recordsTotal':recordsTotal,
+            'recordsFiltered': recordsTotal,
+        }
+        return JsonResponse(resp, safe=False)
