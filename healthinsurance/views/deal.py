@@ -2298,15 +2298,14 @@ def DealJsonView(request):
             # for order in orders:
             #     deals.add(order.deal)
         if stage_filter:
-            #policies = GetPolicyQueryset('range_expiry', range = range_expiry, policies = policies)
             deals = deals | Deal.objects.filter(stage__icontains = stage_filter)
         if status_filter:
             deals = deals | Deal.objects.filter(status__icontains = status_filter)
         if not deals:
-            deals = Deal.objects.all()
+            deals = Deal.objects.all().exclude(status = STATUS_DELETED).order_by('-created_on')
             
         recordsTotal= deals.count()
-        deals = deals.order_by()[start:start + length]
+        deals = deals[start:start + length]
         for deal in deals:
             checkbox = f'''<label class="felix-checkbox">
                 <input class="select-record" type="checkbox" data-id="{deal.pk}" value="{deal.pk}" />
@@ -2314,7 +2313,7 @@ def DealJsonView(request):
                 #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
             stage = f'<td class="capitalize">{deal.deal_stage_text}</td>'
             status = '-' if deal.stage == 'lost' or deal.stage == 'won' else f'<span class="badge badge-{deal.status_badge} badge-font-light badge">{deal.status_text}</span>'
-            created_on = f'{deal.deal_timeinfo} at {deal.created_on}' if deal.deal_timeinfo == 'Today' or deal.deal_timeinfo == 'Yesterday' else f'<td class="link" data-sort="{deal.created_on}" data-search="{deal.created_on}">'
+            created_on = deal.deal_timeinfo
             customer = f'<div><a>{deal.primary_member.name} </a> </div>'
             if deal.deal_type == 'renewal':
                 customer += f'<span class="m-t-15 badge badge-default badge-font-light badge-renewal-deal">Renewal Deal</span>'

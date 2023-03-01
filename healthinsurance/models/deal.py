@@ -142,11 +142,11 @@ class Deal(AuditTrailMixin, models.Model):
     def deal_timeinfo(self):
             created_on = self.created_on.replace(tzinfo=None)
             if created_on.date() == datetime.now().date():
-                return 'Today'
+                return f"Today at {datetime.strftime(self.created_on, '%H:%M')}"
             elif created_on.date() >= (timezone.now() - timedelta(hours=24)).date():
-                return 'Yesterday'
+                return f"Yesterday at {datetime.strftime(self.created_on, '%H:%M')}"
             else:
-                return self.created_on.date()
+                return datetime.strftime(self.created_on, '%b. %d, %Y')
 
     @property
     def deal_stage_text(self):
