@@ -160,6 +160,7 @@ class Deal(AuditTrailMixin, models.Model):
             'housekeeping':'Housekeeping',
             'won':'Won',
             'lost':'Lost',
+            'basic':'Basic',
         }
         return stage.get(self.stage, "")
 

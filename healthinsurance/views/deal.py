@@ -2289,19 +2289,29 @@ def DealJsonView(request):
         stage_filter = request.GET.get('stage')
         status_filter = request.GET.get('status')
         user = request.GET.get('user')
-        daterange = request.GET.get('daterange')
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
         deals = Deal.objects.none()
+        is_filtered = False
         if(search_term):
             deals = deals & Deal.objects.filter(Q(customer__name__icontains = search_term))
             orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
+            is_filtered = True
             # d = []
             # for order in orders:
             #     deals.add(order.deal)
         if stage_filter:
-            deals = deals | Deal.objects.filter(stage__icontains = stage_filter)
+            deals = deals | Deal.objects.filter(stage__iexact = stage_filter)
+            is_filtered = True
         if status_filter:
             deals = deals | Deal.objects.filter(status__icontains = status_filter)
-        if not deals:
+            is_filtered = True
+        if from_date and to_date:
+            from_date = datetime.strptime(from_date, '%Y/%m/%d')
+            to_date = datetime.strptime(to_date, '%Y/%m/%d')
+            deals = deals | Deal.objects.filter(created_on__gte = from_date, created_on__lte = to_date)
+            is_filtered = True
+        if not is_filtered:
             deals = Deal.objects.all().exclude(status = STATUS_DELETED).order_by('-created_on')
             
         recordsTotal= deals.count()
@@ -2311,7 +2321,7 @@ def DealJsonView(request):
                 <input class="select-record" type="checkbox" data-id="{deal.pk}" value="{deal.pk}" />
                 <span class="checkmark"></span>'''
                 #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
-            stage = f'<td class="capitalize">{deal.deal_stage_text}</td>'
+            stage = deal.deal_stage_text
             status = '-' if deal.stage == 'lost' or deal.stage == 'won' else f'<span class="badge badge-{deal.status_badge} badge-font-light badge">{deal.status_text}</span>'
             created_on = deal.deal_timeinfo
             customer = f'<div><a>{deal.primary_member.name} </a> </div>'

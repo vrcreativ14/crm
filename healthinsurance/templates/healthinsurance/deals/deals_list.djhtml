@@ -564,17 +564,17 @@ var table = $('.felix-table').DataTable({
                 type: 'GET',
                 data: function(d){
                     debugger
-                    d.range_expiry = $('.ranges li.active').data('range-key');
                     //d.status = $('label.btn-sm.btn.btn-white.active').text()
-                    d.stage = $('label.btn-sm.btn.btn-white.active').next('input').val()
+                    let stage = $('label.btn-sm.btn.btn-white.active').next('input').val()
+                    //if(stage && $(`.${stage}-count`).text() == 0) return
+                    d.stage = stage
                     d.status = $('#id_filter_deal_status').val()
                     d.user = $('#id_assigned_to').val()
                     if($('input[name="daterange"]').val())
                     d.daterange = $('input[name="daterange"]').val()
-                    // Retrieve dynamic parameters
-                    var range = $('.ranges li.clicked').data('range-key');
-                    // Add dynamic parameters to the data object sent to the server
-                    if(range){ $.extend(d, range); }
+                    d.from_date = $('#min-date').val()
+                    d.to_date = $('#max-date').val()
+                    
                 }
             },
             "columns": [
@@ -599,7 +599,11 @@ var table = $('.felix-table').DataTable({
             $(row).attr('data-url', url_detail);
             $(row).attr('id', `tr_${data['id']}`);
             $(row).addClass('health-deal-row');
+        },
+        initComplete: function() {            
+            //UpdateCount()
         }
+    
 });
 function UpdateCount(){
     const stages = ['open', 'new', 'quote', 'documents', 'Final Quote', 'payment', 'Policy Issuance','basic','housekeeping',  'won', 'lost'];
@@ -607,10 +611,10 @@ function UpdateCount(){
         let count = 0;
         table.rows({order:'index', search:'applied'}).data().map((row, index) => {
             if(element=='open'){
-                    if(row[1].toLowerCase() == 'lost') return
+                    if(row['stage'] && row['stage'].toLowerCase() == 'lost') return
                     count++;
             }
-            if(row[1].toLowerCase()==element.toLowerCase()){                
+            if(row['stage'] && row['stage'].toLowerCase()==element.toLowerCase()){                
                 count++;
             }
         });
@@ -629,11 +633,11 @@ $(document).ready( function () {
 
     $('input[name="daterange"]').daterangepicker({
                 opens: 'left'
-            }, function(start, end, label) {                
+            }, function(start, end, label) {
                 $('#min-date').val(start.format('YYYY/MM/DD'));
                 $('#max-date').val(end.format('YYYY/MM/DD'));
                 table.draw();
-                UpdateCount()
+                //UpdateCount()
             });
 
     $('.felix-table').removeClass('opacity');
@@ -646,14 +650,14 @@ $(document).ready( function () {
                 $('.quick-filters label').removeClass('active');
                 filtered = []
                 table.search($(this).val()).draw();
-                UpdateCount()
+                //UpdateCount()
             });
 
     $('#id_assigned_to').on('change', function() {
         var val = $(this).val();
         filtered = []
         table.search(val).draw();
-        UpdateCount()
+        //UpdateCount()
     });
 
     $('#id_filter_deal_status').on('change', function() {
@@ -664,7 +668,7 @@ $(document).ready( function () {
         else
         filtered=[val]
         table.column(2).search(filtered).draw();
-        UpdateCount()
+        //UpdateCount()
     });
     
 
@@ -676,7 +680,7 @@ $(document).ready( function () {
                 var val = $(this).val();
                 var checked = $(this).prop('checked');
                 var index = filtered.indexOf( val );
-                $('#min-date').val(0)
+                //$('#min-date').val(0)
                 $('#id_search_term').val('')
 
                 filtered = []
@@ -686,13 +690,13 @@ $(document).ready( function () {
                     filtered = [val]
                 }
                 table.column(1).search(filtered).draw();
-                UpdateCount()
+                //UpdateCount()
             });
 
     
             const stages = ['open', 'new', 'quote', 'documents', 'Final Quote', 'payment', 'Policy Issuance','basic','housekeeping',  'won', 'lost'];
 
-setTimeout(UpdateCount(), 500);
+//setTimeout(UpdateCount(), 500);
 
 
 $.fn.dataTable.ext.search.push(
