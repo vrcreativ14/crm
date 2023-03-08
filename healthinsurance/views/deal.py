@@ -2276,86 +2276,102 @@ class DealVoid(View):
 
 
 def DealJsonView(request):
-        data = []
-        start = request.GET.get('start')
-        length = request.GET.get('length')
-        if start and length:
-            start = int(start)
-            length = int(length)
-            page = math.ceil(start / length) + 1
-            per_page = length
-        search_term = request.GET.get('search[value]')
-        range_expiry = request.GET.get('range_expiry')
-        stage_filter = request.GET.get('stage')
-        status_filter = request.GET.get('status')
-        user = request.GET.get('user')
-        from_date = request.GET.get('from_date')
-        to_date = request.GET.get('to_date')
-        deals = Deal.objects.none()
-        is_filtered = False
-        if(search_term):
-            deals = deals & Deal.objects.filter(Q(customer__name__icontains = search_term))
-            orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
-            is_filtered = True
-            # d = []
-            # for order in orders:
-            #     deals.add(order.deal)
-        if stage_filter:
-            deals = deals | Deal.objects.filter(stage__iexact = stage_filter)
-            is_filtered = True
-        if status_filter:
-            deals = deals | Deal.objects.filter(status__icontains = status_filter)
-            is_filtered = True
-        if from_date and to_date:
-            from_date = datetime.strptime(from_date, '%Y/%m/%d')
-            to_date = datetime.strptime(to_date, '%Y/%m/%d')
-            deals = deals | Deal.objects.filter(created_on__gte = from_date, created_on__lte = to_date)
-            is_filtered = True
-        if not is_filtered:
-            deals = Deal.objects.all().exclude(status = STATUS_DELETED).order_by('-created_on')
+        try:
+            data = []
+            start = request.GET.get('start')
+            length = request.GET.get('length')
+            if start and length:
+                start = int(start)
+                length = int(length)
+                page = math.ceil(start / length) + 1
+                per_page = length
+            search_term = request.GET.get('search[value]')
+            stage_filter = request.GET.get('stage')
+            status_filter = request.GET.get('status')
+            user = request.GET.get('user')
+            from_date = request.GET.get('from_date')
+            to_date = request.GET.get('to_date')
+            deals = Deal.objects.none()
+            is_filtered = False
+            query = ''
             
-        recordsTotal= deals.count()
-        deals = deals[start:start + length]
-        for deal in deals:
-            checkbox = f'''<label class="felix-checkbox">
-                <input class="select-record" type="checkbox" data-id="{deal.pk}" value="{deal.pk}" />
-                <span class="checkmark"></span>'''
-                #deal_url = reverse('health-insurance:deal-details', kwargs=dict(pk=policy.deal.pk))
-            stage = deal.deal_stage_text
-            status = '-' if deal.stage == 'lost' or deal.stage == 'won' else f'<span class="badge badge-{deal.status_badge} badge-font-light badge">{deal.status_text}</span>'
-            created_on = deal.deal_timeinfo
-            customer = f'<div><a>{deal.primary_member.name} </a> </div>'
-            if deal.deal_type == 'renewal':
-                customer += f'<span class="m-t-15 badge badge-default badge-font-light badge-renewal-deal">Renewal Deal</span>'
-            selected_plan = deal.selected_plan.insurer.name if deal.selected_plan else '-'
-            budget = f'{deal.indicative_budget} AED' if deal.indicative_budget else '-'
-            premium = f'{deal.total_premium} {deal.selected_plan.currency}' if deal.total_premium and deal.selected_plan else '-'
-            #href="{% url 'customers:edit' deal.customer.pk %}"?entity='health'
-            if deal.customer:
-                # customer_link = f'''<a class="link"
-                # href={reverse('customers:edit', kwargs=dict(pk=policy.customer.pk))}>{policy.customer.name}</a>'''
-                p = {
-                    'id' : deal.pk,
-                    'checkbox' : checkbox,
-                    'stage' : stage,
-                    'status' : status,
-                    'created_on' : created_on,
-                    'customer': customer,
-                    'selected_plan': deal.selected_plan.insurer.name if deal.selected_plan else '-',
-                    'budget': f'{deal.indicative_budget} AED' if deal.indicative_budget else '-',
-                    'premium': premium,
-                    'members': deal.primary_member.additional_members.all().count()+1,
-                    'visa': deal.primary_member.visa if deal.primary_member.visa else '-',
-                    'user': deal.user.get_full_name() if deal.user else '',
-                    'referrer': deal.referrer.get_full_name() if deal.referrer else '',
-                }
-                data.append(p)
+            if(search_term):
+                deals = deals & Deal.objects.filter(Q(customer__name__icontains = search_term))
+                orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
+                is_filtered = True
+                first_name = search_term.split(' ')[0]
+                last_name = search_term.split(' ').pop()
+                query += 'Q(customer__name__icontains = search_term)'
+                query += ' | Q(user__first_name__icontains = {first_name})'
+                query += ' | Q(referrer__first_name__icontains = {first_name})'
+                query += ' | Q(user__last_name__icontains = {last_name})'
+                query += ' | Q(referrer__last_name__icontains = {last_name})'
+                
+            if stage_filter:
+                query += 'Q(stage__iexact = stage_filter)' if not query \
+                        else '& Q(stage__iexact = stage_filter)'
+                is_filtered = True
+            if status_filter:
+                query += 'Q(status__icontains = status_filter)' if not query \
+                         else '& Q(status__icontains = status_filter)'
+                is_filtered = True
+            if from_date and to_date:
+                from_date = datetime.strptime(from_date, '%Y/%m/%d')
+                to_date = datetime.strptime(to_date, '%Y/%m/%d')
+                query += 'Q(created_on__gte = from_date, created_on__lte = to_date)' if not query \
+                        else '& Q(created_on__gte = from_date, created_on__lte = to_date)'
+                is_filtered = True
+            if not is_filtered:
+                deals = Deal.objects.all()
+            else:
+                deals = Deal.objects.filter(eval(query))
+                
+            deals = deals.exclude(status = STATUS_DELETED).order_by('-created_on')
+            recordsTotal= deals.count()
+            deals = deals[start:start + length]
+            for deal in deals:
+                checkbox = f'''<label class="felix-checkbox">
+                    <input class="select-record" type="checkbox" data-id="{deal.pk}" value="{deal.pk}" />
+                    <span class="checkmark"></span>'''
+                    
+                stage = deal.deal_stage_text
+                status = '-' if deal.stage == 'lost' or deal.stage == 'won' else f'<span class="badge badge-{deal.status_badge} badge-font-light badge">{deal.status_text}</span>'
+                created_on = deal.deal_timeinfo
+                customer = f'<div><a>{deal.primary_member.name} </a> </div>'
+                if deal.deal_type == 'renewal':
+                    customer += f'<span class="m-t-15 badge badge-default badge-font-light badge-renewal-deal">Renewal Deal</span>'
+                selected_plan = deal.selected_plan.insurer.name if deal.selected_plan else '-'
+                budget = f'{deal.indicative_budget} AED' if deal.indicative_budget else '-'
+                premium = f'{deal.total_premium} {deal.selected_plan.currency}' if deal.total_premium and deal.selected_plan else '-'
+                
+                if deal.customer:
+                    p = {
+                        'id' : deal.pk,
+                        'checkbox' : checkbox,
+                        'stage' : stage,
+                        'status' : status,
+                        'created_on' : created_on,
+                        'customer': customer,
+                        'selected_plan': deal.selected_plan.insurer.name if deal.selected_plan else '-',
+                        'budget': f'{deal.indicative_budget} AED' if deal.indicative_budget else '-',
+                        'premium': premium,
+                        'members': deal.primary_member.additional_members.all().count()+1,
+                        'visa': deal.primary_member.visa if deal.primary_member.visa else '-',
+                        'user': deal.user.get_full_name() if deal.user else '',
+                        'referrer': deal.referrer.get_full_name() if deal.referrer else '',
+                    }
+                    data.append(p)
+            
+            resp = {
+                'data' : data,
+                'page': page,
+                'per_page' : per_page,
+                'recordsTotal':recordsTotal,
+                'recordsFiltered': recordsTotal,
+            }
+            return JsonResponse(resp, safe=False)
         
-        resp = {
-            'data' : data,
-            'page': page,
-            'per_page' : per_page,
-            'recordsTotal':recordsTotal,
-            'recordsFiltered': recordsTotal,
-        }
-        return JsonResponse(resp, safe=False)
+        except Exception as e:
+                return JsonResponse({'success': False,
+                                     'message': f'Error while fetching deal list:{e}'
+                                })

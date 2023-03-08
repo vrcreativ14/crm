@@ -320,7 +320,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                                 All Open
                                 <span class="open-count"></span>
                             </label>
-                            <input class="quick-filter-radio" id="open" type="radio" name="deals-filter" value="all"/>
+                            <input class="quick-filter-radio" id="open" type="radio" name="deals-filter" value=""/>
 
                             <label for="new" class="btn-sm btn btn-white">
                                 New
@@ -387,7 +387,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                         <span class="user-filter pl-1">
                             <select name="assigned_to" id="id_filter_deal_status">
                                 <option value="" selected="" disabled>Select Deal Status to filter</option>
-                                <option value="all">All</option>
+                                <option value="">All</option>
                                 <option value="waiting for us">Waiting for us</option>
                                 <option value="waiting for insurer">Waiting for insurer</option>
                                 <option value="waiting for client">Waiting for client</option>
@@ -574,7 +574,10 @@ var table = $('.felix-table').DataTable({
                     d.daterange = $('input[name="daterange"]').val()
                     d.from_date = $('#min-date').val()
                     d.to_date = $('#max-date').val()
-                    
+                    // Retrieve dynamic parameters
+                    var range = $('.ranges li.clicked').data('range-key');
+                    // Add dynamic parameters to the data object sent to the server
+                    if(range){ $.extend(d, range); }
                 }
             },
             "columns": [
