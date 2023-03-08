@@ -2327,6 +2327,8 @@ def DealJsonView(request):
                 deals = Deal.objects.filter(eval(query))
                 
             deals = deals.exclude(status = STATUS_DELETED).order_by('-created_on')
+            if request.user.userprofile.has_producer_role():
+                deals = deals.filter(Q(user = request.user) | Q(referrer = request.user))
             recordsTotal= deals.count()
             deals = deals[start:start + length]
             for deal in deals:
