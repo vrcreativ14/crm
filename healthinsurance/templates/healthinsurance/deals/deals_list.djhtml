@@ -595,7 +595,6 @@ var table = $('.felix-table').DataTable({
                 {"data": "referrer"},
       ],
     createdRow: function (row, data, dataIndex) {
-            //let url_delete = DjangoUrls['health-insurance:delete-deal'](data['id'])
             let url_delete = `/health-insurance/deals/delete-deal/${data['id']}`
             let url_detail = `/health-insurance/deals/${data['id']}`
             $(row).attr('data-url-delete', url_delete);
@@ -604,10 +603,13 @@ var table = $('.felix-table').DataTable({
             $(row).addClass('health-deal-row');
         },
         initComplete: function() {            
-            //UpdateCount()
-        }
-    
+            $('.health-deal-row').click(function(e){
+            if ($(e.target).parent().hasClass('felix-checkbox'))
+                e.stopPropagation();
+        });
+    }
 });
+
 function UpdateCount(){
     const stages = ['open', 'new', 'quote', 'documents', 'Final Quote', 'payment', 'Policy Issuance','basic','housekeeping',  'won', 'lost'];
     stages.forEach(element => {
@@ -642,6 +644,13 @@ $(document).ready( function () {
                 table.draw();
                 //UpdateCount()
             });
+    $('.cancelBtn.btn.btn-sm.btn-default').on('click', function(){
+        
+    })
+
+    $('.tqm-events-filter__button--date').on('cancel.daterangepicker', function(ev, picker) {
+      $('.targeted-input').val('');
+  });
 
     $('.felix-table').removeClass('opacity');
     
