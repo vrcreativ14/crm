@@ -401,8 +401,16 @@ class SubStage(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
+        sub_stage = SubStage.objects.filter(deal = self.deal, stage = self.stage, sub_stage = self.sub_stage)
+        if sub_stage.exists():
+            sub_stage = sub_stage.first()
+            sub_stage.delete()
         super(SubStage, self).save(*args, **kwargs)
 
-    class Meta:
-        unique_together = ['deal','stage', 'sub_stage']
+    # class Meta:
+    #     unique_together = ['deal','stage', 'sub_stage']
+
+
+
+
 
