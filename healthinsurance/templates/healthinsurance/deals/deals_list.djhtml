@@ -636,6 +636,16 @@ function UpdateCount(){
 
 $(document).ready( function () {
 
+    $('#health_deals_list tbody').on('click', 'tr',function(e){
+        if ($(e.target).parent().hasClass('felix-checkbox'))
+            e.stopPropagation();
+    });
+
+    $('#health_deals_list tbody').on('click', 'th',function(e){
+            if ($(e.target).parent().hasClass('felix-checkbox'))
+                e.stopPropagation();
+        });
+
     $('input[name="daterange"]').daterangepicker({
                 opens: 'left'
             }, function(start, end, label) {
