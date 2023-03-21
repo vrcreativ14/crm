@@ -642,7 +642,8 @@ $(document).ready( function () {
     });
 
     $('#health_deals_list tbody').on('click', 'th',function(e){
-            if ($(e.target).parent().hasClass('felix-checkbox'))
+        debugger
+            //if ($(e.target).parent().hasClass('felix-checkbox'))
                 e.stopPropagation();
         });
 
