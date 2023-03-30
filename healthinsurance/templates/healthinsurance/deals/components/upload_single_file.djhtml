@@ -101,12 +101,12 @@ right: 15px;
                                             <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}} {{data_type}}</td>
                                             {% if request.user.userprofile.has_producer_role %}
                                                 {% if stage_number <= 3 and sub_stage_number < 3 %}
-                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-document="policy_documents">Delete</a></td>
                                                 {% endif %}
                                             {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
-                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-document="policy_documents">Delete</a></td>
                                             {% elif stage_number < 8 %}
-                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-document="policy_documents">Delete</a></td>
                                             {% endif %}
                                         </tr>
                                     {% endif %}
@@ -246,6 +246,9 @@ $(document).ready(function() {
                 let url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}`   // request url
                 if(event.target.getAttribute("data-document") == 'member_documents')
                     url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}&member=${member}&member_document=1`
+                if(event.target.getAttribute("data-document") == 'policy_documents')
+                    url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}&document_type=policy`
+                
                 
                 console.log(file_name)
                 $.post(url,

@@ -1217,15 +1217,24 @@ class DeleteAttachedFile(DeleteAttachmentView):
         file_name = request.GET.get("file")
         is_member_document = request.GET.get("member_document", None)
         member_id = request.GET.get("member", None)
+        document_type = request.GET.get("document_type", None)
         files = request.FILES.getlist("file")
         response = {}
         if member_id and is_member_document == '1':
             member_obj = get_object_or_404(AdditionalMember, pk=member_id)
-            deal_files = MemberDocuments.objects.filter(deal=deal,type=type,member=member_obj)
+            files = MemberDocuments.objects.filter(deal=deal,type=type,member=member_obj)
+        elif document_type == 'policy':
+            policy = deal.get_policy()
+            if policy:
+                files = PolicyFiles.objects.filter(policy=policy,type=type)
+            else:
+                response = {
+                    "success":False,
+                }
         else:
-            deal_files = DealFiles.objects.filter(deal=deal,type=type)
+            files = DealFiles.objects.filter(deal=deal,type=type)
         
-        for file in deal_files:
+        for file in files:
             if file.filename == file_name:
                 file.delete()
                 response = {
@@ -1664,7 +1673,7 @@ class PolicyView(View):
     def post(self, request):
         updated_request = request.POST.copy()
         reference_number = ''
-        updated_request.update({'company':self.request.company,        
+        updated_request.update({'company':self.request.company,
         'user':self.request.user,
         })
         customer_id = request.POST.get('customer')
