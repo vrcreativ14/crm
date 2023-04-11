@@ -303,6 +303,8 @@ class Deal(AuditTrailMixin, models.Model):
             return None
 
     def get_deal_quote_link_status(self):
+        if self.status == STATUS_DELETED:
+            return False
         if (tz_now() - self.created_on).days > 30:  #inactive after 30 days
                 if(self.deal_quote_link_reactivated_on):
                     if (tz_now() - self.deal_quote_link_reactivated_on).days > 30:
