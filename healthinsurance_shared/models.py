@@ -39,6 +39,8 @@ def get_document_upload_path(self, filename):
         easy navigation when manually browsing the files."""
         if self.__class__ == Insurer:
             base_path = 'health_insurance_plan_/{}-{}'.format(self.pk, slugify(self.name))
+        elif self.__class__ == TPA:
+            base_path = 'health_insurance_plan_/tpa/{}'.format(self.name)
         else:
             base_path = 'health_insurance_plan_/{}-{}'.format(self.insurer.pk, slugify(self.insurer.name))
 
@@ -149,9 +151,11 @@ class OpticalBenefit(models.Model):
 
 class TPA(models.Model):
     name = models.CharField(max_length=200)
+    network_list_outpatient = models.FileField(upload_to=get_document_upload_path, blank=True)
+    network_list_inpatient = models.FileField(upload_to=get_document_upload_path, blank=True)
     def __str__(self):
             return f'{self.name}'
-    class Meta:        
+    class Meta:
         verbose_name_plural = "TPA"
 
 
@@ -205,14 +209,12 @@ class VisaCategory(models.Model):
         verbose_name_plural = "Visa Categories"
     def __str__(self):
         return self.name
-    
 class Currency(models.Model):
         name = models.CharField(max_length=30)
         class Meta:
                 verbose_name_plural = "Currencies"
         def __str__(self):
             return self.name
-
 # class RepatriationPlan(models.Model):
 #     name = models.CharField(max_length=100)
 #     individual_expense = models.CharField(max_length=100, help_text="expense for one person accompanying a repatriated person")
