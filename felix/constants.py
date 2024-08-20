@@ -1,8 +1,8 @@
 import pycountry
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-
 from felix.storages import PublicAzureStorage
+from datetime import datetime
 
 COUNTRIES = list(
     (country.alpha_2, country.name) for country in pycountry.countries
@@ -92,7 +92,7 @@ FIELD_LENGTHS = {
 }
 
 CAR_YEARS_LIST = [
-    (str(year), year) for year in range(2024, 1993, -1)
+    (str(year), year) for year in range(datetime.now().year + 1, 1993, -1)
 ]
 
 AGE_YEARS = [(str(x), str(x)) for x in range(18, 71)] + [('71', '70+')]
