@@ -199,19 +199,24 @@ class DealsFilter():
             chart_data.sort(key= lambda x:x[0])
             self.final_result = [ (x.strftime('%b, %d'),y) for x,y  in chart_data ]
 
-        else:
-            
-            grouping_function = lambda deal: deal.created_on.month
-            
-            for x, y in groupby(self.deals, grouping_function):
-                temp_date = today_date.replace(month=x, day=1)
-                chart_data.append((temp_date,len(list(y))))
-                date_holder.append(temp_date)
-            for x in [v.date() for v in get_last_12_month_dates()]:
-                if x not in date_holder:
-                    chart_data.append((x,0))
-            chart_data.sort(key= lambda x:x[0])
-            self.final_result =  [ (x.strftime('%b, %y'),y) for x,y  in chart_data ]
+        else:            
+            # grouping_function = lambda deal: deal.created_on.month            
+            # for x, y in groupby(self.deals, grouping_function):
+            #     temp_date = today_date.replace(month=x, day=1)
+            #     chart_data.append((temp_date,len(list(y))))
+            #     date_holder.append(temp_date)
+            # for x in [v.date() for v in get_last_12_month_dates()]:
+            #     if x not in date_holder:
+            #         chart_data.append((x,0))
+            # chart_data.sort(key= lambda x:x[0])
+            # self.final_result =  [ (x.strftime('%b, %y'),y) for x,y  in chart_data ]
+            month_ranges = get_month_pairs_for_last_12_months()
+            for sd, ed in month_ranges:
+                month_label = sd.strftime('%b, %y')
+                chart_data.append((
+                    month_label, self.deals.filter(created_on__range=(sd, ed)).count()
+                ))
+            self.final_result = chart_data
 
     def get_result(self):
         return self.final_result
