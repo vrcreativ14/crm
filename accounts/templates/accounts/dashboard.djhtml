@@ -292,7 +292,6 @@
                         {% comment %} URL for Health Deals By Insurer {% endcomment %}
                         data-endpoint="{% url 'health-insurance:health-dashboard-deal-by-insurer' %}"
                         data-params="{{ params }}"
-                        data-tooltip_prefix=" {{ companysettings.get_currency_display }}"
                         data-label="Total Premium"></canvas>
                     <div class="description">All Won Deals</div>
                 </div>
