@@ -145,7 +145,7 @@ class BaseChartDataView(LoginRequiredMixin, PermissionRequiredMixin, View):
                 
                 
             
-            elif  (self.params.get('filtertype') == 'date'):
+            elif (self.params.get('filtertype') == 'date'):
 
                 self.deals = self.deals.filter(created_on__range=[self.params.get('start_date'), self.params.get('end_date')]).order_by('created_on')
 
@@ -199,9 +199,11 @@ class DealsFilter():
             chart_data.sort(key= lambda x:x[0])
             self.final_result = [ (x.strftime('%b, %d'),y) for x,y  in chart_data ]
 
-        else:            
-            # grouping_function = lambda deal: deal.created_on.month            
-            # for x, y in groupby(self.deals, grouping_function):
+        else:
+            month_ranges = get_month_pairs_for_last_12_months()
+            # grouping_function = lambda deal: deal.created_on.month
+            
+            # for x, y in groupby(queryset, grouping_function):
             #     temp_date = today_date.replace(month=x, day=1)
             #     chart_data.append((temp_date,len(list(y))))
             #     date_holder.append(temp_date)
@@ -210,7 +212,7 @@ class DealsFilter():
             #         chart_data.append((x,0))
             # chart_data.sort(key= lambda x:x[0])
             # self.final_result =  [ (x.strftime('%b, %y'),y) for x,y  in chart_data ]
-            month_ranges = get_month_pairs_for_last_12_months()
+            
             for sd, ed in month_ranges:
                 month_label = sd.strftime('%b, %y')
                 chart_data.append((
@@ -296,7 +298,7 @@ class HealthSalesConversionRateView(BaseChartDataView):
             if self.params.get('insurer'): # If insurer filtering out won deal from "Order" model.
                 deals_won_qs = deals_won.filter(created_on__range=(sd, ed))
             else:
-                deals_won_qs = deals.filter(Q(stage = 'closed') )
+                deals_won_qs = deals.filter(Q(stage = 'won') )
 
             
             # for closedD in deals_won_qs:
@@ -368,6 +370,9 @@ class HealthDealByInsurer(BaseChartDataView):
         chart_data = []
         holder =[]
         month_ranges = get_month_pairs_for_last_12_months()
+        for insurer in Insurer.objects.all():
+            filtered_orders = self.deals.filter(selected_plan__plan__insurer = insurer)
+            chart_data.append((insurer.name, filtered_orders.count()))
         # for sd, ed in month_ranges:
         #     month_label = sd.strftime('%b, %y')
         #     if self.params.get('insurer'):
@@ -387,15 +392,14 @@ class HealthDealByInsurer(BaseChartDataView):
         #         total_premium
         #     ))
 
-        grouping_function = lambda order: order.selected_plan.plan.insurer.name
-        for x, y in groupby(self.deals, grouping_function):
-                    chart_data.append((x,len(list(y))))
-                    holder.append(x)
-        for x in Insurer.objects.all():
-                if x.name not in holder:
-                    chart_data.append((x.name,0))
-        #chart_data.sort(key= lambda x:x[0])
-        final_result = chart_data
+        # grouping_function = lambda order: order.selected_plan.plan.insurer.name
+        # for x, y in groupby(self.deals, grouping_function):
+        #             chart_data.append((x,len(list(y))))
+        #             holder.append(x)
+        # for x in Insurer.objects.all():
+        #         if x.name not in holder:
+        #             chart_data.append((x.name,0))
+        # #chart_data.sort(key= lambda x:x[0])
+        # final_result = chart_data
         
         return JsonResponse(chart_data, safe=False)
-
