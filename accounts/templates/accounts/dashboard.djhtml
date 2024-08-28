@@ -207,7 +207,6 @@
                     <canvas
                         class="felix-chart p-l-20 p-r-20 p-b-20"
                         data-fill="false"
-                        data-tooltip_prefix="%"
                         {% if entity == 'mortgage' %}
                         data-type="line"
                         data-endpoint="{% url 'mortgage:dashboard-deals-won' %}"
@@ -216,6 +215,7 @@
                         data-type="bar"
                         data-endpoint="{% url 'health-insurance:dashboard-deals-won' %}"
                         {% else %}
+                        data-tooltip_prefix="%"
                         data-type="line"
                         data-endpoint="{% url 'motorinsurance:dashboard-sales-conversion-rate' %}"
                         {% endif %}
