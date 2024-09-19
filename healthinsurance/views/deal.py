@@ -2307,7 +2307,9 @@ def DealJsonView(request):
             if(search_term):
                 first_name = search_term.split(' ')[0]
                 last_name = search_term.split(' ').pop()
-                if(search_term == 'user_filter_active'):
+                if(search_term == 'user_filter_active' and user):
+                    first_name = user.split(' ')[0]
+                    last_name = user.split(' ').pop()
                     query += f'Q(user__first_name__icontains = {first_name}, user__last_name__icontains = {last_name})'
                     query += f' | Q(referrer__first_name__icontains = {first_name}, Q(referrer__last_name__icontains = {last_name})'
                     is_filtered = True
