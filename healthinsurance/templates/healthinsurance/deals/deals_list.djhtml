@@ -679,7 +679,7 @@ $(document).ready( function () {
     $('#id_assigned_to').on('change', function() {
         var val = $(this).val();
         filtered = []
-        table.search(val).draw();
+        table.search('user_filter_active').draw();
         //UpdateCount()
     });
 

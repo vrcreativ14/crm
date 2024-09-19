@@ -2305,24 +2305,28 @@ def DealJsonView(request):
             query = ''
             
             if(search_term):
-                deals = deals & Deal.objects.filter(Q(customer__name__icontains = search_term))
-                orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
-                is_filtered = True
                 first_name = search_term.split(' ')[0]
                 last_name = search_term.split(' ').pop()
-                query += 'Q(customer__name__icontains = search_term)'
-                query += ' | Q(user__first_name__icontains = {first_name})'
-                query += ' | Q(referrer__first_name__icontains = {first_name})'
-                query += ' | Q(user__last_name__icontains = {last_name})'
-                query += ' | Q(referrer__last_name__icontains = {last_name})'
+                if(search_term == 'user_filter_active'):
+                    query += f'Q(user__first_name__icontains = {first_name}, user__last_name__icontains = {last_name})'
+                    query += f' | Q(referrer__first_name__icontains = {first_name}, Q(referrer__last_name__icontains = {last_name})'
+                    is_filtered = True
+                else:
+                    orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
+                    query += f'Q(customer__name__icontains = {search_term})'
+                    query += f' | Q(user__first_name__icontains = {first_name})'
+                    query += f' | Q(referrer__first_name__icontains = {first_name})'
+                    query += f' | Q(user__last_name__icontains = {last_name})'
+                    query += f' | Q(referrer__last_name__icontains = {last_name})'
+                    is_filtered = True
                 
             if stage_filter:
-                query += 'Q(stage__iexact = stage_filter)' if not query \
-                        else '& Q(stage__iexact = stage_filter)'
+                query += f'Q(stage__iexact = stage_filter)' if not query \
+                        else f'& Q(stage__iexact = stage_filter)'
                 is_filtered = True
             if status_filter:
-                query += 'Q(status__icontains = status_filter)' if not query \
-                         else '& Q(status__icontains = status_filter)'
+                query += f'Q(status__icontains = status_filter)' if not query \
+                         else f'& Q(status__icontains = status_filter)'
                 is_filtered = True
             if from_date and to_date:
                 from_date = datetime.strptime(from_date, '%Y/%m/%d')
