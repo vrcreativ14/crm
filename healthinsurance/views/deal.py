@@ -2297,12 +2297,12 @@ def DealJsonView(request):
                 first_name = search_term.split(' ')[0]
                 last_name = search_term.split(' ').pop()
                 if(search_term == 'user_filter_active' and user):
-                    is_filtered = True
                     if not user == 'all':
                         first_name = user.split(' ')[0]
                         last_name = user.split(' ').pop()
                         query += f'Q(user__first_name__icontains = "{first_name}", user__last_name__icontains = "{last_name}")'
                         query += f' | Q(referrer__first_name__icontains = "{first_name}", referrer__last_name__icontains = "{last_name}")'
+                        is_filtered = True
                 else:
                     orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
                     query += f'Q(customer__name__icontains = "{search_term}")'
