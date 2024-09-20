@@ -397,7 +397,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
                         {% if not request.user.userprofile.has_producer_role %}
                         <span class="user-filter pl-1">
                             <select name="assigned_to" id="id_assigned_to">
-                                <option value="" selected="">Select User/Referrer to filter/All users</option>
+                                <option value="all" selected="">Select User/Referrer to filter/All users</option>
                                 <option value="None">All Unassigned</option>
                                 {% for user in users %}
                                 <option value="{{user.first_name}} {{user.last_name}}">{{user.first_name}} {{user.last_name}}</option>

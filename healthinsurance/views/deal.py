@@ -1941,18 +1941,7 @@ class QuoteAPIView(View):
                     selected_plan = order.selected_plan
                     sp = GetSelectedPlanDetails(selected_plan)
                     if deal.deal_type == DEAL_TYPE_RENEWAL or selected_plan.is_renewal_plan:
-                        # policy = deal.renewal_for_policy if deal.renewal_for_policy else ''
-                        # if policy:
-                        # d = policy.deal
-                        # previous_plan = d.selected_plan if d else None
-                        # previous_plan_insurer = d.selected_plan.insurer if d else None
-                        # if previous_plan and previous_plan_insurer:
-                        #if selected_plan.plan == previous_plan and previous_plan_insurer == selected_plan.plan.insurer:
                         sp['is_previous_plan_selected'] = True
-                            # else:
-                            #     sp['is_previous_plan_selected'] = False
-                    # elif selected_plan.is_renewal_plan:
-                    #     sp['is_previous_plan_selected'] = True
 
                     response["data"]["selected_plan"] = sp
             if stage_number == 4:
@@ -2308,11 +2297,12 @@ def DealJsonView(request):
                 first_name = search_term.split(' ')[0]
                 last_name = search_term.split(' ').pop()
                 if(search_term == 'user_filter_active' and user):
-                    first_name = user.split(' ')[0]
-                    last_name = user.split(' ').pop()
-                    query += f'Q(user__first_name__icontains = "{first_name}", user__last_name__icontains = "{last_name}")'
-                    query += f' | Q(referrer__first_name__icontains = "{first_name}", referrer__last_name__icontains = "{last_name}")'
                     is_filtered = True
+                    if not user == 'all':
+                        first_name = user.split(' ')[0]
+                        last_name = user.split(' ').pop()
+                        query += f'Q(user__first_name__icontains = "{first_name}", user__last_name__icontains = "{last_name}")'
+                        query += f' | Q(referrer__first_name__icontains = "{first_name}", referrer__last_name__icontains = "{last_name}")'
                 else:
                     orders = Order.objects.filter(selected_plan__plan__insurer__name__icontains = search_term)
                     query += f'Q(customer__name__icontains = "{search_term}")'
