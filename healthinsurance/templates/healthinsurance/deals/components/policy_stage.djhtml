@@ -1,0 +1,122 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container">
+    {% if not request.user.userprofile.has_producer_role %}
+    {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+
+    <div class="heading m-b-5">Policy Details</div>
+    <div>Once the policy documents have been received, please upload and send to the client.</div><br/>
+    <form method="POST" enctype="multipart/form-data" action="/health-insurance/deals/{{deal.pk}}/substage">
+    <div class="row">
+        
+        <div class="col-lg-4">
+            <div class="" for="receipt-of-payment-file">Receipt of Payment</div>
+                 <input type="file" class="form-control" name="receipt_of_payment" id="receipt_of_payment_file"/>
+        </div>
+        <div class="col-lg-4">
+            <div for="tax-invoice-file">Tax Invoice</div>
+                 <input type="file" class="form-control" name="tax_invoice" id="tax_invoice_file"/>
+        </div>
+        
+</div>
+
+    <div class="row">
+
+        <div class="col-lg-4">
+            <div for="certificate-of-insurance-file">Certificate of Insurance</div>
+                 <input type="file" class="form-control" name="certificate_of_insurance" id="certificate_of_insurance_file"/>
+        </div>
+        
+        <div class="col-lg-4">
+            <div>Medical Card</div>
+                 <input type="file" class="form-control" name="medical_card" id="medical_card_file" />
+        </div>
+       
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div>Confirmation of Cover</div>
+             <input type="file" class="form-control" name="confirmation_of_cover" id="confirmation_of_cover_file" />
+    </div>
+    {% if not is_producer %}
+    <div class="col-lg-4">
+        <div>Credit Note</div>
+             <input type="file" class="form-control" name="credit_note" id="credit_note_file" />
+    </div>
+    {% endif %}
+    <div class="col-lg-4">
+        <div>Other Documents</div>
+             <input type="file" class="form-control" name="other_document" id="other_document_file" />
+    </div>
+</div>
+
+    
+<br/>
+
+<div class="row">
+    <div class="col-lg-4">
+        <label>Consultant Name(Referrer)</label>
+        <select class="form-control" name="referrer" id="policy_referrer">
+            {% for user in referrers %}
+            {% if deal.referrer.pk == user.value %}
+            <option value="{{user.value}}" selected>{{user.text}}</option>
+            {% else %}
+            <option value="{{user.value}}">{{user.text}}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+   
+    <div class="col-lg-4">
+        <label>Policy Number <span class="error">*</span></label>
+        <input class="form-control required" name="policy_number" required/>
+    </div>
+    {% if not is_producer %}
+    <div class="col-lg-4">        
+        <label>Commission %</label> 
+        <input type="number" class="form-control" name="commission" required/>
+    </div>
+    {% endif %}
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <label>Start Date  <span class="error">*</span></label> 
+        <input class="form-control required" name="start_date" type="date" id="start_date_input" required/>
+    </div>
+   
+    <div class="col-lg-4">
+        <label>Expiry Date  <span class="error">*</span> </label> 
+        <input class="form-control required" name="expiry_date" type="date" id="expiry_date_input" required/>
+    </div>
+    <div class="col-lg-4">
+        <label>Total Premium Inc VAT<span class="error">*</span> </label>
+        <input class="form-control required" name="total_premium_vat_inc" value="{{deal.total_premium}}" required/>
+    </div>
+    <!--<div class="col-lg-4">
+        <label>Basmah Charges (AED)</label>
+        <input type="number" class="form-control" name="basmah_charges"/>
+    </div>-->
+</div>
+
+
+<div style="display:flex;flex-direction:row;justify-content: end;">
+{% include "healthinsurance/deals/components/next_step_button.djhtml" with stage='policy-issuance' name='Save' action='next-substage policy' color='grey' %}
+{% include "healthinsurance/deals/components/next_step_button.djhtml" with stage='policy-issuance' name='Save and Send' action='policy fetch-email btn-nexus btn-nexus-blue float-right' %}
+</div>
+</form>
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
+<script>
+    document.querySelector('#start_date_input').addEventListener('change', function(){
+        debugger
+        const sd = document.getElementById("start_date_input");
+        const ed = document.getElementById('expiry_date_input');
+        const date = new Date(sd.value);
+        date.setFullYear(date.getFullYear() + 1);
+        date.setDate(date.getDate() - 1);
+        ed.value = date.toISOString().split("T")[0];
+    })
+</script>
+{% endif %}
+</div>

@@ -1,0 +1,16 @@
+{% verbatim %}
+<script id="row-helpscout-li" type="text/x-handlebars-template">
+{{#each records}}
+<li class="helpscout-li" data-id="{{ this.id }}">
+    <div class="label">
+        <a class="helpscout-converstaion-trigger" href="javascript:" data-id="{{ this.id }}" data-subject="{{ this.subject }}" data-link="{{ this.web_link }}" target="_blank">{{ this.subject }}</a>
+        <span title="Click to view" class="edit task-edit">
+            <a class="helpscout-converstaion-trigger" href="javascript:" data-id="{{ this.id }}" data-subject="{{ this.subject }}" data-link="{{ this.web_link }}" target="_blank"><i class="ti-new-window"></i></a>
+        </span>
+    </div>
+    <div class="content">{{ this.preview }}</div>
+    <div class="text-muted">Created by {{ this.created_by }} on {{ this.created_at }}</div>
+</li>
+{{/each}}
+</script>
+{% endverbatim %}

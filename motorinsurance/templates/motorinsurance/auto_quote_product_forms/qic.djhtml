@@ -1,0 +1,25 @@
+{% load static %}
+
+<div id="vue-qic-autoquoter-form"></div>
+
+{{ form.get_country_mapping_list|json_script:"qic-country-list" }}
+
+<script type="application/javascript">
+    window.qicVehicleInfoUrl = "{% url "motorinsurance:auto-quote-qic-vehicle-info" deal_pk=deal.pk %}";
+    window.qicTrimsUrl = "{% url "motorinsurance:auto-quote-qic-trims" deal_pk=deal.pk %}";
+    window.qicTrimDetailsUrl = "{% url "motorinsurance:auto-quote-qic-trim-details" deal_pk=deal.pk %}";
+    window.qicGetQuotesUrl = "{% url "motorinsurance:auto-quote-qic-get-quotes" deal_pk=deal.pk %}";
+    window.qicCountryList = JSON.parse(document.getElementById("qic-country-list").textContent);
+
+    window.qicAutoQuoterInitialData = {
+      chassisNumber: "{{ deal.chassis_number }}",
+      name: "{{ deal.customer.name }}",
+      dob: "{{ deal.customer.dob|date:"Y-m-d" }}",
+      nationality: "{{ form.customer_nationality_code }}",
+      firstRegistrationDate: "{{ deal.date_of_first_registration|date:"Y-m-d" }}",
+      noClaims: "{{ form.no_claims }}",
+      noClaimsSelfDec: "{{ form.no_claims_self_dec }}",
+      gulfDrivingExperience: "{{ form.gulf_driving_experience }}"
+    };
+</script>
+<script src="{% static "dist/auto_quoter.js" %}"></script>

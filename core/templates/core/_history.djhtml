@@ -1,0 +1,62 @@
+<style>
+.email-edit{
+cursor: pointer;
+}
+
+</style>
+
+{% if history %}
+    <ul class="trail note-trail ">
+        {% for item in history %}
+            <li class="two-liner {% if item.type == 'email' %}email{% else %}history{% endif %} {% if item.type == 'email' %}email-edit{% endif %}"
+            {% if item.type == 'email' %}data-emailpk="{{item.email_pk}}"{% endif %}>
+                <div class="label">
+                    {{ item.content|safe }}
+                    {% if item.file %}
+                         <a target="_blank" href="{{ item.file }}">View File</a>
+                    {% endif %}
+                </div>
+                <div class="text-muted">
+                    {{ item.date }} {% if item.user %}by {{ item.user.username|title }}{% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <ul class="trail note-trail hide"></ul>
+    <br><br>
+    <div class="small-note note-trail">
+        No history for this deal.
+    </div>
+{% endif %}
+<script>
+$('.email-edit').click( function(){
+    debugger
+    $('#modal_send_custom_email_history').show()
+    let url = ''
+    if (__app_name == "mortgage")
+        url = "{% url 'mortgage:processed_emails' pk=111111111111111111 %}"
+    else if (__app_name == "health-insurance")
+        url = DjangoUrls['health-insurance:processed_emails'](this.dataset.emailpk)
+    url = url.replace("111111111111111111", this.dataset.emailpk)
+    $.get(url, function( data ) {
+        $('#custom_email_form_history').attr('action', url)
+        $('#custom_email_form_history input[id="id_email"').val(data.content.to_address)
+        $('#custom_email_form_history input[id="id_bcc_emails"').val(data.content.bcc_addresses.join())
+        $('#custom_email_form_history input[id="id_cc_emails"').val(data.content.bcc_addresses.join())
+        $('#custom_email_form_history input[id="id_subject"').val(data.content.subject)
+        let email_msg = data.content.html
+        email_msg = email_msg.replace(/<br\s*[\/]?>/gi, "\n");
+        email_msg = email_msg.replace(/<p[^>]*>/g, '');
+        email_msg = email_msg.replace(/<\/p>/g, '');
+        $('#custom_email_form_history textarea').html(email_msg)
+        $('#custom_email_form_history #id_from_email').text(data.content.from)
+        $('#custom_email_form_history #id_reply_to').text(data.content.reply_to)
+        $.each(data.content.stages, function(key, value) {   
+        $('#custom_email_form_history select')
+                .append("<option value="+ key+">"+ value +"</option>")
+        });
+        $('#custom_email_form_history select').val(data.content.current_stage)
+        });
+    });
+</script>

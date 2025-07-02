@@ -1,0 +1,25 @@
+{% verbatim %}
+<script id="row-template" type="text/x-handlebars-template">
+{{#each records}}
+<tr
+    id="tr_{{ this.objectID }}"
+    data-url="{{{ felixUrl 'customers:edit' this.objectID }}}"
+    data-url-delete="{{{ felixUrl 'customers:delete-customer' this.objectID}}}"
+    >
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ this.objectID }}" value="{{ this.objectID }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td class="capitalize">{{ this.name }} </td>
+    <td>{{#if this.email}}{{ this.email }}{{else}}-{{/if}}</td>
+    <td class="capitalize">{{#if this.entity}}{{ this.entity }}{{else}}-{{/if}}</td>
+    <td>{{#if this.phone}}{{ this.phone }}{{else}}-{{/if}}</td>
+    <td class="capitalize">{{#if this.nationality}}{{ this.nationality }}{{else}}-{{/if}}</td>
+    <td class="capitalize">{{ this.created_on_display }}</td>
+    <td class="capitalize">{{ this.updated_on_display }}</td>
+</tr>
+{{/each}}
+</script>
+{% endverbatim %}

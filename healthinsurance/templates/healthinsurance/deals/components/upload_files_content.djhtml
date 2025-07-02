@@ -1,0 +1,253 @@
+{% load static %}
+{% if type == 'policy_documents' %}
+<div class="row upload-files">
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with  data_type="receipt_of_payment" name="Receipt of Payment" doc_name="receipt_of_payment" upload_type="policy_documents" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="tax_invoice" name="Tax Invoice" doc_name="tax invoice" upload_type="policy_documents" %}
+
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="certificate_of_insurance" name="Certificate of Insurance" doc_name="certificate_of_insurance" upload_type="policy_documents" %}
+        
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="medical_card" name="Medical Card" doc_name="medical card" upload_type="policy_documents" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="confirmation_of_cover" name="Confirmation of Cover" doc_name="confirmation of cover" upload_type="policy_documents" %}
+        {% if not request.user.userprofile.has_producer_role %}
+            {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="credit_note" name="Credit Note" doc_name="credit note" upload_type="policy_documents" %}
+            {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other_document" name="Other Documents" doc_name="other document" upload_type="policy_documents" %}
+        {% endif %}
+    </div>
+    <script>
+        function downloadAllPolicyDocuments(e){
+            e.preventDefault();
+            let time = 100
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'receipt_of_payment' %}
+                    let url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'tax_invoice' %}
+                    url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'certificate_of_insurance' %}
+                    url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'medical_card' %}
+                    url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'confirmation_of_cover' %}
+                    url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+        }
+    </script>
+{% elif type == 'primary_member_documents'%}
+    <div class="row upload-files">
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with  data_type="primary_passport" name="Passport" doc_name="passport" upload_type="passport" %}        
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_visa" name="Visa" doc_name="visa" upload_type="visa" %}        
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_emiratesid" name="Emirates ID" doc_name="emirates id front" upload_type="emiratesid" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_maf" name="Medical Application Form" doc_name="maf" upload_type="maf" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="plan_census" name="Census" doc_name="census" upload_type="census" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="plan_bor" name="BOR" doc_name="bor" upload_type="bor" %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="primary_other" name="Other Documents" doc_name="other documents" upload_type="other_documents" %}
+    </div>
+
+    <style>
+        .dz-size,.dz-image,.dz-success-mark,.dz-error-mark{display:none}
+         .files_list{list-style-type: circle;display: list-item;}
+         .dz-preview{display:none}
+     </style>
+      <script>
+        function downloadAllPrimaryDocuments(e){
+            e.preventDefault();
+            console.log('sdfvrety');
+            let time = 100
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'primary_passport' %}
+                let url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'primary_visa' %}
+                 url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'primary_emiratesid' %}
+                 url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'primary_other' %}
+                 url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+        }
+    </script>
+
+    {% elif type == 'member_documents'%}
+    <div class="row upload-files">
+       
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with  data_type="passport" name="Passport" doc_name="passport" upload_type="member_documents" member=member member_counter=counter %}
+       
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="visa" name="Visa" doc_name="visa" upload_type="member_documents" member=member member_counter=counter %}
+        
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="emiratesid" name="Emirates ID" doc_name="emirates id front" upload_type="member_documents" member=member member_counter=counter %}
+        
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="other" name="Other Documents" doc_name="other documents" upload_type="member_documents" member=member member_counter=counter %}
+    
+    </div>
+
+
+   <style>
+       .dz-size,.dz-image,.dz-success-mark,.dz-error-mark{display:none}
+        .files_list{list-style-type: circle;display: list-item;}
+        .dz-preview{display:none}
+    </style>
+
+    <script>
+        function downloadAllMemberDocuments{{member}}(e){
+            e.preventDefault();
+            console.log('sdfvrety');
+            let time = 100
+            {% for deal_file in member_documents %}
+                {% if deal_file.member.pk == member %}
+                    {% if deal_file.type == 'passport' %}
+                    let url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                        setTimeout(window.open(url),time);
+                        time = time + 100
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in member_documents %}
+                {% if deal_file.member.pk == member %}
+                    {% if deal_file.type == 'visa' %}
+                     url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                        setTimeout(window.open(url),time);
+                        time = time + 100
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in member_documents %}
+                {% if deal_file.member.pk == member %}
+                    {% if deal_file.type == 'emiratesid' %}
+                     url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                        setTimeout(window.open(url),time);
+                        time = time + 100
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in member_documents %}
+                {% if deal_file.member.pk == member %}
+                    {% if deal_file.type == 'other' %}
+                     url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                        setTimeout(window.open(url),time);
+                        time = time + 100
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        }
+    </script>
+
+{% elif type == 'other_documents' %}
+<div class="row upload-files">
+    {% if "signed_renewal_document" in saved_files_types %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="signed_renewal_document" name="Signed Renewal Document" doc_name="signed renewal document" upload_type="signed_renewal_document" %}
+    {% endif %}
+    {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="final_quote" name="Final Quote" doc_name="final quote" upload_type="final_quote" %}
+    {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="signed_final_quote" name="Signed Final Quote" doc_name="signed final quote" upload_type="signed_final_quote" %}
+    {% if "final_quote_additional_document" in saved_files_types %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="final_quote_additional_document" name="Final Quote Additional Document" doc_name="final quote additional document" upload_type="final_quote_additional_document" %}
+    {% endif %}
+    {% if "signed_final_quote_additional_document" in saved_files_types %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="signed_final_quote_additional_document" name="Signed Final Quote Additional Document" doc_name="signed final quote additional document" upload_type="signed_final_quote_additional_document" %}
+    {% endif %}
+    {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="payment_proof" name="Payment Proof" doc_name="payment proof" upload_type="payment_proof" %}
+    {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="additional_document" name="Additional Documents" doc_name="additional documents" upload_type="additional_document" %}
+    {% if "world_check_proof" in saved_files_types %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="world_check_proof" name="World Check Proof" doc_name="world check proof" upload_type="world_check_proof" %}
+    {% endif %}
+    {% if order and order_pdf_link and stage_number > 2 %}
+        {% include 'healthinsurance/deals/components/upload_single_file.djhtml' with data_type="order_confirmation" name="Order Confirmation" doc_name="order_confirmation" upload_type="order_confirmation" %}
+    {% endif %}
+</div>
+    <script>
+        function downloadAllOtherDocuments(e){
+            e.preventDefault();
+            let time = 100
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'final_quote' %}
+                let url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'signed_final_quote' %}
+                 url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+
+            {% for deal_file in deal_files %}
+                {% if deal_file.type == 'payment_proof' %}
+                 url = decodeURI('{{deal_file.file.url}}')
+                    url = url.replace(/&amp;/g, "&");
+                    setTimeout(window.open(url),time);
+                    time = time + 100
+                {% endif %}
+            {% endfor %}
+        }
+    </script>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/dropzone.min.js" integrity="sha512-8l10HpXwk93V4i9Sm38Y1F3H4KJlarwdLndY9S5v+hSAODWMx3QcAVECA23NTMKPtDOi53VFfhIuSsBjjfNGnA==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/dropzone.min.css" integrity="sha512-3g+prZHHfmnvE1HBLwUnVuunaPOob7dpksI7/v6UnF/rnKGwHf/GdEq9K7iEN7qTtW+S0iivTcGpeTBqqB04wA==" crossorigin="anonymous" referrerpolicy="no-referrer" />

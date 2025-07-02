@@ -1,0 +1,49 @@
+{% verbatim %}
+<script id="row-template" type="text/x-handlebars-template">
+{{#each records}}
+<tr
+    id="tr_{{ this.objectID }}"
+    data-url="{{{ felixUrl 'motorinsurance:deal-edit' this.objectID}}}"
+    data-url-delete="{{{ felixUrl 'motorinsurance:delete-deal' this.objectID}}}"
+    >
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ this.objectID }}" value="{{ this.objectID }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td class="capitalize">{{ this.stage }}</td>
+    <td>
+    {{#if this.tags }}
+        {{#each this.tags}}
+            <span class="badge badge-default badge-font-light badge-{{{slugify this}}}">{{this}}</span>
+        {{/each}}
+    {{else}}-{{/if}}
+    </td>
+    <td class="link capitalize">
+        <a href="{{{ felixUrl 'motorinsurance:deal-edit' this.objectID}}}">
+            <div title="{{ this.cached_car_name }}" class="limit-text">
+                {{ this.cached_car_name }}
+            </div>
+        </a>
+        {{#if renewal_for_policy_id }}
+            <span class="badge badge-default badge-font-light badge-primary d-block">Renewal Deal</span>
+        {{/if}}
+    </td>
+    <td class="link capitalize">
+        <a href="{{{ felixUrl 'customers:edit' this.customer_id}}}">{{ this.customer_name }}</a>
+    </td>
+    <td>{{#if this.premium }}{{{ money this.premium 2 }}}{{else}}-{{/if}}</td>
+    <td>{{{ money this.vehicle_insured_value }}}</td>
+    <td class="link width-editable-list-container">
+        {{{ userDealUpdateDD this.objectID this.assigned_to_id this.assigned_to_name 'motorinsurance' }}}
+    </td>
+    <td class="link width-editable-list-container">
+        {{{ producerDealUpdateDD this.objectID this.producer_id this.producer_name }}}
+    </td>
+    <td>{{ this.created_on_display }}</td>
+    <td>{{ this.updated_on_display }}</td>
+</tr>
+{{/each}}
+</script>
+{% endverbatim %}

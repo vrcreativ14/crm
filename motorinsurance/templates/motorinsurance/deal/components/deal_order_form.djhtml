@@ -1,0 +1,119 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+<form 
+	id="order_form" 
+	name="order_form" 
+	method="post" 
+	action="{% url 'motorinsurance:deal-update-order' pk=deal.id %}" 
+	data-number-of-passengers="{{ deal.number_of_passengers }}" 
+	data-selected-product="{{ deal.get_order.selected_product.product.id }}"
+	data-selected-addons="{{ deal.get_order.selected_add_ons|jsonify }}"
+	>
+	{{ order_form.payment_amount }}
+	{{ order_form.selected_product }}
+	{{ order_form.selected_add_ons }}
+	{% csrf_token %}
+	<input type="hidden" name="send_email" id="id_send_email" value="" />
+	<div class="products m-t-40 m-b-40">
+		<div class="row justify-content-md-center">
+			{% if deal.quote.get_active_quoted_products %}
+				{% for product in deal.quote.get_active_quoted_products %}
+				<div 
+					class="col-md-4 col-lg-4 col-xl-3 product" 
+					data-id="{{ product.product.id }}" 
+					data-qpid="{{ product.id }}" 
+					data-sale-price="{{ product.get_sale_price }}"
+					data-premium="{{ product.premium }}"
+					data-default-add-ons="{{ product.default_add_ons|jsonify }}"
+					data-add-ons="{{ product.product.get_add_ons|jsonify }}"
+					>
+					<div class="product-logo-container">
+						<span class="spacer"></span>
+						<img src="{{ product.product.get_logo }}">
+					</div>
+					<div class="heading light m-t-10">{{ product.product.name }}</div>
+					<div class="font-13 c-vlgrey">Sale Price: {{ companysettings.get_currency_display }} {{ product.get_sale_price|intcomma }}</div>
+					<div class="font-12 c-lgrey">Insurer Quote Reference: {% if product.insurer_quote_reference %}{{ product.insurer_quote_reference }}{% else %}-{% endif %}</div>
+					<div class="font-11 c-vlgrey">Sum Insured: {{ companysettings.get_currency_display }} {{ product.insured_car_value|intcomma }}</div>
+					<a href="javascript:" class="font-12 select-product">Select</a>
+					<a href="javascript:" class="font-12 c-vlgrey selected-product">Selected</a>
+				</div>
+				{% endfor %}
+			{% else %}
+				<div class="font-18 c-lgrey">You must have published products in the quote to create an order.</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col col-lg-4 col-xl-3">
+			<div class="label m-b-5">Policy start date</div>
+			<div class="date-field">
+				<input type="text" name="policy_start_date" id="id_policy_start_date" value="{{ order_form.policy_start_date.value|date:"d-m-Y"}}" class="form-control datepicker" autocomplete="off" required />
+			</div>
+
+			<div class="label m-b-5 m-t-30">Payment Status</div>
+			{{ order_form.status }}
+			<br><br>
+
+			<div class="label m-b-5 m-t-15">Mortgage</div>
+			{{ order_form.mortgage_by }}
+		</div>
+		<div class="col col-lg-1"></div>
+		<div class="col col-lg-7 col-xl-8">
+			<div class="font-13 m-b-20 c-vlgrey fw-300">
+				Sale Price 
+				<span class="float-right font-13">{{ companysettings.get_currency_display }} <span class="sale_price">{{ order_form.premium.value }}</span></span>
+			</div>
+			<div class="font-12 m-b-20 c-vlgrey fw-300">
+				Premium 
+				<span class="float-right font-13">{{ companysettings.get_currency_display }} <span class="base_premium">{{ order_form.premium.value }}</span></span>
+			</div>
+			<div class="font-12 m-b-20 c-vlgrey fw-300">
+				Default Add-ons 
+				<div class="default-add-ons m-l-10">
+					<span class="c-vlgray font-10 nothing-available">Nothing available</span>
+				</div>
+			</div>
+			<div class="font-12 m-b-20 c-vlgrey fw-300">
+				Paid Add-ons 
+				<span class="float-right font-13">{{ companysettings.get_currency_display }} <span class="paid_addons">0</span></span>
+
+				<div class="addons m-l-10">
+					<span class="c-vlgray font-10 nothing-available">Nothing available</span>
+				</div>
+			</div>
+			<div class="font-12 m-b-30 c-vlgrey fw-300">
+				Discount 
+				<span class="float-right font-13">
+					{{ order_form.discount }}
+				</span>
+			</div>
+			<div class="font-13 m-b-20 c-bgrey fw-500">
+				TOTAL DUE 
+				<span class="float-right font-15">
+					{{ companysettings.get_currency_display }} 
+					<span class="order_total">
+						{% if order_form.payment_amount.value %}{{ order_form.payment_amount.value }}{% else %}0{% endif %}
+					</span>
+				</span>
+			</div>
+		</div>
+	</div>
+
+	<hr class="m-t-50 m-b-25" />
+
+	{% if deal.get_order %}
+    <input name="is_void" id="id_is_void" type="checkbox" switch='success' />
+	<label data-on-label="Void?" data-off-label="Void?" for="id_is_void" class=""></label>
+    {% endif %}
+
+	<button type="button" class="save-and-send submit-send-order float-right btn btn-primary btn-md btn-wide-deal m-l-10">
+		{% if deal.get_order %}Update & Send{% else %}Create & Send{% endif %}
+	</button>
+	<button type="button" class="loader-blue submit-order float-right btn btn-outline-primary btn-md btn-wide-deal m-l-10">
+		{% if deal.get_order %}Update{% else %}Create{% endif %}
+	</button>
+	<button type="button" class="cancel-order float-right btn btn-outline-secondary btn-md btn-wide-deal">Cancel</button>
+</form>

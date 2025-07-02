@@ -1,0 +1,285 @@
+{% load static %}
+<div class="col-6">
+    <style>
+        .btn-remove-file{
+  font-size: 18px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.flex{
+    display: flex;
+}
+.upload-file>input {
+  display: none;
+}
+.upload-file{
+    background: #F2F6FFAD 0% 0% no-repeat padding-box;
+    padding: 15px;
+    border: 1px dashed #838AA2;   
+    height: 65px;
+    width: 350px;
+}
+.icon-text{
+    font-size: 8px;    
+    position: relative;
+    float: right;
+    left: 40px;
+}
+.upload-file > label{
+    width: 100%;
+}
+.icon-container{
+position: relative;
+top:-15px;
+background-size: 20px;
+right: 15px;
+}
+
+    </style>
+    
+    <div class="single-upload-parent-div">
+        <!-- <label class="text-capitalize">{{ name }}</label> -->
+        
+        <div class="d-flex parent-div">
+            <div class="w-100 action">
+                <div class="d-block">
+                    {% if stage_number < 8 or request.user.userprofile.has_user_role or request.user.userprofile.has_admin_role %}
+                    {% if member_counter %}
+                        <div action="/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/" class="upload-file" id="upload_{{data_type}}_{{member_counter}}">
+                    {% else %}
+                        <div action="/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/" class="upload-file" id="upload_{{data_type}}">
+                    {% endif %}
+                        <span class="heading">{{name}}</span>
+                            <span class="icon-container">
+                                <i class="upload-icon"></i>
+                            </span>   <br/>
+                                    <span class="icon-text">Drag and Drop or Browse</span>
+                        </div>
+                    {% else %}
+                        <div class="upload-file">
+                            <span class="heading">{{name}}</span><br/>
+                        </div>
+                    {% endif %}
+                <i><div id="uploading_progress_{{data_type}}" class="text-center"></div></i>
+                
+                {% if upload_type == "member_documents" %}
+                <div class="w-100 p-2 already-exist" id="fileslist_{{data_type}}_{{member_counter}}">
+                    <table class="table mb-0">
+                        <tbody>
+                            {% for deal_file in member_documents %}
+                                {% if deal_file.member.pk == member %}
+                                    {% if deal_file.type == data_type %}
+                                        <tr class="member-file" id="div_file_{{deal_file.filename}}">
+                                            <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
+                                            {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-member="{{member}}" data-document="{{upload_type}}">Delete</a></td>
+                                                {% endif %}
+                                            {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-member="{{member}}" data-document="{{upload_type}}">Delete</a></td>
+                                            {% elif stage_number < 8 %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-member="{{member}}" data-document="{{upload_type}}">Delete</a></td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                                                   
+                    </tbody>
+                    </table>                    
+                    <a class="down-d d-block mt-2" href="#" onclick="downloadAllFiles('member','{{data_type}}');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                </div>
+
+                {% elif upload_type == "policy_documents" %}
+
+                <div class="w-100 p-2 already-exist" id="fileslist_{{data_type}}">
+                    <table class="table mb-0">
+                        <tbody>
+                            {% for deal_file in policy_documents %}                                
+                                    {% if deal_file.type == data_type %}
+                                        <tr class="policy-file" id="div_file_{{deal_file.filename}}">
+                                            <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}} {{data_type}}</td>
+                                            {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-document="policy_documents">Delete</a></td>
+                                                {% endif %}
+                                            {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-document="policy_documents">Delete</a></td>
+                                            {% elif stage_number < 8 %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}" data-document="policy_documents">Delete</a></td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endif %}
+                                
+                            {% endfor %}
+                            {% for deal_file in deal_files %}
+                                    {% if deal_file.type == data_type %}
+                                        <tr class="policy-file" id="div_file_{{deal_file.filename}}">
+                                            <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
+                                            {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                {% endif %}                                            
+                                            {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            {% elif stage_number < 8 %}
+                                                <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                            
+                                            {% endif %}
+                                        </tr>
+                                    {% endif %}
+                            {% endfor %}
+                                                   
+                    </tbody>
+                    </table>
+                    <a class="down-d d-block mt-2" href="#" onclick="downloadAllFiles('policy','{{data_type}}');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                </div>
+
+                {% else %}
+                
+                {% if data_type in saved_files_types %}
+                <div class="w-100 p-2 already-exist" id="fileslist_{{data_type}}">
+                    <table class="table mb-0">
+                        <tbody>
+                            {% for deal_file in deal_files %}
+                                {% if deal_file.type == data_type %}
+                                    <tr class="other-file" id="div_file_{{deal_file.filename}}">
+                                        <td><a class="mr-2" target="_blank" href="{{deal_file.file.url}}"><i class="fa fa-download" aria-hidden="true"></i></a>{{deal_file.filename}}</td>
+                                        {% if request.user.userprofile.has_producer_role %}
+                                                {% if stage_number <= 3 and sub_stage_number < 3 %}
+                                                    <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                                {% endif %}
+                                        {% elif request.user.userprofile.has_admin_role or request.user.is_superuser %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                        {% elif stage_number < 8 %}
+                                            <td class="text-right"><a class="div-remove-file font-11 text-danger" href="#" name="{{data_type}}" id="{{deal_file.filename}}">Delete</a></td>
+                                        {% endif %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                                                   
+                    </tbody>
+                    </table>
+                    <a class="down-d d-block mt-2" href="#" onclick="downloadAllFiles('primary','{{data_type}}');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                </div>
+                {% endif %}
+
+                {% if data_type == 'order_confirmation' %}
+                    <a href="{{order_pdf_link}}" target="_blank" class="m-r-10 float-right">Order PDF link</a>
+                {% endif %}
+            
+            {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+$(document).ready(function() {
+    debugger
+    Dropzone.autoDiscover = false;
+    var cookie = document.cookie;
+    $(function() {
+        var uploading_progress = $("#uploading_progress_{{data_type}}"); 
+        console.log(document.querySelector('div#upload_{{data_type}}'))
+        {% if upload_type == 'member_documents' %}
+        var the_preview_container = $('#fileslist_{{data_type}}_{{member_counter}}');
+        var myDrop = new Dropzone("div#upload_{{data_type}}_{{member_counter}}", {
+
+            url: "/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/?type={{data_type}}&member={{member}}",
+            method: "post",
+            previewsContainer: null,
+            previewsTemplate:'#fileslist_{{data_type}}'
+            });
+        {% else %}
+        var the_preview_container = $('#fileslist_{{data_type}}');
+        var myDrop = new Dropzone("div#upload_{{data_type}}", {
+            url: "/health-insurance/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/?type={{data_type}}&member={{member}}",
+            method: "post",
+            previewsContainer: null,
+            previewsTemplate:'#fileslist_{{data_type}}'
+            });
+        {% endif %}
+
+            myDrop.on("success", function(file, data) {
+                debugger
+                uploading_progress.html('');
+                // let delete_file_button = `<div class="div-remove-file" id="${data.file}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>`
+                let delete_file_button = `<a class="w-50 div-remove-file font-11 text-danger text-right" name="{{data_type}}" id=${data.file} style="margin-left:10px;">Delete</a>`
+                if (data['doc_type'] && data['doc_type'] == 'member_documents' && data['member']){
+                    delete_file_button = `<a class="w-50 div-remove-file font-11 text-danger text-right" name="{{data_type}}" id=${data.file} data-document='member_documents' data-member=${data['member']} style="margin-left:10px;">Delete</a>`
+                }
+                var new_file = `
+                <div id="div_file_${data.file}" class="flex pt-1 pb-1">
+                <span class="w-100" style="font-size:15.2px;">
+                <a class="mr-2" target="_blank" href="${data.url}"><i class="fa fa-download" aria-hidden="true"></i></a>
+                ${data.file}
+                </span>
+                ${delete_file_button}
+                </div>`;
+                
+                the_preview_container.prepend(new_file)
+                //the_preview_container.append(delete_file_button)
+                $( ".div-remove-file" ).click(function(event) {
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                DeleteAttachedFile(event)
+                check_doc_files_health()
+            });
+            });
+            $( ".div-remove-file" ).click(function(event) {
+                debugger
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                DeleteAttachedFile(event)
+                check_doc_files_health()
+            });
+
+            function DeleteAttachedFile(event){
+                console.log(event.target)
+                console.log($(event.target).parent().closest('div')[0])
+                let type = event.target.name;
+                let file_name = event.target.id;
+                let member = event.target.getAttribute("data-member")
+                let url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}`   // request url
+                if(event.target.getAttribute("data-document") == 'member_documents')
+                    url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}&member=${member}&member_document=1`
+                if(event.target.getAttribute("data-document") == 'policy_documents')
+                    url = `/health-insurance/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}&document_type=policy`
+                
+                
+                console.log(file_name)
+                $.post(url,
+                    {
+                        success: function (data, status, xhr) {// success callback function
+                            
+                    }
+                }).done(function(response){
+                            if(response){
+                                if (response['success'] == true){
+                            console.log(file_name)
+                            console.log($(`#div_file_${file_name}`))
+                            //$(`#div_file_${file_name}`).html('')
+                            $(this).parent().remove();
+                            $(`#div_file_${file_name}`).val("")
+                            document.getElementById(`div_file_${file_name}`).innerHTML = ''
+                            console.log(response)
+                            }
+                            else
+                            console.log(response)
+                        }
+                        check_doc_files_health()
+                });
+}
+myDrop.on("totaluploadprogress", function(progress) {
+                uploading_progress.html("uploading... "+parseInt(progress) + "%");
+            })
+    });
+    
+
+
+});
+
+    </script>

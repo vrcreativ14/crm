@@ -1,0 +1,682 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}
+    {% if request.company.companysettings.motor_lead_form_meta_title %}{{ request.company.companysettings.motor_lead_form_meta_title }}{% else %}One step away from receiving your insurance quotes | {{ request.company }}{% endif %}
+{% endblock %}
+{% block page_meta_keywords %}
+    {% if request.company.companysettings.motor_lead_form_meta_keywords %}{{ request.company.companysettings.motor_lead_form_meta_keywords }}{% endif %}
+{% endblock %}
+{% block page_meta_description %}
+    {% if request.company.companysettings.motor_lead_form_meta_description %}{{ request.company.companysettings.motor_lead_form_meta_description }}{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div id="motor-form" class="main-form justify-content-center show-callback">
+        <div class="popup-error-container">
+            <div class="error-message">
+                <div class="title">Oops, something's missing.</div>
+                <p>Please complete all the required fields on this page to move forward.</p>
+            </div>
+        </div>
+
+        <!--Custom Form-->
+        <form class="container" id="motor_lead_form" name="motor_lead_form" method="post" action="">
+            <input type="hidden" name="excluded" id="excluded"/>
+            <input type="hidden" name="user_id" id="user_id" value="{{ user_id }}" />
+            <input type="hidden" name="marketing_source" id="marketing_source" value="{{ marketing_source }}"/>
+            <div class="sub-container">
+                <div class="inner-small-container form-headings step-1">
+                    <h1 class="blue-line m-b-5">
+                        {% if request.company.companysettings.motor_lead_form_title %}
+                            {{ request.company.companysettings.motor_lead_form_title }}
+                        {% else %}
+                            Find the best car Insurance in Dubai, UAE.
+                        {% endif %}
+                    </h1>
+                    <h2 class="down-arrow m-t-5">
+                        <p class="mt-3">
+                        {% if request.company.companysettings.motor_lead_form_subtitle %}
+                            {{ request.company.companysettings.motor_lead_form_subtitle }}
+                        {% else %}
+                            Complete this short, 2-minute form so we can find the best quotes for you.
+                        {% endif %}
+                        </p>
+                    </h2>
+                </div>
+                <div class="inner-small-container step-2">
+                    <div class="animated-car"></div>
+                </div>
+            </div>
+            <h3 class="steps-title">
+            <span class="desc">
+                <div class="label">Vehicle Info</div>
+            </span>
+            </h3>
+
+            <fieldset class="about-car-panel" id="about-car-panel">
+
+                <div id="div_id_lead_type" class="form-group no-top-border select-options">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_lead_type" class="form-control-label">
+                                <div class="label-content">
+                                    What do you need insurance for?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {% with field_name="lead_type" options=form.fields.lead_type.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_car_year" class="form-group no-top-border">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_car_year" class="form-control-label">
+                                <div class="label-content">
+                                    What is the model year of your car?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.car_year }}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_car_make" class="form-group no-top-border">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_car_make" class="form-control-label">
+                                <div class="label-content">
+                                    What is the make of your car?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.car_make }}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_car_model" class="form-group no-top-border">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_car_model" class="form-control-label ">
+                                <div class="label-content">
+                                    What model is it?&nbsp;<span class="asterisk-field"></span>
+
+                                </div>
+                                <div class="field">
+                                    {{ form.car_model }}
+                                    <div class="field-checkbox checkbox-section">
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" name="cant_find_car" id="id_cant_find_car">
+                                            <label for="id_cant_find_car">
+                                                <span class="checkbox">Can't find your car?</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field custom_car_name_field">
+                                    {{ form.custom_car_name }}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_vehicle_insured_value" class="form-group">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_vehicle_insured_value" class="form-control-label">
+                                <div class="label-content">
+                                    How much would you like to insure your car for?&nbsp;<span
+                                        class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.vehicle_insured_value }}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                What does this mean?<a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>What does this mean?</h3>
+
+                                <p>This is basically the current market value of your car. <strong>If you'd like us to
+                                    suggest a number then just enter 0</strong>.
+                                </p>
+
+                                {% include 'motorinsurance/lead/need_help.djhtml' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_current_insurer" class="form-group no-top-border select-options hide">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_current_insurer" class="form-control-label">
+                                <div class="label-content">
+                                    Who is your car currently insured with?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {% with field_name="current_insurer" options=form.fields.current_insurer.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                Why do we ask this?<a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>Why do we ask this?</h3>
+
+                                <p>This information will help us prepare more relevant options for you.</p>
+
+                                {% include 'motorinsurance/lead/need_help.djhtml' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_current_insurance_type" class="form-group no-top-border select-options">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_current_insurance_type" class="form-control-label">
+                                <div class="label-content">
+                                    What is your current insurance type?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {% with field_name="current_insurance_type" options=form.fields.current_insurance_type.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                Why do we ask this?<a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>Why do we ask this?</h3>
+
+                                <p>This information will help us prepare more relevant options for you.</p>
+
+                                {% include 'motorinsurance/lead/need_help.djhtml' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_date_of_first_registration" class="form-group modal-field hide">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_date_of_first_registration" class="form-control-label">
+                                <div class="label-content">
+                                    When was your car first registered?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    <input type="tel" name="new_date_of_first_registration" placeholder="MM/YYYY" maxlength="9" class="calendar-icon" id="new_date_of_first_registration" aria-required="true">
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                Not sure where to find this? <a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <div class="row">
+                                    <div class="col-lg-10">
+                                        <h3>Not sure where to find this?</h3>
+
+                                        <p>You'll find this on your vehicle registration card. If you're buying a used
+                                            car ask the seller for this information.</p>
+
+                                        {% include 'motorinsurance/lead/need_help.djhtml' %}
+                                    </div>
+                                    <div class="col-lg-2">
+
+                                        <div class="image-container"
+                                             data-felix-modal="modal_uae-vehicle-registration-date" href="javascript:">
+                                            <div class="zoom-icon">
+                                                <i class="fa fa-search-plus"></i>
+                                            </div>
+                                            <img src="{% static "images/uae-vehicle-registration-front.png" %}">
+                                        </div>
+                                        <div id="modal_uae-vehicle-registration-date" class="felix-modal-container">
+                                            <div class="felix-modal">
+                                                <img src="{% static "images/uae-vehicle-registration-date.png" %}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_place_of_registration"
+                     class="form-group select-options no-border-bottom-on-mobile">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_place_of_registration" class="form-control-label">
+                                <div class="label-content">
+                                    In which Emirate will the car be registered?&nbsp;<span
+                                        class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {% with field_name="place_of_registration" options=form.fields.place_of_registration.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                What does this mean? <a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h3>What does this mean?</h3>
+
+                                        <p>If the car's already yours then select the Emirate it is registered in. If
+                                            you’re buying a new/used car select the Emirate you will register the car
+                                            in.</p>
+
+                                        {% include 'motorinsurance/lead/need_help.djhtml' %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-container">
+                    <div class="inner-small-container form-headings">
+                        <h2 class="blue-line">
+                            We're almost there!
+                            <p class="mt-2">We just need a few more personal details...</p>
+                        </h2>
+                    </div>
+                </div>
+
+                <div id="div_id_dob" class="form-group">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="" class="form-control-label">
+                                <div class="label-content">
+                                    What's your date of birth?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field hide">
+                                    {{ form.age }}
+                                </div>
+                            </label>
+                            <div class="age-field-container">
+                                <span class="label">Month</span>
+                                <span class="label">Day</span>
+                                <span class="label">Year</span>
+                                <select class="age-field" id="id_age_month" name="age_month">
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                <input class="age-field" type="text" maxlength="2" min="1" max="31" name="age_day" id="id_age_day" onkeypress="return is_number_key(event)" required />
+                                <input class="age-field" type="text" min="1940" max="2020" maxlength="4" name="age_year" id="id_age_year" onkeypress="return is_number_key(event)" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_nationality" class="form-group">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_nationality" class="form-control-label">
+                                <div class="label-content">
+                                    What's your nationality?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.nationality }}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_first_license_country" class="form-group">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_first_license_country" class="form-control-label ">
+                                <div class="label-content">
+                                    In what country was your first driving license issued?&nbsp;<span
+                                        class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.first_license_country }}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_first_license_age" class="form-group hide select-options">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_first_license_age_date" class="form-control-label">
+                                <div class="label-content">
+                                    How long have you had that license?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {% with field_name="first_license_age" options=form.fields.first_license_age.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                Not sure where to find this info? <a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>Not sure where to find this info?</h3>
+
+                                <p>This will typically be mentioned on the actual driving license card.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_uae_license_age" class="form-group select-options">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_uae_license_age" class="form-control-label">
+                                <div class="label-content">
+                                    How many years have you had your UAE license?&nbsp;<span
+                                        class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {% with field_name="uae_license_age" options=form.fields.uae_license_age.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                Not sure where to find this info? <a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>Not sure where to find this info?</h3>
+
+                                <p>You’ll find the issue date of your UAE license on the actual card.</p>
+
+                                {% include 'motorinsurance/lead/need_help.djhtml' %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_years_without_claim"
+                     class="last-select-step-1 form-group no-border-bottom-on-mobile select-options">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_years_without_claim" class="form-control-label">
+                                When did you last make a claim on your insurance?
+                                <div class="field">
+                                    {% with field_name="years_without_claim" options=form.fields.years_without_claim.choices %}
+                                        {% include "motorinsurance/lead/select_to_buttons.djhtml" %}
+                                    {% endwith %}
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                What does this mean? <a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>What does this mean?</h3>
+
+                                <p>If your insurance company has ever paid for the damage caused to your vehicle because
+                                    of an accident then you've made a claim on your insurance.</p>
+
+                                {% include 'motorinsurance/lead/need_help.djhtml' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_claim_certificate_available"
+                     class="last-select-step-1 form-group no-border-bottom-on-mobile select-options">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_claim_certificate_available" class="form-control-label">
+                                <span class="claims_years">Can you prove that you have 1 year no claims?</span>
+                                <div class="field">
+                                    <div class="field-select-buttons">
+                                        <input type="hidden" class="select-to-button-field"
+                                               name="claim_certificate_available" id="id_claim_certificate_available"/>
+                                        <button tabindex="42" type="button" data-value="true">Yes</button>
+                                        <button tabindex="43" type="button" data-value="false">No</button>
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="help-trigger help-trigger-layout">
+                                What's this all about? <a href="javascript:">Show Tip</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+                                <h3>What's this all about?</h3>
+
+                                <p>We may be able to get you better rates if you can provide us with a No Claims
+                                    Certificate from your current/last insurer. Ask them!</p>
+
+                                {% include 'motorinsurance/lead/need_help.djhtml' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-container">
+                    <div class="inner-small-container form-headings">
+                        <h2 class="blue-line">
+                            Please keep in mind that we can only get you a quote if:
+                        </h2>
+                        <label for="id_private_car" class="form-control-label full-width-label indv-field">
+                            <div class="field full-width-field">
+                                <div class="checkbox-section">
+                                    <div class="checkbox-container">
+                                        {{ form.private_car }}
+                                        <label for="id_private_car"><span class="checkbox">Your car is/will be registered to a person and not a company.&nbsp;<span
+                                                class="asterisk-field"></span></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <label for="id_car_gcc_spec" class="form-control-label full-width-label indv-field">
+                            <div class="field full-width-field">
+                                <div class="checkbox-section">
+                                    <div class="checkbox-container">
+                                        {{ form.car_gcc_spec }}
+                                        <label for="id_car_gcc_spec"><span class="checkbox">Your car has GCC specifications and isn't a grey-import.&nbsp;<span
+                                                class="asterisk-field"></span></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <label for="id_car_unmodified" class="form-control-label full-width-label indv-field">
+                            <div class="field full-width-field">
+                                <div class="checkbox-section">
+                                    <div class="checkbox-container">
+                                        {{ form.car_unmodified }}
+                                        <label for="id_car_unmodified"><span class="checkbox">Your car is factory-spec and un-modified (as opposed to a fire-breathing, tire-shredding road warrior.)&nbsp;<span
+                                                class="asterisk-field"></span></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </fieldset>
+
+            <div data-felix-modal="modal_cant_insure_your_car"></div>
+            <div id="modal_cant_insure_your_car" class="felix-modal-container dont-close">
+                <div class="felix-modal with-background">
+                    <h2>Ooops!</h2>
+                    <div class="content">
+                        We'll not be able to insure your vehicle, <span class="model"></span>
+
+                        <a href="javascript:" class="trim">Click here to change</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!---
+                ABOUT THE OWNER
+            -->
+
+            <h3 class="steps-title">
+            <span class="desc">
+                <div class="label">Your Quotes</div>
+            </span>
+            </h3>
+
+            <fieldset class="about-owner-panel" id="about-owner-panel">
+                <div class="sub-container">
+                    <div class="inner-small-container form-headings step-1">
+                        <h2 class="down-arrow blue-line">
+                            That's it, you're almost done!
+                        </h2>
+                    </div>
+                </div>
+                <div id="div_id_name" class="form-group no-top-border">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_name" class="form-control-label">
+                                <div class="label-content">
+                                    What's your name?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.name }}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_email" class="form-group">
+                    <div class="sub-container">
+                        <div class="inner-small-container visible-tooltip">
+                            <label for="id_email" class="form-control-label">
+                                <div class="label-content">
+                                    What's your email address?&nbsp;<span class="asterisk-field"></span>
+                                </div>
+                                <div class="field">
+                                    {{ form.email }}
+                                </div>
+                            </label>
+
+                            <div class="help-trigger help-trigger-layout">
+                                <a href="javascript:">We don't spam...</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout no-title">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+
+                                <p>We will send your car insurance quotes to this address. And we will always respect
+                                    your inbox.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="div_id_contact_number" class="form-group">
+                    <div class="sub-container">
+                        <div class="inner-small-container">
+                            <label for="id_contact_number" class="form-control-label">
+                                What's your mobile number?&nbsp;<span class="asterisk-field"></span>
+                                <div class="field">
+                                    {{ form.contact_number }}
+                                </div>
+                            </label>
+
+                            <div class="help-trigger help-trigger-layout">
+                                <a href="javascript:">We don't spam...</a>
+                            </div>
+                            <div class="tooltip-help tooltip-help-layout no-title">
+                                <a class="tooltip-help-close-container">
+                                    <div class="tooltip-help-close"></div>
+                                </a>
+
+                                <p>We don't spam and we NEVER share your personal details with anyone.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <div class="preloader">
+                <img src="{% static "images/loader-trans.gif" %}">
+                Please wait while we submit your information ....
+            </div>
+
+        </form>
+        <!--ENDS-->
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            endDate: new Date(),
+            autoHide: true,
+        });
+    });
+    function is_number_key(evt)
+    {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+    </script>
+{% endblock extra_js %}

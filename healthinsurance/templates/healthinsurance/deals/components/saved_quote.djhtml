@@ -1,0 +1,60 @@
+{% load static %}
+{% load humanize %}
+<style>
+    .product{
+        margin-bottom: 40px;
+    }
+    .details{
+        margin-bottom: 40px;
+    }
+</style>
+
+<div class="container" id="saved_quote_div">
+<!-- <div class="row"> -->
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class=""><span class="heading m-b-5">Quote Created</span> <a class="edit-health-quote" style="margin-left: 30px;color: #2F8EE0;cursor: pointer;">{% if deal.stage == 'quote' %} edit quote {% endif %}</a></div> 
+        <div>Waiting for client to select and confirm the quote</div>
+    </div>
+    <div class="col-lg-4">
+        {% if quote %}
+        {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+        {% endif %}
+    </div>
+</div>
+<!-- </div> -->
+<br/>
+<br/>
+<div class="row"></div>
+    <div class="row">
+        
+        {% for qp in quoted_plans %}
+        <!-- <div class="col-lg-4"> -->
+            <div class="col-lg-3 m-b-20 product-preview" data-id={{ index }}>                
+                <div class="product-logo-container ">
+                    <span class="spacer"></span>
+                    <img src="{{ qp.plan.insurer.logo.url }}" style="width:100px;height:100px;">
+                </div>
+            </div>
+            <div class="details col-lg-3 col-md-3 col-sm-4">
+                <div class="heading light">{{ qp.plan.name }}</div>
+                <div class="text-muted font-12">Total Premium: {% if qp.currency %}{{qp.currency.name}}{% else %}{{qp.plan.currency}}{% endif %} {{ qp.total_premium }}</div>
+                <!-- <div class="text-muted font-12">Insurer Quote Reference: {{ qp.insurer_quote_reference }}</div> -->
+                <div class="text-muted font-12">{% if qp.is_renewal_plan %}<span>Renewal <i class="fa fa-check m-l-5"></i></span>{% endif %}</div>
+            </div>
+            <br/>
+            <!-- <div title="Click to remove" class="remove product-remove" data-id="{{ index }}"><i class="ti-trash"></i></div>
+                <div title="Click to edit" class="edit product-edit" data-qp-id="{{ id }}" data-id="{{ index }}"><i class="ti-pencil-alt"></i></div> -->
+        <!-- </div> -->
+        {% endfor %}
+        
+   
+    </div>
+    <div class="row"></div>
+    <br/>
+    <br/>
+    
+    <!-- <p>Your quote was created {{ deal.quote.created_on|naturaltime }}. You can update your quote and resent it to your customer</p> -->
+
+</div>   

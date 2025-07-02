@@ -1,0 +1,162 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container">
+    <input type="hidden" id="insurer_bank_name" value="{{bank_name}}" />
+    <input type="hidden" id="insurer_iban" value="{{iban}}" />
+    {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+    <div class="heading m-b-5">Sub Stages</div>
+    <div class="row">
+        <div class="col-lg-6">
+    <ul class="deal-stages-breadcrumb nav">
+        <li data-id='new' class="no-underline {% if sub_stage_number == 1 %}current selected {% else %} completed {% endif %} substage_1">
+            <a href="#">
+                Send to client
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+        <li data-id='new' class="no-underline substage_2 {% if sub_stage_number == 2 %}current selected {% elif sub_stage_number > 2 %} completed {% endif %}">
+            <a href="#">
+                Payment confirmation
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+        <li data-id='new' class="no-underline substage_3 {% if sub_stage_number == 3 %}current selected {% endif %}">
+            <a href="#">
+                Send to Insurer
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="tab-content" id="myTabContent">
+    {% if not request.user.userprofile.has_producer_role %}
+        <div class="tab-pane fade substage_1 {% if sub_stage_number == 1 %}show active {% endif %}" id="send_to_client" role="tabpanel" aria-labelledby="received-tab">
+        <form method="POST">
+            <div class="heading m-b-5">Method of Payment</div>
+        <div class="row m-b-5">
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="payment_link_checkbox">
+                <label class="form-check-label">
+                    Payment link
+                </label>
+            </div>
+            
+            
+        </div>
+        <div class="row m-b-5">
+            
+            <div class="col-lg-6" style="display: inherit;">
+                <label class="" style="white-space: nowrap;"> Payment URL </label>
+                
+                <input class="form-control required" type="" value="" id="payment_url" name="payment_url" style="margin-left: 5px;">
+            
+            </div>
+            </div>
+
+            <div class="row m-b-5">        
+                    <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="bank_transfer_checkbox">
+                    <label class="form-check-label">
+                        Bank transfer
+                    </label>
+                </div>        
+            </div>
+
+            <div class="row m-b-5">
+                <div class="col-lg-1">
+                    <label class="" style="white-space: nowrap;"> Bank Name </label>
+                </div>
+                <div class="col-lg-5" style="display: inherit;">
+                
+                    <input class="form-control" type="text" value="" id="bank_name" name="bank_name" style="margin-left: 5px;" readonly>
+                </div>
+            </div>
+
+            <div class="row m-b-5">
+                <div class="col-lg-1">
+                    <label class="" style="white-space: nowrap;"> IBAN </label>
+                    </div>
+                <div class="col-lg-5" style="display: inherit;">
+                
+                    <input class="form-control" type="text" value="" id="iban" name="iban" style="margin-left: 5px;" readonly>
+                </div>
+            </div>
+            
+            
+                {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=payment name='Save and Send' class='btn-nexus btn-nexus-blue float-right fetch-email payment' %}
+            </form>
+            
+        </div>
+
+        <div class="tab-pane fade substage_2 {% if sub_stage_number == 2 %}show active {% endif %}" id="send_to_client" role="tabpanel" aria-labelledby="received-tab">
+        <form method="POST">
+            <div class="row m-b-5">
+                    
+
+                <div class="col-lg-4">
+                    <div class="form-check">
+                    <input class="form-check-input required" type="checkbox" value="" name="payment_confirmation" id="payment_confirmation" required>
+                    <label class="form-check-label">
+                        Client has confirmed the payment has been made *
+                    </label>
+                </div>
+                </div>
+                </div>
+            <div class="row m-b-5">
+                
+
+                
+                </div>
+                {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' class='btn-nexus btn-nexus-blue next-substage float-right' %}
+        </form>
+        </div>
+
+        <div class="tab-pane fade substage_3 {% if sub_stage_number == 3 %}show active {% endif %}" id="send_to_client" role="tabpanel" aria-labelledby="received-tab">
+        <form method="POST">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-check">
+                    <input class="form-check-input required" type="checkbox" value="" name="payment_proof" id="payment_proof" required checked>
+                    <label class="form-check-label">
+                        Proof of payment has been uploaded.
+                    </label>
+                </div>
+                </div>
+            </div>
+            <div class="row m-b-5">
+                    
+
+                <div class="col-lg-4">
+                    <div class="form-check">
+                    <input class="form-check-input required" type="checkbox" value="" name="payment_confirmation" id="payment_confirmation" required>
+                    <label class="form-check-label">
+                        Payment confirmation has been sent to the insurer
+                    </label>
+                </div>
+                </div>
+                </div>
+                {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' action='btn-nexus btn-nexus-blue next-substage float-right' %}
+        </form>
+        </div>
+    {% else %}
+        <br/>
+        <br/>
+    {% endif %}
+</div>
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
+</div>
+<script>
+    document.querySelector('#bank_transfer_checkbox').addEventListener('change', function(){
+        if(this.checked){
+        document.querySelector('#bank_name').value = document.querySelector('#insurer_bank_name').value
+        document.querySelector('#iban').value = document.querySelector('#insurer_iban').value
+        }
+        else{
+            document.querySelector('#bank_name').value = ''
+            document.querySelector('#iban').value = ''
+        }
+        
+    })
+</script>

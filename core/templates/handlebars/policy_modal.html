@@ -1,0 +1,141 @@
+{% verbatim %}
+<script id="policy-view-modal-template" type="text/x-handlebars-template">
+<div class="policy-modal">
+    <div class="view-file">
+        <a href="{{ policy_document_url }}" target="_blank">
+            <i class="font-15 ti-new-window"></i> <span class="font-12">View File</span>
+        </a>
+        <div class="m-t-10 font-10 text-muted c-vlgrey">Created on: {{ policy_created_on }}</div>
+        <div class="font-10 text-muted c-vlgrey">Last Update on: {{ policy_updated_on }}</div>
+    </div>
+    <div class="row no-gutters">
+        <div class=" col-lg-2 col-md-3 m-r-10">
+            <div class="logo">
+                <span class="spacer"></span>
+                <img src="{{ product_logo_url }}" />
+            </div>
+        </div>
+        <div class="details p-0 col-lg-6 col-md-6 col-sm-8">
+            <div class="heading light">
+                {{#if policy_title }}{{ policy_title }}{{else}}-{{/if}}
+            </div>
+            <div class="font-10 c-bgrey">
+                Policy No. {{ policy_number }}
+            </div>
+
+            <div class="font-12 capitalize">
+                <span class="stage-icon status-{{{ slugify policy_status }}}"></span> {{ policy_status }}
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-60">
+        <div class="col-lg-4">
+            <label class="text-muted">Policy Start Date</label>
+            <div class="value capitalize">
+                {{ policy_start_date }}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Policy End Date</label>
+            <div class="value capitalize">
+                {{ policy_expiry_date }}
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-20">
+        <div class="col-lg-4">
+            <label class="text-muted">Insurance Type</label>
+            <div class="value capitalize">{{#if insurance_type }}{{ insurance_type }}{{else}}-{{/if}}</div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Repair Type</label>
+            <div class="value capitalize">
+                {{#if agency_repair }}Agency Repair{{else}}Non-Agency{{/if}}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Customer</label>
+            <div class="value capitalize">{{#if customer }}{{ customer }}{{else}}-{{/if}}</div>
+        </div>
+    </div>
+
+    <div class="row m-t-20">
+        <div class="col-lg-4">
+            <label class="text-muted">Vehicle</label>
+            <div class="value capitalize">{{#if vehicle }}{{ vehicle }}{{else}}-{{/if}}</div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Sum Insured</label>
+            <div class="value capitalize">{{#if sum_insured }}{{ currency }} {{ sum_insured }}{{else}}-{{/if}}</div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Premium</label>
+            <div class="value capitalize">
+                {{#if premium }}{{ currency }} {{ premium }}{{else}}-{{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-20">
+        <div class="col-lg-4">
+            <label class="text-muted">Deductible</label>
+            <div class="value capitalize">
+                {{#if deductible }}{{ currency }} {{ deductible }}{{else}}-{{/if}}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Ancillary Deductible</label>
+            <div class="value capitalize">
+                {{#if deductible_extras }}{{ deductible_extras }}{{else}}-{{/if}}
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <label class="text-muted">Mortgage</label>
+            <div class="value capitalize">
+                {{#if mortgage }}{{ mortgage }}{{else}}-{{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters m-t-20">
+        <div class="col-lg-12">
+            <label class="text-muted">Addons</label>
+            <div class="value capitalize">
+            {{#if default_add_ons }}
+                <span class="add-ons-preview-label font-10 c-vgrey">Default add-ons: </span> 
+                {{#each default_add_ons }}
+                    <span class="badge badge-default badge-font-light m-t-10">{{{ replaceWith this "_" " "}}}</span>
+                {{/each}}
+                <br />
+            {{/if}}
+            {{#if add_ons }}
+                <span class="add-ons-preview-label font-10 c-vgrey">Paid add-ons: </span> 
+                {{#each add_ons }}
+                    <span class="badge badge-default badge-font-light m-t-10">{{{ replaceWith this "_" " "}}}</span>
+                {{/each}}
+            {{/if}}
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row no-gutters m-t-20">
+    {{#if source_deal_id}}
+        <div class="col-lg-6">
+            <label class="text-muted">Source Deal</label>
+            <div class="value capitalize">
+                <a href="{{{ felixUrl 'motorinsurance:deal-edit' source_deal_id}}}" class="link limit-text font-12">{{#if source_deal_title }}{{ source_deal_title }}{{else}}-{{/if}}</a>
+            </div>
+        </div>
+    {{/if}}
+    {{#if renewal_deal_id}}
+        <div class="col-lg-6">
+            <label class="text-muted">Renewal Deal</label>
+            <div class="value capitalize">
+                <a href="{{{ felixUrl 'motorinsurance:deal-edit' renewal_deal_id}}}" class="link limit-text font-12">{{#if renewal_deal_title }}{{ renewal_deal_title }}{{else}}-{{/if}}</a>
+            </div>
+        </div>
+    {{/if}}
+    </div>
+</div>
+</script>
+{% endverbatim %}

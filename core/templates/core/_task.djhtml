@@ -1,0 +1,16 @@
+{% load static %}
+<li data-task-id="{{ task.pk }}" class="task {% if task.is_completed %}completed{% endif %}">
+    <div class="label">
+        {{ task.title }} 
+        <span title="Click to edit" class="edit task-edit" data-id="{{ task.pk }}">
+            <i class="ti-pencil-alt"></i>
+        </span>
+        <span title="Click to remove" class="remove task-remove" data-id="{{ task.pk }}">
+            <i class="ti-trash"></i>
+        </span>
+    </div>
+    <div class="content">{{ task.content|safe }}</div>
+    <div class="due_date {% if task.is_overdue %}c-error{% endif %}">Due on: {{ task.due_datetime|date:'d-m-Y P'|upper }}</div>
+    <div class="text-muted">
+        Created on {{ task.created_on|date:'d-m-Y P'|upper }} {% if task.added_by %}by {{ task.added_by.get_full_name }}{% endif %}</div>
+</li>

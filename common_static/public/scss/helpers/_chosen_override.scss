@@ -1,0 +1,160 @@
+// CHOSEN.js style overrides
+.main-form {
+    .chosen-container-single {
+        &.chosen-disabled {
+            abbr:hover {
+                background-position: -42px -10px
+            }
+        }
+        .chosen-single {
+            width: 100%;
+            border: 1px solid #DDD;
+            border-radius: 6px;
+            box-shadow: 0px 0px 2px #BDBDBD;
+            background: #FFF;
+            outline: none;
+            height: 52px;
+            span {
+                padding: 15px 5px;
+                font-weight: 200;
+                font-size: 22px;
+                color: #404040;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 90%;
+                line-height: 20px;
+                margin-right: 26px;
+            }
+            abbr {
+                position: absolute;
+                top: 6px;
+                right: 26px;
+                display: block;
+                width: 12px;
+                height: 12px;
+                font-size: 1px;
+                &:hover {
+                    background-position: -42px -10px
+                }
+            }
+            div {
+                position: absolute;
+                top: 0;
+                right: 0;
+                display: block;
+                width: 50px;
+                height: 100%;
+                b {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    background-image: url(../images/dropdown-arrow-icon.svg) !important;
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-size: 24px 15px !important;
+                }
+            }
+        }
+        .chosen-single-with-deselect {
+            span {
+                margin-right: 38px;
+            }
+        }
+        .chosen-search {
+            position: relative;
+            z-index: 1010;
+            margin: 0;
+            padding: 3px 4px;
+            white-space: nowrap;
+            input[type=number],
+            input[type=tel],
+            input[type=text] {
+                border: 1px solid #CCC;
+                padding: 8px 10px;
+                font-size: 18px;
+                color: #404040;
+                font-weight: 200;
+                font-family: $font-family;
+                background-image: none !important;
+                background: none !important;
+                border-radius: 0px;
+                width: 100%;
+                height: auto;
+                @include breakpoint(mobile) {
+                    position: absolute;
+                    left: -99999px;
+                }
+            }
+        }
+        .chosen-drop {
+            background-color: white;
+            border: 1px solid #aaa;
+            border-radius: 0px;
+            box-sizing: border-box;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+        }
+        .chosen-results {
+            padding: 0px;
+            margin: 0px;
+            li {
+                padding: 6px 8px;
+                border-bottom: 1px dotted #DDD;
+                font-size: 1rem;
+                font-weight: 400;
+                line-height: 1.5;
+                font-family: $font-family;
+                &.highlighted {
+                    background-color: $felix-color-primary;
+                    color: #FFF;
+                    background-image: none;
+                }
+                &.result-selected {
+                    color: #111;
+                    background-image: none;
+                    background-color: #DDD;
+                }
+
+                em {
+                    font-size: 1rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    font-family: $font-family;
+                    display: inline-block !important;
+                    position: relative !important;
+                    left: auto;
+                    bottom: auto;
+                }
+            }
+        }
+    }
+    .chosen-container-active {
+        .chosen-single {
+            border: 1px solid $felix-color-primary;
+            border-radius: 6px;
+        }
+        &.chosen-with-drop {
+            input[type=number],
+            input[type=tel],
+            input[type=text] {
+                @include breakpoint(mobile) {
+                    position: relative;
+                    left: auto;
+                }
+            }
+            .chosen-single {
+                width: 100%;
+                border: 1px solid #DDD;
+                border-radius: 6px;
+                box-shadow: 0px 0px 3px #BDBDBD;
+                background: #FFF;
+                outline: none;
+                height: 52px;
+
+                div b {
+                    background-position: center center;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,179 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}Motor Policies{% endblock %}
+{% block body_class %}policies{% endblock %}
+{% block current_nav %}policies{% endblock %}
+
+{% block content %}
+     <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Policies</h1>
+            <button type="button" data-felix-modal="modal_create_policy" class="create-record btn btn-primary btn-md btn-list-create" onclick="$('#policy_form').find(':input').not(':button, :submit, :reset, [name=csrfmiddlewaretoken], :checkbox, :radio').val('');">
+                Create New
+            </button>
+            <div class="float-right policies-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+            {% include 'motorinsurance/policy/new_policy_form.djhtml' %}
+            <span class="felix-table-action-buttons"></span>
+            <div class="clear"></div>
+
+            <div class="table-filters">
+                <form action="{% url 'motorinsurance:policies' %}" method="get">
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="sort_by" id="id_sort_by" value="{{ sort_by }}" />
+                    <input type="hidden" name="expiry" id="id_expiry" value="{{ expiry }}" />
+
+                    <div class="quick-filters">
+                        <span class="title">Quick Filters:</span>
+                        <button data-field="id_expiry" data-type="all" type="button" class="{% if expiry == '' or expiry == 'all' %}active {% endif %} btn btn-white">All</button>
+                        <button data-field="id_expiry" data-type="active" type="button" class="{% if expiry == 'active' %}active {% endif %}btn btn-white">Active</button>
+                        <button data-field="id_expiry" data-type="expired" type="button" class="{% if expiry == 'expired' %}active {% endif %}btn btn-white">Expired</button>
+                    </div>
+
+                    <div class="table-filters float-right">
+                        <div class="filter-trigger">
+                            <i class="ti-filter"></i> <span class="hide badge badge-info badge-pill noti-icon-badge filter-count">0</span>
+                        </div>
+                        {% if is_admin %}
+                        <div class="options-table float-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-settings"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item export" data-url="{% url 'motorinsurance:policy-export' %}" href="javascript:">
+                                    <i class="ti-export m-r-7"></i> Export to CSV
+                                </a>
+                                <a class="dropdown-item import" href="#" data-felix-modal="modal_policy_import">
+                                    <i class="ti-import m-r-7"></i> Import from CSV
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+
+                        <div class="search-popup">
+                            <div class="title">Filters</div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.products.label }}</label>
+                                    {{ search_form.products }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.status.label }}</label>
+                                    {{ search_form.status }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_after.label }}</label>
+                                    {{ search_form.created_on_after }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_before.label }}</label>
+                                    {{ search_form.created_on_before }}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <a href="javascript:" class="search-clear">Clear</a>
+                                <div class="float-right">
+                                    <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                    <button type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table data-update-callback="__POLICY._updateTableAttributes" class="table no-footer felix-table opacity" cellspacing="0" width="100%"
+                        data-index="{{ algolia_env }}_motor_policies_{{ company.pk }}"
+                        data-mode='index'
+                        data-securedapikey="{{ algolia_secured_search_api_key }}"
+                        data-name='policies'>
+                        <thead>
+                            <tr>
+                                <th
+                                    data-name="policy_expiry_date"
+                                    class="p-l-15">
+                                    Status
+                                </th>
+                                <th
+                                    data-name="reference_number"
+                                    class="">
+                                    Policy No.
+                                </th>
+                                <th>Deal</th>
+                                <th
+                                    data-name="customer__name"
+                                    class="">
+                                    Customer
+                                </th>
+                                <th
+                                    data-name="owner_name"
+                                    class="">
+                                    Owner
+                                </th>
+                                <th
+                                    data-name="product"
+                                    class="">
+                                    Selected Product
+                                </th>
+                                <th>Premium ({{ companysettings.get_currency_display }})</th>
+                                <th
+                                    data-name="deal__vehicle_insured_value"
+                                    class="">
+                                    Sum Insured ({{ companysettings.get_currency_display }})
+                                </th>
+                                <th
+                                    data-name="policy_start_date"
+                                    class="sortable {% if sort_by == '' or sort_by == 'policy_start_date'%}desc{% endif %}{% if sort_by == 'policy_start_date'%}asc{% endif %}">
+                                    Policy Start
+                                </th>
+                                <th
+                                    data-name="policy_expiry_date"
+                                    class="sortable {% if sort_by == 'policy_expiry_date_desc'%}desc{% endif %}{% if sort_by == 'policy_expiry_date_asc'%}asc{% endif %}">
+                                    Expiry Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body"></tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center>
+                        <ul class="pagination"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/policies_list.html' %}
+    {% include 'handlebars/pagination.html' %}
+    {% include 'handlebars/policy_modal.html' %}
+
+    {% include 'motorinsurance/deal/components/deal_policy_modal.djhtml' %}
+    {% include 'motorinsurance/deal/components/policy_import_modal.djhtml' %}
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+    <script type="text/javascript">
+    var __current_timestamp = {{current_timestamp}};
+    </script>
+{% endblock %}

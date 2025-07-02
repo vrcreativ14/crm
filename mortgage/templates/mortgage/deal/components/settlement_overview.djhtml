@@ -1,0 +1,40 @@
+{% extends "mortgage/deal/components/stage_form.html" %}
+{% load static %}
+{% load humanize %}
+{% load mortgage %}
+{% block head %}
+{% block extra_css %}
+<style>
+/* New CSS */
+.mortgage-quote-details .table img{
+    height: 50px;
+    width: auto;
+}
+.mortgage-quote-details .table tr td{
+    text-align: right;
+}
+</style>
+{% endblock %}
+<div class="mortgage-quote-details deal-overview deal-process pre-approval display">
+    <div class="row mb-4">
+        <div class="col-6 text-left">
+            <div class="heading text-capitalize">Settlement</div>
+            <p>Your quote was created {{ quote.created_on }}. You can update your quote and resent it to your customer</p>
+        </div>
+        <div class="col-6">
+            {% include 'mortgage/deal/components/quick_customer_link.djhtml' %}
+        </div>
+    </div>
+    <div class="container">
+        {% include 'mortgage/deal/components/quote_main_details.djhtml' %}
+    </div>
+    {% include 'mortgage/deal/components/deal_quote_bank_table.djhtml' %}
+</div>
+{% endblock %}
+{% block button %}
+{% if deal.stage == "settlement" %}
+<button type="submit" class="btn-nexus btn-nexus-golden" style="display: block !important;">
+    Process  Settlement
+</button>
+{% endif %}
+{% endblock %}

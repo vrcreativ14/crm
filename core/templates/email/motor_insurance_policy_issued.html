@@ -1,0 +1,14 @@
+<p>Hi {{ customer_name }},</p>
+
+<p>Policy for your vehicle {{ car_name }} has been issued. It's attached.</p>
+
+{% if additional_documents %}
+	<p>Additional documents</p>
+	{% for document in additional_documents %}
+		<li><a href="{{ document.file.url }}">{{ document.label }}</a></li>
+	{% endfor %}
+{% endif %}
+
+<p>Thanks,<br>
+{{ company_name }}
+</p>

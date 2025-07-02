@@ -1,0 +1,356 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}Pay for {{ product.product.insurer.name }} policy{% endblock %}
+
+{% block content %}
+    <div id="payment-form">
+        <div class="steps clearfix">
+            <ul role="tablist">
+                <li role="tab" aria-disabled="false" class="first completed">
+                    <span class="desc"><div class="label">Choose Policy</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="completed">
+                    <span class="desc"><div class="label">Choose Add-Ons</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="current">
+                    <span class="desc"><div class="label">Order Summary</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="">
+                    <span class="desc">
+                        <div class="label">Upload Documents 
+                            <span class="info-tip felix-tooltip-bottom" data-tooltip="You don't need to complete this step immediately, you have 5 days to do so."></span>
+                        </div>
+                    </span>
+                </li>
+                <li role="tab" aria-disabled="false" class="last">
+                    <span class="desc"><div class="label">Policy Issued!</div></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sub-container">
+            <div class="inner-small-container form-headings step-1">
+                <h1 class="down-arrow">
+                    {{ user_data.name|title }}, here's your order summary:
+                    <div class="blue-line"></div>
+                </h1>
+            </div>
+            <div class="inner-small-container step-2">
+                <div class="animated-car"></div>
+            </div>
+        </div>
+
+        <div class="sub-container info-box">
+            <div class="inner-small-container">
+                <h2>Pricing based on the following information:</h2>
+                <div class="info row">
+                    <div class="label col-md-4 col-sm-12">Name</div>
+                    <div class="value col-md-8 col-sm-12">{{ user_data.name }}</div>
+                    <div class="label col-md-4 col-sm-12">Email</div>
+                    <div class="value col-md-8 col-sm-12">{{ user_data.email }}</div>
+                    <div class="label col-md-4 col-sm-12">Phone</div>
+                    <div class="value col-md-8 col-sm-12">{{ user_data.phone }}</div>
+                    <div class="label col-md-4 col-sm-12">Age</div>
+                    <div class="value col-md-8 col-sm-12">{{ user_data.age }}</div>
+                    <div class="label col-md-4 col-sm-12">Nationality</div>
+                    <div class="value col-md-8 col-sm-12">{{ user_data.nationality }}</div>
+                    <div class="label col-md-4 col-sm-12">Age of UAE license</div>
+                    <div class="value col-md-8 col-sm-12">{{ user_data.uae_license_age }}</div>
+                    <div class="label col-md-4 col-sm-12">Vehicle</div>
+                    <div class="value col-md-8 col-sm-12">{{ quote.deal.get_car_title }}</div>
+                    <div class="label col-md-4 col-sm-12">Vehicle insured value</div>
+                    <div class="value col-md-8 col-sm-12">
+                        {{ request.company.companysettings.get_currency_display }} {{ insured_car_value|intcomma }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sub-container info-box">
+            <div class="inner-small-container">
+                <h2>Your selected insurance policy:</h2>
+                <div class="info row">
+                    {% if product.product.get_logo %}
+                    <div class="logo col-12 col-sm-12">
+                        <img src="{{ product.product.get_logo }}" />
+                    </div>
+                    {% endif %}
+
+                    <div class="label col-lg-4 col-sm-12 custom-line-height">Quotation reference number</div>
+                    <div class="col-lg-8 col-sm-12 quote-number">
+                        <a href="{% url 'motorinsurance:quote-comparison' reference_number=quote.reference_number pk=quote.pk %}">
+                            <i class="mdi mdi-file-outline"></i> {{ quote.reference_number }}
+                        </a>
+                    </div>
+
+                    <div class="label col-md-4 col-sm-12">Insurer</div>
+                    <div class="value col-md-8 col-sm-12">{{ product.product.insurer.name }}</div>
+
+                    <div class="label col-md-4 col-sm-12">Product selected</div>
+                    <div class="value col-md-8 col-sm-12">{{ product.product }}</div>
+
+                    <div class="label col-md-4 col-sm-12">Add-ons selected</div>
+                    <div class="value col-md-8 col-sm-12">
+                        {% if all_add_ons %}
+                            {% for add_on in all_add_ons %}
+                                <span class="addons">{{ add_on }}</span>
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </div>
+
+                    <div class="label col-md-4 col-sm-12">Insurance policy</div>
+                    <div class="value col-md-8 col-sm-12">
+                        {% if product.product.is_tpl_product %}
+                            Third Party Liability (TPL)
+                        {% else%}
+                            Comprehensive
+                        {% endif %}
+                    </div>
+
+                    <div class="label col-md-4 col-sm-12">Emirate of registration</div>
+                    <div class="value col-md-8 col-sm-12">
+                        {% if quote.deal.get_place_of_registration_display %}
+                            {{ quote.deal.get_place_of_registration_display }}
+                        {% else%}
+                            -
+                        {% endif %}
+                    </div>
+
+                    <div class="label col-md-4 col-sm-12">Policy deductible</div>
+                    <div class="value col-md-8 col-sm-12">
+                        {{ request.company.companysettings.get_currency_display }} {{ product.deductible|intcomma }}
+                    </div>
+
+                    <div class="label price col-md-4 col-sm-12">Total premium</div>
+                    <div class="value price col-md-8 col-sm-12">
+                        {{ request.company.companysettings.get_currency_display }} {{ amount|intcomma }}
+                        <small>(Incl. 5% VAT)</small>
+                    </div>
+
+                    <div class="label datepicker-field col-md-4 col-sm-12">Policy start date</div>
+                    <div class="value datepicker-field col-md-8 col-sm-12">
+                        <span class="calendar-icon-svg">
+                            <svg width="30px" height="25px" viewBox="0 0 30 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <defs>
+                                    <rect id="path-1" x="0" y="4" width="24" height="17" rx="3"></rect>
+                                    <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-3" y="-3" width="30" height="23">
+                                        <rect x="-3" y="1" width="30" height="23" fill="white"></rect>
+                                        <use xlink:href="#path-1" fill="black"></use>
+                                    </mask>
+                                </defs>
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="main-stroke" transform="translate(-279.000000, -12.000000)" stroke="#009FAB">
+                                        <g id="Group-2" transform="translate(282.000000, 13.000000)">
+                                            <use id="Rectangle" mask="url(#mask-2)" stroke-width="6" xlink:href="#path-1"></use>
+                                            <path d="M4.44974772,10.5 L19.7411702,10.5" id="Line" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,6"></path>
+                                            <path d="M5.5,0.5 L5.5,5.5" id="Line" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M11.5,0.5 L11.5,5.5" id="Line" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M17.5,0.5 L17.5,5.5" id="Line" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M4.44974772,16.5 L19.7411702,16.5" id="Line" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,6"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                        <input type="text" name="policy_start_date" id="policy_start_date" value="{% if selected_product_details.policy_start_date %}{{ selected_product_details.policy_start_date }}{% endif %}" class="datepicker input-field date-field show-cross" placeholder="Select date..." autocomplete="off" readonly />
+                        <span class="info-tip help-icon" data-tooltip="Please let us know on what date you'd like your new policy to start."></span>
+                    </div>
+
+                    <div class="label datepicker-field col-md-4 col-sm-12">Bank finance</div>
+                    <div class="value datepicker-field col-md-8 col-sm-12">
+                        <input type="text" name="bank_finance" id="bank_finance" value="{% if selected_product_details.bank_finance %}{{ selected_product_details.bank_finance }}{% endif %}" class="input-field" placeholder="Enter bank name if applicable" />
+
+                        <span class="info-tip help-icon" data-tooltip="If this car is financed, please let us know with which bank."></span>
+                    </div>
+                    {% if companysettings.motor_promo_code_allowed %}
+                    <div class="label datepicker-field col-md-4 col-sm-12">Promo code</div>
+                    <div class="value datepicker-field col-md-8 col-sm-12">
+                        <input type="text" name="promo_code" id="promo_code" value="" class="input-field" placeholder="Enter promo code" />
+
+                        <span class="info-tip help-icon" data-tooltip="Enter promo code to get additional discount."></span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if editable %}
+            {% if not product_selected %}
+            <div class="sub-container">
+                <div class="inner-small-container form-headings main-form">
+                    <br />
+                    <label for="information" class="terms-and-condition form-control-label full-width-label indv-field">
+                        <div class="field full-width-field">
+                            <div class="checkbox-section">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="information" id="information">
+                                    <label for="information"><span class="checkbox">The above information is accurate and correct<span class="asterisk-field"></span></span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+
+                    {% for term in order_terms %}
+                        <br />
+                        <label for="terms_{{forloop.counter}}" class="terms-and-condition form-control-label full-width-label indv-field">
+                            <div class="field full-width-field">
+                                <div class="checkbox-section">
+                                    <div class="checkbox-container">
+                                        <input id="terms_{{forloop.counter}}" type="checkbox" class="order-terms">
+                                        <label for="terms_{{forloop.counter}}">
+                                            <span class="checkbox">{{ term|safe }} <span class="asterisk-field"></span></span></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    {% endfor %}
+
+                    {% if product.ncd_required %}
+                    <br />
+                    <label for="ncd-required" class="terms-and-condition form-control-label full-width-label indv-field">
+                        <div class="field full-width-field">
+                            <div class="checkbox-section">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="ncd-required" id="ncd-required">
+                                    <label for="ncd-required"><span class="checkbox">I understand that I need to get a No Claims Letter from my previous insurer. 
+                                        <span class="terms-tooltip info-tip help-icon" data-tooltip="We've quoted you this great rate because you notified us that you can get a No Claims Letter from your previous insurer. If you can't provide us with this letter then this rate will change."></span>
+                                        <span class="asterisk-field"></span></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="action-buttons">
+                <div class="sub-container">
+                    <div class="inner-small-container main-form row">
+                        <div class="col-12">
+                            {% if quote_sent %}
+                                <button type="button" class="submit-btn btn-primary btn">Place Order</button>
+                            {% endif %}
+                            {% if product_selected %}
+                                <a href="{% url 'motorinsurance:quote-upload-documents' reference_number=quote.reference_number pk=quote.pk %}" class="submit-btn btn-primary btn">Place Order</a>
+                            {% endif %}
+                            <span class="loader">
+                                <img width="24" src="{% static "images/preloader.gif" %}" /> Submitting request. Please wait...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% include 'motorinsurance/quote_public/whatsapp_widget.djhtml' %}
+    </div>
+{% endblock %}
+{% block extra_js %}
+    {% if editable %}
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-tooltip!=""]').qtip({
+                content: { attr: 'data-tooltip'},
+                style: { classes: 'qtip-light qtip-shadow qtip-rounded'},
+                hide: { fixed: true, delay: 100},
+                position: { my: 'top center'}
+            });
+            $('.datepicker').datepicker({
+                format: 'dd-mm-yyyy',
+                startDate: new Date(),
+                autoHide: true,
+            });
+            $('.submit-btn').click(function(){
+                var qrn = '{{ quote.reference_number }}';
+                var qid = '{{ quote.pk }}';
+                var error = null;
+
+                $('.error_note').remove();
+                if(!$('#information').is(':checked')){
+                    $('#information')
+                        .closest('.checkbox-container')
+                        .after("<div class='error_note'>You must agree that you've reviewed the information and that it's accurate.</div>");
+
+                    error = true;
+                }
+
+                if($('.order-terms').length){
+                    $('.order-terms').each(function() {
+                        if(!$(this).is(':checked')) {
+                            $(this).closest('.checkbox-container').after("<div class='error_note'>You must agree to this.</div>");
+                            error = true;
+                        }
+                    });
+                }
+
+                if($('#ncd-required').length && !$('#ncd-required').is(':checked')){
+                    $('#ncd-required')
+                        .closest('.checkbox-container')
+                        .after("<div class='error_note'>You must agree with this.</div>");
+
+                    error = true;
+                }
+
+                if(error) return true;
+
+                $('.submit-btn').attr('disabled', true);
+                $('.loader').show();
+
+                $.post(DjangoUrls['motorinsurance:update-deal-stage'](qrn, qid) + '?st=ps',
+                    {'policy_start_date': $('#policy_start_date').val(), 'bank_finance': $('#bank_finance').val(), 'promo_code': $('#promo_code').val()},
+                    function(response) {
+                        if(response.status) {
+                            if(typeof amplitude !== "undefined") {
+                                if('client_email_hash' in response && response.client_email_hash) {
+                                    amplitude.getInstance().setUserId(response.client_email_hash);
+                                    amplitude.getInstance().setUserProperties({
+                                        email: response.client_email
+                                    });
+                                }
+                                amplitude.getInstance().logEvent('motor order created', {
+                                    'source': 'e-commerce',
+
+                                    'company_id': current_company_info.ID,
+                                    'company_name': current_company_info.NAME,
+
+                                    'deal_id': response.deal_id,
+                                    'deal_created_date': response.deal_created_date,
+
+                                    'product': response.product,
+                                    'insurer': response.insurer,
+                                    'cover': response.cover,
+                                    'premium': response.premium,
+                                    'discounted_premium': response.discounted_premium,
+                                    'repair_type': response.repair_type,
+                                    'views': response.views,
+
+                                    'vehicle_model_year': response.vehicle_model_year,
+                                    'vehicle make': response.vehicle_make,
+                                    'vehicle_model': response.vehicle_model,
+                                    'vehicle_body_type': response.vehicle_body_type,
+                                    'vehicle_sum_insured': response.vehicle_sum_insured,
+
+                                    'client_nationality': response.client_nationality,
+                                    'client_gender': response.client_gender,
+                                    'client_age': response.client_age
+                                });
+                            }
+                            setTimeout(function() {
+                                window.location = DjangoUrls['motorinsurance:quote-upload-documents'](qrn, qid);
+                            }, 2000);
+                        } else {
+                            $('.submit-btn').attr('disabled', false);
+                            $('.loader').hide();
+
+                            Utilities.Notify.error(response.error_message, 'Error Occurred!');
+                        }
+                    }
+                );
+            });
+        });
+        </script>
+    {% endif %}
+{% endblock %}

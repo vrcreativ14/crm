@@ -1,0 +1,727 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load permission_tags %}
+
+{% block page_title %}Health Insurance Policies{% endblock %}
+{% block body_class %}motor-deals{% endblock %}
+{% block current_nav %}deals{% endblock %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css" />
+{% block content %}
+
+<style>
+    label{
+        font:normal normal normal 14px/19px Roboto;
+    }
+    .radio-button{
+        margin-left: 8px;
+    }
+.radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+.radio-button input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+.input-container input {
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    padding: .75rem;
+    position: relative;
+    width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.form-label{
+            font-weight: 400!important;
+        }
+        .datepicker{
+            font-family: 'Exo 2', sans-serif;
+          }
+          .datepicker--cell.-range-to-{
+            background: rgba(248, 206, 236, 0.4);
+            border-color: rgba(248, 206, 236, 1);
+          }
+          
+          .datepicker--cell.-selected-,.datepicker--cell.-selected-.-focus-{
+            background-color: #f8ceec;
+            color: #000000;
+          }
+          .datepicker--cell.-in-range-{
+            background: rgba(248, 206, 236, 0.2);
+          }
+          .datepicker--cell-day {
+              font-weight: 500;
+              color: #000000;
+          }
+          input[switch]:checked + label {
+    background-color: #2f8ee0 !important;
+}
+.hidden{
+    display: none;
+}
+.felix-table-container{
+        overflow: auto !important;
+    }
+    .felix-table-container th{
+        white-space: normal !important;
+    }
+    .felix-table{
+        border-radius: 0.5rem;
+        overflow: hidden;
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+    }
+    .felix-table td,.felix-table th{
+        text-align:left !important;
+        color: #4B4B4B !important;
+    }
+    .felix-table th{
+        cursor: pointer;
+    }
+    .felix-table th img{
+        margin-top: -0.25rem;
+        margin-left: 0.25rem;
+    }
+    .felix-table td img{
+        max-width: 100px;
+        height: auto;
+    }
+    #DataTables_Table_0_length{
+        display:block;
+    }
+    .felix-table tbody tr:nth-of-type(odd){
+        background: transparent !important;
+    }
+    .table-hover tbody tr:hover, .felix-table tbody tr:nth-of-type(even){
+        background: #FCFCFC !important;
+    }
+    #DataTables_Table_0_info{
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    label{
+        font:normal normal normal 14px/19px Roboto;
+    }
+    .radio-button{
+        margin-left: 8px;
+    }
+.radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+.radio-button input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+.input-container input {
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    padding: .75rem;
+    position: relative;
+    width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.form-label{
+            font-weight: 400!important;
+        }
+        .datepicker{
+            font-family: 'Exo 2', sans-serif;
+          }
+          .datepicker--cell.-range-to-{
+            background: rgba(248, 206, 236, 0.4);
+            border-color: rgba(248, 206, 236, 1);
+          }
+          .datepicker--cell.-current-{}
+          .datepicker--cell.-selected-,.datepicker--cell.-selected-.-focus-{
+            background-color: #f8ceec;
+            color: #000000;
+          }
+          .datepicker--cell.-in-range-{
+            background: rgba(248, 206, 236, 0.2);
+          }
+          .datepicker--cell-day {
+              font-weight: 500;
+              color: #000000;
+          }
+          input[switch]:checked + label {
+    background-color: #2f8ee0 !important;
+}
+.hidden{
+    display: none;
+}
+
+.felix-table-container{
+        overflow: auto !important;
+    }
+    .felix-table-container th{
+        white-space: normal !important;
+    }
+    .dataTables_filter,.quick-filters .stages input{
+        display:none;
+    }
+    .quick-filters .stages label{
+        color: #343A40;
+    }
+    .quick-filters .stages label.active{
+        border-color: #2f8ee0;
+    }
+    .quick-filters .stages label.disabled{
+        opacity: 0.2;
+    }
+    .dataTables_paginate{
+        text-align: center;
+    }
+    .dataTables_paginate a{
+        display: inline-block;
+        position: relative;
+        padding: .5rem .75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+    }
+    .dataTables_paginate .paginate_button.current,.dataTables_paginate a:hover{
+        background-color: #2f8ee0;
+        border-color: #2f8ee0;
+        color: white;
+    }
+    .quick-filters label span{
+        font-size: 9px;
+        margin-top: -10px;
+        background-color: #F2F2F2;
+        padding: 0px 2px;
+        border-radius: 2px;
+    }
+    .select-drop-down:after{
+        content: "\e64b";
+        font-family: 'themify';
+        font-size: 8px;
+        margin-left: 4px;
+        border-bottom: 1px solid #FFF;
+        display: inline-block;
+    }
+    .d-none-custom{
+        display:none;
+    }
+    .felix-table td{
+        vertical-align: middle !important;
+    }
+    td .d-none-custom{
+        display:block;
+    }
+    .input-row .btn-action{
+        display:none;
+    }
+    .dataTables_length label{
+        width: 150px;
+        display: flex;
+        align-items: center;
+    }
+    .dataTables_length label select{
+        margin: 0 0.5rem;
+    }
+    .felix-table{
+        border-radius: 0.5rem;
+        overflow: hidden;
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+    }
+    .felix-table td,.felix-table th{
+        text-align:left !important;
+        color: #4B4B4B !important;
+    }
+    .felix-table th{
+        cursor: pointer;
+    }
+    .felix-table th img{
+        margin-top: -0.25rem;
+        margin-left: 0.25rem;
+    }
+    .felix-table td img{
+        max-width: 100px;
+        height: auto;
+    }
+    #DataTables_Table_0_length{
+        display:block;
+    }
+    .felix-table tbody tr:nth-of-type(odd){
+        background: transparent !important;
+    }
+    .table-hover tbody tr:hover, .felix-table tbody tr:nth-of-type(even){
+        background: #FCFCFC !important;
+    }
+    #DataTables_Table_0_info{
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    .quick-filters{
+        background:#EFEFEF;
+        display: flex;
+        align-items: center;
+        padding: 0 0.5rem;
+    }
+    .quick-filters span > *{
+        margin-top: 0.25rem;
+        margin-bottom:0.25rem;
+    }
+    .mortgage-deals .quick-filters .user-filter .chosen-container{
+        height: 29px;
+        margin-left: 0 !important;
+        width: 150px !important;
+    }
+    .user-filter .chosen-container .chosen-single{
+        height: 29px;
+        padding-top: 3px;
+        padding-bottom: 0;
+        margin-top: 0;
+        border: unset !important;
+    }
+    .wrapper .table-filters .open-search-field input[type=text]{
+        height: 29px;
+        width: 217px;
+        border: unset;
+        border-radius: 4px;
+        background-color: #FFFFFF;
+        padding: 0 10px 0 30px;
+        color: #868E96;
+        font-size: 12px;
+    }
+    .wrapper .table-filters .open-search-field:after{
+        top: 5px;
+        left: 8px;
+    }
+    
+    .shadow-4{
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        border-radius: 0.5rem !important;
+        overflow: hidden;
+    }
+    #DataTables_Table_0_length{
+        display: none;
+    }
+    .quick-filters .date-ranger{
+        background: white;
+        display: flex;
+        margin: 0.25rem;
+        padding: 0 0.5rem;
+        border-radius: 0.25rem;
+    }
+    .quick-filters .date-ranger input{
+        border: unset !important;
+        font-size: 0.8rem;
+    }
+    .table-filters form{
+        width: 1830px;
+    }
+</style>
+
+
+    <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Health Insurance Policies</h1>
+            <div class="float-right deals-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+            <button type="button" data-felix-modal="modal_create_policy" class="create-record btn btn-primary btn-md btn-list-create">
+                Create New
+            </button>
+
+            {% include 'healthinsurance/deals/components/new_policy_form.djhtml' %}
+            <span class="felix-table-action-buttons">
+                {% if is_admin %}
+                <button type="button" class="delete-record btn btn-md btn-outline-primary">
+                    Delete
+                </button>
+                {% endif %}
+            </span>
+            <div class="clear"></div>
+            <div class="table-filters">
+                
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="stage" id="id_stage" value="{{ stage }}" />
+
+                    <div class="quick-filters">
+                        <span class="title">Quick Filters:</span>
+                        <span class="buttons stages">
+                            <label for="all" class="btn-sm btn btn-white">All</label>
+                            <input class="quick-filter-radio" name="quick-filter-radio" type="radio" class="btn btn-white" id="all" value="all" />
+                            <label for="active" class="btn-sm btn btn-white">Active</label>
+                            <input class="quick-filter-radio" name="quick-filter-radio" type="radio" class="btn btn-white" id="active" value="active" />
+                            <label for="expired" class="btn-sm btn btn-white">Expired</label>
+                            <input class="quick-filter-radio" name="quick-filter-radio" type="radio" class="btn btn-white" id="expired" value="expired" />
+                        </span>
+
+                        <span class="{% if is_producer %}hide{% endif %}">
+                            {{ search_form.assigned_to }}
+                        </span>
+                        <span class="hide">
+                            {{ search_form.producer }}
+                        </span>
+                        <span class="date-ranger float-right">                            
+                            <img src="{% static 'icons/calenders.svg' %}" />
+                            <input type="text" class="date-filter" name="daterange" value="{% now "m/d/Y" %} - {% now "m/d/Y" %}" />
+                            <input id="max-date" type="hidden" value=""/>
+                            <input id="min-date" type="hidden" value=""/>
+                        </span>
+                    </div>
+                    <div class="table-filters float-right">
+                        {% if user|can:'export_health_deals' %}
+                        <div class="options-table float-right">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-settings"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item export" data-url="{% url 'health-insurance:policy-export' %}" href="javascript:">
+                                    <i class="ti-export m-r-7"></i> Export to CSV
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="sorting-table float-right hide">
+                            <a class="dropdown-toggle" data-toggle="dropdown"
+                               href="#"
+                               role="button"
+                               aria-haspopup="false" aria-expanded="false">
+                                <i class="ti-arrows-vertical"></i><i class="ti-align-left"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item {% if request.GET.sort_by == 'created_on_asc'%}active{% endif %}" data-val="created_on_asc" href="javascript:">
+                                    Created On (Asc.)
+                                </a>
+                                <a class="dropdown-item {% if not request.GET.sort_by %}active{% endif %}" data-val="" href="javascript:">
+                                    Created On (Desc.)
+                                </a>
+                                <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_asc'%}active{% endif %}" data-val="updated_on_asc" href="javascript:">
+                                    Updated On (Asc.)
+                                </a>
+                                <a class="dropdown-item {% if request.GET.sort_by == 'updated_on_desc'%}active{% endif %}" data-val="updated_on_desc" href="javascript:">
+                                    Updated On (Desc.)
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="sort-by-field hide">
+                            {{ search_form.sort_by }}
+                        </div>
+
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+
+                        <div class="search-popup deals">
+                            <div class="title">Filters</div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_after.label }}</label>
+                                    {{ search_form.created_on_after }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_before.label }}</label>
+                                    {{ search_form.created_on_before }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Deleted</label>
+                                    {{ search_form.deleted }}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <a href="javascript:" class="search-clear">Clear</a>
+                                <div class="float-right">
+                                    <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                    <button type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="row ">
+            <div class="col-2 quick-filters m-t-0 important hide">
+                <div class="title m-b-10">Filters</div>
+                <div class="sub-title">Stage</div>
+                <ul class="stage"></ul>
+                <div class="sub-title">Status</div>
+                <ul class="status"></ul>
+                <div class="sub-title">User</div>
+                <ul class="user"></ul>
+            </div>
+            <div class="col-12">
+                <div class="felix-table-container p-3">
+                    <table class="table no-footer felix-table" cellspacing="0" width="100%" data-mode='index' data-name='deals'>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th data-name="policy_no">
+                                    Policy No.
+                                </th>
+                                <th data-name="deal">
+                                    Deal
+                                </th>
+                                
+                                <th data-name="customer">
+                                    Customer
+                                </th>
+                                <th data-name="referrer">
+                                    Referrer
+                                </th>
+                                <th data-name="selected_plan">
+                                    Selected Plan
+                                </th>
+                                <th data-name="premium" >
+                                   Premium
+                                </th>
+                                <th data-name="start" >
+                                    Start Date
+                                </th>
+                                <th data-name="expiry" >
+                                    Expiry Date
+                                </th>                               
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center class="pagination-container">
+                        <ul class="pagination hide"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    
+    
+
+    {% include 'handlebars/policies_list.html' %}
+    {% include 'handlebars/pagination.html' %}
+    {% include 'handlebars/health_policy_modal.html' %}
+
+    {% include 'healthinsurance/deals/components/policy_modal.djhtml' %}
+    
+    <!-- {% include 'handlebars/pagination.html' %} -->
+{% endblock %}
+
+{% block extra_js %}
+
+
+
+
+   
+<script type="text/javascript" src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'dist/health_module.js' %}?v=1.1"></script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.en.min.js"></script> -->
+<script type="text/javascript">
+// $('#datepicker').datepicker();
+// $( "#datepicker" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+
+
+$(document).ready( function () {
+debugger
+var table = $('.felix-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url : '/health-insurance/policy/json/',
+                type: 'GET',
+                data: function(d){
+                    d.range_expiry = $('.ranges li.active').data('range-key');
+                    d.status = $('label.btn-sm.btn.btn-white.active').text()
+                    if($('input[name="daterange"]').val())
+                    d.daterange = $('input[name="daterange"]').val()
+                    // Retrieve dynamic parameters
+                    var range = $('.ranges li.clicked').data('range-key');
+                    // Add dynamic parameters to the data object sent to the server
+                    if(range){ $.extend(d, range); }
+                }
+            },
+            "columns": [
+                {"data": "status"},
+                {"data": "policy_number"},
+                {"data": "deal"},
+                {"data": "customer"},
+                {"data": "referrer"},
+                {"data": "selected_plan"},
+                {"data": "total_premium"},
+                {"data": "start_date"},
+                {"data": "expiry_date"},
+      ],
+      createdRow: function (row, data, dataIndex) {
+            $(row).attr('data-target', '#modal_view_policy');
+            $(row).attr('data-toggle', 'modal');
+            $(row).attr('id', `tr_${data['id']}`);
+            $(row).addClass('health-policy-row');
+        }
+        });
+
+$('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            $('#min-date').val(start.format('YYYYMMDD'));
+            $('#max-date').val(end.format('YYYYMMDD'));
+            table.draw();
+        });
+$('input[name="daterange"]').val('');
+$('input[name="daterange"]').attr("placeholder","Filter by date created on");
+
+$('.felix-table').removeClass('opacity');
+
+
+
+$('#id_search_term').on('change keyup',function(){
+            $('#id_assigned_to').val('');
+            $('#id_assigned_to_chosen .chosen-single span').html('Select user to filter/All users');
+            $('.quick-filters label').removeClass('active');
+            filtered = []
+            table.search($(this).val()).draw();
+        });
+
+
+
+$('input.quick-filter-radio').on('change',function() {
+            debugger            
+            $('.quick-filters label').removeClass('active');
+            $(this).prev().addClass('active');
+            var val = $(this).val();
+            var checked = $(this).prop('checked');
+            filtered = []
+            if(val=='all'){
+                filtered = []
+            }else{
+                filtered = [val]
+            }
+            table.column(0).search(filtered).draw();
+        });
+
+       
+
+$.fn.dataTable.ext.search.push(
+                function( settings, data, dataIndex ) {
+                    debugger
+                    var min = parseInt($('#min-date').val());
+                    var max = parseInt($('#max-date').val());
+                    var created_on = parseFloat( data[7] ) || 0; 
+
+                    if(min < 0){
+                        return true;
+                    }
+
+                    filtered = []
+            
+                    if ( ( isNaN( min ) && isNaN( max ) ) ||
+                        ( isNaN( min ) && created_on <= max ) ||
+                        ( min <= created_on   && isNaN( max ) ) ||
+                        ( min <= created_on   && created_on <= max ) )
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+
+            $.fn.dataTable.ext.search.push(
+                function( settings, searchData, index, rowData, counter ) {
+                    
+                    return true;
+                }
+            );
+
+});
+</script>
+
+
+{% endblock %}

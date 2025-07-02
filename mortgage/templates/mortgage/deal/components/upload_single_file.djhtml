@@ -1,0 +1,248 @@
+{% load static %}
+<div class="col-6">
+    <style>
+        .btn-remove-file{
+  font-size: 18px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.flex{
+    display: flex;
+}
+    </style>
+    <div class="single-upload-parent-div">
+        <label class="text-capitalize">{{ name }}</label>
+        <div class="d-flex parent-div">
+            <div class="d-flex w-100 action">
+               
+                
+                <div class="d-block">
+                    <div action="/mortgage/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/" class="btn btn-secondary w-100" id="upload_{{data_type}}">Upload file</div>
+                    
+                <i><div id="uploading_progress_{{data_type}}" class="text-center"></div></i>
+                    <br/><div class="w-100 p-2" id="fileslist_{{data_type}}">
+                    {% if data_type == 'passport' %}
+                            {% for deal_file in deal.passport_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                                <a target="_blank" href="{{deal_file.file.url}}">
+                                    <div class="files_list">{{deal_file.filename}}</div>                                    
+                                </a>        
+                                <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                            </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'visa' %}
+                            {% for deal_file in deal.visa_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                                <a target="_blank" href="{{deal_file.file.url}}">
+                                    <div class="files_list">{{deal_file.filename}}</div>
+                                </a>
+                                <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                            </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'bank-application-form' %}
+                            {% for deal_file in deal.bank_application_form_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                           <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'salary-certificate' %}
+                            {% for deal_file in deal.salary_certificate_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                                <a target="_blank" href="{{deal_file.file.url}}">
+                                    <div class="files_list">{{deal_file.filename}}</div>
+                                </a>
+                                <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                            </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'emirates-id-front' %}
+                            {% for deal_file in deal.emirates_id_front_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                                <a target="_blank" href="{{deal_file.file.url}}">
+                                    <div class="files_list">{{deal_file.filename}}</div>
+                                </a>
+                                <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                            </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'bank-statement' %}
+                            {% for deal_file in deal.bank_statement_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'emirates-id-back' %}
+                            {% for deal_file in deal.emirates_id_back_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'payslips' %}
+                            {% for deal_file in deal.payslips_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'memorandum-of-understanding' %}
+                            {% for deal_file in deal.memorandum_of_understanding_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'property-title-deed' %}
+                            {% for deal_file in deal.property_title_deed_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'sellers-emirates-id-front' %}
+                            {% for deal_file in deal.sellers_emirates_id_front_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'sellers-emirates-id-back' %}
+                            {% for deal_file in deal.sellers_emirates_id_back_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'sellers-passport' %}
+                            {% for deal_file in deal.sellers_passport_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                        </div><br/>
+                            {% endfor %}
+                        {% elif data_type == 'sellers-visa' %}
+                            {% for deal_file in deal.sellers_visa_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                            </div><br/>
+                            {% endfor %}
+                        {% else %}
+                            {% for deal_file in deal.general_files %}
+                            <div id="div_file_{{deal_file.filename}}" class="flex">
+                            <a target="_blank" href="{{deal_file.file.url}}">
+                                <div class="files_list">{{deal_file.filename}}</div>
+                            </a>
+                            <div class="div-remove-file" id="{{deal_file.filename}}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>
+                            </div> <br/>
+                            {% endfor %}
+                    {% endif %}
+                    
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+$(document).ready(function() {
+    
+    Dropzone.autoDiscover = false;
+    var cookie = document.cookie;
+    $(function() {
+        var the_preview_container = $('#fileslist_{{data_type}}');
+        debugger
+        var uploading_progress = $("#uploading_progress_{{data_type}}"); 
+        var myDrop = new Dropzone("div#upload_{{data_type}}", {
+            url: "/mortgage/deals/{{ deal.pk }}/attachment/add/{{ upload_type }}/?type={{data_type}}",
+            method: "post",
+            previewsContainer: null,
+            previewsTemplate:'#fileslist_{{data_type}}'         
+            });
+            myDrop.on("success", function(file, data) {                
+                uploading_progress.html('');
+                let delete_file_button = `<div class="div-remove-file" id="${data.file}" name="{{data_type}}"><span class="btn-remove-file">&times;</span></div><br/>`
+                var new_file = `
+                <div id="div_file_${data.file}" class="flex">
+                <a href="${data.url}">
+                    <div class="files_list">${data.file}</div>
+                </a>
+                ${delete_file_button}
+                </div>`;
+                
+                the_preview_container.prepend(new_file)
+                //the_preview_container.append(delete_file_button)
+                $( ".div-remove-file" ).click(function(event) {
+                debugger
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                DeleteAttachedFile(event)
+            });
+            });
+            $( ".div-remove-file" ).click(function(event) {
+                debugger
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                DeleteAttachedFile(event)
+            });
+
+            function DeleteAttachedFile(event){
+                
+                console.log(event.target)
+                console.log($(event.target).parent().closest('div')[0])
+                let type = event.target.parentElement.closest('div.div-remove-file').getAttribute('name');
+                let file_name = event.target.parentElement.closest('div.div-remove-file').getAttribute('id');
+                console.log(file_name)
+                $.post(`/mortgage/deals/{{ deal.pk }}/attachment/delete/${type}/?file=${file_name}`,   // request url
+                    {
+                        success: function (data, status, xhr) {// success callback function
+                            
+                    }
+                }).done(function(response){                                               
+                            if(response){
+                                if (response['success'] == true){
+                            console.log(file_name)
+                            console.log($(`#div_file_${file_name}`))
+                            //$(`#div_file_${file_name}`).html('')
+                            $(this).parent().remove();
+                            $(`#div_file_${file_name}`).val("")
+                            document.getElementById(`div_file_${file_name}`).innerHTML = ''
+                            console.log(response)
+                            }
+                            else
+                            console.log(response)
+                        }
+                });
+}
+myDrop.on("totaluploadprogress", function(progress) {
+                uploading_progress.html("uploading... "+parseInt(progress) + "%");
+            })
+    });
+    
+
+
+});
+
+
+    </script>

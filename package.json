@@ -1,0 +1,21 @@
+{
+  "name": "felixplatform",
+  "version": "1.0.0",
+  "description": "Felix Platform === This repo holds the main Felix Platform Django application.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felix-technologies/felix.git"
+  },
+  "author": "Felix Tech Team <tech@felix.insure>",
+  "license": "Private",
+  "bugs": {
+    "url": "https://github.com/felix-technologies/felix/issues"
+  },
+  "homepage": "felix.insure",
+  "devDependencies": {
+    "vue": "^2.6.12"
+  }
+}

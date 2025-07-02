@@ -1,0 +1,37 @@
+{% load static %}
+{% if quote.deal.assigned_to.userprofile.get_normalized_whatsapp_number %}
+    <div class="whatsapp-widget">
+        <div class="bubble">
+            <span class="close-bubble fa fa-close"></span>
+            Chat with your agent over WhatsApp.
+            <i></i>
+        </div>
+        <a href="https://wa.me/{{ quote.deal.assigned_to.userprofile.get_normalized_whatsapp_number }}?text=Hi {{ quote.deal.assigned_to.first_name }}, I have a question about my insurance quotes, here is the link: {{ quote.get_quote_short_url }}" target="_blank" class="whatsapp-icon">
+            <img src="{% static "images/whatsapp-logo.png" %}" />
+        </a>
+    </div>
+
+    {% if quote and user_data %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var whatsapp_cookie_name = 'felix__qc_whatsapp_widget';
+            $('.whatsapp-icon').click(function() {
+                amplitude.getInstance().logEvent('whatsapp chat launched', {
+                    'company_id': current_company_info.ID,
+                    'company_name': current_company_info.NAME,
+
+                    'deal_id': {{ quote.deal_id }}
+                });
+            });
+
+            if(!Utilities.Cookie.get(whatsapp_cookie_name))
+                $('.whatsapp-widget .bubble').fadeIn('fast');
+
+            $('.close-bubble').click(function() {
+                $(this).parent().fadeOut('fast');
+                Utilities.Cookie.set(whatsapp_cookie_name, true);
+            });
+        });
+    </script>
+    {% endif %}
+{% endif %}

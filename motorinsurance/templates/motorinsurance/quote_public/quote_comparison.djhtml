@@ -1,0 +1,176 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+
+{% block page_title %}
+    {% if request.company.companysettings.motor_quote_comparison_meta_title %}{{ request.company.companysettings.motor_quote_comparison_meta_title }}{% else %}Select a product to buy{% endif %}
+{% endblock %}
+{% block page_meta_keywords %}
+    {% if request.company.companysettings.motor_quote_comparison_meta_keywords %}{{ request.company.companysettings.motor_quote_comparison_meta_keywords }}{% endif %}
+{% endblock %}
+{% block page_meta_description %}
+    {% if request.company.companysettings.motor_quote_comparison_meta_description %}{{ request.company.companysettings.motor_quote_comparison_meta_description }}{% endif %}
+{% endblock %}
+
+{% block tagline %}Quick &amp; Easy Car Insurance{% endblock %}
+
+{% block content %}
+    <div id="app-container" class="{% if not editable %}product-selected{% endif %}" data-selected-product="{{ selected_product_details }}">
+        <div class="sub-container">
+            <div class="quotes inner-small-container single-product">
+                <div class="row">
+                    <div id="main-heading" class="col-sm-12 col-md-5 col-lg-6">
+                        <h1 class="name">Hi <span id='title_user_name'></span></h1>
+                        <div class="message">We've crunched the data and here are the perfect car insurance quotes for
+                            you.
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-7 col-lg-6">
+                        <div id="user-info-container" class="user-info">
+                            <div class="row">
+                                <div class="col-5 label">REF Number:</div>
+                                <div class="col-7"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-5 label">Name:</div>
+                                <div class="col-7"></div>
+                            </div>
+
+                            <div class="" ss="row">
+                                <div class="col-5 label">Email:</div>
+                                <div class="col-7"></div>
+                            </div>
+
+                            <div class="row toggle">
+                                <div class="col-5 label">Phone:</div>
+                                <div class="col-7"></div>
+                            </div>
+
+                            <div class="row toggle">
+                                <div class="col-5 label">Vehicle:</div>
+                                <div class="col-7" title=""></div>
+                            </div>
+
+                            <div class="show-more">
+                                <div class="show">
+                                    <img width="10" src="{% static "images/dropdown-arrow-icon.svg" %}"> Show More
+                                </div>
+                                <div class="hide">
+                                    <img width="10" src="{% static "images/dropdown-arrow-icon.svg" %}"> Collapse
+                                </div>
+                            </div>
+
+                            <div class="quote-expensive">
+                                Found cheaper elsewhere? Let us know!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="short-line-turquoise"></div>
+
+                <div class="comparison-heading">Select two policies to compare in more detail:</div>
+                <div id="products-container" class="products-container">
+                    Loading products.....
+                </div>
+            </div>
+        </div>
+        <div class="quotes-submit-container hide hide-on-mobile">
+            <div class="sub-container">
+                <div class="inner-small-container">
+                    <button type="button" class="btn btn-primary">Compare <i class="fa fa-angle-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'motorinsurance/quote_public/whatsapp_widget.djhtml' %}
+
+    {% if not editable %}
+        <div class="selected-product-message-container"> 
+            {% if is_product_selected %}
+                <h2>You've already selected a product.</h2>
+                <p>
+                    <a href="{% url 'motorinsurance:quote-upload-documents' reference_number=quote.reference_number pk=quote.pk %}" class="btn btn-warning">Proceed to Document Upload</a>
+                </p>
+            {% else %}
+                <h2>This quote is not active any more.</h2>
+                <p>Either the quote is expired or has already been processed.</p>
+                <p>Please <a href="mailto:{{companysettings.email}}?subject=Ref: {{quote.reference_number}}">contact us</a> for further details.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        var identify_user = {% if identify_user %}true{% else %}false{% endif %};
+        var user_data = {{user_data|safe}};
+        var drafted_product = {% if drafted_product %}true{% else %}false{% endif %};
+        var custom_note = $('<div/>').html('{{note|linebreaksbr}}').text();
+        var is_expired = {% if expired %}true{% else %}false{% endif %};
+        var is_editable = {% if editable %}true{% else %}false{% endif %};
+        var payment_captured = {% if payment_captured %}true{% else %}false{% endif %};
+        var products_data = {{products_data|safe}};
+        var products_data_org = {{products_data|safe}};
+        var selected_product_details = {% if selected_product_details %}{{selected_product_details|safe}}{% else %}[]{% endif %};
+        var company_currency = '{{ request.company.companysettings.get_currency_display }}';
+        var dropdown_arrow_icon = "{% static 'images/dropdown-arrow-icon.svg' %}";
+    </script>
+
+    <script src="{% static 'public/quotes_app/dist/app.js' %}"></script>
+    <script type="text/javascript" src="{% static "libs/jquery.scrollTo.min.js" %}"></script>
+
+    <script type="text/javascript">
+
+        $('#app-container').on('change', ".item .item-selection input[type='checkbox']", function () {
+            var selected_items = $(".item .item-selection input[type='checkbox']:checked");
+            var selected_items_length = selected_items.length;
+
+            if (selected_items_length > 2) {
+                $(this).prop('checked', false);
+                return;
+            }
+
+            $('.quotes-submit-container button').addClass('disabled');
+            if (selected_items_length == 2) {
+                $('.quotes-submit-container').removeClass('hide');
+                $('.quotes-submit-container button').removeClass('disabled');
+                if (Utilities.Check.isMobile()) {
+                    $('.quotes-submit-container').removeClass('hide-on-mobile');
+                }
+                disableProducts();
+            } else {
+                $('.quotes-submit-container').addClass('hide');
+                $('.products .item.disabled').removeClass('disabled');
+                if (Utilities.Check.isMobile()) {
+                    $('.quotes-submit-container').addClass('hide-on-mobile');
+                }
+            }
+
+            if (this.checked) {
+                $(this).closest('.item').addClass('active');
+            } else {
+                $(this).closest('.item').removeClass('active');
+            }
+        });
+        $('#app-container').on('click', '.agent-notes-button', function () {
+            $('.custom-note').addClass('highlight-temp');
+            setTimeout(function () {
+                $('.custom-note').removeClass('highlight-temp');
+            }, 2000);
+            $('html, body').animate({
+                scrollTop: $(".custom-note-heading").offset().top
+            }, 500);
+        });
+
+        function disableProducts() {
+            var items = $('.products .item');
+            items.each(function () {
+                if (!$(this).find('.item-selection input').is(':checked')) {
+                    $(this).addClass('disabled');
+                }
+            });
+        }
+    </script>
+{% endblock %}

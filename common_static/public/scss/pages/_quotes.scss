@@ -1,0 +1,1305 @@
+/*********************
+   QUOTES Styling (Front End)
+   ********************/
+
+.variant1-cta-copy {
+	.title .original, .title .variant_2 {
+		display: none;
+	}
+	.title .variant_1 {
+		display: inline-block !important;
+	}
+}
+
+.variant2-cta-copy {
+	.title .original, .title .variant_1 {
+		display: none;
+	}
+	.title .variant_2 {
+		display: inline-block !important;
+	}
+}
+.on-quote-only {
+	display: none;
+}
+
+.quotes {
+	padding-bottom: 100px;
+
+	@include breakpoint(mobile) {
+		padding-bottom: 0px;
+	}
+
+	.quote-filters {
+		margin-top: 20px;
+		padding: 10px 15px;
+		border-radius: 6px;
+		background-color: #FFF;
+		box-sizing: border-box;
+		box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+		font-size: 12px;
+
+		.label {
+			font-size: 16px;
+			font-weight: 600;
+			margin-bottom: 10px;
+		}
+		.checkbox-container {
+			label {
+				line-height: 45px;
+			}
+			.checkbox {
+				margin-left: 5px;
+				&:after {
+					left: -29px;
+					top: 8px;
+				}
+			}
+		}
+	}
+
+	.inner-small-container {
+		@include breakpoint(mobile) {
+			width: 100%;
+			cursor: pointer;
+		}
+		@include breakpoint(tablet) {
+			width: 84%;
+		}
+	}
+
+	.steps {
+		width: 100%;
+		[role='tablist'] {
+			width: 970px;
+		}
+		@include breakpoint(mobile) {
+            [role='tablist'] {
+                width: 100%;
+            }
+        }
+	}
+	.help-icon {
+		z-index: 100;
+	}
+	h1.name {
+		font-size: 22px;
+		font-weight: 600;
+		text-align: center;
+		text-transform: capitalize;
+		@include breakpoint(mobile) {
+			margin-top: 20px;
+		}
+		@include breakpoint(tablet) {
+			font-size: 26px;
+			color: $felix-color-primary;
+			text-align: left;
+			margin-top: 40px;
+		}
+	}
+	.on-quote-only {
+		display: inline-block;
+	}
+	.message {
+		font-size: 14px;
+		text-align: center;
+		max-width: 60%;
+		margin: auto;
+		@include breakpoint(tablet) {
+			font-size: 22px;
+			line-height: 27px;
+			text-align: left;
+			margin-top: 18px;
+			max-width: 100%;
+		}
+
+		@include breakpoint(mobile) {
+			display: none;
+		}
+	}
+	.trustpilot-heading {
+		font-size: 14px;
+		text-align: center;
+		border-bottom: 1px solid #C8C8C8;
+		padding-bottom: 5px;
+		width: fit-content;
+		margin: auto;
+		margin-top: 18px;
+		margin-bottom: 4px;
+		@include breakpoint(mobile) {
+			margin-top: 20px;
+			font-size: 12px;
+		}
+	}
+	.trustpilot-iframe {
+		position: relative;
+		height: 40px;
+		width: 100%;
+		border-style: none;
+		display: block;
+		overflow: hidden;
+		margin: auto;
+	}
+
+	.row {
+		@include breakpoint(mobile) {
+			margin: 0 
+		}
+	}
+	.default-addon {
+		.checkbox {
+			display: none;
+		}
+	}
+	.user-info {
+		margin: 20px 0;
+		font-size: 13px;
+		border-radius: 3px;
+		font-weight: 600;
+		position: relative;
+		
+		.row {
+			margin: 0px 10px;
+			padding: 5px 0;
+			position: relative;
+			&:nth-child(even) {
+				background-color: #EBF6F7;
+			}
+			&:nth-child(odd) {
+				background-color: #DDF1F3;
+			}
+			&:first-child {
+				border-radius: 5px 5px 0 0;
+			}
+			&:last-child {
+				border-radius: 0 0 5px 5px;
+			}
+		}
+		.label {
+			text-align: right;
+			font-weight: normal;
+			color: #999;
+			padding-right: 0px;
+		}
+		.toggle {
+			@include breakpoint(mobile) {
+			  display: none;
+			}
+		}
+		.show-more {
+			display: none;
+			text-align: center;
+			color: $felix-color-primary;
+			height: 20px;
+			line-height: 20px;
+			background-color: #CDEDEF;
+			font-size: 12px;
+			width: 120px;
+			margin: auto;
+			border-radius: 0 0 30px 30px;
+			.hide {
+				display: none;
+			}
+			img {
+				margin-right: 3px;
+			}
+			@include breakpoint(mobile) {
+				display: block;
+			}
+		}
+
+		&.user-info-mobile-toggle {
+			.toggle {
+				display: flex;
+			}
+			.show-more .hide {
+				display: block;
+				text-align: center;
+				img {
+					transform: rotate(180deg);
+					margin-top: -3px;
+				}
+			}
+			.show-more .show {
+				display: none;
+			}
+		}
+		.price-container {
+			position: relative;
+			display: initial;
+		}
+		.info-tip {
+			position: absolute;
+		    background: url(../images/info-tip-icon.svg) no-repeat;
+		    background-size: 14px;
+		    width: 14px;
+		    height: 14px;
+		    margin-left: 7px;
+		    font-weight: normal;
+		    display: inline-block;
+		    cursor: pointer;
+		    font-size: 10px;
+		    top: 1px;
+			right: -17px;
+		    .tooltip-temp-content {
+		    	width: 280px;
+		    	line-height: 17px;
+		    	letter-spacing: 0.3px;
+		    	z-index: 2;
+		    	@include breakpoint(mobile-tablet) {
+		    		margin-left: -160px;
+		    		&:before {
+		    			margin-left: 109px;
+		    		}
+		    	}
+		    }
+		}
+		.download-pdf {
+			position: relative;
+			a {
+				font-family: inherit;
+				font-size: inherit;
+				font-weight: inherit;
+				left: 8px;
+				width: auto;
+				height: 20px;
+				right: auto;
+				background: none !important;
+
+				&:before {
+					display: none;
+				}
+			}
+
+			i {
+				margin-left: 2px;
+			}
+		}
+	}
+
+	.quote-expensive {
+		padding: 0px 10px 20px 10px;
+		color: $felix-color-primary;
+		font-weight: 400;
+		font-size: 14px;
+		cursor: pointer;
+		text-decoration: underline;
+		width: fit-content;
+		&:hover {
+			text-decoration: underline;
+		}
+		@include breakpoint(mobile) {
+			text-align: center;
+			width:100%;
+			padding: 0px;
+			padding-bottom: 25px;
+		}
+	}
+	.short-line-turquoise {
+		border: 2px solid $felix-color-primary;
+		width: 58px;
+		box-sizing: border-box;
+		display: block;
+		border-radius: 3px;
+		@include breakpoint(mobile) {
+			margin: auto;
+			margin-bottom: 10px;
+		}
+	}
+
+	span.vat {
+		font-size: 12px;
+		color: #424242;
+		opacity: .5;
+		display: block;
+		margin-top: -7px;
+	}
+
+	.comparison-heading {
+		text-align: center;
+		font-size: 18px;
+		font-weight: 600;
+		margin: 10px;
+		position: relative;
+		@include breakpoint(tablet) {
+			text-align: left;
+			font-size: 20px;
+			margin: 20px 0 20px 0; 
+		}
+
+		.agent-notes-button {
+			position: absolute;
+			font-size: 12px;
+			text-transform: capitalize;
+			margin: 0;
+			right: 10px;
+			top: 0;
+			color: #FFF;
+
+			@include breakpoint(mobile) {
+				margin: 10px auto;
+				right: auto;
+				top: 5px;
+				padding: 10px;
+				width: fit-content;
+				position: relative;
+    			display: block;
+			}
+		}
+	}
+	.products-container {
+		width: 100%;
+	    padding: 0 20px;
+	    overflow-x: scroll;
+	    -webkit-overflow-scrolling: touch;
+	    @include breakpoint(tablet) {
+			padding: 0px;
+		}
+	}
+	.products {
+		padding: 10px;
+		@include breakpoint(tablet) {
+			padding: 10px 0px;
+		}
+		@include breakpoint(mobile) {
+			display: inline-flex;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+		.item.disabled {
+			position: relative;
+			&:before {
+				content: ' ';
+				display: block;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				background-color: rgba(255,255,255,0.5);
+				z-index: 2;
+				margin-left: -10px;
+				margin-top: -10px;
+			}
+		}
+		.item {
+			width: 287px;
+			border: 2px solid transparent;
+			margin-right: 15px;
+			padding: 10px;
+			border-radius: 6px;
+			background-color: #FFF;
+			box-sizing: border-box;
+			box-shadow: 0 0 3px 0 rgba(0,0,0,0.1);
+			float: left;
+			position: relative;
+			margin-bottom: 15px;
+			&:last-child {
+				margin-right: 0;
+			}
+			@include breakpoint(tablet) {
+				width: 32%;
+				margin-bottom: 15px;
+				margin-right: 1%;
+			}
+
+			@include breakpoint(tablet-portrait) {
+				width: 45%;
+				margin-right: 15px;
+			}
+			
+			&.active {
+				border: 2px solid $felix-color-primary;
+			}
+
+			.logo-container {
+				max-width: 100%;
+				max-height: 50px;
+				img {
+					max-width: 110px;
+					max-height: 50px;
+				}
+
+				.img-container {
+					text-align: center;
+				}
+			}
+
+			.title {
+				background-color: #F5FBFC;
+				padding: 10px 24px 5px 24px;
+				margin: 10px -10px;
+				text-align: center;
+				h2 {
+					font-size: 16px;
+					font-weight: 600;
+					margin-bottom: 0px;
+				}
+				.original-product-price {
+					position: relative;
+					font-size: 12px;
+					font-weight: normal;
+				    width: fit-content;
+				    text-decoration: line-through;
+				    text-decoration-color: rgba(0,0,0,1);
+				    margin-left: 5px;
+				    cursor: pointer;
+				}
+				.price {
+					font-size: 24px;
+					font-weight: 600;
+					color: $felix-color-primary;
+					position: relative;
+				}
+				.price span.small{
+					font-size: 12px;
+					color: #424242;
+					opacity: 0.5;
+					display: block;
+					margin-bottom: -6px;
+    				margin-top: 3px;
+				}
+				.price .ncd-required {
+					position: absolute;
+					width: 32px;
+					height: 36px;
+					cursor: pointer;
+					display: inline-block;
+					background: url(../images/ncd-seal.svg) no-repeat center center;
+					background-size: 85%;
+				}
+
+				.variant_1, .variant_2 {
+					display: none;
+				}
+
+				.btn-primary {
+					font-size: 13px;
+					letter-spacing: normal;
+					padding: 10px 20px;
+					text-transform: capitalize;
+					margin: 10px 3px;
+				}
+				.or_text {
+					display: none;
+				}
+			}
+
+			.included {
+				color: $felix-color-primary;
+			}
+
+			.actions {
+				text-align: center;
+				margin: 10px 0;
+				@include breakpoint(mobile) {
+					text-align: center; 
+				}
+				button {
+					font-size: 13px;
+					letter-spacing: normal;
+					padding: 10px 20px;
+					text-transform: capitalize;
+					margin: 10px 3px;
+					@include breakpoint(mobile) {
+						text-align: center; 
+						padding: 12px 25px;
+						font-size: 14px;
+					}
+				}
+
+				button.optimize-exp-2 {
+					display: none;
+				}
+				small {
+					font-size: 12px;
+					color: #424242;
+					opacity: 0.5;
+					display: block;
+				}
+				a {
+					font-size: 14px;
+					text-decoration: underline;
+					color: $felix-color-primary;
+				}
+			}
+			.attributes {
+				border-bottom: 1px solid #E9E9E9;
+				padding: 10px 20px;
+				margin: 0 -10px;
+				opacity: 0.8;
+				font-weight: 600;
+				font-size: 14px;
+			    flex-direction: column;
+			    justify-content: center;
+			    transition: height ease-in 0.2s;
+
+				&.car-value {
+					color: $felix-color-primary;
+				}
+
+				select {
+					width: 100%
+				}
+			}
+			.attributes.sub-checkbox {
+				position: relative;
+
+				.price {
+					color: $felix-color-primary;
+				}
+
+				.checkbox-section {
+					position: relative;
+					top: 0px;
+					left: 0px;
+				}
+
+				span.help-icon {
+					right: -28px !important;
+					top: 2px !important;
+				}
+				label {
+					cursor: auto;
+				}
+
+			}
+			.attributes.info {
+				padding-right: 50px;
+				position: relative;
+				span.help-icon {
+					position: absolute;
+					width: 18px;
+					height: 18px;
+					top: 13px;
+					right: 23px;
+					cursor: pointer;
+					&:after {
+						content: "\F2FD";
+						font-size: 18px;
+						font-family: 'mdi';
+						color: $felix-color-primary;
+					}
+				}
+			}
+			
+			.more-attributes {
+				display: none;
+				opacity: 0.3;
+				text-align: center;
+				border: none;
+				padding: 5px 0 0 0;
+				@include breakpoint(tablet) {
+					text-align: left;
+					margin: 5px 10px 5px 14px; 
+				}
+			}
+
+			.checkbox-section {
+				position: absolute;
+				z-index: 1;
+				left: 8px;
+				top: 12px;
+				.checkbox-container {
+					padding: 0px;
+				}
+				span.checkbox {
+					display: inline;
+					margin-left: 0px;
+				}
+				span.checkbox:before { //checkbox
+					left: 0px;
+					top: 2px;
+					width: 17px;
+					height: 17px;
+					border: 2px solid $felix-color-primary;
+				}
+				span.checkbox:after { //arrow
+					left: 0px;
+					top: -14px;
+					background-size: 80%;
+				}
+				label {
+					width: 100%;
+					cursor: pointer;
+				}
+				&.item-selection {
+					left: 0px;
+					top: 5px;
+					width: 100%;
+					padding-left: 25px;
+					label {
+						width: 100%;
+						height: 50px;
+					}
+					span.checkbox {
+						display: inline-block;
+					}
+					span.checkbox:before { //checkbox
+						border: 2px solid $felix-color-primary;
+						width: 20px;
+						height: 20px;
+						top: 10px;
+						@include breakpoint(desktop) {
+							top: -10px;
+						}
+					}
+					span.checkbox:after { //arrow
+						top: 5px;
+						left: 1px;
+					}
+					.label {
+						color: $felix-color-primary;
+						font-weight: 600;
+						font-size: 12px;
+						position: absolute;
+						top: 34px;
+						left: 12px;
+						line-height: 16px;
+					}
+				}
+			}
+		}
+
+		.drafted-product {
+			
+		    position: relative;
+		    background: #FFF;
+		    overflow: hidden;
+		    background: #FFF url(../images/drafted-product.png) no-repeat;
+		    background-size: 100%;
+
+			.content {
+
+			    box-sizing: border-box;
+			    text-align: center;
+			    display: block;
+			    position: absolute;
+			    left: 0;
+			    right: 0;
+			    top: 0;
+			    z-index: 1;
+			    background-color: #FFF;
+			    padding: 10px 20px;
+			    width: 88%;
+			    margin: auto;
+			    margin-top: 70%;
+			    box-shadow: 0px 1px 4px #DDD;
+			    border-radius: 6px;
+			}
+		}
+	}
+
+	.custom-note-heading {
+		text-align: left;
+		font-size: 18px;
+		font-weight: 600;
+		margin: 10px;
+		margin-top: 0px;
+		@include breakpoint(mobile) {
+			text-align: left;
+			font-size: 20px;
+			margin: 0px 0 20px 0;
+			padding-left: 42px;
+		}
+	}
+	.custom-note {
+	    font-size: 14px;
+	    margin-bottom: 15px;
+	    background: #FFF;
+	    padding: 15px;
+	    box-sizing: border-box;
+	    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
+	    border-radius: 6px;
+	    width: 98%;
+	    opacity: 0.8;
+	    font-weight: 600;
+	    @include breakpoint(mobile) {
+			margin: 0px 30px;
+			margin-bottom: 120px;
+			width: auto;
+		}
+
+		ul {
+			padding-left: 25px;
+		}
+	}
+	.scroll-buttons {
+		display: none;
+		@include breakpoint(mobile) {
+			display: block;
+			margin: auto;
+			padding: 0;
+			text-align: center;
+			li {
+				display: inline-block;
+				&.active span{
+					background-color: #777;
+				}
+				span {
+					display: block;
+					width: 12px;
+					height: 12px;
+					background: #DDD;
+					border-radius: 50%;
+					margin: 5px;
+					transition: background-color 0.2s;
+				}
+			}
+		}
+	}
+
+	.steps {
+		@include breakpoint(mobile) {
+			display: none;
+		}
+	}
+
+	.highlight-temp {
+	  animation: highlight 1s;
+	}
+
+	@keyframes highlight {
+	  0% {
+	    background: $felix-color-primary-lighter;
+	  }
+	  100% {
+	    background: #FFF;
+	  }
+	}
+
+	.odometer-inside {
+		.odometer-digit {
+			&:nth-last-child(2),
+			&:nth-last-child(1) {
+				.odometer-value {
+					border-bottom: 1px solid $felix-color-primary;
+				}
+			}
+		}
+	}
+
+	.felix-modal-container {
+		.odometer-inside {
+			.odometer-digit {
+				&:nth-last-child(2),
+				&:nth-last-child(1) {
+					font-size: 10px;
+					margin-top: -4px;
+					.odometer-value {
+						border-bottom: 1px solid #404040;
+					}
+				}
+			}
+		}
+	}
+
+	.attribute-title {
+		font-size: 0.8rem;
+		font-weight: normal;
+		display: block;
+	}
+}
+
+.whatsapp-widget {
+	width: 200px;
+	height: 65px;
+	position: fixed;
+	right: 30px;
+	bottom: 10px;
+	z-index: 11;
+	transition: all .1s;
+
+	.bubble {
+		display: none;
+	    width: 150px;
+	    top: 50%;
+	    right: 80px;
+	    transform: translate(0, -50%);
+	    padding: 5px 10px;
+	    padding-left: 15px;
+	    color: #666666;
+	    background-color: #FFF;
+	    font-weight: normal;
+	    font-size: 13px;
+	    border-radius: 8px;
+	    position: absolute;
+	    z-index: 2;
+	    box-sizing: border-box;
+	    border: 1px solid #DDD;
+	    box-shadow: #DDD 1px 1px 2px;
+	    @include breakpoint(mobile) {
+	    	right: 65px;
+	    }
+
+	    i {
+		    position: absolute;
+		    top: 50%;
+		    left: 100%;
+		    margin-top: -12px;
+		    width: 12px;
+		    height: 24px;
+		    overflow: hidden;
+
+		    &:after {
+			    content: '';
+			    position: absolute;
+			    width: 12px;
+			    height: 12px;
+			    left: 0;
+			    top: 50%;
+			    transform: translate(-50%,-50%) rotate(-45deg);
+			    background-color: #FFF;
+			    border: 1px solid #DDD;
+			}
+		}
+
+		.close-bubble {
+			cursor: pointer;
+			font-size: 12px;
+			position: absolute;
+			top: -10px;
+			left: -10px;
+			border: 1px solid #DDD;
+			padding: 4px 6px;
+			border-radius: 50%;
+			background: #FFF;
+			color: #999;
+		}
+	}
+
+	.whatsapp-icon {
+		cursor: pointer;
+		position: absolute;
+		right: 0px;
+		img {
+			width: 65px;
+		}
+
+		@include breakpoint(mobile) {
+			width: 50px;
+			height: 50px;
+			right: 0px;
+			bottom: 10px;
+			img {
+				width: 50px;
+			}
+		}
+	}
+}
+
+body.exp-primary-cta {
+	.actions {
+		button.optimize-exp-1 {
+			display: none;
+		}
+		button.optimize-exp-2 {
+			display: inline-block !important;
+		}
+	}
+}
+
+/*************
+To superscript the last 2
+digits of prices which uses
+odometer
+	****************/
+.odometer-inside {
+	.odometer-radix-mark {
+		display: none;
+	}
+	.odometer-digit {
+		&:nth-last-child(2) {
+			margin-left: 2px;
+		}
+		&:nth-last-child(2),
+		&:nth-last-child(1) {
+			font-size: 14px;
+			margin-top: -7px;
+			.odometer-value {
+				display: inline !important;
+				border-bottom: 1px solid #FFFFFF;
+			}
+		}
+	}
+}
+
+/*************
+Over ride for felix modal
+for quotes page only
+	****************/
+.felix-modal {
+	@include breakpoint(mobile) {
+		padding-top: 40px;
+	}
+	.responsive-image-container .spacer {
+		padding-top: 70px;
+		margin-top: 10px;
+	}
+	.logo-container {
+		max-height: 100px;
+		text-align: center;
+		img {
+			max-width: 150px;
+			max-height: 60px;
+			@include breakpoint(mobile) {
+				max-height: 65px;
+			}
+		}
+	}
+
+	.title {
+		text-align: center;
+		padding: 0px 0px 15px 0px;
+		h2 {
+			font-size: 16px;
+			font-weight: 600;
+			margin-bottom: 0px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.price {
+			font-size: 20px;
+			font-weight: 600;
+			color: $felix-color-primary;
+		}
+		.price span.small{
+			font-size: 17px;
+			color: #424242;
+			opacity: 0.5;
+			font-weight: normal;
+		}
+		.document-link {
+			text-decoration: underline;
+			color: $felix-color-primary;
+			font-size: 14px;
+			margin-bottom: 5px;
+		}
+	}
+
+	.attributes-container {
+		margin-bottom: 120px;
+		@include breakpoint(tablet) {
+			max-height: 50vh;
+			overflow-y: auto;
+			margin-bottom: 10px;
+		}
+		.attributes-title {
+			font-size: 18px;
+			color: $felix-color-primary;
+			padding: 10px 10px 10px 20px;
+		}
+		a {
+			font-size: 14px;
+			width: 100%;
+			text-align: center;
+			text-decoration: underline;
+			color: $felix-color-primary;
+			display: inline-block;
+			margin-top: 10px;
+		}
+	}
+	.attributes {
+		padding: 10px 15px 10px 30px;
+		border-radius: 3px;
+		font-weight: normal;
+		font-size: 14px;
+		letter-spacing: -1;
+	    flex-direction: column;
+	    justify-content: center;
+	    transition: height ease-in .2s;
+		&:nth-child(odd) {
+			background-color: rgba(235,243,243,0.34);
+		}
+		@include breakpoint(mobile) {
+			padding: 10px 42px;
+		}
+
+		.price {
+			color: $felix-color-primary;
+		}
+
+	}
+	.attributes.info {
+		padding-right: 50px;
+		position: relative;
+		span.help-icon {
+			position: absolute;
+			width: 18px;
+			height: 18px;
+			top: 7px;
+			right: 23px;
+			cursor: pointer;
+			&:after {
+				content: "\F2FD";
+				font-size: 18px;
+				font-family: 'mdi';
+				color: $felix-color-primary;
+			}
+		}
+	}
+}
+
+.quotes-submit-container {
+	text-align: left;
+    padding: 7px 0;
+    margin-top: 30px;
+    background-color: #FFF;
+    box-shadow: 0 2px 24px 0 rgba(0,0,0,0.13);
+	position: fixed;
+	z-index: 2;
+	bottom: 0px;
+	width: 100%;
+    @include breakpoint(mobile) {
+		text-align: left;
+    }
+	.inner-small-container {
+		@include breakpoint(mobile) {
+			width: 100%;
+		}
+		@include breakpoint(tablet) {
+			width: 84%;
+		}
+	}
+	button {
+    	width: 270px;
+    	text-transform: capitalize;
+    	position: relative;
+    	font-size: 20px;
+    	font-weight: normal;
+    	padding: 15px;
+    	cursor: pointer;
+    	@include breakpoint(mobile) {
+    		width: 70%;
+    		margin-left: 25px;
+    	}
+    	i {
+	    	position: absolute;
+	    	right: 10px;
+	    	top: 5px;
+	    	font-size: 35px;
+	    }
+	    &.disabled{
+	    	background-color: #999;
+	    }
+    }
+}
+
+/****************
+	For default checkboxes
+	*******************/
+#app-container {
+	.default-addon {
+		position: relative;
+		.checkbox {
+			margin-left: 0px;
+			position: absolute;
+			top: 4px;
+			left: 0px;
+			width: 20px;
+			height: 20px;
+			border: 2px solid $felix-color-primary;
+			background-color: $felix-color-primary;
+			border-radius: 5px;
+			box-shadow: 1px 0px 2px #DDD;
+			background: $felix-color-primary url(../images/white-check-icon.svg) no-repeat top center;
+			background-size: 85%;
+			background-position-y: 3px;
+		}
+
+		label {
+			margin-bottom: 0px;
+			position: relative;
+		}
+	}
+
+	@include breakpoint(mobile) {
+		.steps {
+			display: none;
+		}
+	}
+}
+/****************
+	For expired quotes
+	*******************/
+
+// #app-container.expired,
+// #app-container.product-selected {
+// 	position: relative;
+// 	&:after {
+// 		content: ' ';
+// 	    width: 100%;
+// 	    height: 100%;
+// 	    position: absolute;
+// 	    background-color: rgba(255,255,255,0.7);
+// 	    z-index: 7;
+// 	    top: 0px;
+// 	    left: 0px;
+// 	}
+// }
+
+#app-container.product-selected {
+	.quotes .products .item .btn.btn-primary,
+	.quotes .products .item .checkbox-section.item-selection,
+	.quotes-submit-container,
+	.quotes-checkout-submit-container  {
+		display: none !important;
+	}
+}
+
+.expired-message-container,
+.selected-product-message-container {
+	position: fixed;
+    width: fit-content;
+    text-align: center;
+    z-index: 10;
+    top: 77px;
+    // left: 0;
+    right: 10px;
+    margin: auto;
+    background: $felix-color-primary;
+    color: #FFF;
+    padding: 20px 20px;
+    box-shadow: 2px 1px 4px #DDD;
+
+    a {
+    	color: #FFF;
+    	text-decoration: underline;
+    }
+
+	@include breakpoint(mobile-tablet) {
+		width: 100%;
+		bottom: 0%;
+		top: auto;
+		right: 0px;
+	}
+
+	h2 {
+		font-size: 18px;
+		@include breakpoint(mobile-tablet) {
+			font-size: 18px;
+		}
+	}
+	p {
+		font-size: 12px;
+		margin: 0px;
+	}
+	button {
+		font-size: 12px;
+	}
+}
+
+/*********************
+   QUOTES Version 2 (for AB testing)
+   ********************/
+
+.version2 {
+	.quotes {
+		.sub-checkbox .checkbox {
+			display: none;
+		}
+	}
+}
+
+/**************
+ version to hide checkboxes
+ on quote's home page
+		**************/
+
+.quotes.hide-addons-checkboxes {
+	.sub-checkbox .checkbox-section span.checkbox,
+	.sub-checkbox .price {
+		display: none;
+	}
+}
+
+.garage-list-anchor {
+	color: $felix-color-primary;
+	font-weight: normal;
+	display: inherit !important;
+	text-decoration: underline;
+	&:hover {
+		color: $felix-color-primary-darker;
+	}
+}
+
+// Skeleton loading animation
+
+$skeleton-base-color: #ddd;
+$skeleton-shine-color: #e8e8e8;
+$skeleton-animation-duration: 1.6s;
+$skeleton-border-radius: 7px;
+
+.products-container {
+	.skeleton {
+		.title .price span.small, .title .price span.vat {
+			color: transparent !important;
+		}
+		.odometer-inside .odometer-digit:nth-last-child(2) .odometer-value,
+		.odometer-inside .odometer-digit:nth-last-child(1) .odometer-value {
+			border-bottom: none !important;
+		}
+		.checkbox-section, img, button, select, .chosen-container, .info-tip, .actions {
+			display: none;
+		}
+		.logo-container {
+			width: 150px;
+			margin: auto;
+			background-color: $skeleton-base-color;
+			border-radius: $skeleton-border-radius;
+			background-image: linear-gradient(90deg, $skeleton-base-color 0px, $skeleton-shine-color 40px, $skeleton-base-color 80px);
+			background-size: 600px;
+			animation: shine-avatar $skeleton-animation-duration infinite linear;
+		}
+		.title h2, .title .price {
+			color: transparent !important;
+			background-color: #DDD;
+			border-radius: $skeleton-border-radius;
+			background-image: linear-gradient(90deg, $skeleton-base-color 0px, $skeleton-shine-color 40px, $skeleton-base-color 80px);
+			background-size: 600px;
+			animation: shine-avatar $skeleton-animation-duration infinite linear;
+		}
+		.attributes {
+			color: transparent !important;
+			position: relative;
+			height: 50px !important;
+			&:before {
+				content: '';
+				margin: auto;
+				width: 90%;
+				height: 25px;
+				position: absolute;
+				left: 0px;
+				right: 0px;
+				top: 12px;
+				border-radius: $skeleton-border-radius;
+				background-image: linear-gradient(90deg, $skeleton-base-color 0px, $skeleton-shine-color 40px, $skeleton-base-color 80px);
+				background-size: 600px;
+				animation: shine-lines $skeleton-animation-duration infinite linear;
+			}
+		}
+		.avatar + .line {
+		  margin-top: 11px;
+		  width: 100px;
+		}
+		.line ~ .line {
+		  background-color: $skeleton-base-color;
+		}
+	}
+
+	@keyframes shine-lines {
+	  0% {
+	    background-position: -100px;
+	  }
+	  40%, 100% {
+	    background-position: 140px;
+	  }
+	}
+	@keyframes shine-avatar {
+	  0% {
+	    background-position: -32px;
+	  }
+	  40%, 100% {
+	    background-position: 208px;
+	  }
+	}
+}

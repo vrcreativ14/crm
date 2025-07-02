@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="132px" height="130px" viewBox="0 0 132 130" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M13.7611965,24.7625742 L13.7611965,6.60558108 C13.7611965,3.00894296 10.841913,0.0822820962 7.24079437,0.0822820962 C3.64700327,0.0822820962 0.720392257,3.00286253 0.720392257,6.60558108 L0.720392257,31.2560926 C0.720392257,34.374039 2.91430861,36.9884803 5.84443947,37.6291828 C6.32670097,37.7430862 6.82962935,37.8033784 7.34660726,37.8033784 L50.9148242,37.8033784 C54.5120489,37.8033784 57.4365254,34.8840949 57.4365254,31.2829763 C57.4365254,27.6891852 54.5166603,24.7625742 50.9148242,24.7625742 L13.7611965,24.7625742 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="56.7161332" height="37.7210963" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons-and-illustrations" transform="translate(-117.000000, -39.000000)">
+            <g id="Check-icon" transform="translate(35.000000, 39.000000)">
+                <g id="Group-3" transform="translate(82.793333, 0.000000)">
+                    <ellipse id="Oval-7" fill="#F7F7F7" cx="65.24" cy="65" rx="65.24" ry="65"></ellipse>
+                    <ellipse id="Oval-7" stroke="#E7E7E7" stroke-width="3" fill="#F7F7F7" cx="65.24" cy="65" rx="59.0266667" ry="58.8095238"></ellipse>
+                    <g id="Group-2" transform="translate(3.106667, 2.210884)" stroke="#FC9809" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M27.3164678,91.1412071 C27.3164678,91.1412071 37.284656,108.894097 62.5897048,108.894097 C87.8947535,108.894097 108.408549,88.4557667 108.408549,63.2438082 C108.408549,38.0318498 87.8947535,17.5935192 62.5897048,17.5935192 C37.284656,17.5935192 16.7708609,38.0318498 16.7708609,63.2438082" id="Oval-7-Copy" fill="#F7F7F7" transform="translate(62.589705, 63.243808) rotate(-210.000000) translate(-62.589705, -63.243808) "></path>
+                        <path d="M96.8112348,28.2486072 C93.3926615,28.805118 90.1012603,29.7385621 86.9814217,31.0047124" id="Oval-7" transform="translate(91.896328, 29.626660) rotate(-301.000000) translate(-91.896328, -29.626660) "></path>
+                    </g>
+                    <g id="Group" transform="translate(67.042791, 57.725402) rotate(-45.000000) translate(-67.042791, -57.725402) translate(38.042791, 38.725402)" stroke="#A0CC38" stroke-width="6">
+                        <use id="Combined-Shape" mask="url(#mask-2)" xlink:href="#path-1"></use>
+                    </g>
+                    <path d="M85.045,73.8988095 L92.8931958,66.079485" id="Line" stroke="#A0CC38" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M38.0566667,74.3669435 L40.775,76.9940476" id="Line" stroke="#A0CC38" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

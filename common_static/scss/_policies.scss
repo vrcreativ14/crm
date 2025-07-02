@@ -1,0 +1,174 @@
+/*
+ POLICIES
+ */
+.policies {
+    .quote-container, .qp-container {
+        display: none;
+    }
+
+    #file_preview_frame {
+        display: none;
+        width: 100%;
+        height: 400px;
+        padding: 15px;
+        border: 1px dotted #DDD;
+    }
+
+    .table-filters {
+        float: none;
+    }
+
+    .table-filters {
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    .policies-total-amount {
+        position: absolute;
+        top: 20px;
+        right: 15px;
+        height: 19px;
+        color: #212529;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19px;
+        text-align: right;
+    }
+
+    .quick-filters {
+        margin-top: 30px;
+        margin-bottom: 20px;
+        float: left;
+        .title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+        button {
+            font-size: 13px;
+            color: #343A40;
+            border-radius: 3.6px;
+            padding: 7px 25px;
+            &.active, &:hover {
+                border-color: $primary;
+                box-shadow: none;
+            }
+            &:active {
+                border: 1px outset $primary-darker;
+            }
+        }
+        .select2-container {
+            max-width: 200px;
+            width: 200px !important;
+            margin-left: 20px;
+            .select2-selection--single {
+                border: none !important;
+                background-color: transparent !important;
+            }
+        }
+    }
+    .renewal_date_filter_field_container {
+        position: relative;
+        display: inline-block;
+        &:after {
+            width: 0;
+            height: 0;
+            margin-left: .255em;
+            vertical-align: .255em;
+            content: "";
+            border-top: .3em solid;
+            border-right: .3em solid transparent;
+            border-bottom: 0;
+            border-left: .3em solid transparent;
+            position: absolute;
+            right: 10px;
+            top: 16px;
+            color: #6C757D;
+            cursor: pointer;
+        }
+        .renewal_date_filter_field {
+            color: inherit;
+            font-size: 13px;
+            margin-left: 10px;
+            padding: 8px 10px;
+            padding-right: 30px;
+            text-align: left;
+        }
+    }
+
+    .fileuploader-theme-dragdrop {
+        img.icon {
+            width: 80px;
+            display: block;
+            margin: auto;
+        }
+        .fileuploader-input-caption {
+            &:after {
+                display: none;
+            }
+        }
+        .fileuploader-input {
+            padding: 22px 0 20px 0;
+            p {
+                margin: 12px 0;
+            }
+        }
+        .fileuploader-items, .fileuploader-input-button {
+            display: block !important;
+        }
+
+        .fileuploader-items {
+            width: 90%;
+            margin: auto;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .fileuploader-input-button {
+            background: none;
+        }
+    }
+
+    #modal_policy_import {
+        .instructions {
+            text-align: left;
+            width: 90%;
+            h4 {
+                font-size: 18px;
+                text-decoration: underline;
+            }
+            ol {
+                padding: 0;
+                margin: 0;
+                font-size: 13px;
+                padding-left: 15px;
+                margin-top: 20px;
+                li {
+                    margin-top: 10px;
+                }
+            }            
+        }
+    }
+
+}
+
+.policy-modal {
+    position: relative;
+
+    .product-logo-container img {
+        width: 100%;
+    }
+    .view-file {
+        position: absolute;
+        right: 0px;
+        top: 12px;
+        text-align: right;
+    }
+}
+
+.policies.renewals {
+    .policy-renewal-badge {
+        display: block;
+        text-transform: capitalize;
+    }
+}

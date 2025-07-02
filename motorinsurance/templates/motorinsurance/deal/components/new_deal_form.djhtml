@@ -1,0 +1,139 @@
+{% load static %}
+<div id="modal_create_deal" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>New Deal</h1>
+
+        <form action="{% url 'motorinsurance:deal-new' %}" name="deal_form" id="deal_form" method="post" data-module-name="Deal" novalidate>
+            {% csrf_token %}
+            <div class="content squeeze">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="autocomplete-container">
+                                <input
+                                    type="text"
+                                    data-url="{% url 'customers:customers-search' %}" 
+                                    data-target="id_customer"
+                                    class="autocomplete-field form-control" 
+                                    id="id_customer_name" 
+                                    name="customer_name" autocomplete="off" />
+                            </div>
+                            <input type="hidden" name="customer" id="id_customer" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Model Year *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.car_year }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Make *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.car_make }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Model/Trim *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.car_trim }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Custom Car Trim</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.custom_car_name }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Enquiry Type *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.lead_type }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row info-container">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Vehicle Usage *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.private_car }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Sum Insured ({{ companysettings.get_currency_display }})</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {{ deal_form.vehicle_insured_value }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Valuation Guide (beta)</label>
+                        </div>
+                        <div class="col-lg-9">
+                            {% if request.company.get_algodrive_usage_for_current_month >= request.company.workspacemotorsettings.algodriven_credits %}
+                            <button title="Your organisation has already used up your monthly quota of {{ request.company.workspacemotorsettings.algodriven_credits }} vehicle valuation checks. To enable more checks please reach out to us via live chat. At the beginning of next month you will automatically get another 20 free valuation checks." type="button" disabled data-allowed='false' 
+                                class="check-vehicle-value btn btn-primary btn-sm">Check
+                            </button>
+                            {% else %}
+                            <button type="button" disabled data-allowed="true" class="check-vehicle-value btn btn-primary btn-sm">Check</button>
+                            {% endif %}
+
+                            <span class="valuation-guide-display d-block m-t-5 hide"></span>
+                            <span class="valuation-guide-loader d-block m-t-5 hide">
+                                <img src="{% static "images/preloader.gif" %}" width="18" /> loading. please wait...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                    <span>Save</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        
+        $('#id_car_make').prop('disabled', true).trigger('chosen:updated');
+        $('#id_car_trim').prop('disabled', true).trigger('chosen:updated');
+
+        $('#id_car_year').change(function() {
+            $('#id_car_make').prop('disabled', false).trigger('chosen:updated');
+            $('#id_car_trim').prop('disabled', true).trigger('chosen:updated');
+        });
+
+        $('#id_car_make').change(function() {
+            $('#id_car_trim').prop('disabled', false).trigger('chosen:updated');
+        });
+    });
+</script>

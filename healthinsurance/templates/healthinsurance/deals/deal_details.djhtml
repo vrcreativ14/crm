@@ -1,0 +1,1977 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load permission_tags %}
+
+{% block page_title %}Deals{% endblock %}
+{% block body_class %}health-deals{% endblock %}
+{% block current_nav %}deals{% endblock %}
+{% block extra_css %}
+<style>
+  /* New CSS */
+  .title{
+      font-weight: 500;
+  }
+
+  .product-logo-container{
+    width: 120px;
+    min-height: 80px;
+    max-width: 118px;
+    max-height: 80px;
+    padding: 2px 10px;
+    background-color: #FFF;
+    border: 1px solid #E9ECEF;
+    border-radius: 4px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .mortgage-quote-details .felix-modal-container .felix-modal,.mortgage-quote-details .felix-modal-container .felix-modal .content{
+      height: auto;
+  }
+  .mortgage-quote-details .felix-modal-container .felix-modal .content{
+      padding-bottom: 20px;
+  }
+  
+  .mortgage-quote-details .bank-selection label{
+      cursor:pointer;
+  }
+  
+  .shadow-2-strong{
+      -webkit-box-shadow: 0 1px 3px 0 rgba(0,0,0,.07),0 1px 2px 0 rgba(0,0,0,.05)!important;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.07),0 1px 2px 0 rgba(0,0,0,.05)!important;
+  }
+  .deals-main-info .shadow-2-strong{
+      padding: 1rem;
+      text-align: center
+  }
+  .deals-main-info .shadow-2-strong p{
+      margin-bottom: 0;
+      font-size: 1.1rem;
+  }
+  .deals-main-info .shadow-2-strong p strong{
+      color: #212529;
+      font-weight: bold; 
+  }
+  .mortgage-quote-details .table{
+      border: 1px solid #eee;
+  }
+  .mortgage-quote-details .table tr td{
+      text-align: center;
+      font-weight: 500;
+      min-width: 200px;
+      max-width: 200px;
+  }
+  .mortgage-quote-details .table tr th{
+      font-weight: 400;
+      text-align: left !important;
+  }
+  .mortgage-quote-details .table td,.mortgage-quote-details .table th {
+      padding: .75rem;
+      vertical-align: bottom;
+      border: unset;
+  }
+  .mortgage-quote-details .table tr:first-child{
+      border-bottom: 1px solid #78738920;
+      font-size: 1.3rem;
+  }
+  .mortgage-quote-details .table .background-blue{
+      background: #F8FAFF;
+  }
+  .btn-nexus{
+      padding: 0.35rem 1.5rem;
+      border: none;
+      border-radius: 0.15rem;
+      box-shadow: unset;
+      cursor: pointer;
+      margin-left: 0.5rem;
+      margin-bottom: 0.5rem;
+      background: #F5F5F6;
+      font-size: 0.7rem;
+      color: #212529 !important;
+      font-weight: 400 !important;
+      display: inline-block;
+  }
+  .btn-nexus-golden{
+      background:#DBAE58;
+      color: white !important;
+  }
+  .btn-nexus-dark-grey{
+      background:#babec2;
+      color: white !important;
+  }
+  .btn-nexus-blue{
+      background:#2f8ee0;
+      color: white !important;
+  }
+  .text-nexus-blue{
+      color: #2f8ee0 !important;
+      cursor: pointer;
+  }
+  #modal_new_rate_banks_form{
+      padding: 1rem;
+  }
+  #modal_new_rate_banks_form img{
+      height: 50px;
+      width: auto;
+      margin-bottom: 1rem;
+  }
+  #modal_new_rate_banks_form p span.helptext{
+      margin-left: 0.5rem;
+  }
+  .show-selected-bank-table th.unselected,.show-selected-bank-table td.unselected{
+      opacity: 0.15;
+  }
+  .show-selected-bank-table .selected .idle-action, .show-selected-bank-table .active-action{
+      display: none !important;
+  }
+  .show-selected-bank-table .selected .active-action{
+      display: flex !important;
+  }
+  #tab_all button{
+      display: none;
+  }
+  #modal_new_rate_banks_form label{
+      font-weight: bold;
+      font-size: 0.9rem;
+  }
+  .mortgage .deal.info-container .info-table .editable-click:hover:before{
+      display: none;
+  }
+  .mortgage .copy-link-container .link{
+      width: 80%;
+  }
+  .editable-bank-rate {
+      cursor: pointer;
+      text-decoration: underline;
+      color: #63adeb;
+      opacity: 0.25;
+  }
+  tr:hover .editable-bank-rate,.editable-bank-rate:hover {
+      opacity: 1;
+  }
+  .info-container p.name{
+    color: black !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+
+  /* Sub Stages */
+  .sub-stages a{
+    text-decoration: unset !important;
+    font-size: 0.7rem !important;
+  }
+  .info-container .sub-stages li{
+      text-decoration: none !important;
+      cursor: pointer;
+  }
+  .info-container .sub-stages li:before{
+    border-top: 18px solid transparent !important;
+    border-bottom: 16px solid transparent !important;
+  }
+  .info-container .sub-stages li:after{
+    right: -12px !important;
+    border-top: 18px solid transparent !important;
+    border-bottom: 16px solid transparent !important;
+  }
+  .info-container .sub-stages li a{
+    line-height: 35px !important;
+  }
+
+  /* New design */
+  .bank-details .bg-wheat-nexus{
+      background: #fbf7ee !important;
+  }
+  .bank-details .bg-wheat-nexus{
+      background: #fbf7ee !important;
+  }
+  .bank-details .bg-light-grey-nexus{
+      background: #fafafa !important;
+  }
+  .bank-details .row > div > div{
+      padding: 1rem;
+      padding-bottom: 0;
+      border-radius: 0.25rem;
+  }
+  .bank-details .row .d-flex > *{
+      width: 50%;
+      color: black;
+      font-weight: 400;
+  }
+  .bank-details .row .d-flex > *:last-child{
+    text-align: right;
+    font-weight: 500;
+    padding-left: 0.5rem;
+  }
+  .bank-details .editable-bank-rate-modal{
+      cursor: pointer;
+      color: #459ce6;
+      text-decoration: underline;
+  }
+  .stages-status-indication{
+      font-size: 0.9rem;
+      font-weight: 400;
+  }
+  .stages-status-indication{
+      font-weight: 500 !important;
+  }
+  .stages-status-indication p{
+      color: black !important;
+      font-weight: 500 !important;
+  }
+  .stages-status-indication i{
+      font-size: 1.25rem;
+  }
+  .sub-stages-content p{
+    color: #1d1d1d !important;
+    font-weight: 400 !important;
+  }
+  .mortgage-deal-processes > #deal-stage-quote-form > button{
+      display: none;
+  }
+
+  .new-documents-section .tab-content{
+      background: #fafafa;
+      padding: 0 1rem;
+  }
+  .new-documents-section .nav-tabs .nav-item.show .nav-link, .new-documents-section .nav-tabs .nav-link.active{
+    background-color: #fafafa;
+    border-color: #fafafa;
+  }
+  .new-documents-section .tab-content .col-6{
+      border-bottom: 1px solid #cccccc;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+  }
+  .new-documents-section .tab-content .col-6:nth-last-child(3),.new-documents-section .tab-content .col-6:nth-last-child(2){
+      border-bottom: unset;
+  }
+
+  .open-lost-deal.re-open,.bank-details.modal .editable-bank-rate-modal{
+      display: none !important;
+  }
+  #mortgage_tab_history .email-edit{
+      background: transparent;
+  }
+  #mortgage_tab_history .email-edit:hover{
+    background-color: #FCFCFC;
+  }
+  .single-upload-parent-div input[type=file]{
+    width: 225px;
+  }
+  .single-upload-parent-div .editableform{
+    display: block;
+  }
+  .checkbox-wrapper {
+    height: 13px;
+    width: 13px;
+}
+.redirect{
+    background:url(../images/icons/redirect.svg) no-repeat;
+    width: 60px;
+    height: 18px;
+    background-position: center center;
+    background-size: 20px;
+}
+label{
+        font:normal normal normal 14px/19px Roboto;
+    }
+    .radio-button{
+        margin-left: 8px;
+    }
+.radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+.radio-button input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+.input-container input {
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    padding: .75rem;
+    position: relative;
+    width: 100%;
+}
+.row{
+    display: flex;
+}
+ .add {
+  background-image: url(../images/icons/add.svg);
+  background-size: 12px;
+  background-position: 4px;
+}
+ .add:before {
+  background-image: url(../images/icons/add.svg);
+ 
+}
+ .subtract {
+  background-image: url(../images/icons/subtract.svg);
+  background-size: 12px;
+  background-position: 4px;
+}
+ .subtract:before {
+  background-image: url(../images/icons/subtract.svg);
+  background-size: 12px;
+  background-position: 4px;
+}
+.upload-icon{
+    background: url('/static/images/icons/upload.svg') no-repeat;
+  background-size: 12px;
+  background-position: 4px;
+  display: block;
+height: 40px;
+width: 40px;
+background-size: contain;
+float: right;
+}
+.upload-btn{
+    width: 70%;
+    padding: 20px;
+}
+.input-icons {
+            width: 100%;
+            margin-bottom: 10px;
+            position: absolute;
+        }
+        .icon {
+            padding: 10px;
+            min-width: 40px;
+        }
+        .arrow-up{
+            background: url('/static/images/icons/arrow_up.svg') no-repeat;
+  background-size: 12px;
+  background-position: 4px;
+  display: block;
+height: 22px;
+width: 40px;
+background-size: contain;
+float: right;
+        }
+        .arrow-down{
+            background: url('/static/images/icons/arrow_down.svg') no-repeat;
+  background-size: 12px;
+  background-position: 4px;
+  display: block;
+height: 22px;
+width: 40px;
+background-size: contain;
+float: right;
+        }
+
+.deal-documents-show a{
+    font-size: 11px;
+}
+
+a{
+    cursor: pointer;
+}
+
+/*New design for document section*/
+.new-documents-section .info-container{
+    background: #f1f1f1;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.new-documents-section .info-container .collapsable .heading{
+    font-size: 1rem;
+    display: block;
+}
+.new-documents-section .upload-file{
+    width: 100%;
+}
+.new-documents-section .action{
+    padding: 0.25rem;
+    background: white;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+}
+.new-documents-section .action .upload-file{
+    border-radius: 0.5rem;
+}
+.new-documents-section .action table td{
+    border: unset;
+    padding: 0.25rem 0;
+}
+.product-logo-container{
+    width: 120px;
+  min-height: 80px;
+  max-width: 118px;
+  max-height: 80px;
+  padding: 2px 10px;
+  background-color: #FFF;
+  border: 1px solid #E9ECEF;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-logo-container img{
+    max-width: 90px;
+    max-height: 70px;
+    margin: 0 auto;
+}
+.download-all-details{
+    position: absolute;
+    right: 5rem;
+    top: 0.75rem;
+    font-size: 14px !Important;
+}
+.collapse-html{
+    position: absolute;
+    right: 1.5rem;
+    top: 0.25rem;
+    font-size: 1.5rem !Important;
+}
+.collapsable .fa-chevron-circle-down{
+    display: none;
+}
+.collapsable.collapsed .fa-chevron-circle-up{
+    display: none;
+}
+.collapsable.collapsed .fa-chevron-circle-down{
+    display: inline-block;
+}
+</style>
+{% endblock %}
+{% block breadcrumb %}
+    <!-- Page-Title -->
+    <div class="breadcrumb">
+        <a class="back" href="{% url 'health-insurance:deals' %}">
+            <i class="ti-arrow-left"></i>
+        </a>
+        <ul>
+            <li><a href="{% url 'health-insurance:deals' %}">Deals</a></li>
+            <li class="muted">/</li>
+            <li>
+                {% if deal %}
+                    {{ deal.primary_member.name }} (<span class="capitalize">{{ deal.stage }}</span>)
+                {% else %}
+                    Add new deal
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+    <!-- end page title end breadcrumb -->
+{% endblock %}
+
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<input type="hidden" id="deal_id" value={{deal.pk}} />
+<input type="hidden" id="deal_stage_id" value={{stage_number}} />
+<input type="hidden" id="current_sub_stage" value="{{sub_stage_number}}" />
+
+{% if not deal.status == 'deleted' %}
+    <div class="deal-detail-settings">
+        <a class="dropdown-toggle" data-toggle="dropdown"
+           href="javascript:"
+           role="button"
+           aria-haspopup="false" aria-expanded="false">
+            <i class="ti-settings"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+                <a href="#" data-redirect-to="{% url 'health-insurance:deals' %}"
+                data-url="{% url 'health-insurance:delete-deal' pk=deal.pk %}"
+                   class="dropdown-item btn-delete-record">
+                    <i class="ti-trash"></i> Delete
+                </a>
+        </div>
+    </div>
+    {% endif %}
+    <div class="deal-container container-fluid squeeze"
+         data-id="{{ deal.pk }}"
+         data-title="{{ deal.get_title }}"
+         data-status="{{ deal.stage }}"
+    >
+        
+        <div class="row">
+            <!-- *******
+                 LEFT Column
+                        ****** -->
+            <div class="col col-lg-4 col-xl-3">
+                <!-- Deal Title-->
+                <div class="card info-container m-b-20">
+                    <div class="deal-title-container medical">
+                        <div class="deal-title">
+                            <span class="heading">Health Insurance</span>
+                            <span class="price"></span>
+                        </div>
+                    </div>
+                    <div class="info-table deal-number-editable">
+                        {% if deal.stage == 'lost' %}
+                            <span class="m-t-15 m-r-4 badge badge-unpaid badge-font-light badge-published text-capitalize">{{ deal.stage }}</span>
+                        {% else %}
+                        <div class="deal-statuses">
+                            {% if deal.get_tags %}
+                                {% for tag in deal.get_tags %}
+                                    <span class="m-t-15 m-r-4 badge badge-default badge-font-light badge-{{ tag|slugify }}">{{ tag }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                            <!-- <span class="m-t-15 m-r-4 badge badge-default badge-font-light badge-published text-capitalize">{{ deal.stage }}</span> -->
+                        {% endif %}
+                    </div>
+                    <div class="info-table deal-number-editable deal-status">
+                        {% if deal.status %}
+                            <div class="row editable flex">
+                                <div class="col col-lg-4 label p-l-20 p-r-0">
+                                    Status
+                                </div>
+                                <div class="col col-lg-6 editable-icon update-deal-status">
+                                    <a href="javascript:"
+                                    class="deal-inline-update-field select-editable editable m-r-4 badge badge-{{deal.status_badge}} badge-font-light text-capitalize"
+                                    data-name="status"
+                                    data-type="select"
+                                    data-emptytext="Add"
+                                    data-pk="{{ deal.pk }}"
+                                    data-value="{% if deal.status %}{{ deal.status }}{% endif %}"
+                                    data-source="[{'value': 'waiting for client', 'text': 'Waiting for client'},{'value': 'waiting for insurer', 'text': 'Waiting for insurer'},{'value': 'waiting for us', 'text': 'Waiting for us'}, {'value': 'waiting for compliance', 'text': 'Waiting for compliance'}]"
+                                    data-url="{% url 'health-insurance:update-deal-field' pk=deal.pk %}"
+                                    data-title="Select"
+                                    id="deal_status">
+                                    <span id="deal_status_text" class="font-10">{% if deal.status_text %}{{ deal.status_text }}{% else %}-{% endif %} </span>
+                                </a>
+                                </div>
+                            </div>
+                                <span class="m-t-15 m-r-4 badge badge-default badge-font-light badge-published text-capitalize"></span>
+                            {% endif %}
+
+                        
+
+                        <div class="row editable flex">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Final Premium (inc VAT)
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                {% if deal.total_premium %}
+                                <span id="final_premium_label">{{deal.total_premium}}</span>
+                                {% else %}
+                                <span id="final_premium_label"> - </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row editable flex">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Insurer
+                            </div>
+                            <div class="col col-lg-8">
+                                {% if order %}
+                                {{order.selected_plan.plan.insurer.name}}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row editable flex">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Plan
+                            </div>
+                            <div class="col col-lg-8">
+                                {% if order %}
+                                {{order.selected_plan.plan.name}}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="deal-email-settings__bcc row editable flex">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Referrer
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                class="deal-inline-update-field select-editable editable"
+                                data-name="referrer_id"
+                                data-type="select"
+                                data-emptytext="Add"
+                                data-pk="{{ deal.pk }}"
+                                data-value="{% if deal.referrer %}{{ deal.referrer.pk }}{% endif %}"
+                                data-source="{% url 'health-insurance:deal-attributes-list' pk=deal.pk %}?type=agents"
+                                data-url="{% url 'health-insurance:update-deal-field' pk=deal.pk %}"
+                                data-title="Select"
+                            >
+                                {% if deal.referrer %}{{ deal.referrer }}{% else %}-{% endif %}
+                            </a>
+                            </div>
+                        </div>
+                       
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Policy Start Date
+                            </div>
+                            <div class="col col-lg-8 editable-icon">                                
+                                <span>{% if policy %} {{policy.start_date}} {% else %} - {% endif %}</span>
+                            </div>
+                        </div>
+                        {% if quote %}
+                            <div class="row">
+                                <div class="col col-lg-4 label p-l-20 p-r-0">
+                                    Insurer Quote Reference
+                                </div>
+                                <div class="col col-lg-6 editable-icon">
+                                    <a
+                                    class="text-editable"
+                                    data-name="insurer_quote_reference"
+                                    data-class="form-control-sm"
+                                    data-pk="{{ deal.pk }}"
+                                    data-title="insurer quote reference"
+                                    data-url="{% url 'health-insurance:update-deal-field' pk=deal.pk %}"
+                                    id="insurer_quote_reference">
+                                    {% if quote.insurer_quote_reference %} {{quote.insurer_quote_reference}} {% else %} - {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    
+                    <a href="javascript:" class="toggle-details less"></a>
+                </div>
+
+                <!-- Customer Info-->
+                <div class="card info-container m-b-20 flex">
+                    <div class="title">
+                        <div class="initials rounded-circle">
+                            {{ deal.customer.get_initials }}
+                        </div>
+                        <div class="deal-title">                           
+                           <div class="heading">Primary Member Details</div>
+                        </div>
+                        <a class="font-12 fw-400" href="{% url 'customers:edit' pk=deal.customer.pk %}">
+                            {% if user|can:'list_customers' %}
+                                View Customer 
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <div class="info-table ">
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Name</div>
+                            <div class="col col-lg-8 ">
+                                <span>{{ deal.customer.name }}</span>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Phone <a title="click to start WhatsApp chat with {{ deal.customer.name }}"
+                                         href="{% if deal.customer.phone %}https://wa.me/{{ deal.customer.get_whatsapp_formatted_number }}{% endif %}"
+                                         target="_blank" class="whatsapp-customer-icon">
+                                
+                            </a>
+                            </div>
+                            <div class="col col-lg-8 editable-icon">                                
+                                   <span>{% if deal.customer.phone %} {{ deal.customer.phone }} {% else %} - {% endif %}</span>                                
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Email</div>
+                            <div class="col col-lg-8 editable-icon">                                
+                                   <span>{{ deal.customer.email }}</span>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="" style="display: flex;justify-content: flex-end;">
+                            <div class="" style="font-size:10px;">
+                                <a href="javascript:" class="" data-felix-modal="modal_edit_deal">edit details</a>
+                            </div>
+                            
+                            <div class="" style="font-size:10px;margin-left: 10px;">
+                                <a href="javascript:" class="" data-toggle="modal" data-target="#member_details">more details</a>
+                            </div>
+                            <div class="" style="font-size:10px;margin-left: 10px;">
+                                <a target="_blank" href="{% url 'health-insurance:deal-more-details' pk=deal.pk %}">
+                                    <i class="">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
+                                            <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/>
+                                          </svg>
+                                    </i>
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member Info-->
+                <div class="card deal info-container m-b-20">
+                    <div class="heading">Additional Member Details ({{ deal.primary_member.additional_members.all.count }}) </div>
+                    <div class="info-table">
+                        {% for member in additional_members %}
+                        <div class="deal-actions row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                <span>Member {{forloop.counter|add:1}}</span>
+                            </div>
+                            <div class="col col-lg-8 editable-icon capitalize">
+                                <span class="">{{ member.relation }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Name
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                   class="text-dark text-capitalize"
+                                   data-name="property_price"
+                                   data-class="form-control-sm"                                   
+                                   data-url=""
+                                >{{ member.name }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Date of Birth
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                   class="text-dark"
+                                   data-name="property_price"
+                                   data-class="form-control-sm"                                   
+                                   data-url=""
+                                >{{ member.dob }}</a>
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Nationality
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                   class="text-dark text-capitalize"
+                                   data-name="property_price"
+                                   data-class="form-control-sm"                                   
+                                   data-url=""
+                                >{{ member.nationality }}</a>
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Country of Residence
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                   class="text-dark text-capitalize"
+                                   data-name="property_price"
+                                   data-class="form-control-sm"                                   
+                                   data-url=""
+                                >{{ member.country_of_stay }}</a>
+                            </div>
+                        </div>
+
+                        {% endfor %}                                                                                                                       
+                       
+                        
+                        <br/>
+                        <div class="" style="display: flex;justify-content: flex-end;">
+                        <div class="col-lg-6"></div>
+                            <div class="" style="font-size:10px;">
+                                <a href="javascript:" class="" data-toggle="modal" data-target="#edit_additional_members">edit details</a>
+                            </div>
+                            
+                            <div class="" style="font-size:10px;margin-left: 10px;">
+                                <a href="javascript:" class="" data-toggle="modal" data-target="#member_details">more details</a>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <!-- Deal Info -->
+                <div class="card info-container m-b-20">
+                    <div class="">
+                        <div class="deal-title">
+                            <span class="heading">Deal Form Info</span>
+                            <span class="price"></span>
+                        </div>
+                    </div>
+                    <div class="deal-statuses">
+                    </div>
+                    <div class="info-table deal-number-editable">
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Level of Cover
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                {% if deal.level_of_cover == 'comprehensive' %}
+                                <span>Comprehensive</span>
+                                {% elif deal.level_of_cover == 'basic' %}
+                                <span>Basic</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Geographical Coverage
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span>{% if deal.geographical_coverage_text %}{{ deal.geographical_coverage_text }} {% else %} - {% endif %}</span>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Additional Benefits
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span>
+                                    {% if deal.additional_benefits.all.count > 0 %}
+                                    {% for benefit in deal.additional_benefits.all %}
+                                        {{benefit}}{% if forloop.counter < deal.additional_benefits.all.count  %},{% endif %}
+                                    {% endfor %}
+                                    {% else %} 
+                                        - 
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        {% if deal.other_benefits %}
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Other Benefits
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span>
+                                    {% for benefit in deal.other_benefits %}
+                                    {{benefit}} {% if forloop.counter < deal.other_benefits|length %},{% endif %}
+                                    {% endfor %}
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Indicative Budget per person
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span>{% if deal.indicative_budget %}{{deal.indicative_budget}} {% if deal.indicative_budget != 'Not Sure'%} AED {% endif %} {% else %} - {% endif %}</span>
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Preferred Start Date
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span>{% if deal.start_date %} {{deal.start_date}} {% else %} - {% endif %}</span>
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable flex hide">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Preferred Hospitals/Clinics
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span>{% if deal.primary_member.preferred_hospitals %}{{deal.primary_member.preferred_hospitals}} {% else %} - {% endif %}</span>
+                            </div>
+                        </div>
+                        
+                       
+                    </div>
+                    
+                    
+                    <!-- <a href="javascript:" class="toggle-details less"></a> -->
+                </div>
+            </div>
+
+            <!-- *******
+                 RIGHT Column
+                        ****** -->
+            <div class="col col-lg-8 col-xl-9">
+                <div class="card info-container m-b-20">
+                    <div class="deal-actions row">
+                        <div class="col col-lg-6 assigned_to">
+                            <span class="text-muted font-12">Assigned to:</span>
+                            <a href="javascript:"
+                                class="deal-inline-update-field select-editable editable"
+                                data-name="user_id"
+                                data-type="select"
+                                data-emptytext="Add"
+                                data-pk="{{ deal.pk }}"
+                                data-value="{% if deal.user %}{{ deal.user.pk }}{% endif %}"
+                                data-source="{% url 'health-insurance:deal-attributes-list' pk=deal.pk %}?type=assigned_to"
+                                data-url="{% url 'health-insurance:update-deal-field' pk=deal.pk %}"
+                                data-title="Select"
+                            >
+                                {% if deal.user %}{{ deal.user }}{% else %}-{% endif %}
+                            </a>
+                        </div>
+
+                        <!-- Deal Stage Jump Dropdown -->
+                         <div class="col col-lg-6 align-right">
+                            <button class="manual-email-trigger btn btn-outline-primary btn-sm m-r-5"
+                                    onclick="__HEALTH_DEALS._triggerCustomEmailModal('latest')">
+                                Email
+                            </button>
+                            {% if deal.stage == 'lost' or deal.stage == 'won' %}
+                            <button type="button" data-id="{{ deal.pk }}"
+                                    class="m-b-20 btn-sm btn float-right btn-fit open-lost-deal re-open btn-outline-dark" style="display: block !important;">
+                                Reopen
+                            </button>
+                            {% else %}
+                            {% if request.user.userprofile.has_producer_role %}
+                                {% if stage_number <= 3 and sub_stage_number <= 2 %}
+                                <button type="button" data-id="{{ deal.pk }}"
+                                        class="m-b-20 btn-sm btn btn-outline-danger float-right btn-fit open-lost-deal">
+                                    Mark as Lost
+                                </button>
+                                {% endif %}
+                            {% else %}
+                                <button type="button" data-id="{{ deal.pk }}"
+                                        class="m-b-20 btn-sm btn btn-outline-danger float-right btn-fit open-lost-deal">
+                                    Mark as Lost
+                                </button>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <ul class="deal-stages-breadcrumb">
+                        <li data-id='new' value="1"  {% if deal.stage == 'new' %} 
+                            data-item="deal-overview"{% endif %}>
+                            <a href="#">
+                                New Deal
+                                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+                            </a>
+                        </li>
+                        
+                        {% if order and order.selected_plan.plan.coverage_type == 'basic' or deal.stage == 'basic' %}
+
+                        <li data-id='basic' data-item="basic" value="6.5">
+                            <a href="#">
+                                Basic
+                                <span class="duration">{{ deal.pre_approval|naturalday|capfirst }}</span>
+                            </a>
+                            {% if sub_stage_number < 1 %}
+                            <label class="waiting_label_{{current_stage}} form-check-label fw-300 hide">waiting</label>
+                            {% endif %}
+                        </li>
+
+                        {% else %}
+
+                        <li data-id='quote' data-item="quote-overview" value="2">
+                            <a href="#" style="cursor: pointer;">
+                                <i class="stage-warning fas fa-exclamation-triangle {% if not deal.quote.outdated %}hide{% endif %}"></i>
+                                Quote
+                                {% if deal.quote %}
+                                    <span class="duration">{{ deal.quote.created_on|naturalday|capfirst }}</span>
+                                    <span class="quote-views">Viewed {{ deal.quote.number_of_views }} time(s)</span>
+                                {% endif %}
+                            </a>
+                        </li>
+
+                        <li data-id='documents' data-item="documents" value="3">
+                            <a href="#">
+                                Documents
+                                <span class="duration">{{ deal.pre_approval|naturalday|capfirst }}</span>
+                            </a>
+                            {% if sub_stage_number < 1 %}
+                            <label class="waiting_label_{{current_stage}} form-check-label fw-300 hide">waiting</label>
+                            {% endif %}
+                        </li>
+                        <li data-id='final_quote' class="final-quote no-underline" data-item="final-quote" value="4">
+                            <a href="#">
+                                Final Quote
+                                <span class="duration">{{ deal.valuation|naturalday|capfirst }}</span>
+                            </a>
+                            {% if stage_number == 4 and sub_stage_number == 2 and deal.status == "waiting for client" %}
+                            <label class="waiting_label_{{current_stage}} form-check-label fw-300 hide">waiting</label>
+                            {% endif %}
+                        </li>
+                        <li data-id='payment' data-item="payment" value="5">
+                            <a href="#">
+                                Payment
+                            </a>
+                            {% if stage_number == 5 and sub_stage_number == 2 and deal.status == "waiting for client" %}
+                            <label class="waiting_label_{{current_stage}} form-check-label fw-300 hide">waiting</label>
+                            {% endif %}
+                        </li>
+                        <li data-id='policy_issuance' data-item="policy-issuance" value="6">
+                            <a href="#">Policy Issuance</a>
+                        </li>
+
+                        {% endif %}
+                       
+                        <li data-id='housekeeping' data-item="houseKeeping" value="7">
+                            <a href="#">Housekeeping</a>
+                        </li>
+                        <li data-id='won' data-item="won" value="8">
+                            <a href="#">Closed</a>
+                        </li>
+                    </ul>
+
+                    <!-- <div class="toggle-deal-processes show-div align-right m-t-40">
+                        <div class="collapse">
+                            Collapse <i class="ti-angle-up"></i>
+                        </div>
+                        <div class="expand">
+                            Expand <i class="ti-angle-down"></i>
+                        </div>
+                    </div>  -->
+
+                    
+                    
+                 <div class="health-deal-processes info-table m-t-10 m-b-10">
+                     
+                </div>
+                
+
+               
+                
+                
+                <!--- Activities/Notes/Documents -->
+                <div class="card info-container m-b-20">
+                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" data-toggle="tab" href="#tab_all" role="tab"
+                               aria-selected="true">Timeline</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_tasks" role="tab" aria-selected="true">Tasks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_notes" role="tab" aria-selected="true">Notes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_documents" role="tab" aria-selected="true">Documents</a>
+                        </li>
+                        {% if helpscout_enabled %}
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab_helpscout" role="tab"
+                                   aria-selected="true"><img src="{% static 'images/help-scout-logo.svg' %}"
+                                                             width="70"/></a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#health_tab_history" role="tab" aria-selected="true">History</a>
+                        </li>
+                    </ul>
+
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane p-3 active show" id="tab_all" role="tabpanel">
+                            <button data-felix-modal="modal_add_note" class="btn btn-info-container btn-primary btn-sm">
+                                Add Note
+                            </button>
+                            <button data-felix-modal="modal_task" class="add-task btn btn-info-container btn-primary btn-sm" onclick="default_agent_id(200)">Add Task
+                            </button>
+                            <button class="add-documents btn btn-info-container btn-secondary btn-sm">Add Documents
+                            </button>
+                            {% if deal.notes.all %}
+                                <ul class="trail note-trail">
+                                    <li>Deal Created on {{deal.created_on|date:"d M Y"}} at {{deal.created_on|time:"H:i"}}</li>
+                                    {% for note in deal.notes.all %}
+                                    {% include 'core/_note.djhtml' with delete_form_action="health-insurance:notes-delete" %}
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <ul class="trail note-trail"><li>Deal Created on {{deal.created_on|date:"d M Y"}} at {{deal.created_on|time:"H:i"}}</li></ul>
+                                <br><br>
+                                <div class="small-note note-trail">
+                                    
+                                    <!-- No record found for this deal. -->
+                                </div>
+                            {% endif %}
+                        </div>
+
+                       
+                        <div class="tab-pane p-3" id="health_tab_history" role="tabpanel"></div>
+
+                       
+                        <div class="tab-pane p-3" id="tab_tasks" role="tabpanel">
+                            <button data-felix-modal="modal_task"
+                                    class="add-task btn btn-info-container btn-primary btn-sm" onclick="default_agent_id(200)">Add Task
+                            </button>
+
+                            <div class="hide">
+                                <form name="tasks-filter-form" id="id_tasks-fitler-form">
+                                    <input type="hidden" name="filter_type" id="filter_type" value="all"/>
+                                    <input type="hidden" name="order_by" id="order_by" value="-due_datetime"/>
+                                </form>
+                            </div>
+
+                            <div class="task-actions float-right">
+                                <div class="task-loader">
+                                    <img src="{% static "images/preloader2.svg" %}"/> loading...
+                                </div>
+                                <button data-type='all' class="btn btn-outline-primary active btn-sm">All</button>
+                                <button data-type='do' class="btn btn-outline-primary btn-sm">Do</button>
+                                <button data-type='done' class="btn btn-outline-primary btn-sm">Done</button>
+                                <button data-type='today' class="btn btn-outline-primary btn-sm">Today</button>
+                                <button data-type='tomorrow' class="btn btn-outline-primary btn-sm">Tomorrow</button>
+                                <button data-type='overdue' class="btn btn-outline-primary btn-sm">Overdue</button>
+                            </div>
+                            <ul class="trail task-trail">
+                                <li class="no-record">No task found</li>
+                            </ul>
+                        </div>
+
+                       
+                        <div class="tab-pane p-3" id="tab_notes" role="tabpanel">
+                            <button data-felix-modal="modal_add_note" class="btn btn-info-container btn-primary btn-sm">
+                                Add Note
+                            </button>
+
+                            {% if deal.notes.all %}
+                                <ul class="trail note-trail">
+                                    {% for note in deal.notes.all %}
+                                        {% include 'core/_note.djhtml' with delete_form_action="health-insurance:notes-delete" %}
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <ul class="trail note-trail hide"></ul>
+                                <br><br>
+                                <div class="small-note note-trail">
+                                    There are no notes for this deal.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                      
+                        <div
+                            class="tab-pane p-3"
+                            id="tab_documents"
+                            role="tabpanel"
+                            data-attachments-url=""
+                            data-delete-url=""
+                            data-copy-url=""
+                        >
+                        
+                            <div class="new-documents-section mt-3 d-block">
+                                <div>
+                                    <div class="info-container mb-2">
+                                        <div class="collapsable deal-documents-show collapsed pr-2 pl-2" data-toggle="collapse" data-target="#primary_member_documents">
+                                            <a class="heading">Primary Member Documents</a>
+                                            <a href="#" class="download-all-details" onclick="downloadAllFiles('primary');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                                            <a class="collapse-html"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="mt-3 w-100" id="primary_member_documents" style="display:none;">
+                                            {% include 'healthinsurance/deals/components/upload_files_content.djhtml' with type="primary_member_documents" %}
+                                        </div>
+                                    </div>
+
+                                    {% for member in deal.primary_member.additional_members.all %}
+                                        <div class="info-container mb-2">
+                                            <div class="collapsable deal-documents-show collapsed pr-2 pl-2" data-toggle="collapse" data-target="#member_{{member.order}}_{{member.relation}}_documents">
+                                                <a class="heading capitalize">Documents: Member {{forloop.counter|add:1}} {{member.relation}}</a>
+                                                <a href="#" class="download-all-details" onclick="downloadAllFiles('member');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                                            <a class="collapse-html"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+                                            </div>
+                                            <div class="mt-2 w-100" id="member_{{member.order}}_{{member.relation}}_documents" style="display:none;">
+                                                {% include 'healthinsurance/deals/components/upload_files_content.djhtml' with type="member_documents" member=member.pk counter=forloop.counter %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    
+                                    <div class="info-container mb-2">
+                                        <div class="collapsable deal-documents-show collapsed pr-2 pl-2" data-toggle="collapse" data-target="#other_documents">
+                                            <a class="heading">Other Documents</a>
+                                            <a href="#" class="download-all-details" onclick="downloadAllFiles('other');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                                            <a class="collapse-html"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="mt-2 w-100" id="other_documents" style="display:none;">
+                                            {% include 'healthinsurance/deals/components/upload_files_content.djhtml' with type="other_documents" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="info-container mb-2">
+                                        <div class="collapsable deal-documents-show collapsed pr-2 pl-2" data-toggle="collapse" data-target="#policy_documents">
+                                            <a class="heading">Policy Documents</a>
+                                            <a href="#" class="download-all-details" onclick="downloadAllFiles('policy');"><i class="fa fa-download" aria-hidden="true"></i> Download All</a>
+                                            <a class="collapse-html"><i class="fa fa-chevron-circle-up" aria-hidden="true"></i><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="mt-2 w-100" id="policy_documents" style="display:none;">
+                                            {% include 'healthinsurance/deals/components/upload_files_content.djhtml' with type="policy_documents" %}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                                        <input type="file" name="file" id="document_upload"
+                                            data-url="{{ attachment_form.helper.form_action }}"/>
+                                        <div class="progress-bar-container squeeze">
+                                            <div class="progress-bar"><span></span></div>
+                                        </div>
+                                        <button class="float-right btn btn-primary btn-sm preview-documents mt-3">Preview Documents</button>
+                                        <span class="documents-section"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if helpscout_enabled %}
+                          
+                            <div class="tab-pane p-4" id="tab_helpscout" role="tabpanel">
+                                <ul class="trail helpscout-trail">
+                                    <li class="no-record">No conversation found</li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            <!-- </div>
+        </div> --> 
+
+        <!-- MODALS -->
+        {% include "healthinsurance/deals/components/member_details.djhtml" %}
+        {% include "healthinsurance/deals/components/new_deal_form.djhtml" %}
+
+        {% include 'core/_documents_viewer.djhtml' %}
+
+        {% with post_url=note_form_action %}
+            {% include 'core/_note_form.djhtml' %}
+        {% endwith %}
+
+        {% include 'core/_task_form.djhtml' %}
+
+        {% if companysettings.auto_quote_allowed %}
+            {% include 'motorinsurance/auto_quote_product_forms/modal.djhtml' %}
+        {% endif %}
+
+        {% if helpscout_enabled %}
+            {% include 'core/helpscout_modal.djhtml' %}
+        {% endif %}
+        <!-- Modal Ends -->
+
+        {% include 'handlebars/task_li.html' %}
+        {% include 'handlebars/documents.html' %}
+        {% include "handlebars/deal_quote_add_product_health_insurance.html" %}
+        {% if helpscout_enabled %}
+            {% include 'handlebars/helpscout_li.html' %}
+            {% include 'handlebars/helpscout_conversation.html' %}
+        {% endif %}
+
+      <button data-felix-modal="modal_send_custom_email_health"
+                class="hide btn btn-info-container btn-primary btn-sm"></button>
+                </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <link rel="stylsheet" href="{% static "plugins/fileuploader/jquery-fileuploader.css" %}"/>
+    <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
+    <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
+    <script src="{% static 'dist/health_module.js' %}?v=1.1"></script>
+    <script type="text/javascript">
+    window.products_data = [];
+    var _deal_id = document.querySelector('#deal_id').value
+    var current_stage = document.getElementById('deal_stage_id').value
+    var current_sub_stage = document.getElementById('current_sub_stage').value
+    var total_premium = 0
+    document.querySelectorAll('.member_premium').forEach(elem => function(elem){
+                elem.addEventListener('change', function(elem){
+                    let premium = parseFloat(elem.value)
+                    total_premium += premium
+                    document.querySelector('#id_total_premium').value = total_premium
+                })
+            })
+
+       var formData = new FormData()
+
+    function updateEmailForm(response){
+        var form = $('#custom_email_form');
+        $('#custom_email_form').css({'opacity': '1'});
+        form.find('#email_type').val(email_type);
+                form.find('#id_email').val(response.to);
+                form.find('#id_from_email').html(response.from);
+                form.find('#id_reply_to').html(response.reply_to);
+                form.find('#id_cc_emails').val(response.cc_emails);
+                form.find('#id_bcc_emails').val(response.bcc_emails);
+                form.find('#id_subject').val(response.subject);
+                form.find('#id_content').trumbowyg($.trumbowyg.config);
+                form.find('#id_content').trumbowyg('html', response.content);
+                form.find('#custom_email_type option').remove();
+    }
+
+    $('.fetch-email').on('click', function(e){
+        e.preventDefault()
+        let formData = new FormData()
+        formData = validatePrepare(this)
+        if(!formData) return
+        saveForm(formData)
+        $('[data-felix-modal="modal_send_custom_email"]').click();
+        let type = 'final_quote'
+        
+        let url = `/health-insurance/deals/${_deal_id}/email/${type}/`
+        $.ajax({
+            method: 'GET',
+            url: url,
+            data: '',
+            async: true,
+            success: function(response){
+                debugger
+            console.log(response)
+            updateEmailForm(response)
+            },
+            error: function(error){
+                debugger
+            },
+            'processData': false,
+            'contentType': false,
+            })
+
+        return
+    })
+
+
+    $('.send-email').on('click', function(e){
+        debugger
+        if(!validateEmailForm())
+            return
+        $('[data-felix-modal="modal_send_custom_email"]').click();
+        let type = 'final_quote'
+        
+        let url = `/health-insurance/deals/${_deal_id}/email/${type}/`
+        let data = $('#custom_email_form').serialize()
+        $.ajax({
+            method: 'POST',
+            url: url,
+            data: data,
+            success: function(response){
+                debugger
+            console.log(response)
+            if(response['success']){
+                processEmailResponse(response)
+                location.reload()
+            }
+            //updateEmailForm(response)
+            },
+            error: function(error){
+                debugger
+            },
+            
+            })
+
+        return
+    })
+
+
+    function validateEmailForm(){
+        var form = $('#custom_email_form');
+                var email_type = form.find('#email_type').val();
+
+                // Validations
+                form.find('.error').remove();
+                if(form.find('#id_email').val() == '') {
+                    form.find('#id_email').after('<span class="error">This field is required</span>');
+                    return false;
+                }
+                if(form.find('#id_subject').val() == '') {
+                    form.find('#id_subject').after('<span class="error">This field is required</span>');
+                    return false;
+                }
+
+                form.find('button.send-email').addClass('loader');
+                return true
+    }
+
+    function processEmailResponse(response){
+        if(response.success) {
+                            Utilities.Notify.success('Email sent successfully.', 'Success');
+                            $('#modal_send_custom_email').hide();
+
+    //                         if(response.email_type == 'new_quote' || response.email_type == 'quote_updated') {
+    //                             __AMPLITUDE.logEvent(
+    //                                 __AMPLITUDE.event('motor_quote_email_sent'), {
+    //                                     'deal_id': _deal_id
+    //                                 }
+    //                             );
+                             }
+    }
+    
+
+    $('.next-substage').on('click', function(e){
+        debugger
+        let formData = new FormData()
+        e.preventDefault()
+        formData = validatePrepare(this)
+        if(!formData) return
+        
+        let url = `/health-insurance/deals/${_deal_id}/substage`
+        saveForm(formData)
+    })
+
+        $( document ).ready(function(){
+            document.cookie = "email-trigger=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";            
+                    
+          GetDealStage();
+          UpdateDealStage();
+
+          const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let value = params.some_key;
+        
+        
+        });
+
+
+        function GetDealStage(stage) {
+            debugger
+            if(_deal_id) {
+
+                if(stage === undefined)
+                    stage = '';
+                
+                $.ajax({
+            method: 'GET',
+            url: `/health-insurance/deals/${_deal_id}/get-stage`,
+            data: '',
+            async: false,
+            success: function(response){
+                debugger            
+            $('.health-deal-processes').html(response);
+            },
+            error: function(error){
+                debugger
+            },
+            
+            })
+            }
+        }
+
+
+        var _quoted_products_data;
+    _quoted_products_data = {'products': [], 'quote': {'status': true, 'email': false, 'delete': false}};
+        $('.add-product').on('click', function(){
+            console.log('add product')
+            debugger
+            var error = false;
+                $('.error').remove();
+                
+
+                if(error) return;
+
+               
+                var product = $('#id_product').val();
+                var premium = $('#id_premium').val();
+                var sale_price = $('#id_sale_price').val();
+                var deductible = $('#id_deductible').val();
+                if(!accounting.unformat(sale_price))
+                    sale_price = premium;
+                if(deductible === ""){
+                    document.querySelector('#id_deductible').value = parseFloat("0").toFixed(2)
+                    deductible = parseFloat("0").toFixed(2)
+                }
+                
+                var product = window.products_data['data'];
+                var data = {
+                    'product_id': $('#id_product').val(),
+                    'product_name': product.name,
+                    'product_logo': product.logo,
+                    'currency': 'Dhs',
+                    'default_add_ons': $('#id_default_add_ons').val() || [],
+                    'total_premium' : $('#id_total_premium').val(),
+                    'deductible': deductible,
+                    'deductible_extras': $('#id_deductible_extras').val(),
+                    'insurer_quote_reference': $('#id_insurer_quote_reference').val(),
+                    'premium': premium,
+                    'sale_price': sale_price,
+                    'payment_frequency': $('.payment_frequency select').val(),
+                    'area_of_cover': $('.area_of_cover select').val(),
+                    'copayment': $(".copayment select").val(),
+                    'deductible': $('#id_deductible').val(),
+                    'network': $('#id_network').val(),
+                    'annual_limit': $(".annual_limit select").val(),
+                    'physiotherapy': $('#id_physiotherapy').val(),
+                    'pre_existing_cover': $('#id_pre_existing_cover').val(),
+                    'alternative_medicine_chosen': $('#id_alternative_medicine_chosen').val(),                    
+                    'wellness_benefits': $(".wellness_benefits select").val(),
+                    'dental_benefits': $(".dental_benefits select").val(),
+                    'optical_benefits': $(".optical_benefits select").val(),
+                    'dental_benefits': $(".dental_benefits select").val(),
+                    'maternity_benefits': $(".maternity_benefits select").val(),
+                    'maternity_waiting_period': $(".maternity_waiting_period select").val(),
+                    'alternative_medicine': $(".alternative_medicine select").val(),
+                    'physiotherapy': $(".physiotherapy select").val(),
+                    
+                    'published': true,
+                    'auto_quoted': false,
+                    'is_renewal' : $('#is_renewal_checkbox').checked,
+                    
+                    // 'is_tpl_product': product.is_tpl_product,
+                    // 'allows_agency_repair': product.allows_agency_repair
+                };
+                //'renewal_document' : $('.renewal_document_file')[0].files[0],
+
+                let highlight_index = '';
+
+                if($('#edited_id').val().length) {
+                    if($('#edited_qp_id').val().length)
+                        data['id'] = parseInt($('#edited_qp_id').val());
+                    $.each(_quoted_products_data['products'], function(k, v) {
+                        if(k == parseInt($('#edited_id').val())) {
+                            _quoted_products_data['products'][k] = data;
+                        }
+                    });
+                    highlight_index = parseInt($('#edited_id').val());
+                } else {
+                    _quoted_products_data['products'].push(data);
+                    highlight_index = _quoted_products_data['products'].length - 1;
+                }
+
+                renderQuotedProductsPreview(highlight_index);
+
+                $('.deal-form .products-preview').removeClass('hide');
+                $('.deal-form .form').addClass('hide');
+                $('.renewal_details').toggleClass('hide', true)
+
+        })
+
+        function _toggleProductFormActionButtons () {
+            var quote_id = $('.deal-form').data('quote-id');
+            var quoted_product_length = $('.deal-form .products-preview .products .product').length;
+            $('.quote-submit-send').prop('disabled',  quoted_product_length <= 0);
+
+            if(!quoted_product_length && !$('.deal-form').data('quote-id')) {
+                // _this._resetProductForm();
+
+                // $('.deal-overview .new-deal').addClass('display');
+                // $('.deal-overview .deal-form').removeClass('display');
+
+                // $('.deal-form .form').removeClass('hide');
+                // $('.deal-form .products-preview').addClass('hide');
+            }
+        }
+        $('#renewal_document_form').on('submit', function(event){
+                debugger
+                event.preventDefault();
+                var formData = new FormData(this);
+                url = `/health-insurance/deals/${_deal_id}/quoted-products/json/`
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function (data) {
+                        alert(data)
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+        })
+
+        function SaveQuote(){
+            var formData = new FormData()
+            formData.append('quoted_products_data',JSON.stringify(_quoted_products_data))
+            formData.append('file',document.querySelector('.renewal_document_file').files[0])
+            debugger
+            url = `/health-insurance/deals/${_deal_id}/quoted-products/json/`
+            $.ajax({
+                type: "POST",
+                url: `/health-insurance/deals/${_deal_id}/quoted-products/json/`, 
+                enctype: "multipart/form-data",
+                accepts:"*/*",
+                data: formData,
+                cache: false,
+                success: function(response) {
+                    if(response.success) {
+                        Utilities.Notify.success('Quote updated successfully', 'Success');
+                        if(response.deleted) {
+                            _quoted_products_data['products'] = [];
+                        }
+                        _deal_stages_breadcrumb.find('li[data-id=quote]').addClass('completed');
+                        _deal_stages_breadcrumb.find('li[data-id=documents]').addClass('completed');
+                        var deals_cls = __DEALS;
+
+                        if(send_email) {
+                            var email_type = updated?'quote_updated':'new_quote';
+                            deals_cls._triggerCustomEmailModal(email_type);
+                        }
+
+                        var selected_stage = 'quote';
+                        if(!$('.products-preview .products .row.product').length)
+                            selected_stage = 'new';
+
+                        deals_cls._loadDealStage(selected_stage);
+                        
+                        $('.stage-warning').addClass('hide');
+                        window.location.reload();
+                    }
+
+                    $('.' + _show_loader_class).removeClass(_show_loader_class);
+                },
+                'processData': false,
+                'contentType': false,
+            });
+        }
+    
+
+        function renderQuotedProductsPreview(highlight_index) {
+            if(highlight_index === undefined) highlight_index = -1;
+
+            $('.deal-form .products-preview .products').html('');
+            $.each(_quoted_products_data['products'], function(k, v) {
+                if(v === undefined || ('deleted' in v && v.deleted)) return;
+                var source   = $('#health-deal-quote-add-product-template').html();
+                var template = Handlebars.compile(source);
+                v['index'] = k;
+                $('.deal-form .products-preview .products').append(template(v));
+            });
+            _toggleProductFormActionButtons();
+
+            if(highlight_index > -1) {
+                $('.products .product[data-id=' + highlight_index + ']').addClass('highlight-success');
+
+                setTimeout(function(){
+                    $('.highlight-success').removeClass('highlight-success');
+                }, 2000);
+            }
+        }
+
+        $('.deal-documents-show').on('click', function(){
+            
+        })
+
+        function confirm_delete() {
+            if (window.confirm('Are you sure to delete this document?')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function upload_type(){
+            url = $('.document_upload')[0].dataset.url
+            if ($('.change_upload_type').val() == "on"){
+                url =  url.replace('preapproval', 'postapproval')
+            }
+            else {
+                url =  url.replace('postapproval', 'preapproval')
+            }
+            $('.document_upload').attr('data-url', url)
+        }
+
+        function UpdateDealStage(){
+            debugger
+            let stage_number = document.querySelector('#deal_stage_id').value
+            if(stage_number == 6 && current_sub_stage == 2){
+                //fetchEmailDetails();
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const sendEmail = urlParams.get('send-email');
+            if (sendEmail && sendEmail.toLowerCase() == 'true'){
+                type = 'policy_issuance'
+                fetchEmailDetails(type);
+            }
+            document.querySelectorAll('.deal-stages-breadcrumb li').forEach(i => {
+                if(stage_number == 0){
+                    i.className = 'no-underline lost'
+                }
+                if(i.value == stage_number){
+                    if (i.dataset.id == "won")
+                        i.className = 'no-underline completed'
+                    else
+                        i.className = 'selected current'
+                }
+                else if(stage_number == 6.5 && i.value==6){
+                    i.className = 'selected current'
+                }
+                else if(i.value < stage_number){
+                    i.className = 'no-underline completed'
+                }
+            })
+        }
+
+        function SubStageProcessor(){
+            
+        }
+
+        function downloadAllFiles(type, subtype){
+            debugger
+            let url = `{% url 'health-insurance:download-zipfile' pk=11 type=22 %}`
+            url = url.replace('11', _deal_id)
+            url = url.replace('22', type)
+            if(subtype)
+                url = url + `?subtype=${subtype}`
+            window.location.href = url
+        }
+        
+    </script>
+    <div id="delete_note_csrftoken">
+    {% csrf_token %}
+    </div>
+
+    {% if 'email-trigger' in request.COOKIES %}
+   
+    {% endif %}
+
+    <script type="text/javascript">        
+        
+        document.querySelector('#countries-button').addEventListener('click', function(){
+            $('.flagstrap').flagStrap({buttonSize: "btn-md",});
+        })
+        
+        $('body').on('focus',".datepicker-dob", function(){
+            $(this).datepicker();
+        });
+        
+        function addMember(elem){
+            debugger
+            let relative = elem.className.toLowerCase()
+            let rel = document.querySelector(`#${relative}`)
+            if(!rel){
+                relative = relative.replace(relative[0], relative[0].toLocaleUpperCase())
+                rel = document.querySelector(`#${relative}`)
+            }                
+            let count = parseInt(rel.value)
+            count += 1
+            let new_elem = CreateElement(relative, count)
+            let addElem = document.querySelector(`#additional_member_details_${relative.toLowerCase()}`)
+            if(!addElem)
+                addElem = document.querySelector(`#additional_member_details_${relative}`)
+                $(addElem).last().append(new_elem)
+            document.querySelector(`#${relative}`).value = count
+            document.getElementById('countries-button').click()
+        }
+        
+        function removeMember(elem){
+            debugger
+            console.log(elem)
+            let relative = elem.className.toLowerCase()
+            let rel = document.querySelector(`#${relative}`)
+            if(!rel){
+                relative = relative.replace(relative[0], relative[0].toLocaleUpperCase())
+                rel = document.querySelector(`#${relative}`)
+            }
+            $(`#additional_member_details_${relative.toLowerCase()}:last-child`)
+            let count = parseInt(document.querySelector(`#${relative}`).value)
+            let elemRemove = document.querySelector(`#additional_member_details_${relative.toLowerCase()}_${count}`)
+            if(!elemRemove)
+                elemRemove = $(`#additional_member_details_${relative}_${count}`)
+            //$(`#additional_member_details_${relative.toLowerCase()}_${count}`).last().remove()
+            $(elemRemove).last().remove()
+            count -= 1
+            document.querySelector(`#${relative}`).value = count
+        }
+        
+        document.querySelector('#add_members').addEventListener('change', function(){
+            if(this.checked){
+                document.querySelector('#additional_member_div').style.display = 'block'
+            }
+            else{
+                document.querySelector('#additional_member_div').style.display = 'none'
+            }
+        })
+        
+        $('#datepicker').setDefaults({
+          showOn: "both",
+          buttonImageOnly: true,
+          buttonImage: "calendar.gif",
+          buttonText: "Calendar"
+        });
+        
+        
+        </script>
+
+    <script>
+        $('.toggle-details').on('click', function(){
+            console.log('check')
+            debugger
+            this.closest('.info-container').querySelectorAll('.collapsable').forEach(m => {
+                debugger
+                $(m).toggleClass("flex hide")
+            })
+            // let collapsable = this.closest('.info-container').querySelectorAll('.collapsable')
+            // collapsable.toggle()
+        })
+
+        function default_agent_id(sec = 1000){
+            const agent_id = $('body').data('agent');
+            $('#id_assigned_to').val(agent_id);
+            $('#id_assigned_to option:eq(0)').removeAttr("selected");
+            $('#id_assigned_to option[value='+agent_id+']').attr("selected");
+            $('.task #id_assigned_to_chosen .chosen-single span').html($('#id_assigned_to option[value='+agent_id+']').text());
+
+            setTimeout(function(){
+                console.log(agent_id); 
+                $('#id_assigned_to').val(agent_id);
+                $('#id_assigned_to option:eq(0)').removeAttr("selected");
+                $('#id_assigned_to option[value='+agent_id+']').attr("selected");
+                $('.task #id_assigned_to_chosen .chosen-single span').html($('#id_assigned_to option[value='+agent_id+']').text());
+            },sec);
+        }
+        function load_upload_doc_info(){
+            $.ajax({
+                method: 'GET',
+                url: '',
+                success: function(response){
+                    console.log(response)
+                    if(response.preapproval!='[]'){
+                        response.preapproval.map((file) => {
+                            $(".upload-files-approval .col-6").each(function( index ) {
+                                if(file.document_name==$(this).find('.single-upload-parent-div .parent-div').attr('data-upload')){
+                                    $(this).find('.file-name').html(file.label);
+                                    $(this).find('.url').attr('href',file.url_for_linking);
+
+                                    $(this).find('.single-upload-parent-div .parent-div .file-name').show();
+                                    $(this).find('.single-upload-parent-div .parent-div .edit-upload-doc').show();
+                                    $(this).find('.single-upload-parent-div .parent-div .url').show();
+                                    $(this).find('.single-upload-parent-div .parent-div form').hide();
+                                }
+                            });
+                        })
+                    }
+                    if(response.postapproval!='[]'){
+                        response.postapproval.map((file) => {
+                            $(".upload-files-postapproval .col-6").each(function( index ) {
+                                console.log($(this))
+                                if(file.document_name==$(this).find('.single-upload-parent-div .parent-div').attr('data-upload')){
+                                    $(this).find('.file-name').html(file.label);
+                                    $(this).find('.url').attr('href',file.url_for_linking);
+
+                                    $(this).find('.single-upload-parent-div .parent-div .file-name').show();
+                                    $(this).find('.single-upload-parent-div .parent-div .edit-upload-doc').show();
+                                    $(this).find('.single-upload-parent-div .parent-div .url').show();
+                                    $(this).find('.single-upload-parent-div .parent-div form').hide();
+                                }
+                            });
+                        })
+                    }
+                },
+                error: function(errors){
+                    Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+                }
+            });
+        }
+
+        function check_doc_files_health(){
+            $('.upload-files .single-upload-parent-div table').each(function(i, obj) {
+                let file = 0
+                $(this).find('tr').each(function(i, obj) {
+                    file = file + 1
+                })
+                if(file<=1){
+                    $(this).closest('.single-upload-parent-div').find('.down-d').removeClass('d-block')
+                    $(this).closest('.single-upload-parent-div').find('.down-d').addClass('d-none')
+                }
+            })
+        }
+        
+        // A $( document ).ready() block.
+        $( document ).ready(function() {
+            setTimeout(function() { load_upload_doc_info() }, 3000);
+            setTimeout(function() { check_doc_files_health() }, 3000);
+            $('#modal_update_note #note_form_edit').on('submit',function(){
+                const pk = $(this).find('input[name=pk]').val();
+                console.log(pk,$(this).find('textarea').val())
+                $('.note-id-'+pk).html($(this).find('textarea').val())
+            });
+            $('.deal-number-editable .editable').on('click','.editable-submit',function(e){
+                e.preventDefault();
+                var num = $(this).parents('form').find('input').val();
+                console.log(num)
+                num = num.replace(/[, ]+/g, "").trim();
+                num = num.replace(/[% ]+/g, "").trim();
+                $(this).parents('form').find('input').val(num);
+                // and when you done:
+                $(this).submit();
+                setTimeout(function(){
+                    if(!$('div').hasClass('editable-error-block') || $('.editable-error-block').html()==''){
+                        location.reload();
+                    }
+                } , 500);
+            });
+            $('.deal-number-editable .editable').on('focus','input',function(){
+                if ($(this).val() == '') {
+                    return
+                }
+                let num = $(this).val();
+                num = num.replace(/[, ]+/g, "").trim();
+                $(this).val(parseFloat(num));
+            });
+            $('.deal-number-editable .editable').on('focusout','input',function(){
+                var value = $(this).val()
+                if(!value.includes('.')){
+                    $(this).val(accounting.formatNumber(value, 0, ',', '.'));
+                }
+            });
+            $('.deal-customer-editable .editable').on('click','.editable-submit',function(e){
+                $(this).submit();
+                setTimeout(function(){ 
+                    if(!$('div').hasClass('editable-error-block') || $('.editable-error-block').html()==''){
+                        location.reload();
+                    }
+                } , 750);
+            });
+            default_agent_id();
+
+            $('body').on('click','.edit-upload-doc',function(){
+                $(this).parents('.parent-div').find('a').hide();
+                $(this).parents('.parent-div').find('form').show();
+                $(this).parents('.parent-div').find('.file-name').hide();
+            });
+
+            $('body').on('submit','.upload-form-data',function(e){
+                e.preventDefault();
+                var formdata = new FormData(this);
+                var requestOptions = {
+                    method: 'POST',
+                    body: formdata,
+                    redirect: 'follow'
+                };
+
+                const self = $(this);
+
+                fetch($(this).attr('action'), requestOptions)
+                .then((response) => {
+                    console.log(response,response.data)
+                    return response.json();
+                })
+                .then((result) => {
+                    console.log(result)
+                    self.parents('.parent-div').find('.url').attr('href',result.file[0].url)
+                    self.parents('.parent-div').find('.file-name').html(result.file[0].label)
+                    self.parents('.parent-div').find('a').show();
+                    self.parents('.parent-div').find('form').hide();
+                    self.parents('.parent-div').find('.file-name').show();
+                    Utilities.Notify.success('File Uploaded.', 'Success'); 
+                })
+                .catch(error => Utilities.Notify.error('Please check the file format.', 'Error'));
+            });
+        });
+
+    </script>    
+{% endblock %}

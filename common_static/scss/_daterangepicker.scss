@@ -1,0 +1,9 @@
+// Date Range Picker overrides
+
+.daterangepicker {
+	.ranges{
+		li.active {
+			background-color: $primary !important;
+		}
+	}
+}

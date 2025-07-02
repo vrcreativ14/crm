@@ -1,0 +1,80 @@
+{% load static %}
+    <form class="text-right" action="{% url 'mortgage:stage' %}" method="POST" id="deal-stage-quote-form">
+        {% csrf_token %}
+        <input type="hidden" name="deal" value={{deal.pk}}>
+        <input type="hidden" name="stage" value={{deal.stage}}>
+        {% block head %}
+        {% endblock %}
+        {% block content %}
+        {% endblock %}
+        {% block button %} 
+        {% if deal.stage == "quote" %}
+        {% if deal.deal_bank %}
+        <button type="submit" class="btn-md button btn-primary w-100 d-none">Next</button>
+        {% else %}
+        <button type="submit" class="btn-nexus btn-nexus-golden d-none">Next</button>
+        {% endif %}
+        {% endif %}
+        {% endblock %} 
+    </form>
+    {% if deal.stage != "quote" %}
+        {% include 'mortgage/deal/components/bank_info_modal.djhtml' %}
+    {% endif %}
+{% block extra_js %}
+<div class="d-none" id="sub-stage-csrf">
+    {% csrf_token %}
+</div>
+<!-- <span>{{deal.stage}}{{deal_stage_number}}</span> -->
+<script>
+    $( document ).ready(function() {
+        $('#deal-stage-quote-form').submit(function(eventObj) {
+            eventObj.preventDefault()
+            if ( $('#deal-stage-quote-form input[name="stage"]').val() == "quote"){
+                if ($('#deal-stage-quote-form input[name="bank"]')[0] === undefined){
+                    if ("{{selected_bank}}") {}
+                    else {
+                    Utilities.Notify.error('The bank should be selected from customer end only', 'Error');
+                    return;
+                    }
+                }
+            }
+            if($('div').hasClass('payment-content-form')){
+                var fromDataStage = new FormData();
+                fromDataStage.append('bankrefno', $('#bank-reference-number').val());
+                fromDataStage.append('loan_amount', parseInt($('#mortgage-loan-amount').val()));
+                fromDataStage.append('property_price', parseInt($('#mortgage-property-price').val()));
+                fromDataStage.append('tenure_months', parseInt($('#mortgage-tenure-months').val()));
+                fromDataStage.append('ltv', parseFloat($('#mortgage-ltv').val()));
+                fromDataStage.append('csrfmiddlewaretoken', $('#sub-stage-csrf input').val());
+                $.ajax({
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    url: '{% url "mortgage:bank-ref-number" pk=deal.pk %}',
+                    data: fromDataStage,
+                    success: function(response){
+                    },
+                    error: function(errors){
+                        Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+                    }
+                })
+            }
+            $.ajax({
+                method: $(this).attr('method'),
+                url:$(this).attr('action'),
+                data:$('#deal-stage-quote-form').serialize(),
+                success: function(response){
+                    Utilities.Notify.success(response.message, 'Success');
+                    document.cookie = "email-trigger=true; path=/";
+                    setTimeout(function(){ location.reload(); }, 2000);
+                },
+                error: function(errors){
+                    Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+                }
+            })
+        })
+    })
+
+</script>
+{% endblock %}

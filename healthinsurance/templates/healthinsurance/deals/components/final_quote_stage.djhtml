@@ -1,0 +1,132 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container">
+    {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+    <div class="heading m-b-5">Sub Stages</div>
+    <div class="row">
+        <div class="col-lg-6">
+    <ul class="deal-stages-breadcrumb nav">
+        <li data-id='new' class="no-underline nav-item {% if sub_stage_number == 1 %}current selected {% else %} completed {% endif %} substage_1" >
+            <a href="#" data-bs-target="received">
+                Send to client
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+        <li data-id='new' class="no-underline nav-item substage_2 {% if sub_stage_number == 2 %}current selected {% elif sub_stage_number > 2 %} completed {% endif %}" >
+            <a href="#" data-bs-target="sent">
+                Signed
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+        <li data-id='new' class="no-underline nav-item substage_3 {% if sub_stage_number == 3 %}current selected {% endif %}" >
+            <a href="#" data-bs-target="world-check">
+                Send to Insurer
+                <span class="duration">{{ deal.created_date|naturalday|capfirst }}</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+<!-- <div class="heading m-b-5">Sub Stages</div> -->
+
+<div class="tab-content" id="myTabContent">
+    {% if not request.user.userprofile.has_producer_role %}
+    <div class="tab-pane fade substage_1 {% if sub_stage_number == 1 %}show active {% endif %}" id="send_to_client" role="tabpanel" aria-labelledby="received-tab">
+    <div class="row m-b-5">
+            <label class="form-check-label">
+                Once the final quote has been received from the insurer please send it to the client
+            </label>
+        </div>
+        <div class="heading m-b-5">Final Premium (inc VAT) *</div>
+        <form method="POST">
+            <div class="row">
+                <div class="col-lg-4">
+                    <input class="form-control required" name="total_premium" type="number" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                <label>Upload Final Quote *</label>
+                <input type="file" name="final_quote_document" class="required"/>
+
+                </div>
+                <div class="col-lg-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <label>Upload Final Quote Additional Document</label>
+                    <input type="file" name="final_quote_additional_document" />
+                </div>
+            </div>
+            <br/>
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Save and Send' class='btn-nexus btn-nexus-blue float-right fetch-email' %}
+        </form>
+        <br/>
+    </div>
+    <div class="tab-pane fade substage_2 {% if sub_stage_number == 2 %}show active {% endif %}" id="signed" role="tabpanel" aria-labelledby="home-tab">
+        <div class="heading m-b-5">Waiting for the client to sign and upload the final quotation.</div>
+        <form method="POST">
+        <div class="row m-b-5">
+            <div class="col-lg-4">
+                <div class="form-check">
+                <input class="form-check-input required" type="checkbox" value="" name="final_quote_uploaded" id="final_quote_uploaded" required>
+                <label class="form-check-label">
+                    <b>Signed Final quotation</b> has been uploaded to documents *
+                </label>
+            </div>
+            </div>
+            </div>
+            <hr/>
+                {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' class='btn-nexus btn-nexus-blue next-substage float-right' %}
+                {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Resend Final Quote' color='grey' action='resend-quote' %}
+       
+            
+        </form>
+        <form class="void-deal-form">
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Void Deal' class='btn-nexus btn-info btn-nexus-blue void-deal' %}
+        </form>
+    </div>
+    <div class="tab-pane fade substage_3 {% if sub_stage_number == 3 %}show active {% endif %}" id="send_to_insurer" role="tabpanel" aria-labelledby="home-tab">        
+        <form method="POST">
+        <div class="row m-b-5">
+            
+
+            <div class="col-lg-4">
+                <div class="form-check">
+                <input class="form-check-input required" type="checkbox" value="" name="final_quote_uploaded" id="final_quote_uploaded" required>
+                <label class="form-check-label">
+                    Signed Final quote has been verified ?
+                </label>
+            </div>
+            </div>
+            </div>
+        <div class="row m-b-5">
+            
+
+            <div class="col-lg-4">
+                <div class="form-check">
+                <input class="form-check-input required" type="checkbox" value="" name="final_quote_uploaded" id="final_quote_uploaded" required>
+                <label class="form-check-label">
+                    Final quotation has been sent to insurer ?
+                </label>
+            </div>
+            </div>
+            </div>
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' class='btn-nexus btn-nexus-blue next-substage float-right' %}
+        </form>
+    </div>
+    {% else %}
+    <br/>
+    <br/>
+    {% endif %}
+</div>
+</div>
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
+    <div>
+        <!-- <button class="loader-blue quote-submit m-r-10 float-right btn btn-nexus-golden btn-md btn-wide-deal">
+           Next Step
+        </button> -->
+    </div>
+</div>

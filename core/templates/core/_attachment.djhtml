@@ -1,0 +1,33 @@
+<div class="row files">
+    <div class="col-8">
+        <a data-id={{document.pk}} href="{{ document.get_url_for_linking_in_frontend }}"
+
+           {% if document.can_preview_in_frontend %}data-preview-image="{{ document.file.url }}"{% endif %}
+
+           target="_blank"
+           class="text-editable attachment-field"
+           data-class="form-control-sm"
+           data-name="label"
+           data-toggle="manual"
+           data-value="{{ document.label }}"
+           data-title="{{ document.label }}"
+           data-pk="{{ document.pk }}"
+           data-url="{% url 'core:update-attachment' pk=document.pk %}"
+        >{{ document.label }}</a>
+        <a class="edit-file" href="javascript:"><i class="ti-pencil"></i></a>
+        {% comment %}
+            <div class="dates text-muted">
+                    {{ document.created_on }}
+                    {% if document.added_by %}
+                        by {{ document.added_by.get_full_name }}
+                    {% endif %}
+                </div>
+        {% endcomment %}
+    </div>
+    <div class="col-2">
+        {{ document.get_file_extension|upper }}
+    </div>
+    <div class="col-2 text-right">
+        <a href="#" class="delete-file" data-id="{{ document.pk }}">Delete</a>
+    </div>
+</div>

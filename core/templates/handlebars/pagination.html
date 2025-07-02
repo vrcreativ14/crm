@@ -1,0 +1,17 @@
+{% load static %}
+{% verbatim %}
+<script id="pagination-template" type="text/x-handlebars-template">
+
+{{#times pages}}
+<li class="page-item {{#ifCond this ../current_page}}active{{/ifCond}}">
+    <a data-number="{{this}}" href="javascript:" class="page-link {{#ifCond this ../current_page}}active{{/ifCond}}">{{this}}</a>
+</li>
+{{/times}}
+</script>
+<script id="empty-row-template" type="text/x-handlebars-template">
+	<div class="no-record-found">
+		<i class="ti-search"></i>
+		No Record Found
+	</div>
+</script>
+{% endverbatim %}

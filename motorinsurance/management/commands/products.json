@@ -1,0 +1,2027 @@
+[
+  {
+    "insurer": "AXA",
+    "logo": "/static/images/product_logos/axa.png?build_id=1527072792.449245",
+    "code": "AXA-PERFECT-2017-05-29",
+    "name": "AXA Perfect",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "7-days rental car available for an extra Dhs 173.25.",
+      "help_text": "If you select this add-on AXA will provide you with a rental car for a maximum of 7 days in case of an accident.",
+      "price": 173.25
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "AXA roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen, windows & sunroof damage cover limited to Dhs 5,000 incl.",
+      "help_text": "AXA will cover the cost of replacing/repairing a damaged windscreen, windows or sunroof. Up until Dhs 5,000 AXA will not charge you any excess. Any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 3,500.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 4,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks for damaged locks or stolen keys incl.",
+      "help_text": "AXA will not charge you any excess and your no-claims history will be unaffected if your locks need to be replaced."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover incl.",
+      "help_text": "Oman cover for own damage and third party liability are both included in this policy."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "AXA off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 3,500,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "AXA",
+    "logo": "/static/images/product_logos/axa.png?build_id=1527072792.449245",
+    "code": "AXA-PRESTIGE-2017-05-29",
+    "name": "AXA Prestige",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "Car rental reimbursement available for an extra Dhs 173.25.",
+      "help_text": "If you select this add-on AXA will reimburse you for up to Dhs 1,500 in car rental costs for a maximum of 7 days in case of an accident.",
+      "price": 173.25
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "AXA roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 350,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen, windows & sunroof damage cover incl.",
+      "help_text": "AXA will cover the cost of replacing/repairing a damaged windscreen, windows or sunroof and you will not be charged any excess. Any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 6,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 4,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks for damaged locks or stolen keys incl.",
+      "help_text": "AXA will not charge you any excess and your no-claims history will be unaffected if your locks need to be replaced."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover incl.",
+      "help_text": "Oman cover for own damage and third party liability are both included in this policy."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "AXA off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 5,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "AXA",
+    "logo": "/static/images/product_logos/axa.png?build_id=1527072792.449245",
+    "code": "AXA-SELECT-2017-05-29",
+    "name": "AXA Select",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "7-days rental car available for an extra Dhs 173.25.",
+      "help_text": "If you select this add-on AXA will provide you with a rental car for a maximum of 7 days in case of an accident.",
+      "price": 173.25
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "AXA roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "No special windscreen, windows or sunroof damage cover.",
+      "help_text": "This policy doesn't make any special provisions for windscreen or glass damage. This means that if your windscreen, windows or sunroof get damaged your standard policy conditions will apply. You'll be charged your excess and your no-claims record will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for emergency medical expenses.",
+      "help_text": null
+    },
+    "personal_belongings": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for personal belongings.",
+      "help_text": null
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover incl.",
+      "help_text": "Oman cover for own damage and third party liability are both included in this policy."
+    },
+    "off_road_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No off-road cover.",
+      "help_text": null
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 3,500,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "DAT",
+    "logo": "/static/images/product_logos/dar-al-takaful.png?build_id=1527072792.449245",
+    "code": "DAT-ALMASA-2017-08-09",
+    "name": "DAT Platinum",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": false,
+      "description": "10-days rental car incl.",
+      "help_text": "DAT will provide you with a rental car for a maximum of 10 days in case of an at-fault accident with no limit on the number of claims per year."
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "IMC Platinum roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for driver incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers employed by you incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl. for cars under 5 years old.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen damage cover limited to Dhs 10,000 incl.",
+      "help_text": "DAT will cover the cost of replacing/repairing damaged windscreen. Up until Dhs 10,000 DAT will not charge you any excess and any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 5,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 5,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for replacement locks",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": true,
+      "description": "Oman cover available for an extra Dhs 157.50.",
+      "help_text": "If you select this add-on you will get coverage in Oman for own damage and third party liability.",
+      "price": 157.50
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "DAT off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and third parties. Limited to 500m from the main road. Please make sure you read DAT's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 3,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "DAT",
+    "logo": "/static/images/product_logos/dar-al-takaful.png?build_id=1527072792.449245",
+    "code": "DAT-KHAAS-2018-01-21",
+    "name": "DAT Silver",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "10-days rental car for an at-fault accident available for an extra Dhs 210.00.",
+      "help_text": "If you select this add-on DAT will provide you with a rental car for a maximum of 10 days in case of an at-fault accident with no limit on the number of claims per year.",
+      "price": 210.00
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "AAA Silver roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl. for cars under 5 years old.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen damage cover limited to Dhs 2,000 incl.",
+      "help_text": "DAT will cover the cost of replacing/repairing damaged windscreen. Up until Dhs 2,000 DAT will not charge you any excess and any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 2,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 1,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": true,
+      "description": "Oman cover available for an extra Dhs 262.50.",
+      "help_text": "If you select this add-on you will get coverage in Oman for own damage and third party liability.",
+      "price": 262.50
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": true,
+      "description": "DAT off-road cover available for an extra Dhs 315.00.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and third parties. Limited to 500m from the main road. Please make sure you read DAT's terms and conditions for more info.",
+      "price": 315.00
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "DAT",
+    "logo": "/static/images/product_logos/dar-al-takaful.png?build_id=1527072792.449245",
+    "code": "DAT-MUMTAZ-2017-08-09",
+    "name": "DAT Gold",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": false,
+      "description": "10-days rental car incl. for an at-fault accident",
+      "help_text": "DAT will provide you with a rental car for a maximum of 10 days in case of an at-fault accident with no limit on the number of claims per year."
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "IMC Platinum roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for driver incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers employed by you incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl. for cars under 5 years old.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen damage cover limited to Dhs 5,000 incl.",
+      "help_text": "DAT will cover the cost of replacing/repairing damaged windscreen. Up until Dhs 5,000 DAT will not charge you any excess and any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 5,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 5,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": true,
+      "description": "Oman cover available for an extra Dhs 157.50.",
+      "help_text": "If you select this add-on you will get coverage in Oman for own damage and third party liability.",
+      "price": 157.50
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "DAT off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and third parties. Limited to 500m from the main road. Please make sure you read DAT's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 3,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Dubai Insurance",
+    "logo": "/static/images/product_logos/dubai-insurance.png?build_id=1527072792.449245",
+    "code": "DI-GOLD-2017-08-10",
+    "name": "Dubai Insurance Gold",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "7-days rental car for an at-fault accident available for an extra Dhs 120.75.",
+      "help_text": "If you select this add-on DIC will provide you with a rental car for a maximum of 7 days in case of an at-fault accident.",
+      "price": 120.75
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "DIC Gold roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen damage cover limited to Dhs 3,000 incl.",
+      "help_text": "DIC will cover the cost (up to Dhs 3,000) of replacing/repairing a damaged windscreen and they will not charge you any excess. However, your no-claims history will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 2,500.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 1,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks covered up to Dhs 1,000 for lost or stolen keys.",
+      "help_text": "DIC will charge you your excess but your no-claims history will be unaffected."
+    },
+    "oman_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage in Oman.",
+      "help_text": "No coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Limited DIC off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and not third parties. Dune bashing is NOT covered. Limited to 500m from the main road. Additional excess of Dhs 1,500 for off-road damage! Please make sure you read DIC's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Dubai Insurance",
+    "logo": "/static/images/product_logos/dubai-insurance.png?build_id=1527072792.449245",
+    "code": "DI-PLATINUM-2017-08-10",
+    "name": "Dubai Insurance Platinum",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": false,
+      "description": "7-days rental car incl. for an at-fault accident",
+      "help_text": "DIC will provide you with a rental car for a maximum of 7 days in case of an at-fault accident."
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "DIC Platinum roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for driver incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers employed by you incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen, windows and sunroof damage cover limited to Dhs 5,000 incl.",
+      "help_text": "DIC will cover the cost of replacing/repairing damaged windscreen. Up until Dhs 5,000 DIC will not charge you any excess. However, your no-claims history will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 5,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 1,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks covered up to Dhs 2,500 for lost or stolen keys.",
+      "help_text": "DIC will charge you your excess but your no-claims history will be unaffected."
+    },
+    "oman_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage in Oman.",
+      "help_text": "No coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Limited DIC off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and not third parties. Dune bashing is NOT covered. Limited to 500m from the main road. Additional excess of Dhs 1,500 for off-road damage! Please make sure you read DIC's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Dubai Insurance",
+    "logo": "/static/images/product_logos/dubai-insurance.png?build_id=1527072792.449245",
+    "code": "DI-SILVER-2017-08-10",
+    "name": "Dubai Insurance Silver",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "7-days rental car for an at-fault accident available for an extra Dhs 120.75.",
+      "help_text": "If you select this add-on DIC will provide you with a rental car for a maximum of 7 days in case of an at-fault accident.",
+      "price": 120.75
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "DIC Silver roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for storm and flood damage.",
+      "help_text": null
+    },
+    "riot_and_strike": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for riot and strike damage.",
+      "help_text": null
+    },
+    "windscreen_and_glass_damage": {
+      "available": false,
+      "add_on": false,
+      "description": "No special cover for windscreen & glass damage.",
+      "help_text": "This policy doesn't make any special provisions for windscreen and glass damage. This means that if your windscreen or windows get damaged your standard policy conditions will apply. You'll be charged your excess and your no-claims record will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for emergency medical expenses.",
+      "help_text": null
+    },
+    "personal_belongings": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for personal belongings.",
+      "help_text": null
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage in Oman.",
+      "help_text": "No coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No off-road cover.",
+      "help_text": null
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Emirates",
+    "logo": "/static/images/product_logos/emirates.png?build_id=1527072792.449245",
+    "code": "EMIRATES-MARKABATI-2017-05-29",
+    "name": "Emirates Gold",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "Car rental reimbursement available for an extra Dhs 210.00.",
+      "help_text": "If you select this add-on, in case of an accident EIC will reimburse you for up to Dhs 100 per day in car rental costs for a maximum of 7 days per claim and 12 days per year.",
+      "price": 210.00
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "IMC Gold roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen & windows damage cover limited to Dhs 2,500 incl.",
+      "help_text": "EIC will cover the cost of replacing/repairing damaged windscreen or windows. Up until Dhs 2,500 EIC will not charge you any excess and any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 2,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 2,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": true,
+      "description": "Oman cover available for an extra Dhs 630.00.",
+      "help_text": "If you select this add-on you will get coverage in Oman for own damage and third party liability.",
+      "price": 630.00
+    },
+    "off_road_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No off-road cover.",
+      "help_text": null
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Insurance House",
+    "logo": "/static/images/product_logos/insurance-house.png?build_id=1527072792.449245",
+    "code": "INSURANCE-HOUSE-GOLD-2018-01-17",
+    "name": "Insurance House Gold",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "7-days rental car available for an extra Dhs 157.50.",
+      "help_text": "If you select this add-on IH will provide you with a rental car for a maximum of 7 days in case of an accident.",
+      "price": 157.50
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "IH Gold roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage for riot and strike damage.",
+      "help_text": null
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen damage cover limited to Dhs 2,000 incl.",
+      "help_text": "IH will cover the cost (up to Dhs 2,000) of replacing/repairing a damaged windscreen and they will not charge you any excess. However, your no-claims history will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 2,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 1,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage in Oman.",
+      "help_text": "No coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No off-road cover.",
+      "help_text": null
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Oman",
+    "logo": "/static/images/product_logos/oman.png?build_id=1527072792.449245",
+    "code": "OMAN-GOLD-2017-05-29",
+    "name": "Oman Gold",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "Car rental reimbursement available for an extra Dhs 225.75.",
+      "help_text": "If you select this add-on, in case of an accident OIC will reimburse you for up to Dhs 100 per day in car rental costs for a maximum of 7 days per claim and 2 claims per year. The total reimbursement is capped at Dhs 700 per year.",
+      "price": 225.75
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "OIC Gold roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for driver incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers employed by you incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen & windows damage cover limited to Dhs 3,000 incl.",
+      "help_text": "OIC will cover the cost of replacing/repairing damaged a windscreen or windows. Up until Dhs 3,000 OIC will not charge you any excess. However, your no-claims history will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 5,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 5,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks covered up to Dhs 1,000 for lost or stolen keys.",
+      "help_text": "OIC will charge you your excess and your no-claims history will be affected."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover incl.",
+      "help_text": "Oman cover for own damage and third party liability are both included in this policy. Let us know before you go to Oman so that we can get you your free certificate of insurance."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "OIC off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and not third parties. Dune bashing is NOT covered. Double the normal excess for off-road damage! Please make sure you read OIC's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 3,500,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "Oman",
+    "logo": "/static/images/product_logos/oman.png?build_id=1527072792.449245",
+    "code": "OMAN-SILVER-2017-05-29",
+    "name": "Oman Silver",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "Car rental reimbursement available for an extra Dhs 225.75.",
+      "help_text": "If you select this add-on, in case of an accident OIC will reimburse you for up to Dhs 100 per day in car rental costs for a maximum of 7 days per claim and 2 claims per year. The total reimbursement is capped at Dhs 700 per year.",
+      "price": 225.75
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "OIC Silver roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for driver incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers employed by you incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for storm and flood damage.",
+      "help_text": null
+    },
+    "riot_and_strike": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for riot and strike damage.",
+      "help_text": null
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "No special cover for windscreen & glass damage.",
+      "help_text": "This policy doesn't make any special provisions for windscreen or glass damage. This means that if your windscreen or windows get damaged your standard policy conditions will apply. You'll be charged your excess and your no-claims history will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for emergency medical expenses.",
+      "help_text": null
+    },
+    "personal_belongings": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for personal belongings.",
+      "help_text": null
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No Oman cover.",
+      "help_text": "No coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No off-road cover.",
+      "help_text": null
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "QIC",
+    "logo": "/static/images/product_logos/qic.png?build_id=1527072792.449245",
+    "code": "QIC-PRESTIGE-2018-01-21",
+    "name": "QIC Prestige",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "7-days rental car available for an extra Dhs 189.00.",
+      "help_text": "If you select this add-on QIC will provide you with a rental car for a maximum of 7 days in case of an accident and only once per policy period.",
+      "price": 189.00
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "AAA Silver roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen & glass damage cover limited to Dhs 3,000 incl.",
+      "help_text": "In case of windscreen or windows damage of up until Dhs 3,000 QIC will not charge you any excess. Up to 1 claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 3,500.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 5,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks for lost or stolen keys incl.",
+      "help_text": "QIC will charge you your excess and your no-claims history will be affected."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "No Oman cover.",
+      "help_text": "QIC covers own damage in the parts of Oman that fall within the borders of the UAE. However, for all intents and purposes there is no coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there. "
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Limited QIC off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and not third parties. Dune bashing is NOT covered. Additional excess of Dhs 1,000 for off-road damage! Please make sure you read QIC's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "RSA",
+    "logo": "/static/images/product_logos/rsa.png?build_id=1527072792.449245",
+    "code": "RSA-EXECUTIVE-2017-05-29",
+    "name": "RSA Executive",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": false,
+      "description": "10-days rental car included.",
+      "help_text": "In the event of an accident, RSA will provide you with a rental car for a maximum of 10 days per claim with no limit on the number of claims per year."
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "RSA roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for driver incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers employed by you incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death."
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen, windows & sunroof damage cover incl.",
+      "help_text": "RSA will cover the cost of replacing/repairing a damaged windscreen, windows or sunroof and you will not be charged any excess. Any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 6,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 7,500.",
+      "help_text": "This is compensation for the loss or damage to Your personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks or keys covered up to Dhs 7,500 for lost or stolen keys.",
+      "help_text": "RSA will charge you your excess but your no-claims history will be unaffected."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover incl.",
+      "help_text": "Oman cover for own damage and third party liability are both included in this policy."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "RSA off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and third parties. Dune bashing is NOT covered. Please make sure you read RSA's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 5,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "RSA",
+    "logo": "/static/images/product_logos/rsa.png?build_id=1527072792.449245",
+    "code": "RSA-SMART-2017-05-29",
+    "name": "RSA Smart",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "10-days rental car available for an extra Dhs 210.00.",
+      "help_text": "If you select this add-on, in the event of an accident RSA will provide you with a rental car for a maximum of 10 days per claim with no limit on the number of claims per year.",
+      "price": 210.00
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": true,
+      "description": "RSA roadside assistance available for an extra Dhs 36.75.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info.",
+      "price": 36.75
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen, windows & sunroof damage cover incl.",
+      "help_text": "RSA will cover the cost of replacing/repairing a damaged windscreen, windows or sunroof and you will not be charged any excess. Any claim made under this cover will not affect your no-claims history."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 3,500.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 5,000.",
+      "help_text": "This is compensation for the loss or damage to Your personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks or keys covered up to Dhs 5,000 for lost or stolen keys.",
+      "help_text": "RSA will charge you your excess but your no-claims history will be unaffected."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover incl.",
+      "help_text": "Oman cover for own damage and third party liability are both included in this policy."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "RSA off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and third parties. Dune bashing is NOT covered. Please make sure you read RSA's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 3,500,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "UNION",
+    "logo": "/static/images/product_logos/union.png?build_id=1527072792.449245",
+    "code": "UNION-STANDARD-2017-07-20",
+    "name": "Union Silver",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "5-days rental car available for an extra Dhs 152.25.",
+      "help_text": "If you select this add-on UIC will provide you with a rental car for a maximum of 5 days in case of an accident.",
+      "price": 152.25
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": true,
+      "description": "UIC Silver roadside assistance incl. Gold available for an extra Dhs 26.25.",
+      "help_text": "UIC Silver roadside assistance is included in this policy by default, however UIC Gold is available as an upgrade. Check out the difference between the two <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">here</a>.",
+      "price": 26.25
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "No special cover for windscreen & glass damage.",
+      "help_text": "This policy doesn't make any special provisions for windscreen damage. This means that if your windscreen or windows get damaged your standard policy conditions will apply. You'll be charged your excess and your no-claims record will be affected."
+    },
+    "emergency_medical_expenses": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for emergency medical expenses.",
+      "help_text": null
+    },
+    "personal_belongings": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for personal belongings.",
+      "help_text": null
+    },
+    "replacement_keys_and_locks": {
+      "available": false,
+      "add_on": false,
+      "description": "No cover for replacement locks.",
+      "help_text": null
+    },
+    "oman_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No coverage in Oman.",
+      "help_text": "No coverage in Oman in this policy so you'll have to purchase insurance at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": false,
+      "add_on": false,
+      "description": "No off-road cover.",
+      "help_text": null
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 2,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  },
+  {
+    "insurer": "UNION",
+    "logo": "/static/images/product_logos/union.png?build_id=1527072792.449245",
+    "code": "UNION-SUPERIOR-2017-07-20",
+    "name": "Union Gold",
+    "is_tpl_product": false,
+    "allows_agency_repair": true,
+    "rent_a_car": {
+      "available": true,
+      "add_on": true,
+      "description": "5-days rental car available for an extra Dhs 152.25.",
+      "help_text": "If you select this add-on UIC will provide you with a rental car for a maximum of 5 days in case of an accident.",
+      "price": 152.25
+    },
+    "road_side_assistance": {
+      "available": true,
+      "add_on": false,
+      "description": "UIC Gold roadside assistance incl.",
+      "help_text": "Check out this <a href=\"http://help.myfelix.com/article/87-roadside-assistance\" target=\"_blank\">help doc</a> on roadside assistance for more info."
+    },
+    "pab_driver": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for driver available for an extra Dhs 126.00.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the driver (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 126.00
+    },
+    "pab_passenger": {
+      "available": true,
+      "add_on": true,
+      "description": "Personal accident benefit for passengers employed by you available for an extra Dhs 31.50 per passenger.",
+      "help_text": "The total additional premium is calculated on the no. of passenger seats. Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death.",
+      "price": 31.50
+    },
+    "pab_family_and_friends": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal accident benefit for passengers who are family and friends incl.",
+      "help_text": "Maximum cover of up to Dhs 200,000. This compensation will be paid to the passenger(s) (or their next-of-kin) in the event of an accident causing disability or death. Passengers who are employed by you are excluded."
+    },
+    "fire_and_theft_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Fire damage and theft cover incl.",
+      "help_text": null
+    },
+    "natural_disaster": {
+      "available": true,
+      "add_on": false,
+      "description": "Storm and flood damage cover incl.",
+      "help_text": "Flood damage is only covered if your car is not driven. This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "riot_and_strike": {
+      "available": true,
+      "add_on": false,
+      "description": "Riot and strike damage cover incl.",
+      "help_text": "This coverage is for damage caused to your own vehicle and does not cover third parties."
+    },
+    "windscreen_and_glass_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Windscreen cover incl.",
+      "help_text": "In case of windscreen damage UIC will not charge you any excess and your no-claims history will be unaffected."
+    },
+    "emergency_medical_expenses": {
+      "available": true,
+      "add_on": false,
+      "description": "Emergency medical expenses covered up to Dhs 6,000.",
+      "help_text": "This is the maximum that the insurer will pay out for the immediate medical expenses to an injured occupant of the car if it has been in an accident."
+    },
+    "personal_belongings": {
+      "available": true,
+      "add_on": false,
+      "description": "Personal belongings covered up to Dhs 5,000.",
+      "help_text": "This is compensation for the loss or damage to personal belongings by fire, theft or accident. A police report will be required."
+    },
+    "replacement_keys_and_locks": {
+      "available": true,
+      "add_on": false,
+      "description": "Replacement of locks covered up to Dhs 1,000 for lost or stolen keys.",
+      "help_text": "UIC will charge you your excess but your no-claims history will be unaffected."
+    },
+    "oman_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Oman cover for own damage incl.",
+      "help_text": "Oman cover for own damage is included in this policy. No cover for third party liability so you'll have to purchase this at the border if you plan to take your car there."
+    },
+    "off_road_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Limited UIC off-road cover incl.",
+      "help_text": "4x4 vehicles with off-road capability only! This coverage is for damage caused to your own vehicle and not third parties. Dune bashing is NOT covered. Additional excess of 15% of the claim amount for off-road damage! Please make sure you read UIC's terms and conditions for more info."
+    },
+    "ambulance_cover": {
+      "available": true,
+      "add_on": false,
+      "description": "Ambulance transportation covered up to Dhs 6,770 per injured person.",
+      "help_text": null
+    },
+    "third_party_property_damage": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party property damage cover of up to Dhs 5,000,000 incl.",
+      "help_text": null
+    },
+    "third_party_bodily_injury": {
+      "available": true,
+      "add_on": false,
+      "description": "Third party bodily injury covered as per UAE court award.",
+      "help_text": null
+    }
+  }
+]

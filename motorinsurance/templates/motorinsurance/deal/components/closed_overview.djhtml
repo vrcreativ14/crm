@@ -1,0 +1,106 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+<div class="closed-overview deal-process {% if has_closed %}no-border m-0{% endif %}">
+	{% if not has_closed %}
+    	<p class="empty-area">Here, you can see an overview of the entire deal once it is closed as won or lost</p>
+    {% else %}
+	    <div class="policy-summary">
+	    	{% if deal.stage == 'lost' %}
+	    	<div class="deal-lost">
+	    		<center class="c-error m-b-30">
+			   		<div class="font-40 m-b--10"><i class="ti-thumb-down"></i></div>
+			   		<div class="font-32">Deal Lost</div>
+			   	</center>
+			   	<div class="align-center c-lgrey font-15 m-b-40">Tasks were not verified to successfully complete the deal</div>
+	    	</div>
+	    	{% endif %}
+	    	{% if deal.stage == 'won' %}
+		    	<div class="deal-won">
+				   	<center class="c-success m-b-40">
+				   		<div class="font-40 m-b--10"><i class="ti-cup"></i></div>
+				   		<div class="font-32">Deal Won</div>
+				   	</center>
+					<div class="products-preview">
+						<div class="row no-hover">
+							<div class=" col-lg-2 col-md-3 m-l-10">
+								<div class="product-logo-container">
+									<span class="spacer"></span>
+									<img src="{{ deal.get_order.selected_product.product.get_logo }}">
+								</div>
+							</div>
+							<div class="details p-0 col-lg-6 col-md-6 col-sm-8">
+								<div class="heading light">{{ deal.policy.product.name }}</div>
+								<div class="text-muted font-12">Sum Insured: {{ companysettings.get_currency_display }} {{ deal.vehicle_insured_value|intcomma }}</div>
+								{% if deal.get_order %}
+									<ul class="icons">
+										<li><i class="{% if deal.get_order.selected_product.agency_repair %}ti-check yes{% else %}ti-close no{% endif %}"></i> Agency</li>
+										<li><i class="{% if deal.get_order.selected_product.ncd_required %}ti-check yes{% else %}ti-close no{% endif %}"></i> NCD Required </li>
+									</ul>
+
+									{% if deal.get_order.selected_product.default_add_ons %}
+										<span class="add-ons-preview-label font-10 c-vgrey">Default add-ons: </span> 
+										{% for addon in deal.get_order.selected_product.default_add_ons %}
+											<span title="default add-on" class="badge badge-default badge-font-light m-t-10">{{ addon|capfirst|replace_with_space:'_' }}</span>
+										{% endfor %}
+										<br />
+									{% endif %}
+									{% if deal.get_order.selected_add_ons %}
+										<span class="add-ons-preview-label font-10 c-vgrey">Paid add-ons: </span> 
+										{% for addon in deal.get_order.selected_add_ons %}
+											<span title="default add-on" class="badge badge-default badge-font-light m-t-10">{{ addon|capfirst|replace_with_space:'_' }}</span>
+										{% endfor %}
+
+									{% endif %}
+								{% endif %}
+							</div>
+							<div class="col-lg-3 col-md-4 col-sm-12">
+								<div class="float-right">
+									<div class="c-vlgrey font-13 t-center">Total Premium:</div>
+									<div class="c-bgrey font-23 t-center">{{ companysettings.get_currency_display }} {{ deal.get_order.payment_amount|intcomma }}</div>
+									<div class="m-t-10 font-14 c-vlgrey align-center">
+										{{ deal.get_order.get_status_display|upper }}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row no-hover">
+						
+							<div class="col-lg-2 col-md-3">&nbsp;</div>
+							<div class="details col-lg-2 col-md-3 col-sm-8 p-t-17">
+								<div class="text-muted font-12 m-b-5">Policy start date</div>
+								<div class="font-14 c-bgrey">{{ deal.policy.policy_start_date|date:'M d, Y' }}</div>
+								<div class="m-t-30">
+									{% if deal.policy %}
+									<a href="javascript:" data-felix-modal="modal_view_policy" onclick="__POLICY._getPolicyDetail({{ deal.policy.pk }})">
+										<i class="font-18 ti-new-window"></i> View Policy
+									</a>
+									{% endif %}
+								</div>
+							</div>
+							<div class="details col-lg-2 col-md-3 col-sm-8 p-t-17">
+								<div class="text-muted font-12 m-b-5">Policy expiry date</div>
+								<div class="font-14 c-bgrey">{{ deal.policy.policy_expiry_date|date:'M d, Y' }}</div>
+							</div>
+							<div class="col-lg-2 col-md-3 col-sm-12 p-t-17">
+								<div class="text-muted font-12 m-b-5">Policy number</div>
+								<div class="font-14 c-bgrey">{{ deal.policy.reference_number }}</div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 p-t-17">
+								<div class="text-muted font-12 m-b-5">Invoice number</div>
+								<div class="font-14 c-bgrey">{% if deal.policy.invoice_number %}{{ deal.policy.invoice_number }}{% else %}-{% endif %}</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				{% if deal.policy %}
+					{% include 'motorinsurance/deal/components/deal_policy_modal.djhtml' %}
+				{% endif %}
+			{% endif %}
+		</div>
+	{% endif %}
+</div>
+
+{% include 'handlebars/policy_modal.html' %}

@@ -1,0 +1,56 @@
+//COLORS
+$bgcolor: #F7F7F7;
+$bgcolor-dark: #1f1f1f;
+$font-color: #404040;
+$font-color-light: #999;
+
+$felix-color-orange: #FEBA25;
+$felix-color-orange-lighter: lighten($felix-color-orange, 10%);
+$felix-color-orange-darker: darken($felix-color-orange, 10%);
+
+$felix-color-grey: #4D4E4E;
+$felix-color-grey-lighter: lighten($felix-color-grey, 10%);
+$felix-color-grey-vlighter: lighten($felix-color-grey, 20%);
+$felix-color-grey-darker: darken($felix-color-grey, 10%);
+
+$felix-color-turquoise: #222b6b; //#009FAB;
+$felix-color-turquoise-lighter: lighten($felix-color-turquoise, 10%);
+$felix-color-turquoise-darker: darken($felix-color-turquoise, 10%);
+
+$felix-color-primary: $felix-color-turquoise;
+$felix-color-primary-lighter: lighten($felix-color-primary, 10%);
+$felix-color-primary-darker: darken($felix-color-primary, 10%);
+
+$felix-color-primary-new: #222b6b;
+
+$fieldset-bgcolor: #FFF;
+$fieldset-bordercolor: transparent;
+
+$error-color: #BD6663;
+$error-color-lighter: lighten($error-color, 20%);
+$error-color-v-lighter: lighten($error-color, 35%);
+$error-color-darker: #8B504E;
+
+$field-border-color: #DDD;
+
+$prototype-color: #F3FAFE;
+
+// Dubizzle Colors
+
+$dubizzle-color-primary: #E00000;
+$dubizzle-color-secondary: #E53B3B;
+$dubizzle-color-third: #EE7575;
+$dubizzle-color-fourth: #F7BABA;
+
+$dubizzle-color-error: #FF4B82;
+$dubizzle-color-warning: #FFB202;
+$dubizzle-color-info: #29D483;
+$dubizzle-color-azure: #03C7F0;
+
+
+$dubizzle-color-ink: #212223;
+$dubizzle-color-grease: #2B2D2E;
+$dubizzle-color-charcoal: #626465;
+$dubizzle-color-smoke: #B6B8B9;
+$dubizzle-color-cloud: #EEF0F1;
+

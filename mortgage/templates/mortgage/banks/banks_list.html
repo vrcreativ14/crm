@@ -1,0 +1,424 @@
+{% extends 'base.djhtml' %}
+{% load permission_tags %}
+{% load humanize %}
+
+{% block content %}
+{% include './bank_form.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+<style type="text/css">
+    .bank-form-mortgage form p {
+        display: flex;
+    }
+
+    .bank-form-mortgage form label {
+        width: 300px;
+    }
+
+    .bank-form-mortgage form input,.bank-forms .modal-content form select {
+        width: 250px !important;
+        margin-right: 1rem;
+    }
+
+    .bank-form-mortgage form span {
+        width: 200px;
+    }
+
+    .bank-form-mortgage form .btn {
+        width: 100% !important;
+        margin: 3rem 0;
+    }
+
+    .bank-form-mortgage form input[type="text"],
+    .bank-form-mortgage form input[type="number"],
+    .bank-forms .modal-content form select {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .felix-table thead td {
+        max-width: 90px;
+        white-space: normal !important;
+    }
+
+    .felix-table td img {
+        width: 80px;
+        height: auto;
+    }
+    .show{
+        display: block;
+    }
+    .hide{
+        display: none !important;
+    }
+</style>
+{% endblock %}
+<div class="container-fluid">
+    <div class="pre-wrapper squeeze">
+        <h1 class="title">Banks</h1>
+        {% if user|can:'create_banks' %}
+        <button class="btn btn-primary mb-4" data-toggle="modal" data-target='#modal_create_bank'>Create Bank</button>
+        <button class="btn btn-primary mb-4" data-toggle="modal" data-target='#modal_eibor'>Eibor</button>
+        <button class="btn btn-primary mb-4" data-toggle="modal" data-target='#modal_eibor_post'>
+            Eibor Post Introduction Rate
+        </button>
+        <button class="btn btn-primary mb-4" data-toggle="modal" data-target='#government_fee'>Government Fee</button>
+        {% endif %}
+
+        {% if messages %}
+        <div id="message_div_eibor" style="display: none;">
+            {% for message in messages %}
+            <p> {{ message }} </p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div style="overflow-x: auto;">
+            <table class='table no-footer felix-table dataTable'>
+                <thead>
+                    <tr>
+                        {% for field in form %}
+                        {% if field.label == "Eibor duration" or field.label == "Eibor post duration" or field.label == "Extra Financing Allowed?" or field.label == "Type" or field.label == "Minimum floor rate" %}
+                        {% else %}
+                        <td> {{ field.label }} </td>
+                        {% endif %}
+                        {% endfor %}
+                        <td>
+                            {% if user|can:'edit_banks' or user|can:'delete_banks' %}
+                            Action
+                            {% endif %}
+                        </td>   
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bank in banks %}
+                    <tr id="tr-{{bank.bank_id}}">
+                        <td data-name="name" data-value="{{bank.name}}">{{bank.name}}</td>
+                        <td data-name="logo" data-value="{{bank.logo}}">
+                            <img src="{{ bank.logo }}" height="60px" width="80px">
+                        </td>
+                        <td data-name="interest_rate" data-value="{{bank.interest_rate}}">
+                            {{bank.interest_rate}}
+                        </td>
+                        {% for bankRate in bankInterestRate %}
+                            {% if bankRate.bank_id == bank.bank_id %}
+                                <td class="d-none" data-name="eibor_duration" data-value="{{bankRate.eibor_duration}}">
+                                    {{bankRate.eibor_duration}}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                        <input type="hidden" id="bank_{{bank.bank_id}}_extra_financing_allowed" value="{{bank.extra_financing_allowed}}" />
+                        <input type="hidden" id="bank_{{bank.bank_id}}_type" value="{{bank.type}}" />
+                        <input type="hidden" id="bank_{{bank.bank_id}}_minimum_floor_rate" value="{{bank.minimum_floor_rate}}" />
+                        {% comment %} 
+                        <td data-name="eibor_rate" data-value="{{bank.eibor_rate}}">
+                            {{bank.eibor_rate}}
+                        </td>
+                        <td data-name="eibor_duration" data-value="{{bank.eibor_duration}}">
+                            {{bank.eibor_duration}}
+                        </td> 
+                        {% endcomment %}
+                        {% comment %} 
+                        <td data-name="floor_rate" data-value="{{bank.floor_rate}}">
+                            {{bank.floor_rate}}
+                        </td>                         
+                        {% endcomment %}
+                        <td data-name="introduction_period_in_years" data-value="{{bank.introduction_period_in_years}}">
+                            {{bank.introduction_period_in_years}}
+                        </td>
+                        <td data-name="post_introduction_rate" data-value="{{bank.post_introduction_rate}}">
+                            {{bank.post_introduction_rate}}
+                        </td>
+                        <td style="display: none;" data-name="eibor_post_duration" data-value="{{bank.eibor_post_duration}}">
+                            {{bank.eibor_post_duration}}
+                        </td>
+                        <td data-name="property_valuation_fee" data-value="{{bank.property_valuation_fee}}">
+                            {{bank.property_valuation_fee | intcomma}}
+                        </td>
+                        <td data-name="bank_processing_fee_rate" data-value="{{bank.bank_processing_fee_rate}}">
+                            {{bank.bank_processing_fee_rate | intcomma}}
+                        </td>
+{#                        <td data-name="bank_processing_fee_extra" data-value="{{bank.bank_processing_fee_extra}}">#}
+{#                            {{bank.bank_processing_fee_extra | intcomma}}#}
+{#                        </td>#}
+{#                        <td data-name="max_bank_processing_fee" data-value="{{bank.max_bank_processing_fee}}">#}
+{#                            {{bank.max_bank_processing_fee | intcomma}}#}
+{#                        </td>#}
+                        <td data-name="life_insurance_monthly_rate" data-value="{{bank.life_insurance_monthly_rate}}">
+                            {{bank.life_insurance_monthly_rate | intcomma}}
+                        </td>
+                        <td data-name="property_insurance_yearly_rate"
+                            data-value="{{bank.property_insurance_yearly_rate}}">
+                            {{bank.property_insurance_yearly_rate | intcomma}}
+                        </td>
+                        <td data-name="full_settlement_percentage" data-value="{{bank.full_settlement_percentage}}">
+                            {{bank.full_settlement_percentage}}
+                        </td>
+                        <td data-name="full_settlement_max_value" data-value="{{bank.full_settlement_max_value}}">
+                            {{bank.full_settlement_max_value | intcomma}}
+                        </td>
+                        <td data-name="free_partial_payment_per_year"
+                            data-value="{{bank.free_partial_payment_per_year}}">
+                            {{bank.free_partial_payment_per_year | intcomma}}
+                        </td>
+                        {% for bank_full in banks_full %}
+                            {% if bank.bank_id == bank_full.bank_id %}
+                                {% if bank_full.sample_form %}
+                                    <td data-name="sample_form"
+                                        data-value="{{bank_full.sample_form.url}}">
+                                        <a target="_blank" href="{{bank_full.sample_form.url}}">Download form</a>
+                                    </td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        <td>
+                            {% if user|can:'edit_banks' %}
+                            <span>
+                                <button class="btn btn-primary mb-1" data-toggle="modal"
+                                    data-target="#modal_update_bank" onclick="update_bank_modal('{{bank.bank_id}}')">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                            </span>
+                            {% endif %}
+                            {% if user|can:'delete_banks' %}
+                            <span>
+                                {% csrf_token %}
+                                <button class="btn btn-danger mb-1" data-delete-url="{% url 'mortgage:banks' %}"
+                                    data-bank='{{bank.bank_id}}' onclick="deleteBanks(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </span>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    function deleteBanks(data) {
+        var result = confirm("Want to delete?");
+        if (result) {
+            __BANKS._deleteBank(data);
+        }
+    }
+
+    function convert_num_format(self) {
+        if ($(self).val() == '') {
+            return
+        }
+        let num = $(self).val();
+        num = num.replace(/[, ]+/g, "").trim();
+        num = parseFloat(num).toLocaleString("en-US", { maximumFractionDigits: 5, minimumFractionDigits: 2 });
+        $(self).val(num);
+        if (($(self).attr('id')).includes('addition')) {
+
+        } else if (($(self).attr('id')).includes('rate') || ($(self).attr('id')).includes('percentage')) {
+            $(self).val(num + '%')
+        }
+    }
+
+    function change_num_text(type = false){
+        if(!type){
+            $('input[type=number]').each(function( index, value ) {
+                $(this).prop('type','text');
+                // if($(this).attr('id')=='id_eibor_rate' || $(this).attr('id')=='id_eibor_duration'){
+                    
+                // }else{
+                //     $(this).val('');   
+                // }
+                $(this).addClass('number-to-text-format')
+                convert_num_format(this)
+            });
+        } else {
+            $('.number-to-text-format').each(function (index, value) {
+                convert_num_format(this)
+            });
+        }
+    }
+
+    
+
+    document.querySelectorAll('#id_type').forEach(element => {
+        element.addEventListener('change', function(){        
+        if(this.value == 'fixed')
+            this.parentElement.parentElement.parentElement.querySelector('#id_eibor_duration').parentElement.parentElement.classList.add('hide')
+        else
+            this.parentElement.parentElement.parentElement.querySelector('#id_eibor_duration').parentElement.parentElement.classList.remove('hide')
+        });
+    });
+
+
+    function update_bank_modal(id) {
+        let actionUrl = "{% url 'mortgage:bank-edit' pk=1111111111111111111 %}";
+        let is_extra_financing = document.querySelector(`#bank_${id}_extra_financing_allowed`).value
+        let bank_type = document.querySelector(`#bank_${id}_type`).value        
+         if (is_extra_financing == 'True')
+            document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'True'
+            else
+            document.querySelector('#modal_update_bank').querySelector('#id_extra_financing_allowed').value = 'False'
+
+        
+        if (bank_type.toLowerCase() == 'fixed'){
+           document.querySelector('#modal_update_bank').querySelector('#id_type').value = 'fixed'
+            document.querySelector('#modal_update_bank').querySelector('#id_eibor_duration').parentElement.parentElement.classList.add('hide')
+        }
+        else{
+            document.querySelector('#modal_update_bank').querySelector('#id_type').value = 'variable'
+            document.querySelector('#modal_update_bank').querySelector('#id_eibor_duration').parentElement.parentElement.classList.remove('hide')
+        }
+        let min_floor_rate = document.querySelector(`#bank_${id}_minimum_floor_rate`).value
+        document.querySelector('#modal_update_bank').querySelector('#id_minimum_floor_rate').value = min_floor_rate
+
+        actionUrl = actionUrl.replace('1111111111111111111', id);
+        $('#modal_update_bank form').attr('action', actionUrl);
+        $('#tr-' + id + ' td').each(function (index, value) {
+            const id = $(this).attr('data-name');
+            const input_value = $(this).attr('data-value');
+            if (id != 'logo') {
+                $('#modal_update_bank #id_' + id).val(input_value);
+            }
+        });
+        setTimeout(function () { change_num_text(true); }, 300);
+    }
+
+    function deleteBanks(data) {
+        var result = confirm("Want to delete?");
+        if (result) {
+            __BANKS._deleteBank(data);
+        }
+    }
+
+    function CustomAutoComma(self){
+        var value = $(self).val()
+        if(!value.includes('.')){
+            $(self).val(accounting.formatNumber(value, 0, ',', '.'));
+        }
+    }
+
+    $('.body').ready(function () {
+        if ($('#message_div_eibor p')[0]) {
+            Utilities.Notify.success($('#message_div_eibor p')[0].innerText, 'Success');
+        }
+    })
+    // A $( document ).ready() block.
+    {% comment %} $(document).ready(function () {
+        change_num_text();
+        $('.number-to-text-format').on('input', function () {
+            CustomAutoComma(this)
+        });
+        $('.number-to-text-format').on('change focusout', function () {
+            convert_num_format(this)
+        });
+        $('.number-to-text-format').on('focus', function () {
+            if ($(this).val() == '') {
+                return
+            }
+            let num = $(this).val();
+            num = num.replace(/[, ]+/g, "").trim();
+            $(this).val(parseFloat(num));
+        });
+
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+
+            $('.number-to-text-format').each(function (index, value) {
+                let num = $(this).val();
+                num = num.replace(/[, ]+/g, "").trim();
+                num = num.replace(/[% ]+/g, "").trim();
+                $(this).val(num);
+            });
+
+            setTimeout(function(){
+                fetch($(this).attr('action'), {
+                    method: "POST",
+                    body: new FormData(e.target),
+                }).then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    return Promise.reject(response);
+                }).then(function (data) {
+                    Utilities.Notify.success('Updated successfully', 'Success');
+                    setTimeout(function(){ location.reload(); }, 500);
+                }).catch(function (error) {
+                    console.warn(error);
+                });
+            }, 500);
+
+            // and when you done:
+            // $(this).submit();
+        });
+    }); {% endcomment %}
+    $(document).ready(function () {
+        change_num_text();
+        $('.number-to-text-format').on('focusout', function () {
+            CustomAutoComma(this)
+        });
+        $('.number-to-text-format').on('change focusout', function () {
+            convert_num_format(this)
+        });
+        $('.number-to-text-format').on('focus', function () {
+            if ($(this).val() == '') {
+                return
+            }
+            let num = $(this).val();
+            num = num.replace(/[, ]+/g, "").trim();
+            $(this).val(parseFloat(num));
+        });
+
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+
+            $('.number-to-text-format').each(function (index, value) {
+                let num = $(this).val();
+                num = num.replace(/[, ]+/g, "").trim();
+                num = num.replace(/[% ]+/g, "").trim();
+                $(this).val(num);
+            });
+
+            const url = $(this).attr('action')
+
+            console.log(url)
+
+            setTimeout(function(){
+                fetch(url, {
+                    method: "POST",
+                    body: new FormData(e.target),
+                }).then(function (response) {
+                    if (response.ok) {
+                        return true;
+                    }
+                    return Promise.reject(response);
+                }).then(function (data) {
+                    Utilities.Notify.success('Updated successfully', 'Success');
+                    setTimeout(function(){ location.reload(); }, 500);
+                }).catch(function (error) {
+                    Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+                });
+            }, 500);
+
+            // and when you done:
+            // $(this).submit();
+        });
+    });
+</script>
+{% endblock %}

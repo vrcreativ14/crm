@@ -1,0 +1,105 @@
+/*
+ Login Pages
+ */
+.login-pages {
+	.alert ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.login-new {
+	.input{
+		width: 100%;
+		padding: 14px 12px;
+		border: none;
+		box-shadow: 5PX 5PX 10PX 5PX #e9e7f4;
+		border-radius: 5px;
+	}
+	::-webkit-scrollbar {
+	  width: 10px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+	  background: #f2ece2;
+	}
+
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+	  background: rgb(2,0,36);
+	background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+	  border-radius: 5px;
+	}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+	  background: #555;
+	  border-radius: 5px;
+	}
+	.input-check{
+		border: none;
+		 background-color: #eee;
+		border-radius: 5px;
+	}
+	label{
+		margin-top: 10px;
+	}
+	.form-contain{
+		padding: 10% 20%;
+	}
+	::placeholder {
+	  color: #e9e7f4;
+	  opacity: 1;
+	}
+	button{
+		color: #fff;
+		background: rgb(2,0,36);
+		background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+		border: none;
+		width: 180px;
+		padding: 5px;
+		border-radius: 10px;
+		margin-top: 4%;
+	}
+	a{
+		color: #000;
+	}
+	a:hover{
+		color: #000;
+		text-decoration: none;
+	}
+	.login-footer{
+		background-color: rgb(14 45 128);
+		color: #fff;
+		padding-top: 10px;
+	}
+	.footer-end{
+		 background-color: black;
+		 width: 100%;
+		 color: white;
+		 font-size: 1rem;
+		 font-weight: bold;
+	}
+
+	.login-right-image {
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+		width: 81%;
+		float: right;
+	}
+
+	@media screen and (max-width: 991px){
+		.form-contain {
+			padding: 5% ;
+		}
+		body {
+			overflow-y: scroll;
+		}
+
+		.login-right-image {
+			display: none;
+		}
+	}
+}

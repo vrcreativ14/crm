@@ -1,0 +1,56 @@
+{% extends "base_public.djhtml" %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}
+Thank you for uploading your documents
+{% endblock %}
+
+{% block content %}
+
+    <div id="document-upload">
+        <div class="steps clearfix">
+            <ul role="tablist">
+                <li role="tab" aria-disabled="false" class="first completed">
+                    <span class="desc"><div class="label">Choose Policy</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="completed">
+                    <span class="desc"><div class="label">Choose Add-Ons</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="completed">
+                    <span class="desc"><div class="label">Order Summary</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="completed">
+                    <span class="desc"><div class="label">Upload Documents</div></span>
+                </li>
+                <li role="tab" aria-disabled="false" class="last">
+                    <span class="desc"><div class="label">Policy Issued!</div></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sub-container">
+            <div class="inner-small-container form-headings">
+                <h1 class="thankyou-heading">
+                    Thank you for uploading your documents!
+                    <p>Our customer success team has been notified and is now checking your documents to make sure that all of the information we have is correct.</p>
+
+                    <p>If all of the information is correct we will get in touch with you to collect payment and issue your policy. If there are things missing we’ll get in touch with you to let you know.</p>
+
+                    <div class="blue-line"></div>
+                </h1>
+                <h1>
+                    IMPORTANT:
+                    <p>Your order is still in process and your new insurance is NOT active yet. Your car will only be insured when your new policy has been issued and sent to you by email.</p>
+                    <p>&nbsp;</p>
+                </h1>
+            </div>
+            <div class="inner-small-container step-2">
+                <div class="animated-car"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}

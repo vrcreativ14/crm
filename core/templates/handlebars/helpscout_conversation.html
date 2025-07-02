@@ -1,0 +1,15 @@
+{% verbatim %}
+<script id="row-helpscout-conversation" type="text/x-handlebars-template">
+{{#each records}}
+<div class="helpscout-conversation" data-id="{{ this.id }}">
+	<div class="title">Created by {{ this.created_by }}
+		<div class="text-muted font-12">{{ this.created_at }}</div>
+	</div>
+    <div class="email-body">{{{ this.body }}}</div>
+
+    <hr class="{{#if @last}}hide{{/if}}"/>
+</div>
+
+{{/each}}
+</script>
+{% endverbatim %}

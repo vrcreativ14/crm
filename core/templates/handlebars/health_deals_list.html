@@ -1,0 +1,31 @@
+{% for deal in deals %}
+<tr id="tr_{{ deal.pk }}" data-url-delete="{% url 'health-insurance:delete-deal' deal.pk %}"  data-url="{% url 'health-insurance:deal-details' deal.pk %}">
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ deal.pk }}" value="{{ deal.pk }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td class="capitalize">{% if deal.stage == "policy_issuance" %} Policy Issuance {% elif deal.stage == "final_quote" %} Final Quote {% else %} {{ deal.stage }} {% endif %}</td>
+    <td>{% if deal.stage == 'lost' or deal.stage == 'won' %} - {% else %}<span class="badge badge-{{deal.status_badge}} badge-font-light badge">{{deal.status_text}}</span>{% endif %}</td>
+    
+    <td class="link" data-sort="{{ deal.created_on | date:'Ymd' }}" data-search="{{ deal.created_on | date:'Ymd' }}" {{ deal.created_on }}>
+        {{ deal.deal_timeinfo }} {% if deal.deal_timeinfo == 'Today' or deal.deal_timeinfo == 'Yesterday' %} at {{deal.created_on|time:"H:i"}} {% endif %}   
+    </td>
+    
+    <td class="link capitalize">
+        <div><a href="{% url 'customers:edit' deal.customer.pk %}"?entity='health'>{{ deal.primary_member.name }} </a> </div> {% if deal.deal_type == 'renewal' %} <span class="m-t-15 badge badge-default badge-font-light badge-renewal-deal">Renewal Deal</span> {% endif %}
+    </td>
+    <td> {% if deal.selected_plan %} {{deal.selected_plan.insurer.name}} {% else %} - {% endif %}</td>
+    <td>{% if not deal.indicative_budget %} - {% elif deal.indicative_budget == 'Not Sure' %} Not Sure {% else %} {{ deal.indicative_budget }} AED {% endif %} </td>
+    <td> {% if deal.total_premium %} {{ deal.total_premium }} {{deal.selected_plan.currency}} {% else %} - {% endif %} </td>
+    <td class="link width-editable-list-container">
+        {{ deal.primary_member.additional_members.all.count|add:1  }}
+    </td>
+    <td class="link width-editable-list-container">
+        {% if deal.primary_member.visa %}{{deal.primary_member.visa}} {% else %} - {% endif %}
+    </td>
+    <td>{{ deal.user }}</td>
+    <td>{{ deal.referrer }}</td>
+</tr>
+{% endfor %}

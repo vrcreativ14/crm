@@ -1,0 +1,698 @@
+{% extends 'motor_base.djhtml' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	{% block content %}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+	    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+		<link rel="icon" href="{% static 'images/icon.png' %}" sizes="518x518"  type="image/x-icon"/>
+
+	<title>Nexus</title>
+	<style type="text/css">
+		:root {
+    --ward: #dfb76c;}
+
+      .header {
+    padding: 20px 5px;
+  }
+	.logo img{
+			width: 42%;
+			display: block;
+			margin: auto;
+		}
+		.num{
+			text-align: center;
+		}
+		.num p{
+			
+			font-family: Roboto;
+			color: #8191a5;
+			margin-bottom: 0rem !important;
+		}
+		.num a{
+			
+			color: #dbae58;
+			font-weight: bold;
+			font-size: 26px;
+		}
+		.num a:hover{
+			text-decoration: none;
+		}
+		.form-body{
+			background-color: #f5f5f5;
+			background-image: url(images/background.png);
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+		
+
+		}
+		.form-body{
+			padding: 40px 10px;
+		}
+		h1{
+      font-family: 'Montserrat-Bold' ;
+      font-size: 30px;
+    }
+    h2{
+      font-family: 'Montserrat-SemiBold' ;
+      font-size: 22px;
+    }
+    p{
+      font-family: 'Montserrat-Regular' ;
+      font-size: 17.5px;
+    }
+    
+    .form-body h1{
+      font-family: 'Montserrat-Bold' ;
+      font-weight: bold;
+    }
+    .form-body p{
+      color: #737374;
+      padding: 7px;
+    }
+		.progress-row img{
+			display: block;
+			margin: auto;
+
+		}
+		.progress-row .col-md-1,.progress-row .col-md-4,.progress-row .col-1{
+			padding: 0px !important;
+		}
+progress {
+  border-radius: 0px; 
+  width: 100%;
+  height: 8px;
+}
+progress::-webkit-progress-bar {
+  background-color: #c5c5c5;
+}
+progress::-webkit-progress-value {
+  background-color: #dfb76c;
+  
+}
+::-moz-progress-value {
+  background-color: #dfb76c !important;
+  
+}
+progress::-moz-progress-bar {
+  /* style rules */
+}
+.select-body{
+	margin-top: 2rem;
+	padding: 2rem 0rem 2rem 2rem;
+	background-color: #fff;
+	color: #000 !important;
+	border-radius: 10px;
+
+}
+
+button:hover{
+	background-color: #dfb76c;
+	border-radius: 10px;
+	border: 1px solid #dfb76c;
+
+	color: #fff;
+}
+
+.person{
+	width: 30%;
+}
+.car{
+	width: 70%;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+.row-all::-webkit-scrollbar {
+  width: 3px!important;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #c5c5c5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dfb76c;
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #dfb76c;
+  border-radius: 8px;
+}
+@media (max-width: 768px) {
+	.none{
+		display: none;
+	}
+	.header {
+    padding: 20px 5px;
+  }
+  .logo img{
+  	width: 40%;
+  	margin: 0;
+  }
+  .num{
+  	padding-top: 0.7rem;
+  	text-align: right;
+  }
+  .num a {
+  	font-size: 18px;
+}
+.num p {
+    font-size: 12px;
+    font-weight: 500;}
+	.d-md-block{
+		display: none;
+	}
+	.form-body h1 {
+    font-size: 1.3rem !important;}
+	.logo img {
+    width: 68%;
+}
+.num{
+	margin-top: 1.8rem;
+	}
+.form-body p {
+    color: #737374;
+    padding: 10px ;}
+ .person{
+	width: 66%;
+}
+.car{
+	padding-top: 8px;
+	width:120%;
+}
+.select-body {
+    
+    padding: 2rem 0rem 1rem 0rem;}}
+
+@media (max-width: 360px) {
+	button{
+	
+	width: 300px;
+}
+button span{
+	    padding: 0px 0px;
+
+	font-size: 15px;
+}
+}
+.detail{
+	padding-left: 0;
+    text-align: right;
+    padding-right: 0;
+	color: #363636;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+	font-family:'Montserrat-Medium' ;
+}
+.type{font-size: 15px;font-family:'Montserrat-Bold'} 
+.normel{font-size: 15px;font-family:'Montserrat-Regular';font-weight: 100!important;}   
+.car-detail{
+padding: 10px 0rem 15px 2rem!important;
+}
+.car-detail img{
+  width: 50%;
+}
+#select-input{
+	margin-top: 1rem;
+	    height: 38px;
+    font-size: 13px;
+	font-family: 'Montserrat-Regular';
+    color: #414D64;
+    background: #f9f8f8;
+    padding: 0 7px;
+    border: 2px solid #f9f8f8;
+    border-radius: 7px;
+    text-align: left;
+    width: 260px;
+}
+#select-input::placeholder{color: #bfbdbb}
+#select-input:focus-visible{outline: none;}
+
+.years{margin-top: 25px}
+
+.years button{
+	font-size: 13px;
+	font-family: 'Montserrat-SemiBold';
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+	border: 1px solid #f3f3f3;
+    box-shadow: 5px 4px 3px 0px #f3f3f3;
+    	
+    	width: 165px;
+}
+.years button:hover{
+		background-color: #dfb76c;
+	border: 1px solid #dfb76c;
+	color: #fff;
+}
+.countainer-all{
+    display: grid;
+
+    width: 87%;
+    padding-left: 1rem;
+    padding-top: 1rem;
+}
+
+.year{margin-top: 0!important}
+.first-row{padding: 10px 0rem 15px 2rem!important}
+.first-col{padding-right: 0!important}
+#car{width: 4%}
+@media(max-width: 500px){
+.years button{width: 100%!important;margin-top: 0px!important;}
+.years{margin-top: 18px!important;}
+.year{margin-top: 18px!important;}
+
+.row-all{width: 100%!important;height: 16rem;overflow-y: scroll;}
+.countainer-all{width: 100%!important;padding-top: 75px}
+.year1{margin-top: 0!important}
+.year1 button{margin-top: 0!important}
+.first-row{padding:10px 0rem 17px 0rem!important}
+.detail{font-size: 10px!important}
+#car{width: 22px!important}
+.select-body h2{font-size: 1rem!important}
+}
+
+
+
+
+.tooltip-1 {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+width: 375px;
+    background-color: #f6f6f6;
+    color: #000;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px;
+    left: 3rem;
+  font-size: 14px;
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip-1:hover .tooltiptext-1 {
+  visibility: visible;
+}
+
+
+@media (max-width: 1200px) {
+	.tooltip-1 .tooltiptext-1 {
+		width: 278px;
+  visibility: hidden;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: 2rem;
+ }
+	input[type=text]{
+	width: 250px;}
+}
+@media (max-width: 991px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -9rem;
+  bottom: -8rem;
+ }
+	
+}
+@media (max-width: 768px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 406px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -20rem;
+ bottom: -4.5rem;}
+ .countainer-all{padding-top: 5rem;}
+ .back-btn p{
+	padding: 1rem 0rem!important;
+}}
+
+
+
+
+@media (max-width: 513px) {
+	.tooltip-1 .tooltiptext-1 {
+		visibility: hidden;
+  width: 406px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  left: -20rem;
+ bottom: -4.5rem;}
+.select-body h2 {
+    font-size: 1rem;
+}}
+@media (max-width: 425px) {
+	.tooltip-1 .tooltiptext-1 {
+		width: 345px;
+    background-color: #f6f6f6;
+    color: #000;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 12px;
+    left: -20rem;
+    bottom: -4.3rem;}
+.select-body h2 {
+    font-size: 1rem;
+}}
+@media (max-width: 406px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 300px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  font-size: 12px;
+  left: -18rem;
+ bottom: -4.2rem;}
+.select-body h2 {
+    font-size: 0.8rem;
+}}
+@media (max-width: 335px) {
+	.tooltip-1 .tooltiptext-1 {
+  visibility: hidden;
+  width: 300px;
+  background-color: #f6f6f6;
+  color: #000;
+  text-align: left;
+  border-radius: 6px;
+  padding: 8px ;
+  font-size: 12px;
+  left: -16rem;
+ bottom: -4.2rem;}
+}
+.back-btn{
+	padding: 0px 1rem;
+}
+
+.back-btn a{
+	color: #000;
+	font-size: 18px;
+	font-weight: 500;
+	font-family: 'Montserrat-SemiBold';
+}
+.form-body p {
+    color: #737374;
+  }
+.back-btn a:hover{
+text-decoration: none;
+color: #dfb76c;
+}
+
+	
+
+
+
+@media (max-width: 991px) {
+
+ .car-detail img {
+    width: 165%;
+}
+}
+@media(max-width: 768px){
+
+.num{
+  margin-top: 0rem;
+  }
+.form-body p {
+    color: #737374;
+    padding: 0px ;}
+ .person{
+  width: 66%;
+}
+.car{
+  padding-top: 8px;
+  width:120%;
+}
+
+  .car-detail{
+padding: 10px 0rem 15px 1rem!important;
+}
+.car-detail img{
+  width: 90%;
+}
+}
+
+
+@media (max-width: 500px){
+.detail {
+    font-size: 10px!important;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 5px;
+}
+.logo img{
+			width: 70%;}
+.car-detail img {
+    width: 109%!important;}
+}
+
+
+@media(max-width:500px){
+	button{width: 100%!important;}
+	button span{font-size: 13px!important;}
+}
+
+
+
+.back-btn{padding: 10px 95px!important;}
+@media(max-width:1200px) and (min-width:768px){
+	.back-btn{padding: 10px 60px!important;}	
+}
+@media(max-width:515px){
+	.back-btn{padding: 10px 0px!important;}
+}
+
+
+@media(max-width:991px){
+	.detail,.type,.normel{
+		font-size: 12px!important;
+	}
+}
+@media(max-width:991px) and (min-width:515px){
+	.car-detail img{width: 50%!important;padding-top: 5px!important;}
+}
+
+@media(max-width:375px){
+	.select-body h2{font-size: 18px!important;}
+}
+
+@media(max-width:768px){
+	p{
+    font-size: 11.5px;
+  }
+  .select-body h2{
+    font-size: 16px;
+  }
+}
+</style>
+
+
+
+
+
+</head>
+<body>
+	<!--header section-->
+		<section class="header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-4 col-6 logo">
+					<img src="{% static 'images/nexus-logo.png' %}" alt="Nexus Logo">
+				</div>
+				<div class="col-lg-4 col-6 none">
+					
+				</div>
+				<div class="col-lg-4 col-6 num">
+					
+						<p>Need some help? Call Us</p>
+						<p><a href="tel:+97142378294">+971 4 237 8294</a></p>
+					
+					
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!--end of header section-->
+	<!--form section-->
+	<section class="form-body">
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<div class="col-md-10 col-12">
+					<!--text row-->
+					<div class="row">
+						<center>
+							<h1>Find the most competitive car insurance quote in the UAE</h1>
+							<p>We are offering up to 20% off on some deals. Complete this short 2 minute form so we can email you the most competitive quotes.</p>
+						</center>
+					</div>
+					<!--end of text row-->
+					<!--progress row-->
+					<div class="row progress-row d-flex justify-content-center" >
+						<div class="col-1">
+							<img src="{% static 'images/car.png' %}" alt="car" class="car">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="60" max="100"> 60% </progress>
+
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/person.png' %}" alt="person" class="person">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="0" max="100"> 0% </progress>
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/file.png' %}" class="person" alt="file">
+						</div>
+					</div>
+					<!--end of progress row-->
+
+					<!--start of first section -->
+					<div class="row select-body car-detail">
+						<div class="col-lg-1 col-md-1 col-1 detail">
+							<img src="{% static 'images/car.png' %}" >
+						</div>
+						<div class="col-lg-10 col-md-10 col-9">
+							
+							<span class="detail">Car Details: <span class="type">Type:</span> <span class="normel"> Renewal, </span><span class="type">Car Make:</span><span class="normel"> Honda,City,2009, </span><span class="type">Car Value:</span><span class="normel"> 18,500 AED, </span><span class="type">Insurance Type:</span><span class="normel"> TPL, </span><span class="type">Currently Insured: </span><span class="normel"> Tokio Marine</span></span>
+						</div>
+						<div class="col-lg-1 col-md-1 col-2 text-right">
+							<a href="" style="color: #000"><i class="fa fa-pencil" aria-hidden="true" style="font-size: 12px;"></i></a>
+						</div>
+					</div>
+
+					<!--end of first section-->
+					<!--select row-->
+					<div class="row select-body">
+						<div class="col-12">
+							<h2>Who is your car currently insured with?
+								 <span class="tooltip-1"><img alt="svgImg" width="20px" style="padding: 0px 0px 5px 3px;" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iNjQiIGhlaWdodD0iNjQiCnZpZXdCb3g9IjAgMCAxNzIgMTcyIgpzdHlsZT0iIGZpbGw6IzAwMDAwMDsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIGZvbnQtZmFtaWx5PSJub25lIiBmb250LXdlaWdodD0ibm9uZSIgZm9udC1zaXplPSJub25lIiB0ZXh0LWFuY2hvcj0ibm9uZSIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0wLDE3MnYtMTcyaDE3MnYxNzJ6IiBmaWxsPSJub25lIj48L3BhdGg+PGc+PHBhdGggZD0iTTE2OS4zNDYwOSw4NmMwLC00Ni4wMjM0NCAtMzcuMzIyNjYsLTgzLjM0NjA5IC04My4zNDYwOSwtODMuMzQ2MDljLTQ2LjAyMzQ0LDAgLTgzLjM0NjA5LDM3LjMyMjY2IC04My4zNDYwOSw4My4zNDYwOWMwLDQ2LjAyMzQ0IDM3LjMyMjY2LDgzLjM0NjA5IDgzLjM0NjA5LDgzLjM0NjA5YzQ2LjAyMzQ0LDAgODMuMzQ2MDksLTM3LjMyMjY2IDgzLjM0NjA5LC04My4zNDYwOXoiIGZpbGw9IiMyNjgwZWIiPjwvcGF0aD48cGF0aCBkPSJNMTA4LjU3NSwxMjMuNDU3MDNjLTAuNDcwMzEsLTAuNjcxODcgLTEuMzQzNzUsLTAuOTQwNjIgLTIuMTE2NDEsLTAuNTcxMDljLTguMjY0MDYsMy44OTY4OCAtMTcuNjM2NzIsOC4wMjg5MSAtMTkuNDg0MzcsOC4zOTg0NGMtMC4wMzM1OSwtMC4wMzM1OSAtMC4xMzQzNywtMC4xMDA3OCAtMC4yMDE1NiwtMC4yMzUxNmMtMC4yMzUxNiwtMC4zMzU5NCAtMC4zNjk1MywtMC43NzI2NiAtMC4zNjk1MywtMS4zNDM3NWMwLC00LjY2OTUzIDMuNTI3MzQsLTE4Ljg3OTY5IDEwLjQ4MTI1LC00Mi4yMjczNGM1Ljg3ODkxLC0xOS42MTg3NSA2LjU1MDc4LC0yMy42ODM1OSA2LjU1MDc4LC0yNS4wMjczNGMwLC0yLjA4MjgxIC0wLjgwNjI1LC0zLjgyOTY5IC0yLjMxNzk3LC01LjA3MjY2Yy0xLjQ0NDUzLC0xLjE3NTc4IC0zLjQyNjU2LC0xLjc4MDQ3IC01Ljk0NjA5LC0xLjc4MDQ3Yy00LjE5OTIyLDAgLTkuMDM2NzIsMS41Nzg5MSAtMTQuODE0ODQsNC44NzEwOWMtNS42MTAxNiwzLjE1NzgxIC0xMS44OTIxOSw4LjUzMjgxIC0xOC42MTA5NCwxNS45NTcwM2MtMC41Mzc1LDAuNTcxMDkgLTAuNTcxMDksMS40NDQ1MyAtMC4xMzQzNywyLjA4MjgxYzAuNDM2NzIsMC42MzgyOCAxLjI3NjU2LDAuODczNDQgMi4wMTU2MywwLjYwNDY5YzIuMzUxNTYsLTAuOTc0MjIgMTQuMjQzNzUsLTUuODQ1MzEgMTUuOTkwNjMsLTYuOTIwMzFjMS40MTA5NCwtMC44NzM0NCAyLjY1MzkxLC0xLjM0Mzc1IDMuNjYxNzIsLTEuMzQzNzVjMC4wMzM1OSwwIDAuMDY3MTksMCAwLjEwMDc4LDBjMCwwLjA2NzE5IDAuMDMzNTksMC4xNjc5NyAwLjAzMzU5LDAuMzAyMzRjMCwxLjAwNzgxIC0wLjIwMTU2LDIuMjUwNzggLTAuNjM4MjgsMy41OTQ1M2MtMTAuMTExNzIsMzIuNzg3NSAtMTUuMDUsNTIuOTEwMTYgLTE1LjA1LDYxLjQ3NjU2YzAsMy4wMjM0NCAwLjgzOTg0LDUuNDQyMTkgMi40ODU5NCw3LjIyMjY2YzEuNjc5NjksMS44MTQwNiAzLjk2NDA2LDIuNzIxMDkgNi43NTIzNCwyLjcyMTA5YzIuOTg5ODQsMCA2LjYxNzk3LC0xLjI0Mjk3IDExLjExOTUzLC0zLjgyOTY5YzQuMzMzNTksLTIuNDg1OTQgMTAuOTg1MTYsLTcuOTYxNzIgMjAuMjkwNjIsLTE2LjY5NjA5YzAuNTcxMDksLTAuNjA0NjkgMC42NzE4OCwtMS41MTE3MiAwLjIwMTU2LC0yLjE4MzU5ek0xMDguMjM5MDYsMjguNDIwMzFjLTEuNjQ2MDksLTEuNjc5NjkgLTMuNzYyNSwtMi41NTMxMiAtNi4yODIwMywtMi41NTMxMmMtMy4xMjQyMiwwIC01Ljg3ODkxLDEuMjQyOTcgLTguMTI5NjksMy42OTUzMWMtMi4yMTcxOSwyLjQxODc1IC0zLjMyNTc4LDUuMzQxNDEgLTMuMzI1NzgsOC43Njc5N2MwLDIuNjg3NSAwLjgzOTg0LDQuOTM4MjggMi40NTIzNCw2LjY1MTU2YzEuNjQ2MDksMS43NDY4OCAzLjcyODkxLDIuNjIwMzEgNi4yMTQ4NCwyLjYyMDMxYzMuMDIzNDQsMCA1LjcxMDk0LC0xLjMxMDE2IDguMDYyNSwtMy44OTY4N2MyLjMxNzk3LC0yLjU1MzEzIDMuNDkzNzUsLTUuNTA5MzggMy40OTM3NSwtOC44Njg3NWMwLC0yLjU4NjcyIC0wLjgzOTg0LC00LjczNjcyIC0yLjQ4NTk0LC02LjQxNjQxeiIgZmlsbD0iI2ZmZmZmZiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+"/>
+								<span class="tooltiptext-1"><span style="color: #dfb76c;font-family: 'Montserrat-Bold';font-size: 12px;">Why do we ask this?</span><br><span style="font-size:12px;font-family:'Montserrat-Regular' ;" >This information will help us prepare more relevant options for you.</span></span></span>
+							</h2>
+
+						</div>
+
+					<div class="countainer-all" >	
+						<div class="row row-all">
+						<div class="col-lg-3 col-md-4 col-6 years ">
+							<button>AXA Gulf</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years ">
+							<button>Al Sagr</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years ">
+							<button>Aman</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years ">
+							<button>Dubai Insurance</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years ">
+							<button>Dubai National Ins.</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years ">
+							<button>Emirates Insurance</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>New India</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Tokio Marine</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Noor Takaful</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Oman Insurance Co</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Qatar Insurance Co</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>RSA</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Orient Insurance</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Salama</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Noor Takaful</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Union Insurance</button>
+						</div>
+						<div class="col-lg-3 col-md-4 col-6 years">
+							<button>Other</button>
+						</div>
+	
+
+						</div>
+                    </div>	
+					<div class="col-12">
+						<input id="select-input" type="text" placeholder="Please mention" name="">
+					</div>	
+					</div>
+					<!--end of select row-->
+					<div class="col-12 second-q">
+						<form action="/motor-insurance/motor-step10/">
+						<button class="next-btn">Next</button>
+					</form>
+					</div>
+				</div>
+			</div>
+                <div class="row">
+				<div class="col-12 back-btn">
+						<p><a href="/motor-insurance/motor-step8/">Go Back <img src="{% static 'images/back.png' %}" width="18px"></a></p>
+					</div>
+			</div>
+		</div>
+		
+		
+	</section>
+	<!--end of form section-->
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+
+
+</body>
+{% endblock %}
+</html>

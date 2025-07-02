@@ -1,0 +1,507 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load permission_tags %}
+
+{% block page_title %}Health Renewals{% endblock %}
+{% block body_class %}policies renewals{% endblock %}
+{% block current_nav %}renewals{% endblock %}
+
+<link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap.min.css" />
+{% block content %}
+
+<style>
+    label{
+        font:normal normal normal 14px/19px Roboto;
+    }
+    .radio-button{
+        margin-left: 8px;
+    }
+.radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+.radio-button input[type="radio"] {
+  opacity: 0.01;
+  z-index: 100;
+}
+.input-container input {
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    padding: .75rem;
+    position: relative;
+    width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+
+        .datepicker{
+            font-family: 'Exo 2', sans-serif;
+          }
+          .datepicker--cell.-range-to-{
+            background: rgba(248, 206, 236, 0.4);
+            border-color: rgba(248, 206, 236, 1);
+          }
+          
+          .datepicker--cell.-selected-,.datepicker--cell.-selected-.-focus-{
+            background-color: #f8ceec;
+            color: #000000;
+          }
+          .datepicker--cell.-in-range-{
+            background: rgba(248, 206, 236, 0.2);
+          }
+          .datepicker--cell-day {
+              font-weight: 500;
+              color: #000000;
+          }
+          input[switch]:checked + label {
+    background-color: #2f8ee0 !important;
+}
+
+.felix-table-container{
+        overflow: auto !important;
+    }
+    .felix-table-container th{
+        white-space: normal !important;
+    }
+    .felix-table{
+        border-radius: 0.5rem;
+        overflow: hidden;
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+    }
+    .felix-table td,.felix-table th{
+        text-align:left !important;
+        color: #4B4B4B !important;
+    }
+    .felix-table th{
+        cursor: pointer;
+    }
+    .felix-table th img{
+        margin-top: -0.25rem;
+        margin-left: 0.25rem;
+    }
+    .felix-table td img{
+        max-width: 100px;
+        height: auto;
+    }
+    #DataTables_Table_0_length{
+        display:block;
+    }
+    .felix-table tbody tr:nth-of-type(odd){
+        background: transparent !important;
+    }
+    .table-hover tbody tr:hover, .felix-table tbody tr:nth-of-type(even){
+        background: #FCFCFC !important;
+    }
+    #DataTables_Table_0_info{
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    label{
+        font:normal normal normal 14px/19px Roboto;
+    }
+    .radio-button{
+        margin-left: 8px;
+    }
+.radio-button label, .radio-button input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid #CED4DA;
+border-radius: 4px;
+}
+
+.radio-button label {
+  /* padding: 5px; */
+  border: 1px solid #CCC;
+  cursor: pointer;
+  z-index: 90;
+  color:#343A40;
+  border: 1px solid #CED4DA;
+  font-weight: 500;
+  text-align: center;
+}
+
+.radio-button input[type="radio"]:checked+label,
+.Checked+label {
+background: #E9ECEF 0% 0% no-repeat padding-box;
+}
+
+
+          .datepicker--cell.-in-range-{
+            background: rgba(248, 206, 236, 0.2);
+          }
+          .datepicker--cell-day {
+              font-weight: 500;
+              color: #000000;
+          }
+          input[switch]:checked + label {
+    background-color: #2f8ee0 !important;
+}
+
+.felix-table-container{
+        overflow: auto !important;
+    }
+    .felix-table-container th{
+        white-space: normal !important;
+    }
+    .dataTables_filter,.quick-filters .stages input{
+        display:none;
+    }
+    .quick-filters .stages label{
+        color: #343A40;
+    }
+    .quick-filters .stages label.active{
+        border-color: #2f8ee0;
+    }
+    .quick-filters .stages label.disabled{
+        opacity: 0.2;
+    }
+    .dataTables_paginate{
+        text-align: center;
+    }
+    .dataTables_paginate a{
+        display: inline-block;
+        position: relative;
+        padding: .5rem .75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        cursor: pointer;
+    }
+    .dataTables_paginate .paginate_button.current,.dataTables_paginate a:hover{
+        background-color: #2f8ee0;
+        border-color: #2f8ee0;
+        color: white;
+    }
+    .quick-filters label span{
+        font-size: 9px;
+        margin-top: -10px;
+        background-color: #F2F2F2;
+        padding: 0px 2px;
+        border-radius: 2px;
+    }
+    .select-drop-down:after{
+        content: "\e64b";
+        font-family: 'themify';
+        font-size: 8px;
+        margin-left: 4px;
+        border-bottom: 1px solid #FFF;
+        display: inline-block;
+    }
+    .d-none-custom{
+        display:none;
+    }
+    .felix-table td{
+        vertical-align: middle !important;
+    }
+    td .d-none-custom{
+        display:block;
+    }
+    .input-row .btn-action{
+        display:none;
+    }
+    .dataTables_length label{
+        width: 150px;
+        display: flex;
+        align-items: center;
+    }
+    .dataTables_length label select{
+        margin: 0 0.5rem;
+    }
+ 
+    #DataTables_Table_0_length{
+        display:block;
+    }
+    .felix-table tbody tr:nth-of-type(odd){
+        background: transparent !important;
+    }
+    .table-hover tbody tr:hover, .felix-table tbody tr:nth-of-type(even){
+        background: #FCFCFC !important;
+    }
+    #DataTables_Table_0_info{
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    .quick-filters{
+        background:#EFEFEF;
+        display: flex;
+        align-items: center;
+        padding: 0 0.5rem;
+    }
+    .quick-filters span > *{
+        margin-top: 0.25rem;
+        margin-bottom:0.25rem;
+    }
+    
+    .user-filter .chosen-container .chosen-single{
+        height: 29px;
+        padding-top: 3px;
+        padding-bottom: 0;
+        margin-top: 0;
+        border: unset !important;
+    }
+    .wrapper .table-filters .open-search-field input[type=text]{
+        height: 29px;
+        width: 217px;
+        border: unset;
+        border-radius: 4px;
+        background-color: #FFFFFF;
+        padding: 0 10px 0 30px;
+        color: #868E96;
+        font-size: 12px;
+    }
+    .wrapper .table-filters .open-search-field:after{
+        top: 5px;
+        left: 8px;
+    }
+    
+    .shadow-4{
+        -webkit-box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.07),0 4px 6px -2px rgba(0,0,0,.05)!important;
+        border-radius: 0.5rem !important;
+        overflow: hidden;
+    }
+    #DataTables_Table_0_length{
+        display: none;
+    }
+    .quick-filters .date-ranger{
+        background: white;
+        display: flex;
+        margin: 0.25rem;
+        padding: 0 0.5rem;
+        border-radius: 0.25rem;
+    }
+    .quick-filters .date-ranger input{
+        border: unset;
+        font-size: 0.8rem;
+    }
+    .table-filters form{
+        width: 1830px;
+    }
+    .table-filters .open-search-field input[type=text] {
+        width: 275px !important;
+    }
+</style>
+
+
+     <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Health Renewals</h1>
+
+            <div class="float-right policies-total-amount hide">
+                {{ request.company.companysettings.get_currency_display }} <span></span>
+            </div>
+
+            <button title="Select at least one record to create a renewal deal" type="button" class="renewal-deal btn btn-md btn-primary disabled">
+                Create Renewal Deal
+            </button>
+
+            <div class="clear"></div>
+
+            <div class="table-filters">
+                
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="sort_by" id="id_sort_by" value="{{ sort_by }}" />
+                    <input type="hidden" name="from_date" id="id_from_date" value="{{ from_date }}" />
+                    <input type="hidden" name="to_date" id="id_to_date" value="{{ to_date }}" />
+                    <input type="hidden" name="hide_renewal_deal" id="id_hide_renewal_deal" />
+
+                    <div class="quick-filters">
+                        <span class="title">Select Expiring Date Range:</span>
+
+                        <span class="renewal_date_filter_field_container">
+                            <div class="btn btn-white renewal_date_filter_field" id="renewal_date_filter"></div>
+                        </span>
+
+                        <span class="title ml-3">Hide Policies with Renewal Deals:</span>
+                        <span class="checkbox">
+                            <label class="felix-checkbox">
+                                <input type="checkbox" name="hide-renewaldeals" class="hide-renewaldeals" id="hide-renewal-deals"/>
+                                <span class="checkmark big"></span>
+                            </label>
+                        </span>
+                    </div>
+            </div>
+            <div class="table-filters float-right m-r-25">
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        {% include 'healthinsurance/deals/components/policy_modal.djhtml' %}
+        <div class="row">
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table data-update-callback="__POLICY._updateTableAttributes" class="table no-footer felix-table" cellspacing="0" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="felix-checkbox parent">
+                                        <input class="select-record-all" type="checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th
+                                    data-name="policy_expiry_date"
+                                    class="p-l-15">
+                                    Status
+                                </th>
+                                <th
+                                    data-name="reference_number"
+                                    class="">
+                                    Policy No.
+                                </th>
+                                <th>Renewal Deal</th>
+                                <th
+                                    data-name="primary_member__name"
+                                    class="">
+                                    Customer
+                                </th>
+                                <th
+                                    data-name="owner_name"
+                                    class="">
+                                    Referrer
+                                </th>
+                                <th
+                                    data-name="insurer"
+                                    class="">
+                                    Expiring Insurer
+                                </th>
+                                <th>Expiring Premium ({{ companysettings.get_currency_display }})</th>
+                                
+                                <th
+                                    data-name="policy_expiry_date"
+                                    class="sortable {% if sort_by == 'policy_expiry_date_desc'%}desc{% endif %}{% if sort_by == 'policy_expiry_date_asc'%}asc{% endif %}">
+                                    Expiry Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center>
+                        <ul class="pagination"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    
+    {% include 'handlebars/pagination.html' %}    
+    {% include 'handlebars/health_policy_modal.html' %}
+
+{% endblock %}
+
+{% block extra_js %}
+    <link rel="stylesheet" type="text/css" href="{% static "plugins/daterangepicker/daterangepicker.css" %}" />
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>    
+    <script src="{% static "plugins/daterangepicker/daterangepicker.js" %}"></script>
+    <script src="{% static 'dist/health_module.js' %}?v=1.1"></script>
+    <script type="text/javascript">
+    
+    $(document).ready( function (){
+        var table = $('.felix-table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url : '/health-insurance/renewals/json/',
+                type: 'GET',
+                data: function(d){
+                    d.range_expiry = $('.ranges li.active').data('range-key');
+                    // if($('#hide-renewal-deals').is(":checked"))
+                    //     d.hide_renewals = true
+                    // else
+                    //     d.hide_renewals = false
+                    // Retrieve dynamic parameters
+                    var range = $('.ranges li.clicked').data('range-key');
+                    // Add dynamic parameters to the data object sent to the server
+                    if(range){ $.extend(d, range); }
+                }
+            },
+            "columns": [
+                {"data": "checkbox"},
+                {"data": "status"},
+                {"data": "policy_number"},
+                {"data": "deal"},
+                {"data": "customer"},
+                {"data": "referrer"},
+                {"data": "expiring_insurer"},
+                {"data": "total_premium"},
+                {"data": "expiry_date"},
+      ],
+      createdRow: function (row, data, dataIndex) {
+            $(row).attr('data-target', '#modal_view_policy');
+            $(row).attr('data-toggle', 'modal');
+            $(row).attr('id', `tr_${data['id']}`);
+            $(row).addClass('health-policy-row');
+        }
+        });
+
+        $('.ranges li').last().hide()
+
+        $('#id_search_term').on('change keyup',function(){
+            $('#id_assigned_to').val('');
+            $('#id_assigned_to_chosen .chosen-single span').html('Select user to filter/All users');
+            $('.quick-filters label').removeClass('active');
+            filtered = []
+            table.search($(this).val()).draw();
+        });
+
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        let searchTerm = $('#id_search_term').val()
+       if (~data[2].toLowerCase().indexOf(searchTerm)) return true;
+       if (~data[4].toLowerCase().indexOf(searchTerm)) return true;
+       return false;
+   })
+});
+    </script>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+
+{% block page_title %}Tasks{% endblock %}
+{% block body_class %}motor-deals tasks-list{% endblock %}
+{% block current_nav %}tasks{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="pre-wrapper squeeze">
+            <h1 class="title">Tasks</h1>
+            <button data-felix-modal="modal_task" data-backdrop='static' data-keyboard='false'
+                class="add-task btn btn-info-container btn-primary btn-sm">Add Task
+            </button>
+            {% with post_url=task_form_action %}
+                {% include 'core/_task_form.djhtml' %}
+            {% endwith %}
+
+            <span class="felix-table-action-buttons">
+                <a href="javascript:" class="mark-as-done btn btn-md btn-outline-primary">
+                    Mark as Done
+                </a>
+                {% if is_admin %}
+                <a href="javascript:" class="delete-record btn btn-md btn-outline-primary">
+                    Delete
+                </a>
+                {% endif %}
+            </span>
+            <div class="clear"></div>
+            <div class="table-filters">
+                <form action="{% url 'health-insurance:tasks' %}" method="get">
+                    <input type="hidden" name="page" id="id_page" value="{{ page }}" />
+                    <input type="hidden" name="filter_type" id="id_filter_type" value="{{ filter_type }}" />
+                    <input type="hidden" name="order_by" id="id_order_by" value="{{ order_by }}" />
+
+                    <div class="quick-filters">
+                        <span class="title">Quick Filters:</span>
+                        <button data-field="id_filter_type" data-type="all" type="button" class="{% if filter_type == 'all' %}active {% endif %} btn btn-white">All</button>
+                        <button data-field="id_filter_type" data-type="todo" type="button" class="{% if filter_type == 'todo' %}active {% endif %}btn btn-white">To Do</button>
+                        <button data-field="id_filter_type" data-type="done" type="button" class="{% if filter_type == 'done' %}active {% endif %}btn btn-white">Done</button>
+                        <button data-field="id_filter_type" data-type="today" type="button" class="{% if filter_type == 'today' %}active {% endif %}btn btn-white">Due Today</button>
+                        <button data-field="id_filter_type" data-type="tomorrow" type="button" class="{% if filter_type == 'tomorrow' %}active {% endif %}btn btn-white">Tomorrow</button>
+                        <button data-field="id_filter_type" data-type="overdue" type="button" class="{% if filter_type == 'overdue' %}active {% endif %}btn btn-white">Overdue</button>
+
+                        {{ search_form.assigned_to }}
+
+                    </div>
+                    <div class="table-filters float-right hide">
+                        <div class="filter-trigger">
+                            <i class="ti-filter"></i> <span class="hide badge badge-info badge-pill noti-icon-badge filter-count">0</span>
+                        </div>
+
+                        <div class="open-search-field">
+                            <span class="cross"><i class="ti-close"></i></span>
+                            {{ search_form.search_term }}
+                        </div>
+
+                        <div class="search-popup">
+                            <div class="title">Filters</div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_after.label }}</label>
+                                    {{ search_form.created_on_after }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>{{ search_form.created_on_before.label }}</label>
+                                    {{ search_form.created_on_before }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Deleted</label>
+                                    {{ search_form.deleted }}
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <a href="javascript:" class="search-clear">Clear</a>
+                                <div class="float-right">
+                                    <button type="button" class="search-cancel btn btn-sm btn-outline-secondary">Cancel</button>&nbsp;
+                                    <button type="button" class="search-apply btn btn-sm btn-primary">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="row">
+            <div class="col-12">
+                <div class="felix-table-container">
+                    <table class="table no-footer felix-table" cellspacing="0" width="100%" data-update-callback="__FELIX__._loadLibs">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label class="felix-checkbox parent">
+                                        <input class="select-record-all" type="checkbox" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </th>
+                                <th data-name="status"
+                                    class="small {% if order_by == 'status'%}asc{% endif %}{% if order_by == '-status' %}desc{% endif %}">
+                                    Status
+                                </th>
+                                <th data-name="title"
+                                    class="sortable {% if order_by == 'title'%}asc{% endif %}{% if order_by == '-title' %}desc{% endif %}">
+                                    Title
+                                </th>
+                                <th>Deal</th>
+                                <th>Deal Status</th>
+                                <th>Premium ({{ companysettings.get_currency_display }})</th>
+                                <th>Sum Insured ({{ companysettings.get_currency_display }})</th>
+                                <th data-name="assigned_to__first_name"
+                                    class="sortable {% if order_by == 'assigned_to__first_name'%}asc{% endif %}{% if order_by == '-assigned_to__first_name' %}desc{% endif %}">
+                                    Assigned To</th>
+                                <th
+                                    data-name="due_datetime"
+                                    class="sortable {% if order_by == 'due_datetime'%}asc{% endif %}{% if order_by == '-due_datetime'%}desc{% endif %}">
+                                    Due In
+                                </th>
+                                <th
+                                    data-name="created_on"
+                                    class="sortable {% if order_by == 'created_on'%}asc{% endif %}{% if order_by == '-created_on'%}desc{% endif %}">
+                                    Created On
+                                </th>
+                                <th
+                                    data-name="updated_on"
+                                    class="sortable {% if order_by == 'updated_on'%}asc{% endif %}{% if order_by == '-updated_on' %}desc{% endif %}">
+                                    Updated On
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="felix-table-body"> </tbody>
+                    </table>
+                </div>
+                <div class="squeeze">
+                    <small class="table_counts"></small>
+                    <center>
+                        <ul class="pagination"></ul>
+                    </center>
+                </div>
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+    </div>
+    {% include 'handlebars/tasks_list.html' %}
+    {% include 'handlebars/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,305 @@
+<div>
+{% load static %}
+<style>
+    .radio-button label{
+         min-height: 33px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     }
+     .modal-content{
+         padding: 20px;
+     }
+     .dropdown-toggle{
+         width: 100%;
+     }
+     .formlabel{
+         font-weight: 500;
+     }
+ </style>
+<div>
+
+<div class="felix-modal-container"  id="modal_create_policy">
+    <!-- Create Deal Form -->
+    <div class="felix-modal">
+        <!-- <div class="modal-content" style="padding:20px;"> -->
+            <!-- <div class="modal-header"> -->
+                <!-- <label class="formlabel" style="font-size:20px;">New Deal</label> -->
+                <h1>New Policy</h1>
+               
+            <!-- </div> -->
+            <!-- <div class="container"> -->
+                
+        <form action="{% url 'health-insurance:new-policy' %}" name="health_policy_form" id="health_policy_form" method="post" data-module-name="Deal" novalidate>
+            {% csrf_token %}
+            
+            <div class="content squeeze">
+                <div class="form-group">            
+                    
+                    <!-- <input type="hidden" name="customer_name" id="name_customer" value={{customer.name}} /> -->
+                    <input type="hidden" name="source" id="source_customer" value="people_page" />
+                    
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Customer *</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="autocomplete-container">
+                                <input
+                                    type="text"
+                                    data-url="{% url 'customers:customers-search' %}" 
+                                    data-target="id_customer"
+                                    class="autocomplete-field form-control required" 
+                                    id="id_customer_name" 
+                                    name="name" autocomplete="off" />
+                                    <input type="hidden" name="customer" id="id_customer" class="form-control" value="{{customer.pk}}" />                                    
+                            </div>                           
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label class="">Referrer</label> 
+                        </div>
+                        <div class="col-lg-6">
+                            <select class="form-control" name="referrer" id="policy_referrer">
+                                {% for user in referrers %}
+                                {% if user.value == -1 %}
+                                <option value="" selected disabled>{{user.text}}</option>
+                                {% else %}
+                                <option value="{{user.pk}}">{{user}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Policy Number *</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control required" id="id_policy_number" name="policy_number" />
+                            </div>
+                    </div>
+                    <br/>
+                    {% if not is_producer %}                                   
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Commission %</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control" id="id_commission" name="commission" />
+                            </div>
+                    </div>
+                    <br/>
+                    {% endif %}
+                    <!-- <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Basmah Charges</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control" id="id_basmah_charges" name="basmah_charges" />
+                            </div>
+                    </div> -->
+                                                         
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Total Premium Inc VAT *</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control required" id="id_total_premium_vat_inc" name="total_premium_vat_inc" />
+                            </div>
+                    </div>
+                    <br/>                                                   
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Start Date *</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" class="datepicker-here form-control required" id="id_start_date" name="start_date" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Please Select Start Date" />
+                            </div>
+                    </div>
+                    <br/>                    
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Expiry Date *</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" class="datepicker-here form-control required" id="id_expiry_date" name="expiry_date" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Please Select Expiry Date" />
+                            </div>
+                    </div>
+                    <br/>                    
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Receipt of Payment</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_receipt_of_payment" name="receipt_of_payment" />
+                            </div>
+                    </div>
+                    <br/>               
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Tax Invoice</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_tax_invoice" name="tax_invoice" />
+                            </div>
+                    </div>
+                    <br/>  
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Certificate of Insurance</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_certificate_of_insurance" name="certificate_of_insurance" />
+                            </div>
+                    </div>
+                    <br/>  
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Medical Card</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_medical_card" name="medical_card" />
+                            </div>
+                    </div>
+                    <br/>  
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Confirmation of Cover</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_confirmation_of_cover" name="confirmation_of_cover" />
+                            </div>
+                    </div>
+                    <br/>
+                    {% if not is_producer %}
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Credit Note</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_credit_note" name="credit_note" />
+                            </div>
+                    </div>
+                    <br/>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-lg-3 p-0">
+                            <label>Other Documents</label>
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="file" class="form-control" id="id_other-document" name="other_document" multiple/>
+                            </div>
+                    </div>
+                    <br/>  
+                </div>             
+            </div>
+
+                <div class="button-container float-right">
+                    <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md" data-dismiss="modal" aria-label="Close">Close</a>
+                    <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                        <span>Save</span>
+                        <div class="ball-spinner"></div>
+                    </button>
+                </div>
+          
+           
+
+           
+        </form>
+        <!-- </div> -->
+    <!-- </div> -->
+        <script type="text/javascript">        
+        $('#health_policy_form').submit(function(e){
+        debugger            
+        e.preventDefault()
+        e.target.querySelector('button[type="submit"]').disabled = true
+        var loader = '<div class="ball-spinner"></div>';
+        var button = $(this).find('button[type=submit]');
+
+        $(this).find('button[type=submit]').addClass('loader');
+        let errorCount = 0
+        $('.error').hide()
+        
+        this.querySelectorAll('.required').forEach(i => {       
+                if (! i.value) {                    
+                $(i).after('<span class="error">This field is required</span>');
+                errorCount++
+            }
+            
+        })
+        if(errorCount > 0) {
+            Utilities.Notify.error('Please check all the required Fields.', 'Error');
+            $(this).find('button[type=submit]').removeClass('loader');
+            e.target.querySelector('button[type="submit"]').disabled = false
+            return
+        }        
+        let url = "{% url 'health-insurance:new-policy' %}"
+        let redirect_url = "{% url 'health-insurance:policies' %}"
+        let formData = new FormData()
+        this.querySelectorAll('.form-control').forEach(i => {       
+            if (i.type == 'file')
+                formData.append(i.name,i.files[0])
+            else
+                formData.append(i.name,i.value)
+            
+        })
+        $.ajax({
+                type: "POST",
+                url: url,
+                data: formData, 
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                    e.target.querySelector('button[type="submit"]').classList.remove('loader')
+                    if(response.success) {
+                        Utilities.Notify.success('Policy Created Successfully', 'Success');
+                        $(this).find('button[type=submit]').removeClass('loader');                        
+                        window.location = redirect_url;                        
+                    }
+                    else if(response.errors){
+                        if(typeof(response.errors) == 'string')
+                            return Utilities.Notify.error(response.errors, 'Error');
+                        
+                        let errors = ''
+                        for(let i in response.errors){
+                            errors += response.errors[i] + '\n'
+                        }
+                        Utilities.Notify.error(errors, 'Error');
+                    }
+                    $(this).find('button[type=submit]').removeClass('loader');
+                },
+                error:function(error){
+                    Utilities.Notify.error('Some Error Occurred', 'Error');
+                    $(this).find('button[type=submit]').removeClass('loader');
+                    e.target.querySelector('button[type="submit"]').disabled = false
+                }
+    });
+    });        
+document.onchange = function(event){
+    let element = event.target.id;
+    if(event.target.id == 'id_start_date'){
+        debugger
+        let sd = document.getElementById("id_start_date").value;
+        sd = sd.split('/')
+        
+        let dt = $('#id_start_date').datepicker("getDate");
+        dt.setDate(dt.getDate() - 1)
+        dt.setFullYear(dt.getFullYear() + 1)        
+        $('#id_expiry_date').datepicker('setDate', dt);        
+    }
+}
+    
+
+        </script>
+
+    </div>
+  
+</div>
+</div>

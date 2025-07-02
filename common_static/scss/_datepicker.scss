@@ -1,0 +1,27 @@
+div.datepicker {
+    margin-top: 10px;
+    &.datepicker-dropdown.datepicker-orient-bottom:after {
+        border-bottom: 6px solid #e6e6e6;
+        display: none;
+    }
+
+    &.datepicker-dropdown.datepicker-orient-left:after {
+        display: none;
+    }
+}
+.datepicker {
+	.active {
+		background: $primary !important;
+	}
+	&.datepicker-dropdown.dropdown-menu {
+		z-index: 2;
+	}
+	td, th.dow {
+		font-size: 11px;
+		padding: 5px 7px;
+	}
+	th.datepicker-switch, th.next, th.prev {
+		cursor: pointer;
+		font-size: 13px;
+	}
+}

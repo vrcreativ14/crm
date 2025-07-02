@@ -1,0 +1,206 @@
+/*********************
+   Motor Lead Form Styling
+   ********************/
+
+#motor-form {
+    text-align: left;
+
+    .form-group.active {
+        background-color: #FAFAFA;
+    }
+    h1 {
+        color: $dubizzle-color-primary;
+        font-size: 32px;
+        font-weight: normal;
+
+        &.top-heading {
+            width: 90%;
+            margin-bottom: 30px;
+        }
+
+        &.down-arrow:after {
+            display: none;
+        }
+
+        p {
+            color: $dubizzle-color-smoke;
+        }
+    }
+
+    label {
+        color: $dubizzle-color-grease;
+
+        span.subtitle {
+            font-size: 12px;
+            font-weight: 200;
+            display: block;
+            color: $dubizzle-color-charcoal;
+        }
+    }
+
+    .indv-field label {
+        font-weight: 400;
+    }
+
+    .asterisk-field {
+        &:after {
+            color: $dubizzle-color-third;
+        }
+    }
+
+    .field-select-buttons button {
+        font-size: 14px;
+        border-radius: 6px;
+        &:hover {
+            background-color: $dubizzle-color-third;
+            border-color: $dubizzle-color-third;
+        }
+        &.active {
+            background-color: $dubizzle-color-secondary;
+            border-color: $dubizzle-color-secondary;
+        }
+    }
+    .chosen-container-active {
+        .chosen-single {
+            border: 1px solid $dubizzle-color-charcoal;
+            border-radius: 6px;
+        }
+    }
+    .chosen-results {
+        li.highlighted {
+            background-color: $dubizzle-color-secondary;
+        }
+    }
+
+    .chosen-container-single .chosen-single div b {
+        background-image: url(../images/dropdown-arrow-icon-dubizzle.svg) !important;
+    }
+
+    input[type=text],
+    input[type=tel],
+    input[type=email],
+    input[type=tel],
+    input[type=number] {
+        &:focus {
+            border: 1px solid $dubizzle-color-charcoal;
+        }
+    }
+
+    button {
+        font-family: $font-family;
+    }
+
+    .tooltip-help {
+        h3 {
+            color: $dubizzle-color-grease;
+            font-weight: 400;
+        }
+    }
+
+    .blue-line {
+        border-bottom: 3px solid $dubizzle-color-primary;
+    }
+
+    .checkbox-container input[type="checkbox"]:checked + label span.checkbox::before {
+        background-color: $dubizzle-color-secondary;
+    }
+
+    .image-container .zoom-icon {
+        background: rgba(223, 3, 0, 0.7);
+    }
+
+    .btn-contact-tooltip {
+        color: $dubizzle-color-secondary;
+        background: url(../images/tip-chat-icon-dubizzle.svg) no-repeat 12px 12px;
+    }
+
+    .calendar-icon {
+        background: #FFF url(../images/calendar-icon-dubizzle.svg) no-repeat 10px 10px;
+    }
+
+    .steps [role='tablist'] {
+        li > * {
+            color: $dubizzle-color-smoke;
+        }
+        li.current > * {
+            color: $dubizzle-color-grease;
+            border-bottom: 3px solid $dubizzle-color-primary;
+        }
+    }
+
+    .heading-error {
+        em.error {
+            color: $dubizzle-color-third;
+        }
+        span.checkbox:before {
+            border: 2px solid $dubizzle-color-error;
+        }
+        input[type=text],
+        input[type=tel],
+        input[type=email],
+        input[type=tel],
+        input[type=number] {
+            border: 1px solid $dubizzle-color-error;
+        }
+    } 
+
+    [aria-label='Pagination'] li a {
+        background-color: $dubizzle-color-primary;
+        border-radius: 6px;
+    }
+
+    .tooltip-help-close-container .tooltip-help-close {
+        background: transparent url(../images/cross-tooltip-dubizzle.svg) 0 0 no-repeat;
+    }
+    .tooltip-help {
+        a {
+            color: $dubizzle-color-third;
+        }
+    }
+    .help-trigger-layout {
+        a {
+            color: $dubizzle-color-third;
+            border-bottom: 2px dashed $dubizzle-color-third;
+        }
+    }
+
+    .animated-car {
+        &:before {
+            background: url(../images/illustration-check-dubizzle.svg) no-repeat;
+        }
+        &:after {
+            background: url(../images/illustration-car-dubizzle.svg) no-repeat;
+        }
+    }
+}
+
+.thankyou {
+    font-family: $font-family;
+
+    h1 {
+        color: $dubizzle-color-charcoal;
+    }
+
+    p {
+        color: $dubizzle-color-charcoal;
+        font-weight: 400;
+    }
+    .meet-felix-team {
+        background-color: $dubizzle-color-secondary;
+        color: #FFF !important;
+        text-transform: inherit;
+        font-weight: 600;
+        margin: 20px 0px 0px 0px;
+    }
+
+    hr.blue-short {
+        border-top: 3px solid $dubizzle-color-secondary;
+    }
+
+    .call-us {
+        color: $dubizzle-color-charcoal;
+        .phone {
+            color: $dubizzle-color-secondary;
+        }
+    }
+}

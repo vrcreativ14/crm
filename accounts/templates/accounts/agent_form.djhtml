@@ -1,0 +1,226 @@
+{% extends 'accounts/settings_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Users{% endblock %}
+{% block body_class %}user-profile{% endblock %}
+
+{% block settings_content %}
+    <div class="row justify-content-md-center p-t-40">
+        <div class="col-lg-8">
+            <div class="breadcrumb pt-0">
+                <ul class="ml-1">
+                    <li><a href="{% url 'accounts:agents' %}">Users</a></li>
+                    <li class="muted">/</li>
+        
+                    <li>{% if agent %}{{ agent }}{% else %}Create a New User{% endif %}</li>
+                </ul>
+            </div>
+
+            <div class="card m-b-20">
+                <form action="{{ post_url }}" name="profile_form" id="profile_form" method="post" validate
+                    enctype="multipart/form-data" data-module-name="Profile">
+                    {% csrf_token %}
+                    <input type="hidden" name="remove_avatar" id="id_remove_avatar" value="" />
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Profile - {% if agent %}{{ agent }}{% else %}Create a New User{% endif %}</h4>
+                    <hr />
+
+                    <div class="row m-20 m-t-50 m-b-60">
+                        <div class="col-lg-4">
+                            <center>
+                                <div class="profile-image-container rounded-circle user-profile-image"
+                                     style="background-image:url({{ agent.get_profile_image }})">
+                                </div>
+                                <br />
+                                <a href="javascript:" class="upload-new font-12 fw-300">Upload New Photo</a><br />
+                                <a href="javascript:" class="remove-avatar font-12 c-error important fw-300">Delete Photo</a>
+                                <div class="form-group hide">
+                                    {{ form.image }}
+                                </div>
+                            </center>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">Name</label>
+                                </div>
+                                <div class="col-lg-7">
+                                    <div class="row">
+                                        <div class="col-lg-6 p-l-0">
+                                            {{ form.first_name }}
+                                        </div>
+                                        <div class="col-lg-6 p-l-0">
+                                            {{ form.last_name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">Email</label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    {% if agent %}
+                                        <input type="text" value="{{ agent.user.email }}" disabled
+                                               class="form-control"/>
+                                    {% else %}
+                                        {{ form.email }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">Password</label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="password-field">
+                                        {{ form.password }}
+                                        <div class="password-show-toggle"><i class="ti-eye c-lgrey"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">Role</label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    {{ form.permissions }}
+                                </div>
+                            </div>
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">Allowed Workspaces</label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="allowed-workspaces-field-container">
+                                        <span class="counts">0 Selected</span>
+                                        <b></b>
+                                        {{ form.allowed_workspaces }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% if agent %}
+                            {% if 'MT' in agent.allowed_workspaces %}
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Your Personal Motor Link
+                                        <span class="help-icon" title="This is your personal motor insurance application form link. Anyone that applies for motor insurance using this link will automatically be assigned to you."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="copy-link-container profile">
+                                        <input id="id_motor_lead_form_url" name="motor_lead_form_url" type="text" readonly class="form-control" value="{{ userprofile.get_motor_lead_form_url }}" />
+                                        <ul class="controls">
+                                            <li>
+                                                <a title="Click to copy" onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="id_motor_lead_form_url" class="font-14"><i class="ti-files"></i></a>
+                                            </li>
+                                            <li>
+                                                <a title="Click to open" href="{{ userprofile.get_motor_lead_form_url }}" target="_blank" class="m-l-5 font-14"><i class="ti-new-window"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if 'MG' in agent.allowed_workspaces %}
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Your Personal Mortgage Link
+                                        <span class="help-icon" title="This is your personal mortgage application form link. Anyone that applies for mortgage using this link will automatically be assigned to you."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="copy-link-container profile">
+                                        <input id="id_mortgage_lead_form_url" name="mortgage_lead_form_url" type="text" readonly class="form-control" value="{{ userprofile.get_mortgage_lead_form_url }}" />
+                                        <ul class="controls">
+                                            <li>
+                                                <a title="Click to copy" onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="id_mortgage_lead_form_url" class="font-14"><i class="ti-files"></i></a>
+                                            </li>
+                                            <li>
+                                                <a title="Click to open" href="{{ userprofile.get_mortgage_lead_form_url }}" target="_blank" class="m-l-5 font-14"><i class="ti-new-window"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if 'HI' in agent.allowed_workspaces %}
+                            <div class="row m-t-30">
+                                <div class="col-lg-4">
+                                    <label class="font-12 fw-300 c-vlgrey">
+                                        Your Personal Health Link
+                                        <span class="help-icon" title="This is your personal health application form link. Anyone that applies for health insurance using this link will automatically be assigned to you."></span>
+                                    </label>
+                                </div>
+                                <div class="col-lg-7 p-l-0">
+                                    <div class="copy-link-container profile">
+                                        <input id="id_health_lead_form_url" name="health_lead_form_url" type="text" readonly class="form-control" value="{{ userprofile.get_health_lead_form_url }}" />
+                                        <ul class="controls">
+                                            <li>
+                                                <a title="Click to copy" onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="id_health_lead_form_url" class="font-14"><i class="ti-files"></i></a>
+                                            </li>
+                                            <li>
+                                                <a title="Click to open" href="{{ userprofile.get_health_lead_form_url }}" target="_blank" class="m-l-5 font-14"><i class="ti-new-window"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                        {% endif %}
+                        </div>
+                    </div>
+                    <hr />
+                    {% if agent %}
+                    <button type="button" data-status-url="{% url 'accounts:agent-deals-and-delete' pk=userprofile.pk %}" data-redirect-url="{% url 'accounts:agents' %}" data-id="{{ userprofile.pk }}" class="remove-agent btn btn-md btn-danger m-l-15">
+                        <i class="ti ti-trash"></i> Remove this user account
+                    </button>
+                    {% endif %}
+                    <button type="submit" class="update-profile float-right m-r-15 m-b-15 btn btn-md btn-primary">
+                        {% if agent %}
+                            <span>Save Profile</span>
+                        {% else %}
+                            <span>Add User</span>
+                        {% endif %}
+                        <div class="ball-spinner"></div>
+                    </button>
+                </form>
+            </div>
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+    {% include "accounts/agent_remove_modal.djhtml" %}
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $('.allowed-workspaces-field-container').click(function() {
+            $(this).toggleClass('active');
+        });
+        $('#id_permissions').change(function() {
+            $('.allowed-workspaces-field-container input').prop('checked', false);
+
+            if($(this).val() == 'admin')
+                $('.allowed-workspaces-field-container input').prop('checked', true);
+
+            $('.allowed-workspaces-field-container input').change();
+        });
+        $('.allowed-workspaces-field-container input').change(function() {
+            let count = $(this).closest('ul').find('input:checked').length;
+            $('.allowed-workspaces-field-container span.counts').html(`${count} Selected`);
+        });
+        $('html').click(function(e) {
+            if ($(e.target).closest('.allowed-workspaces-field-container').length == 0)
+                $('.allowed-workspaces-field-container').removeClass('active');
+        });
+
+        $('.allowed-workspaces-field-container input').change();
+    });
+    </script>
+{% endblock extra_js %}

@@ -1,0 +1,56 @@
+.radio-container {
+    padding-left: 25px;
+
+    @include breakpoint(mobile-tablet) {
+        padding: 5px 0px;
+    }
+
+    input[type="radio"]{
+        display: block;
+        visibility: hidden;
+        position: absolute;
+    }
+
+    label {
+       position: relative;
+    }
+
+    /* Base styles for spans */
+    span {
+        &.radio::before,
+        &.radio::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        &.radio:hover {
+            cursor: pointer;
+        }
+        &.radio::before {
+            left: -40px;
+            width: 22px;
+            height: 21px;
+            background-color: #fcfcfc;
+            border-radius: 50px;
+            border: 1px solid #999;
+        }
+        &.radio::after {
+            left: -35px;
+            width: 12px;
+            height: 13px;
+            border-radius: 10px;
+            background-color: #FFF;
+            transition: left .25s, background-color .25s;
+        }
+    }
+
+    /* Radio buttons */
+    input[type="radio"]:checked + label span.radio::after {
+      background-color: $success;
+    }
+    input[type="radio"]:checked + label span.radio::before {
+      border: 1px solid $success;
+    }
+}

@@ -1,0 +1,66 @@
+{% extends "mortgage/deal/components/stage_form.html" %}
+{% load static %}
+{% load humanize %}
+{% load mortgage %}
+{% block head %}
+{% block extra_css %}
+<style>
+/* New CSS */
+.mortgage-quote-details .table img{
+    height: 50px;
+    width: auto;
+}
+.mortgage-quote-details .table tr td{
+    text-align: right;
+}
+</style>
+{% endblock %}
+
+<div class="mortgage-quote-details deal-overview deal-process pre-approval display">
+
+    <div class="row mb-4">
+        <div class="col-4 text-left">
+            <div class="heading text-capitalize">Sub stages</div>
+            <ul class="sub-stages deal-stages-breadcrumb mt-4">
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="FOL Requested From Bank" key="FOL Requested From Bank" stage="offer" stage_number="4" %}
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="FOL signed" key="FOL signed" stage="offer" stage_number="4" %}
+                <li class="d-none"></li>
+            </ul>
+        </div>
+        <div class="col-8">
+            {% include 'mortgage/deal/components/quick_customer_link.djhtml' %}
+        </div>
+    </div>
+
+    <div class="text-left">
+        <div class="sub-stages-content fol-requested-content" {% if deal.current_sub_stage.sub_stage != 'FOL Requested From Bank' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8">
+                    <p>Once FOL has been received and sent to the client, move to the next stage</p>
+                    <button type="button" class="mt-4 ml-0 btn-nexus btn-nexus-blue" onclick="deal_sub_tages_processor('fol-signed')">Next</button>
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-stages-content fol-signed-content" {% if deal.current_sub_stage.sub_stage != 'FOL signed' and deal.stage == 'offer' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8">
+                    <p>Once FOL is signed move to next stage.</p>
+                    {% block button %}
+                        {% if deal.stage == "offer" %}
+                            <button type="submit" class="mt-4 ml-0 btn-nexus btn-nexus-blue">Next</button>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

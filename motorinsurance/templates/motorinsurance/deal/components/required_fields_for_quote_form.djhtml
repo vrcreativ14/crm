@@ -1,0 +1,35 @@
+<div id="modal_required_fields_quote_form" class="felix-modal-container">
+    <div class="felix-modal fit">
+        <h1>Please set the number of passengers for {{ deal.get_car_title }}</h1>
+
+        <form action="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}" name="deal_num_passengers_field" id="deal_num_passengers_field" method="post" data-module-name="Deal">
+            {% csrf_token %}
+            <input type="hidden" name="name" value="number_of_passengers" />
+            <input type="hidden" name="pk" value="{{ deal.pk }}" />
+
+            <div class="content squeeze single-field">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <label class="">
+                                Number of Passengers *
+                                <span class="help-icon" title="This is the number of passengers excluding the driver and is used to calculate the Personal Accident Benefit premium. Eg. for a typical family sedan with space for 1 driver and 4 passengers you would enter '4' for this field."></span>
+                            </label>
+                        </div>
+                        <div class="col-lg-7">
+                            <input type="number" class="form-control" name="value" min="1" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary  btn-md">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide btn-md">
+                    <span>Update</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

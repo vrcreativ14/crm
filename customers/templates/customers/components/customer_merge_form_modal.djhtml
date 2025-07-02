@@ -1,0 +1,9 @@
+<div id="modal_merge_customer" class="felix-modal-container customer-merge-form">
+    <div class="felix-modal wide">
+        <h1>Merge Customers</h1>
+
+        <div class="form-container">
+            
+        </div>
+    </div>
+</div>

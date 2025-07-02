@@ -1,0 +1,66 @@
+{% load static %}
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+	     
+
+
+	<title>Nexus</title>
+<style>
+		@font-face {
+        font-family: 'Montserrat-Bold';
+        src: url('{% static 'fonts/Montserrat-Bold.ttf' %}');		
+      }
+      @font-face {
+        font-family: 'Montserrat-Regular';
+        src: url('{% static 'fonts/Montserrat-Regular.ttf' %}');
+		
+      }
+      @font-face {
+        font-family: 'Montserrat-SemiBold';
+        src: url('{% static 'fonts/Montserrat-SemiBold.ttf' %}');
+		
+      }
+      @font-face {
+        font-family: 'Montserrat-Medium';
+        src: url('{% static 'fonts/Montserrat-Medium.ttf' %}');		
+      }
+
+.next-btn{
+	width: 120px;
+	padding: 10px;
+	background-color:#dfb76c ;
+	border-radius: 5px;
+	text-align: center;
+	color: #fff;
+	font-weight: 500;
+	cursor: pointer;
+	float: right;
+}
+.next-btn:hover{
+		border-radius: 5px;
+}
+button{
+	font-family: 'Montserrat-Medium' ;
+      font-size: 15px;
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+	border: 1px solid #f3f3f3;
+    box-shadow: 5px 4px 3px 0px #f3f3f3;
+	width: 370px;
+	margin-top: 1rem;
+	text-align: left;
+}
+</style>
+
+
+</head>
+
+
+{% block content %}
+
+{% endblock %}

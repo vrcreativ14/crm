@@ -1,0 +1,565 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Dashboard{% endblock %}
+{% block current_nav %}dashboard{% endblock %}
+
+{% block page_header %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <h4 class="page-title"><i class="mdi mdi-view-dashboard"></i> Dashboard</h4>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container squeeze">
+        <div class="row m-b-20 justify-content-end" style="width: 100%">
+            {% if entity == "mortgage" %}
+            <div class="col-2">
+                    Filter by Dates:
+                    <select id="mortgage-deal-filter-type">
+                        <option {% if filtertype == "month" %} selected {% endif %}value="month">Monthly</option>
+                        <option {% if filtertype == "date" %} selected {% endif %}value="date">By Dates</option>
+                    </select>
+                </div>
+            {%endif%}
+
+            {% if  entity == "health" %}
+            <div class="col-2">
+                    Filter by Dates:
+                    <select id="health-deal-filter-type">
+                        <option {% if filtertype == "month" %} selected {% endif %}value="month">Monthly</option>
+                        <option {% if filtertype == "date" %} selected {% endif %}value="date">By Dates</option>
+                    </select>
+                </div>
+
+            <div class="col-2">
+                    Filter by Insurer:
+                    <select id="insurer">
+                    <option value="">All Insurer</option>
+                    {% for insurer in insurers %}
+                        <option value="{{ insurer.pk }}" {% if selected_insurer_id == insurer.pk %}selected{% endif %}>{{ insurer.name }}</option>
+                    {% endfor %}
+                </select>
+                </div>
+
+               
+                
+            {%endif%}
+            <div class="col-2">
+                Filter by user:
+                <!-- <div class="allowed-workspaces-field-container">
+                    <span class="counts">0 Selected</span>
+                    <b></b>
+                    <ul id="id_user_filter" class="multiselect-ui allowed-workspaces-field">
+                        {% for user in users %}
+                            <li><label for="id_allowed_workspaces_{{forloop.counter0}}"><input type="checkbox" name="allowed_workspaces" value="MT" class="multiselect-ui allowed-workspaces-field" id="id_allowed_workspaces_{{forloop.counter0}}">
+                                {{ user.username }}
+                            </label></li>
+                        {% endfor %}
+                    </ul>
+                </div> -->
+                <!-- <select id="select-users" class="chosen-select selectpicker autocomplete" data-placeholder="select users" multiple>
+                    {% for user in users %}
+                    <option value="{{ user.pk }}" {% if selected_user_id == user.pk %}selected{% endif %}>{{ user.username }}</option>
+                    {% endfor %}
+                </select> -->
+
+                <!-- <script src="js/multiselect/jquery.multiselect.js"></script>
+                <link rel="stylesheet" href="js/multiselect/jquery.multiselect.css">
+
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+               <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+               
+                <!-- <select id="users" class="multiselect-ui" multiple="multiple">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user.pk }}" {% if selected_user_id == user.pk %}selected{% endif %}>{{ user.username }}</option>
+                    {% endfor %}
+                </select>-->
+                <select id="users">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user.pk }}" {% if selected_user_id == user.pk %}selected{% endif %}>{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+                
+
+
+            </div>
+            {% if show_date %}
+                <div class="col-2" >
+                {% else %}
+                <div class="col-2" id="date-range-selector" style="display: none;">
+            {% endif %}
+                Select Date
+                {%  if start_date and end_date %}
+                    <input type="text" class="form-control" name="daterange" value="{{start_date}} - {{end_date}}" />
+                {% else %}
+                    <input type="text" class="form-control" name="daterange" />
+                {% endif %}
+                <script>
+                    $(function() {
+                    $('input[name="daterange"]').daterangepicker({
+                        opens: 'left',
+                        maxDate: new Date(),
+                        "maxSpan": {
+                            "months": 2
+                        },
+                        }, 
+                        function(start, end, label) {
+                        qs_str = window.location.search
+                        qs = new URLSearchParams(qs_str);
+                        qs.set('start_date', start.toJSON())
+                        qs.set('end_date', end.toJSON())
+                        qs.set('filtertype', "date")
+                        $('#start_date').val(start.toJSON())
+                        $('#end_date').val(end.toJSON())
+                        window.location = "?" + qs.toString()
+                    });
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    {% if entity == 'mortgage' %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Deals Created</h4>
+
+                    {% elif entity == 'health' %}
+                        <h4 class="header-title m-l-15 m-t-15 m-b-0">Health Deals Created</h4>
+                    {% else %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Motor Deals Created</h4>
+                    {% endif %}
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="bar"
+                        {% if entity == 'mortgage' %}
+                            data-endpoint="{% url 'mortgage:dashboard-deals-created' %}"
+                        {% comment %} URL for  Health Deals Created {% endcomment %}
+                        {% elif entity == 'health'%}
+                            id="health-deals-created"
+                        {% else %}
+                        data-endpoint="{% url 'motorinsurance:dashboard-deals-created' %}"
+                        {% endif %}
+                        data-params="{{ params }}"
+                        data-label="Motor Deals Created"></canvas>
+                    <div class="description">Sum of all the new deals created in timeframe</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    {% if entity == 'mortgage' %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Value  of Won Deals </h4>
+
+                    {% elif entity == 'health' %}
+                        <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Won </h4>
+                    {% else %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">No. of Motor Deals Won</h4>
+                    {% endif %}
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        
+                        {% if entity == 'mortgage' %}
+                        data-type="bar"
+                        data-endpoint="{% url 'mortgage:dashboard-deals-total-won' %}"
+                        {% comment %} URL for Total Premium  from Won {% endcomment %}
+                        {% elif entity == 'health' %}
+                        id="health-won-premium"
+                            data-type="line"
+                            data-fill="false"
+                        {% else %}
+                        data-type="bar"
+                        data-endpoint="{% url 'motorinsurance:dashboard-orders-created' %}"
+                        {% endif %}
+                        data-params="{{ params }}"
+                        data-label="Motor Orders Created"></canvas>
+                    {% if entity == 'mortgage' %}
+                    <div class="description">Sum of all the active deals in timeframe</div>
+                    {% else %}
+                    <div class="description">Sum of all the new motor orders in timeframe</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    {%if entity == 'mortgage' %}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Lost Deals</h4>
+                    {% elif  entity == 'health'%}
+                        <h4 class="header-title m-l-15 m-t-15 m-b-0">Health Deals Lost</h4>
+                    {%else%}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Total Premium from Orders</h4>
+                    {%endif%}
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-fill="false"
+                        {% if entity == 'mortgage' %}
+                        data-type="line"
+                        data-endpoint="{% url 'mortgage:dashboard-deals-lost' %}"
+                        {% comment %} URL for Health Deals Lost {% endcomment %}
+                        {% elif entity == 'health' %}
+                            data-type="bar"
+                            id="health_deals_lost"
+                        {% else %}
+                            data-type="line"
+                            data-endpoint="{% url 'motorinsurance:dashboard-orders-premium' %}"
+                        {% endif %}
+                        data-params="{{ params }}"
+                        data-tooltip_prefix=" {{ companysettings.get_currency_display }}"
+                        data-label="Total Premium"></canvas>
+                    <div class="description">Sum of all the order premiums</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    {%if entity == 'mortgage' %}
+                        <h4 class="header-title m-l-15 m-t-15 m-b-0">Won Deals <span class="help-icon" title = "number of Total Deals"></span></h4>
+                    {% elif entity == 'health'%}
+                        <h4 class="header-title m-l-15 m-t-15 m-b-0">Health Deals Won<span class="help-icon" title = "number of Total Deals"></span></h4>    
+                    {%else%}
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Sales Conversion Rate <span class="help-icon" title="The sales conversion rate is calculated using two numbers. We take the number of new deals created and then the number of deals won in a specific month. We divide the number of deals won by the number of new deals to calculate the sale conversion rate."></span></h4>
+                    {%endif%}
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-fill="false"
+                        {% if entity == 'mortgage' %}
+                        data-type="line"
+                        data-endpoint="{% url 'mortgage:dashboard-deals-won' %}"
+                        {% comment %} URL for  Health Deals Won {% endcomment %}
+                        {% elif entity == 'health' %}
+                        id="health-deals-won"
+                        data-type="bar"
+                        
+                        {% else %}
+                        data-tooltip_prefix="%"
+                        data-type="line"
+                        data-endpoint="{% url 'motorinsurance:dashboard-sales-conversion-rate' %}"
+                        {% endif %}
+                        data-params="{{ params }}"
+                        data-label="Conversion Rate"></canvas>
+                    <div class="description">No. of Orders Created / No. of Deals Created</div>
+                </div>
+            </div>
+        </div>
+
+        {% if entity == 'mortgage' %} 
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0"> Active Deals </h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="line"
+                        data-endpoint="{% url 'mortgage:dashboard-deals-total' %}"
+                        data-params="{{ params }}"
+                        data-tooltip_prefix=" {{ companysettings.get_currency_display }}"
+                        data-label="Total Premium"></canvas>
+                    <div class="description">All Won Deals</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Won Deals by bank<span class="help-icon" title = "number of Total Deals"></span></h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="line"
+                        data-fill="false"
+                        data-tooltip_prefix="%"
+                        data-endpoint="{% url 'mortgage:dashboard-deals-bank' %}"
+                        data-params="{{ params }}"
+                        data-label="Conversion Rate"></canvas>
+                    <div class="description">No. of Orders Created / No. of Deals Created</div>
+                </div>
+            </div>
+        </div>
+        {% endif  %}
+
+        {% if entity == 'health' %} 
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0">Sales Conversion Rate<span class="help-icon" title = "Sales Conversion Rate"></span></h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-fill="false"
+                        data-tooltip_prefix="%"
+                        id="health_sales_conversion_rate"
+                        data-params="{{ params }}"
+                        data-label="Conversion Rate"></canvas>
+                    <div class="description">No. of Orders Created / No. of Deals Created</div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-xl-6">
+                <div class="card m-b-20 chart-container">
+                    <h4 class="header-title m-l-15 m-t-15 m-b-0"> Health Deals Won By Insurer </h4>
+                    <hr />
+                    <i class="fa fa-circle-notch fa-spin text-muted preloader"></i>
+                    <canvas
+                        class="felix-chart p-l-20 p-r-20 p-b-20"
+                        data-type="bar"
+                        {% comment %} URL for Health Deals By Insurer {% endcomment %}
+                        id = "won_insurer"
+                        data-params="{{ params }}"
+                        data-label="Total Premium"></canvas>
+                    <div class="description">All Won Deals</div>
+                </div>
+            </div>
+        </div>
+        {% endif  %}
+
+        <script type="text/javascript">
+
+            const deals_won = "/health-insurance/deals-won/?entity=health";
+            const deals_created = "/health-insurance/deals-created?entity=health"
+            const premium = "/health-insurance/orders-premium/?entity=health"
+            const lost = "/health-insurance/deals-lost/?entity=health"
+            const sales_conversion_rate = "/health-insurance/sales-conversion-rate/?entity=health"
+            const won_insurer_url = "/health-insurance/deal-insurer/?entity=health"
+
+            function createChart(elem, data){
+                new Chart(
+                    $(`#${elem}`),
+                    {
+                      type: 'bar',
+                      data: {
+                        labels: data.map(x => x[0]),
+                        datasets: [
+                          {
+                            label: 'New Deals',
+                            backgroundColor: 'rgb(54, 162, 235, 0.5)',
+                            data: data.map(row => ({
+                              x: row[0],
+                              y: row[1],
+                            }))
+                          },
+                          {
+                            label: 'Renewals',
+                            backgroundColor: 'rgb(153, 102, 255, 0.5)', //'#b32ee6',
+                            data: data.map(row => ({
+                              x: row[0],
+                              y: row[2],
+                            }))
+                          }
+                        ]
+                      }
+                    }
+                  );
+            }
+
+            $(document).ready(function() {
+                //$('select:not(#select-users)').chosen();
+                //$('#select-users').formSelect();
+                $.ajax({
+                    type: 'GET',
+                    url: deals_won,
+                    dataType: 'json',
+                    success: function(data){
+                        debugger
+                        console.log(data)
+                        createChart('health-deals-won', data)
+                    }
+                    })
+
+                $.ajax({
+                    type: 'GET',
+                    url: deals_created,
+                    dataType: 'json',
+                    success: function(data){
+                        debugger
+                        console.log(data)
+                        createChart('health-deals-created', data)
+                    }
+                    })
+  
+                $.ajax({
+                    type: 'GET',
+                    url: premium,
+                    dataType: 'json',
+                    success: function(data){
+                        debugger
+                        console.log(data)
+                        createChart('health-won-premium', data)
+                    }
+                    })
+
+                $.ajax({
+                        type: 'GET',
+                        url: lost,
+                        dataType: 'json',
+                        success: function(data){
+                            debugger
+                            console.log(data)
+                            createChart('health_deals_lost', data)
+                    }
+                    })
+                $.ajax({
+                        type: 'GET',
+                        url: won_insurer_url,
+                        dataType: 'json',
+                        success: function(data){
+                            debugger
+                            console.log(data)
+                            createChart('won_insurer', data)
+                    }
+                    })
+
+                
+                    $.ajax({
+                        type: 'GET',
+                        url: sales_conversion_rate,
+                        dataType: 'json',
+                        success: function(data){
+                            debugger
+                            console.log(data)
+                            createChart('health_sales_conversion_rate', data)
+                    }
+                    })
+                    
+                
+            
+        })
+            // $('#select-users').on('change', function(){
+            //     let url = "/health-insurance/deals/ajax/";
+            //     url = url + '?entity=health' + '&filtertype=users' + '&users=' + $('#select-users').val();
+            //     console.log('test')
+            //     $.ajax({
+            //         type: 'GET',
+            //         url: url,
+            //         dataType: 'json',
+            //         success: function(result){
+            //             chart.data = result;
+            //         }
+            //     })
+            // })
+
+        $('.input-daterange input').each(function() {
+            $(this).datepicker('clearDates');
+            });
+        
+            function filterHandler(refresh){
+                let url = "{% url 'accounts:dashboard' %}";
+                if ( __app_name == "mortgage" ){
+                    url = url + '?entity=mortgage' + '&filtertype=' + $('#mortgage-deal-filter-type').val();
+                    if ($('#mortgage-deal-filter-type').val() == "date") {
+                        if (refresh){
+                        qs_str = window.location.search
+                        qs = new URLSearchParams(qs_str);
+                        var start_date
+                        var end_date
+                        if (qs.get("start_date") && qs.get("end_date") ){
+                        start_date = qs.get("start_date", "")
+                        end_date = qs.get("end_date", "")
+                        }
+                        else{ 
+                            var currentTime = new Date();
+                            start_date = currentTime.toJSON()
+                            end_date =  currentTime.toJSON()  
+                        }
+                        url = url + "&start_date=" + start_date
+                        url = url + "&end_date=" + end_date
+                        }
+                        else {
+                            $('#date-range-selector').show()
+                            $('input[name="daterange"]').removeAttr('val') ;
+                            return
+                        }
+                    }
+                }
+                if ( __app_name == "health-insurance" ){
+                    url = url + '?entity=health' + '&filtertype=' + $('#health-deal-filter-type').val();
+                    if ($('#health-deal-filter-type').val() == "date") {
+                        if (refresh){
+                        qs_str = window.location.search
+                        qs = new URLSearchParams(qs_str);
+                        var start_date
+                        var end_date
+                        if (qs.get("start_date") && qs.get("end_date") ){
+                        start_date = qs.get("start_date", "")
+                        end_date = qs.get("end_date", "")
+                        }
+                        else{ 
+                            var currentTime = new Date();
+                            start_date = currentTime.toJSON()
+                            end_date =  currentTime.toJSON()  
+                        }
+                        url = url + "&start_date=" + start_date
+                        url = url + "&end_date=" + end_date
+                        }
+                        else {
+                            $('#date-range-selector').show()
+                            $('input[name="daterange"]').removeAttr('val') ;
+                            return
+                        }
+                    }
+                }
+                if ($('#users').val()) 
+                {
+                    if ( __app_name == "mortgage" ){
+                    url = url + '&user=' + $('#users').val();
+
+                    }
+                    if ( __app_name == "motorinsurance" ){
+                    url = url + '?user=' + $('#users').val();
+                    }
+                    if ( __app_name == "health" ){
+                    url = url + '&user=' + $('#users').val();
+                    }
+                    
+                }
+                if($('#insurer').val())
+                {
+                    if ( __app_name == "health" ){
+                    url = url + '&insurer=' + $('#insurer').val();
+                    }
+                }
+                window.location = url;
+            };
+            $('#users').change(function() {
+                //let refresh = true
+                //filterHandler(refresh)
+            })
+            
+            $('#insurer').change(function() {
+                let refresh = true
+                filterHandler(refresh)
+            })
+            
+         $('#mortgage-deal-filter-type').change(function() {
+                filterHandler()
+        }) 
+        $('#health-deal-filter-type').change(function() {
+                filterHandler()
+        })
+        </script>
+        <!-- end row -->
+    </div> <!-- end container -->
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static "plugins/chartjs/chart.js" %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+{% endblock %}

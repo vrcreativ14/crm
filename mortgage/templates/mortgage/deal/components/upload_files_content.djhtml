@@ -1,0 +1,37 @@
+{% if type == 'pre_approval' %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/dropzone.min.js" integrity="sha512-8l10HpXwk93V4i9Sm38Y1F3H4KJlarwdLndY9S5v+hSAODWMx3QcAVECA23NTMKPtDOi53VFfhIuSsBjjfNGnA==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/dropzone.min.css" integrity="sha512-3g+prZHHfmnvE1HBLwUnVuunaPOob7dpksI7/v6UnF/rnKGwHf/GdEq9K7iEN7qTtW+S0iivTcGpeTBqqB04wA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<div class="row upload-files-approval">
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with  data_type="passport" name="Passport" doc_name="passport" upload_type="preapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="bank-application-form" name="Bank Application Form" doc_name="bank application form" upload_type="preapproval" %}
+
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="visa" name="Visa" doc_name="visa" upload_type="preapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="salary-certificate" name="Salary Certificate" doc_name="salary certificate" upload_type="preapproval" %}
+
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="emirates-id-front" name="Emirates ID Front" doc_name="emirates id front" upload_type="preapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="bank-statement" name="Bank Statement" doc_name="bank statement" upload_type="preapproval" %}
+
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="emirates-id-back" name="Emirates ID Back" doc_name="emirates id back" upload_type="preapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="payslips" name="Payslips" doc_name="payslips" upload_type="preapproval" %}
+        
+        <div class="col-12 text-right d-none"><a href="#">Download All</a></div>
+    </div>
+{% elif type == 'valuation'%}
+    <div class="row upload-files-postapproval">
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="memorandum-of-understanding" name="Memorandum of Understanding" doc_name="memorandum of understanding" upload_type="postapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="property-title-deed" name="Property title deed" doc_name="property title deed" upload_type="postapproval" %}
+
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="sellers-emirates-id-front" name="Seller's Emirates ID Front" doc_name="sellers emirates id front" upload_type="postapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="sellers-emirates-id-back" name="Seller's Emirates ID Back" doc_name="sellers emirates id back" upload_type="postapproval" %}
+        
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="sellers-passport" name="Seller's Passport" doc_name="sellers passport" upload_type="postapproval" %}
+        {% include 'mortgage/deal/components/upload_single_file.djhtml' with data_type="sellers-visa" name="Seller's Visa" doc_name="sellers visa" upload_type="postapproval" %}
+        
+        <div class="col-12 text-right d-none"><a href="#">Download All</a></div>
+    </div>
+   <style>
+       .dz-size,.dz-image,.dz-success-mark,.dz-error-mark{display:none}
+        .files_list{list-style-type: circle;display: list-item;}
+        .dz-preview{display:none}
+    </style>
+    {% endif %}

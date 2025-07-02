@@ -1,0 +1,49 @@
+{% extends "mortgage/deal/components/stage_form.html" %}
+{% load static %}
+{% load humanize %}
+{% load mortgage %}
+{% block head %}
+{% block extra_css %}
+<style>
+/* New CSS */
+.mortgage-quote-details .table img{
+    height: 50px;
+    width: auto;
+}
+.mortgage-quote-details .table tr td{
+    text-align: right;
+}
+</style>
+{% endblock %}
+
+<div class="mortgage-quote-details deal-overview deal-process pre-approval display">
+
+    <div class="row">
+        <div class="col-4 text-left">
+            <div class="heading text-capitalize">Sub stages</div>
+            <p class="mt-3">Once the loan is disbursed, Move to next stage.</p>
+            {% block button %}
+                {% if deal.stage == "loanDisbursal" %}
+                    <button type="submit" class="mt-4 ml-0 btn-nexus btn-nexus-blue">Next</button>
+                {% endif %}
+            {% endblock %}
+        </div>
+        <div class="col-8">
+            {% include 'mortgage/deal/components/quick_customer_link.djhtml' %}
+        </div>
+    </div>
+
+    <div class="text-left">
+        <div class="sub-stages-content loan-disbursal-content">
+            <div class="row">
+                <div class="col-8">
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

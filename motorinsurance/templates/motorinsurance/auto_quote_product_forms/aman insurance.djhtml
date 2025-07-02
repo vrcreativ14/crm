@@ -1,0 +1,8 @@
+{% load static %}
+{% with form=form %}
+    {% include 'motorinsurance/auto_quote_product_forms/generic_form.djhtml' %}
+{% endwith %}
+
+<div class="alert alert-info" role="alert">
+    Agency repair is only available if the vehicle was purchased from the authorized dealer in the UAE.
+</div>

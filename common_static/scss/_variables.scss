@@ -1,0 +1,62 @@
+
+// Color variables
+$white: #ffffff;
+
+$primary: #2f8ee0;
+$primary-new: #222b6b;
+$primary-darker: #297bc1;
+$success: #6fd088;
+$success_2: #39bb5b;
+$info: #4bbbce;
+$warning: #ffbb44;
+$danger: #f24734;
+$purple: #8862e0;
+$pink: #e6487e;
+
+$dark: #0a1832;
+$muted: #999FA5;
+
+$lightdark5: #555555;
+$lightgray: #dddddd;
+$light: #eff3f6;
+$lightdark3: #333333;
+$lightdark4: #444444;
+$light5: #f5f5f5;
+$light3: #f3f3f3;
+$light9: #f9f9f9;
+$light-alt: #fafafa;
+$lightdark7: #797979;
+$lightdark-alt: #cccccc;
+
+$bg-body: #f5f5f5;
+$left-bar: #ffffff;
+$bg-topbar: #424858;
+
+$shadow: 0 2px 3px 0 rgba(0,0,0,0.16);
+
+$base-font: 14px;
+
+// Width variables
+$width: 100%;
+
+// Height variables
+$height: 100%;
+
+// screen width sizes
+$hd-min-width: 9900px;
+$hd-lg-min-width: 1920px;
+$hd-md-min-width: 1600px;
+$hd-sm-min-width: 1366px;
+
+$desktop-max-width: $hd-min-width - 1;
+$desktop-min-width: 1025px;
+
+$tablet-max-width: $desktop-min-width - 1 ;
+$tablet-min-width: 768px;
+
+$mobile-max-width: $tablet-min-width - 1;
+$mobile-min-width: 0px;
+
+//  Page width
+$full_page_width: 1154px;
+$full_page_width_reduced: 820px;

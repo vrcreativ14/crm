@@ -1,0 +1,101 @@
+
+<br/>
+<div class="flex row" style="flex-direction:column;padding: 15px;">
+    <div>
+        {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+        <br/>
+    </div>
+        <script>
+            $('.reactivate-quote').on('click',function(e){
+                debugger
+                url = DjangoUrls['health-insurance:quote-reactivate'](_deal_id)
+                $.ajax({
+                    method: 'POST',
+                    url: url,
+                    async: false,
+                    success: function(response){
+                        debugger
+                        if(response['success']){
+                            Utilities.Notify.success(response['message'], 'Success');
+                            $('.reactivate-quote').parent().remove()
+                        }
+                    },
+                    error: function(error){
+                        debugger
+                    },
+                    })
+            });
+        </script>
+
+</div>
+<br/>
+<br/>
+<div>
+<div class="flex-container" style="margin-top: -50px;">
+    
+<div class="flex">
+    <div class="col-md-2 c-success m-b-40 text-center" style="align-self: center;">
+        <div class="font-40 m-b--10">
+            <i class="ti-cup"></i><br/><span class="font-32">Deal Won</span>
+            </div>
+    </div>
+    <div style="flex-grow: 1;align-items: center;">
+        <div class="row">  
+            <div class="col-md-4">
+                <span class="heading m-b-5">Insured Primary Member Name</span><br/>
+                <span>{{deal.primary_member.name}}</span>
+            </div>
+            <div class="col-md-4">
+                <span class="heading m-b-5">Premium</span><br/>
+                <span>{{policy.total_premium_vat_inc}}</span>
+            </div>
+            <div class="col-md-4">
+                <span class="heading m-b-5">Insurer</span><br/>
+                <span>{{order.selected_plan.plan.insurer.name}}</span>
+            </div>
+            </div>
+
+            <div class="row">
+                
+            <div class="col-md-4">
+                <span class="heading m-b-5">Plan</span><br/>
+                <span>{{order.selected_plan.plan.name}}</span>
+            </div>
+            <div class="col-md-4">
+                <span class="heading m-b-5">Commission Rate %</span><br/>
+                <span>{{policy.commission}}</span>
+            </div>
+            <div class="col-md-4">
+                <span class="heading m-b-5">No Of Members</span><br/>
+                <span>{{ deal.primary_member.additional_members.all.count|add:1  }}</span>
+            </div>
+            </div>
+
+            <div class="row">
+                
+            <div class="col-md-4">
+                <span class="heading m-b-5">Start Date</span><br/>
+                <span >{{policy.start_date}}</span>
+            </div>
+            <div class="col-md-4">
+                <span class="heading m-b-5">Expiry Date</span><br/>
+                <span >{{policy.expiry_date}}</span>
+            </div>
+            <div class="col-md-4">
+                <span class="heading m-b-5">Policy Number</span><br/>
+                <span>{{policy.policy_number}}</span>
+            </div>
+            </div>
+
+            <div class="row">
+                
+            <div class="col-md-4">
+                <span class="heading m-b-5">Consultant Name</span><br/>
+                <span>{{policy.referrer}}</span>
+            </div>
+            </div>
+    </div>
+</div>
+</div>
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
+</div>

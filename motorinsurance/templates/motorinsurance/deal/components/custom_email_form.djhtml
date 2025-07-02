@@ -1,0 +1,143 @@
+<div id="modal_send_custom_email" class="felix-modal-container">
+    <div class="felix-modal">
+        <form action="" name="custom_email_form" id="custom_email_form" method="post" data-module-name="Deal" novalidate>
+            <h1>Send <span class="email_type_display capitalize"></span> Email</h1>
+            {% csrf_token %}
+            <input type="hidden" name="email_type" id="email_type" value="new_quote" />
+            <div class="content squeeze">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">To *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input type="text" name="email" id="id_email" class="form-control modal-textinput" />
+                            <div class="text-muted font-10 m-t-2">Separate multiple email addresses with a comma(,)</div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">CC</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input type="text" name="cc_emails" id="id_cc_emails" class="form-control modal-textinput" value="{{ deal.cc_emails}}" />
+                            <div class="text-muted font-10 m-t-2">Separate multiple email addresses with a comma(,)</div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">BCC</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input type="text" name="bcc_emails" id="id_bcc_emails" class="form-control modal-textinput" value="{{ deal.bcc_emails}}" />
+                            <div class="text-muted font-10 m-t-2">Separate multiple email addresses with a comma(,)</div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row m-t-10">
+                        <div class="col-lg-3">
+                            <label class="text-muted">From</label>
+                        </div>
+                        <div class="col-lg-9 font-12" id="id_from_email"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Reply To</label>
+                        </div>
+                        <div class="col-lg-9 font-12" id="id_reply_to"></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Email Template</label>
+                        </div>
+                        <div class="col-lg-9 font-12" id="id_email_template">
+                            <select name="custom_email_type" id="custom_email_type">
+                                <option value="latest">Select...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Subject *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <input type="text" name="subject" id="id_subject" class="form-control modal-textinput" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Message</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea placeholder="" class="form-control modal-textarea" name="content" id="id_content" required></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row attachments hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Attachments</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <ul class="p-l-15">
+                            </ul>
+                        </div>
+                    </div>
+                    <hr class="show-when-sms" />
+                    <br>
+                    <div class="row sms_toggler show-when-sms hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Send SMS</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <input id="id_send_sms" name="send_sms" type="checkbox" switch="success" checked />
+                            <label class="switch-toggle" for="id_send_sms" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row sms_container show-when-sms hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">SMS Content</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <textarea maxlength="159" class="form-control tiny modal-textarea" name="sms_content" id="id_sms_content"></textarea>
+                        </div>
+                    </div>
+                    <hr class="show-when-wa-msg" />
+                    <br />
+                    <div class="row sms_toggler show-when-wa-msg hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Send WhatsApp Message</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <input id="id_send_wa_msg" name="send_wa_msg" type="checkbox" switch="success" checked />
+                            <label class="switch-toggle" for="id_send_wa_msg" data-on-label="Yes" data-off-label="No"></label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row msg_container show-when-wa-msg hide">
+                        <div class="col-lg-3">
+                            <label class="text-muted">Message Content</label>
+                        </div>
+                        <div class="col-lg-9 font-12">
+                            <textarea class="form-control tiny modal-textarea" name="wa_msg_content" id="id_wa_msg_content"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Cancel</a>
+                <button type="button" class="send-email btn btn-success btn-wide btn-md">
+                    <span>Send</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

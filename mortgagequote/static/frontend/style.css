@@ -1,0 +1,561 @@
+:root{
+    --golden-color: #DBAE58;
+    --text-main-color: #111E4A;
+    --text-fade-color: #66788A;
+    --text-green-color: #035603;
+    --grey-color:#F3F4F6;
+    --tab-color: #979797;
+    --border-color: #78738920;
+    --breadcrumb-active: #87878710;
+}
+
+
+
+* {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+body{
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-main-color);
+    font-size: 0.9rem;
+    background-color: #F9FAFC;
+}
+.text-fade-grey{
+    color: var(--text-fade-color);
+}
+.fw-light-bold{
+    font-weight: 500;
+}
+.btn-nexus{
+    padding: 0.5rem 1.5rem;
+    border: unset;
+    box-shadow: unset;
+    border-radius: 0.25rem;
+    min-width: 115px;
+    margin-bottom: 0.5rem;
+}
+.btn-golden{
+    background-color: var(--golden-color);
+    color: white;
+}
+.btn-grey{
+    background-color: var(--grey-color);
+}
+.color-4D8BFF{
+    background-color: #F8FAFF;
+}
+
+
+
+header{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+}
+header img{
+    width: 100px;
+    height: auto;
+    margin-left: 2rem;
+}
+header div{
+    margin-right: 5rem;
+    text-align: center;
+}
+.header a{
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--golden-color);
+}
+@media(max-width:768px){
+    header img,header div{
+        margin: 0 !important;
+    }
+}
+
+
+
+main{
+    display: flex;
+}
+main .breadcrumb{
+    background-color: white;
+    height: 90vh;
+}
+main .breadcrumb ul{
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+main .breadcrumb li{
+    display: flex;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+main .breadcrumb li div{
+    width: 175px;
+}
+main .breadcrumb li.active,main .breadcrumb li.completed{
+    background-color: var(--breadcrumb-active);
+    color: var(--golden-color);
+}
+main .breadcrumb li.active{
+    font-weight: 600;
+}
+main .breadcrumb li.completed{
+    background-color: white;
+    opacity: 0.5;
+}
+main .breadcrumb li img{
+    margin-right: 1rem;
+}
+main .breadcrumb span{
+    display: none;
+    float: right;
+    width: 15px;
+}
+main .breadcrumb li.active span.current,main .breadcrumb li.completed span.completed{
+   display: inline-block;
+}
+
+
+
+main .content-head h3{
+    text-transform: capitalize;
+    font-weight: 500;
+}
+main .content-head{
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+}
+
+
+main .property-price,main .bank-info{
+    background-color: white;
+    border-radius: 0.5rem;
+}
+main .property-price > *{
+    display: flex;
+    justify-content: space-between;
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+main .property-price.user-info > *{
+    align-items: center;
+}
+main .user-info input{
+    background-color: #FBFBFB;
+    border-radius: 0.5rem;
+}
+main .property-price > div{
+    color: var(--text-fade-color);
+    line-height: 1rem;
+}
+main .property-price div small{
+    font-size: 65%;
+}
+main .property-price div span:last-child{
+    text-align: right;
+    font-weight: 500;
+    color: var(--text-green-color);
+}
+main .property-price.user-info span:last-child{
+    width: 70%;
+}
+
+
+main .bank-info{
+    margin-bottom: 1.5rem;
+}
+main .bank-info img{
+    width: 120px;
+    height: auto;
+}
+main .bank-head{
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+}
+main .bank-head input{
+    margin-left: 0.5rem;
+}
+main .bank-content{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+main .bank-content > *{
+    border-left: 1px solid var(--border-color);
+    text-align: center;
+    width: 100%;
+    margin: 2rem 0;
+}
+main .bank-content .fw-light-bold{
+    color: var(--text-green-color);
+}
+main .bank-content p:first-child{
+    margin-bottom: 0;
+    margin-top: 1rem;
+}
+main .bank-content .full-border{
+    border-right: 1px solid var(--border-color);
+}
+main .bank-content .img,main .bank-content .action,main .bank-content .no-border{
+    border: unset;
+}
+main .bank-content .img{
+    margin: 0;
+    border-right: 1px solid var(--border-color);
+    padding: 3rem 0;
+}
+main .bank-details{
+    position: fixed;
+    margin: 1rem;
+    opacity: 0;
+    transition: opacity ease-in-out 0.3s;
+    z-index: -1;
+}
+main .bank-details.active{
+    position: relative;
+    opacity: 1;
+    z-index: 1;
+    height: auto;
+}
+main .bank-details img,main .comparison img{
+    width: 25px;
+    float: right;
+    margin-right: 2rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+main .bank-details th,main .comparison th{
+    font-weight: normal;
+}
+main .bank-details .sub-title,main .bank-details .no-border,main .comparison .sub-title,main .comparison .no-border{
+    border: unset;
+    border-color: transparent;
+}
+main .bank-details .sub-title th,main .comparison .sub-title th{
+    font-weight: 600;
+}
+main .bank-details .sub-title td,main .comparison .sub-title td{
+    visibility: hidden;
+}
+
+
+main .compare-nav{
+    position: fixed;
+    bottom: -4rem;
+    right: 2rem;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 45px;
+    transition: bottom ease-in 0.3s;
+    border-radius: 50%;
+    border-top-right-radius: 0;
+    color: white;
+    background-color: var(--golden-color);
+    z-index: 11;
+}
+main .compare-nav.active{
+    bottom: 1.5rem;
+}
+main .compare-nav span{
+    position: absolute;
+    top: -0.5rem;
+    right: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+main .comparison{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: -100vh;
+    right: 0;
+    z-index: 11;
+    opacity: 0;
+    transition: opacity ease-in 0.5s;
+}
+main .comparison.active{
+    opacity: 1;
+    top: 0;
+}
+main .overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.75);
+    z-index: -1;
+}
+main .comparison .close{
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    cursor: pointer;
+}
+main .comparison .row > *{
+    display: flex;
+    justify-content: flex-end;
+}
+main .comparison .row > div > div{
+    overflow-y: scroll;
+    height: 100vh;
+}
+main .comparison table{
+    background-color: white;
+    padding-top: 1.5rem;
+    min-width: 800px;
+    margin-bottom: 0;
+}
+main .comparison table td{
+    text-align: center;
+}
+main .comparison table img{
+    width: 100px;
+    height: auto;
+    margin: auto;
+    float: none;
+}
+
+
+
+main .file-upload{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+main .file-upload i{
+    font-size: 1.5rem;
+}
+main .file-upload .name{
+    width: 70%;
+    display: flex;
+    font-weight: bold;
+}
+main .file-upload .name > span{
+    width: 100%;
+}
+main .file-upload .name small{
+    font-size: 65%;
+    color: var(--text-fade-color);
+}
+main .file-upload .name > span span{
+    display: inline-block;
+    width: 100%;
+    height: 0.20rem;
+    background-color: var(--grey-color);
+}
+
+main .parent-file-upload{
+    background-color: white;
+}
+main .parent-file-upload .file-upload{
+    background-color: transparent;
+}
+main .file-upload.done .name > span span{
+    background-color: var(--golden-color);
+}
+main .file-upload .file label{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    text-align: center;
+    border: 4px dotted var(--border-color);
+    border-radius: 0.5rem;
+    background-color: #F2F6FF68;
+}
+main .file-upload .file label input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+main .file-upload .file label small{
+    font-size: 65%;
+    color: var(--text-fade-color);
+    font-weight: bold;
+}
+main .file-upload.done .file label{
+    border: unset;
+    line-height: 1rem;
+}
+main .file-upload.done .file .fa-cloud-upload-alt,main .file-upload.done .file small{
+    display: none;
+}
+main .file-upload.done{
+    width: 50%;
+    display: inline-block;
+    opacity: 0.75;
+}
+main .file-upload.done .name{
+    width: 10%;
+}
+main .file-upload.done .file{
+    width: 90%;
+}
+main .file-upload.done .file label i{
+    cursor: pointer;
+}
+main .file-upload .fa-times-circle{
+    font-size: 0.75rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+main .file-upload .font-size-bigger-upload{
+    font-size: 0.75rem;
+    margin-bottom: 0;
+    float: left;
+}
+main .file-upload .font-size-bigger-upload .fa-arrow-circle-down{
+    color: #DBAE58;
+}
+main .thank-you-bank-details .action{
+    display: none !important;
+}
+
+
+
+main .static-images{
+    max-height: 75px;
+    width: auto;
+}
+
+
+
+
+/* Mobile */
+@media(max-width:768px){
+    body{
+        font-size: 0.8rem !important;
+    }
+    main{
+        display: block;
+        margin-bottom: 5rem;
+    }
+    main .breadcrumb{
+        height: auto;
+        overflow-x: scroll;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    main .breadcrumb::-webkit-scrollbar{
+        display: none;
+    }
+    main .breadcrumb ul{
+        display: flex;
+    }
+    main .breadcrumb li{
+        display: inline-block;
+        text-align: center;
+        border-right: 1px solid var(--border-color);
+        padding: 1rem;
+    }
+    main .breadcrumb li img{
+        margin: auto;
+    }
+    main .breadcrumb li span{
+        display: none !important;
+    }
+    main .breadcrumb li.completed{
+        display: none;
+    }
+    main .breadcrumb.active li.completed{
+        display: inline-block;
+    }
+    main .breadcrumb li.completed span.completed{
+        display: block !important;
+        width: 100%;
+    }
+    main .breadcrumb li div{
+        width: auto;
+    }
+    main .breadcrumb li div.big{
+        min-width: 135px;
+    }
+    main .property-price, main .bank-info{
+        margin-bottom: 1.5rem;
+    }
+
+    main .bank-content{
+        flex-wrap: wrap;
+        padding: 0;
+        align-items: stretch;
+    }
+    main .bank-content > *{
+        border: 1px solid var(--border-color) !important;
+        width: 50%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    main .bank-content .img{
+        padding: 0.5rem 0;
+    }
+    main .bank-content .img,main .bank-content .no-border,main .bank-content .action{
+        width: 100%;
+    }
+    main .bank-content .action{
+        display: block;
+        border: unset !important;
+        margin-top: 0.5rem;
+    }
+    main .bank-content .action button:first-child{
+        margin-right: 0.5rem;
+    }
+
+    main .bank-details{
+        margin: 1rem 0;
+    }
+
+    main .comparison table{
+        min-width: unset;
+        font-size: 0.7rem;
+        height: 100%;
+    }
+    main .comparison .table>:not(caption)>*>*{
+        padding: 0.25rem 0.5rem;
+    }
+    main .comparison table img{
+        width: 75px;
+    }
+    main .comparison table .btn-nexus{
+        padding: 0.35rem 1rem;
+        min-width: unset;
+    }
+
+    main .file-upload{
+        margin-bottom: 1rem;
+    }
+    main .file-upload .file label{
+        padding: 0.1rem;
+        margin-left: 0.5rem;
+    }
+}
+
+
+main .file-upload i.fa-arrow-circle-down{
+    font-size: 0.75rem;
+    cursor: pointer;
+}

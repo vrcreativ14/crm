@@ -1,0 +1,41 @@
+{% load humanize %}
+<p>Good Morning {{ user_name }},</p>
+
+<p>Here's a quick reminder of your tasks that need to be completed <strong>today</strong>:</p>
+
+{% if todays_tasks %}
+	<ul>
+	{% for task in todays_tasks %}
+		<li>
+			<a href="{{ todays_tasks_link }}">
+				{% if task.attached_to.customer.name %}
+					{{ task.attached_to.customer.name }} - 
+				{% endif %}
+				{{ task.title }} - {{ task.due_datetime|date:'d-m-Y P'|upper }}
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>All clear.</p>
+{% endif %}
+
+{% if overdue_tasks %}
+	<p><strong>Oh and don't forget about your overdue tasks that are waiting for you. Hurry up and knock these out of the park!</strong></p>
+
+	<ul>
+	{% for task in overdue_tasks %}
+		<li>
+			<a href="{{ overdue_tasks_link }}">
+				{% if task.attached_to.customer.name %}
+					{{ task.attached_to.customer.name }} - 
+				{% endif %}
+				{{ task.title }} - {{ task.due_datetime|date:'d-m-Y P'|upper }}
+			</a>
+		</li>
+	{% endfor %}
+	</ul>
+{% endif %}
+
+<p>Have a great day!,</p>
+<p>From Team InsureNex</p>

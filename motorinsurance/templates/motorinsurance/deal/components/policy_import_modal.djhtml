@@ -1,0 +1,41 @@
+{% load static %}
+{% load motorinsurance %}
+<div id="modal_policy_import" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>Upload CSV to import Policies</h1>
+
+        <div class="content squeeze info-container">
+            <center>
+                <section class="success-message hide">
+                    <img src="{% static "images/felix-success.svg" %}" width=100 />
+                    <h4 class="c-bgrey font-20">Your file has been uploaded.<br>We will notify you once the import is done.</h4>
+                </section>
+                <section class="input-container">
+                    <input
+                        type="file"
+                        name="policy_import_file"
+                        data-fileuploader-limit="1"
+                        data-fileuploader-extensions="csv"
+                        data-url="{% url 'motorinsurance:policy-import' %}"
+                    />
+                    <div class="progress-bar-container squeeze">
+                        <div class="progress-bar"><span></span></div>
+                    </div> 
+
+                    <div class="m-t-20 instructions">
+                        <h4>Instructions</h4>
+                        <ol>
+                            <li><a href="{% static "policy_import_sample.csv" %}">Download the sample csv file here.</a></li>
+                            <li>Delete the sample data in the csv file and replace with your own data (Do not delete the column headers).</li>
+                            <li>Upload your csv file.</li>
+                        </ol>
+                    </div>
+                </section>
+            </center>
+        </div>
+
+        <div class="button-container">
+            <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md float-right">Close</a>
+        </div>
+    </div>
+</div>

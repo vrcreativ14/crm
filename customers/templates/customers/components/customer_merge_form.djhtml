@@ -1,0 +1,211 @@
+
+<form action="{% url 'customers:merge-customers' pk1=primary.pk pk2=secondary.pk %}" name="customer-merge-form" id="customer-merge-form" method="post" data-module-name="Customer" novalidate>
+    {% csrf_token %}
+    <div class="content">
+        <div class="form-group">
+            <div class="row">
+                <!-- First Record -->
+                <div class="column-1 col-lg-4 p-0 align-left">
+                    <div class="title">
+                        {{ primary.name }}
+                        <a class="merge-customer-column" href="javascript:">Use all of this customer's information</a>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Full Name</label>
+                        <div class="value" data-value="{{ primary.name }}" data-key="id_name">{{ primary.name }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Email</label>
+                        <div class="value" data-value="{{ primary.email }}" data-key="id_email">{{ primary.email }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Phone</label>
+                        <div class="value" data-value="{{ primary.phone }}" data-key="id_phone">{{ primary.phone }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Gender</label>
+                        <div class="value" data-value="{{ primary.gender }}" data-key="id_gender">{{ primary.get_gender_display }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Nationality</label>
+                        <div class="value" data-value="{{ primary.nationality }}" data-key="id_nationality">{{ primary.get_nationality_display }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+
+                    <!-- Motor profile fields -->
+                    <div class="field-container customer-info">
+                        <label class="text-muted">First License Country</label>
+                        <div class="value" data-value="{{ primary.motorinsurancecustomerprofile.first_license_country }}" data-key="id_first_license_country">{{ primary.motorinsurancecustomerprofile.get_first_license_country_display }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">First License Age</label>
+                        <div class="value" data-value="{{ primary.motorinsurancecustomerprofile.first_license_age }}" data-key="id_first_license_age">{{ primary.motorinsurancecustomerprofile.get_first_license_age_display }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">UAE License Age</label>
+                        <div class="value" data-value="{{ primary.motorinsurancecustomerprofile.uae_license_age }}" data-key="id_uae_license_age">{{ primary.motorinsurancecustomerprofile.get_uae_license_age_display }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">First License Issue Date</label>
+                        <div class="value" data-value="{{ primary.motorinsurancecustomerprofile.first_license_issue_date|date:"d-m-Y" }}" data-key="id_first_license_issue_date">{{ primary.motorinsurancecustomerprofile.first_license_issue_date }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">UAE License Issue Date</label>
+                        <div class="value" data-value="{{ primary.motorinsurancecustomerprofile.uae_license_issue_date|date:"d-m-Y" }}" data-key="id_uae_license_issue_date">{{ primary.motorinsurancecustomerprofile.uae_license_issue_date }}</div>
+                        <i class="ti-angle-right shift-right"></i>
+                    </div>
+                </div>
+
+                <!-- Merged record -->
+                <div class="column-2 col-lg-4 p-0">
+                    <div class="title">
+                        &nbsp;
+                    </div>
+
+                    <div class="field-container">
+                        {{ customer_merge_form.name }}
+                    </div>
+                    <div class="field-container">
+                        {{ customer_merge_form.email }}
+                    </div>
+                    <div class="field-container">
+                        {{ customer_merge_form.phone }}
+                    </div>
+                    <div class="field-container">
+                        {{ customer_merge_form.gender }}
+                    </div>
+                    <div class="field-container">
+                        {{ customer_merge_form.nationality }}
+                    </div>
+
+                    <!-- Motor profile fields -->
+                    <div class="field-container">
+                        {{ customer_merge_form.first_license_country }}
+                    </div>
+
+                    <div class="field-container">
+                        {{ customer_merge_form.first_license_age }}
+                    </div>
+
+                    <div class="field-container">
+                        {{ customer_merge_form.uae_license_age }}
+                    </div>
+
+                    <div class="field-container">
+                        {{ customer_merge_form.first_license_issue_date }}
+                    </div>
+
+                    <div class="field-container">
+                        {{ customer_merge_form.uae_license_issue_date }}
+                    </div>
+                </div>
+
+                <!-- Second Record -->
+                <div class="column-3 col-lg-4 p-0 align-right">
+                    <div class="title">
+                        {{ secondary.name }}
+                        <a class="merge-customer-column" href="javascript:">Use all of this customer's information</a>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Full Name</label>
+                        <div class="value" data-value="{{ secondary.name }}" data-key="id_name">{{ secondary.name }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Email</label>
+                        <div class="value" data-value="{{ secondary.email }}" data-key="id_email">{{ secondary.email }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Phone</label>
+                        <div class="value" data-value="{{ secondary.phone }}" data-key="id_phone">{{ secondary.phone }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Gender</label>
+                        <div class="value" data-value="{{ secondary.gender }}" data-key="id_gender">{{ secondary.get_gender_display }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+                    <div class="field-container customer-info">
+                        <label class="text-muted">Nationality</label>
+                        <div class="value" data-value="{{ secondary.nationality }}" data-key="id_nationality">{{ secondary.get_nationality_display }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+
+                    <!-- Motor profile fields -->
+                    <div class="field-container customer-info">
+                        <label class="text-muted">First License Country</label>
+                        <div class="value" data-value="{{ secondary.motorinsurancecustomerprofile.first_license_country }}" data-key="id_first_license_country">{{ secondary.motorinsurancecustomerprofile.get_first_license_country_display }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">First License Age</label>
+                        <div class="value" data-value="{{ secondary.motorinsurancecustomerprofile.first_license_age }}" data-key="id_first_license_age">{{ secondary.motorinsurancecustomerprofile.get_first_license_age_display }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">UAE License Age</label>
+                        <div class="value" data-value="{{ secondary.motorinsurancecustomerprofile.uae_license_age }}" data-key="id_uae_license_age">{{ secondary.motorinsurancecustomerprofile.get_uae_license_age_display }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">First License Issue Date</label>
+                        <div class="value" data-value="{{ secondary.motorinsurancecustomerprofile.first_license_issue_date|date:"d-m-Y" }}" data-key="id_first_license_issue_date">{{ secondary.motorinsurancecustomerprofile.first_license_issue_date }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+
+                    <div class="field-container customer-info">
+                        <label class="text-muted">UAE License Issue Date</label>
+                        <div class="value" data-value="{{ secondary.motorinsurancecustomerprofile.uae_license_issue_date|date:"d-m-Y" }}" data-key="id_uae_license_issue_date">{{ secondary.motorinsurancecustomerprofile.uae_license_issue_date }}</div>
+                        <i class="ti-angle-left shift-left"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="button-container">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="disclaimer">
+                    <label for="merge-customers-disclaimer" class="felix-checkbox-form">
+                        I understand that merging customer data cannot be undone.
+                        <input type="checkbox" name="merge-customers-disclaimer" id="merge-customers-disclaimer" />
+                        <div class="control__indicator"></div>
+                    </label>
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4 align-center p-0">
+                <div class="scroll-to-disclaimer">
+                    <button type="submit" disabled="disabled" class="btn-merge-customers btn btn-success btn-wide btn-md">
+                        <span>Merge Customers</span>
+                        <div class="ball-spinner"></div>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+
+    </div>
+
+</form>

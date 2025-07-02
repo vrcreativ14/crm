@@ -1,0 +1,40 @@
+{% verbatim %}
+<script id="row-template" type="text/x-handlebars-template">
+{{#each records}}
+<tr
+    data-id="{{ this.objectID }}"
+    id="tr_{{ this.objectID }}"
+    data-click-callback="__POLICY._getPolicyDetail({{ this.objectID }})"
+    >
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ this.objectID }}" value="{{ this.objectID }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td data-felix-modal="modal_view_policy" class="p-l-15 important capitalize">
+        <span class="capitalize stage-icon status-{{{ policyStatus this.policy_expiry_date }}}"></span> {{{ policyStatus this.policy_expiry_date }}}
+    </td>
+    <td data-felix-modal="modal_view_policy">{{ this.reference_number }}</td>
+    {{#if this.renewal_deal_id}}
+    <td class="new-tab link">
+        <a title="{{ this.renewal_deal }}" href="{{{ felixUrl 'motorinsurance:deal-edit' this.renewal_deal_id }}}" class="link limit-text">{{ this.renewal_deal }}</a>
+        {{#if this.renewal_deal_stage}}
+        <span class="policy-renewal-badge badge badge-default badge-font-light badge-{{this.renewal_deal_stage}}">{{this.renewal_deal_stage}}</span>
+        {{/if}}
+    </td>
+    {{else}}
+    <td>-</td>
+    {{/if}}
+    <td data-felix-modal="modal_view_policy" class="link">
+        <a class="link" href="{{{ felixUrl 'customers:edit' this.customer_id}}}">{{ this.customer_name }}</a>
+    </td>
+    <td data-felix-modal="modal_view_policy">{{ this.owner_name }}</td>
+    <td data-felix-modal="modal_view_policy">{{ this.insurer_name }}</td>
+    <td data-felix-modal="modal_view_policy">{{#if this.premium}}{{{ money this.premium 2 }}}{{else}}-{{/if}}</td>
+    <td data-felix-modal="modal_view_policy">{{{ money this.car_value }}}</td>
+    <td data-felix-modal="modal_view_policy">{{ this.policy_expiry_date_display }}</td>
+</tr>
+{{/each}}
+</script>
+{% endverbatim %}

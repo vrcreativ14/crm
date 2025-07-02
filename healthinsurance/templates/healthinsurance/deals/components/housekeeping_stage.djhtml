@@ -1,0 +1,54 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container">
+    {% if not request.user.userprofile.has_producer_role %}
+    {% include 'healthinsurance/deals/components/quote_customer_link.djhtml' %}
+    
+    <div class="row">
+        <div class="col-lg-6">
+</div>
+</div>
+<!-- <div class="heading m-b-5">Sub Stages</div> -->
+
+<div class="" id="myTabContent">
+    <div class="" id="send_to_client" role="tabpanel" aria-labelledby="received-tab">        
+        <form method="POST">
+            <div class="row m-b-5">
+                <div class="form-check">
+                <input class="form-check-input required" type="checkbox" value="" id="payment_link_checkbox" required>
+                <label class="form-check-label">
+                    Policy has been updated on NTAS
+                </label>
+            </div>
+            </div>
+            <div class="row">
+                <div class="form-check">
+                <input class="form-check-input required" type="checkbox" value="" id="payment_link_checkbox" required>
+                <label class="form-check-label">
+                    All documents have been uploaded (including E-card / Medical card)
+                </label>
+            </div>
+            
+            
+        </div>
+        <br/>
+        <br/>
+            {% include "healthinsurance/deals/components/next_step_button.djhtml" with stage=document name='Next Step' class='btn-nexus btn-nexus-blue next-substage float-right' %}
+        </form>
+        
+    </div>
+ 
+</div>
+
+{% include 'healthinsurance/deals/components/custom_email_form.djhtml' %}
+{% endif %}
+</div>
+    <div>
+        <!-- <button class="loader-blue quote-submit m-r-10 float-right btn btn-nexus-golden btn-md btn-wide-deal">
+           Next Step
+        </button> -->
+       
+    </div>
+    
+</div>

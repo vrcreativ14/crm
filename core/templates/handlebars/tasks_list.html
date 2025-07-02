@@ -1,0 +1,53 @@
+{% verbatim %}
+<script id="row-template" type="text/x-handlebars-template">
+{{#each records}}
+<tr
+    id="tr_{{ this.pk }}"
+    data-url="{{ this.view_url }}"
+    data-url-delete="{{{ felixUrl 'motorinsurance:task-delete' this.pk}}}"
+    data-trigger-modal="#modal_task"
+    data-click-callback="__TASKS._getTaskDetail({{ this.pk }}, '{{ this.attached_to }}')"
+    >
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ this.pk }}" value="{{ this.pk }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td><span title="{{ this.status }}" class="task-status {{{slugify this.status}}}"></span></td>
+    <td>{{ this.title }}</td>
+    <td class="link">
+        <a title="{{ this.attached_to }}" class="link capitalize limit-text" href="{{ this.attached_to_url }}">
+            {{ this.attached_to }}
+        </a>
+    </td>
+    <td>
+    {{#if this.deal_tags }}
+        {{#each this.deal_tags}}
+            <span class="badge badge-default badge-font-light badge-{{{slugify this}}}">{{this}}</span>
+        {{/each}}
+    {{else}}-{{/if}}
+    </td>
+    <td>{{ this.deal_premium }}</td>
+    <td>{{ this.deal_sum_insured }}</td>
+    <td class="link width-editable-list-container">
+        <a href="javascript:"
+            class="deal-inline-update-field select-editable editable"
+            data-name="assigned_to_id"
+            data-type="select"
+            data-emptytext="Add"
+            data-pk="{{ this.pk }}"
+            data-value="{{ this.assigned_to_id }}"
+            data-source="{{ this.company_agents }}"
+            data-url="{{ this.update_task_field_url }}"
+            data-title="Select">
+            {{ this.assigned_to_name }}
+        </a>
+    </td>
+    <td class="{{#if is_overdue}}c-error{{/if}}" title="{{ this.due_date_display }}">{{ this.due_in }}</td>
+    <td title="{{ this.created_on_display }}">{{ this.created_on }}</td>
+    <td title="{{ this.updated_on_display }}">{{ this.updated_on }}</td>
+</tr>
+{{/each}}
+</script>
+{% endverbatim %}

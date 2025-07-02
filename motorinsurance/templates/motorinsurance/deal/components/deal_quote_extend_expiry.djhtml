@@ -1,0 +1,9 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+
+{% if deal.quote and deal.stage == 'quote' and deal.quote.is_expired %}
+    <div class="extend-quote-expiry alert alert-warning" role="alert">
+        <i class="ti-alert"></i> This quote has expired. <strong><a class="" href="#">Click here to extend the expiry date to {{ extended_expiry_date }}.</a></strong>
+    </div>
+{% endif %}

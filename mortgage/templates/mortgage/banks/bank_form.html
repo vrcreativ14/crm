@@ -1,0 +1,168 @@
+<div class="bank-form-mortgage modal fade bank-forms" id="modal_create_bank" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Bank</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="felix-modal">
+          <form method="POST" action="/mortgage/banks/" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mx-5">
+              {% for field in form %}
+              <div class="d-flex my-2">
+                <div class="w-50">{{ field.label }}
+                  {% if field.field.required %}
+                    <i>*</i>
+                  {% endif %}
+                </div>
+                
+                <div class="w-50">{{ field }}</div>
+              </div>
+              {% endfor %}
+            </div>
+            <input class="btn btn-success" type="submit">
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer d-none">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="bank-form-mortgage modal fade bank-forms" id="modal_update_bank" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Bank details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="felix-modal">
+          <form method="POST" action="{% url 'mortgage:bank-edit' pk=22 %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mx-5">
+              {% for field in form %}
+              <div class="d-flex my-2">
+                <div class="w-50">{{ field.label }}
+                  {% if field.field.required %}
+                  <i>*</i>
+                  {% endif %}
+                </div>
+                <div class="w-50">{{ field }}</div>
+                
+              </div>
+              {% endfor %}
+            </div>
+            <input class="btn btn-success" type="submit">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bank-form-mortgage modal fade" id="modal_eibor" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eibor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="felix-modal">
+          <form method="POST" action="{% url 'mortgage:eibor' %}">
+            {% csrf_token %}
+            {{ eibor_form.as_p }}
+{#              <select class="form-control" name="banks" id="bansfsks" multiple >#}
+{#                <option value="all">Apply to all the banks</option>#}
+{#                {% for bank in banks %}#}
+{#                <option value="{{bank.bank_id}}"> {{ bank.name }} </option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+            <input class="btn btn-success" type="submit">
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer d-none">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bank-form-mortgage modal fade" id="modal_eibor_post" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eibor Post Introduction</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="felix-modal">
+          <form method="POST" action="{% url 'mortgage:eibor_post' %}">
+            {% csrf_token %}
+            {{ eibor_post_form.as_p }}
+{#              <select class="form-control" name="banks" id="bansfsks" multiple >#}
+{#                <option value="all">Apply to all the banks</option>#}
+{#                {% for bank in banks %}#}
+{#                <option value="{{bank.bank_id}}"> {{ bank.name }} </option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+            <input class="btn btn-success" type="submit">
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer d-none">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bank-form-mortgage modal fade" id="government_fee" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Government Fee</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="felix-modalx">
+          <form method="POST" action="{% url 'mortgage:govt-fee' %}">
+            {% csrf_token %}
+            {{ govt_fee_form.as_p }}
+            <input class="btn btn-success" type="submit">
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer d-none">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+

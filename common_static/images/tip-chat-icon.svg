@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="16px" viewBox="0 0 17 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Rectangle 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M113.663453,130.340013 C113.663453,127.07097 117.059986,124.420887 121.24278,124.420887 L122.286426,124.420887 C126.472373,124.420887 129.596199,127.80061 129.497519,130.315753 C129.497519,130.315753 129.497519,128.210444 129.497519,130.315753 C129.497519,132.421062 129.497519,134.105309 126.91988,136.210618 C124.342241,138.315927 120.6599,139.579113 120.6599,139.579113 L121.764603,136.210618 L119.60072,136.210618 L119.60072,136.210618 C116.321658,136.210618 113.513731,132.829364 113.663453,130.340013 C113.663453,130.340013 113.295218,134.574892 113.663453,130.340013 C114.031687,126.105135 113.663453,130.340013 113.663453,130.340013 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="16" height="15.1582251" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Tip-bar---opened" transform="translate(-125.000000, -134.000000)" stroke="#009FAB" stroke-width="4">
+            <g id="Group-2" transform="translate(12.000000, 10.000000)">
+                <use id="Rectangle-5" mask="url(#mask-2)" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

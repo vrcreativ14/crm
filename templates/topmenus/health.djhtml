@@ -1,0 +1,62 @@
+{% load static %}
+{% load permission_tags %}
+{% with request.resolver_match.url_name as page_name %}
+<ul class="navigation-menu health">
+    {% if user|can:'company_dashboard' %}
+        <li class="{% if page_name == 'dashboard'%}active{% endif %}">
+            <a data-elem="dashboard" href="{% url 'health-insurance:index'%}">
+                <i class="ti-dashboard"></i> Dashboard
+            </a>
+        </li>
+    {% endif %}
+
+    {% if user|can:'list_health_deals' %}
+        <li class="{% if page_name == 'deals' or page_name == 'deal-edit' %}active{% endif %}">
+            <a data-elem="deals" href="{% url 'health-insurance:deals' %}">
+                <i class="ti-home"></i>Deals
+            </a>
+        </li>
+    {% endif %}
+
+    {% if user|can:'list_customers' %}
+        <li class="{% if page_name == 'customers' or page_name == 'edit' %}active{% endif %}">
+            <a data-elem="customers" href="{% url 'customers:customers' %}?entity=health">
+                <i class="ti-user"></i>People
+            </a>
+        </li>
+    {% endif %}
+    {% comment %}{% if user|can:'list_health_insurers' %}
+    <li class="{% if page_name == 'insurers' or page_name == 'insurer-edit' %}active{% endif %}">
+        <a><i class="ti-time"></i>Insurers</a>
+         <a data-elem="insurers" href="{% url 'health-insurance:insurers' %}">
+            <i class="ti-money"></i>Insurers
+        </a> 
+    </li>
+    {% endif %}{% endcomment %}
+    {% if user|can:'list_tasks' %}
+    <li class="{% if page_name == 'tasks'%}active{% endif %}">        
+        <a data-elem="tasks" href="{% url 'health-insurance:tasks' %}?assigned_to={{ request.user.pk }}">
+            <i class="ti-time"></i>Tasks
+        </a>
+    </li>
+    {% endif %}
+    {% if user|can:'list_health_policies' %}
+    <li class="{% if page_name == 'issued'%}active{% endif %}">
+        <!-- <a><i class="ti-shield"></i>Policies</a> -->
+        <a data-elem="issued" href="{% url 'health-insurance:policies' %}">
+            <i class="ti-shield"></i>Policies
+        </a>
+    </li>
+    {% endif %}
+    {% if user|can:'list_health_policies' and user|can:'create_health_deals' %}
+    <li class="{% if page_name == 'renewals'%}active{% endif %}">
+        <a data-elem="health-renewals" href="{% url 'health-insurance:renewals' %}">
+            <i class="ti-loop"></i>Renewals
+            <span class="badge-with-counts health-renewals-menu-counter">
+                <span class="badge-counter">0</span>
+            </span>
+        </a>
+    </li>
+    {% endif %}
+</ul>
+{% endwith %}

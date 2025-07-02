@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn
+After=network.target
+
+[Service]
+PIDFile=/run/gunicorn/pid
+User=ubuntu
+Group=ubuntu
+RuntimeDirectory=gunicorn
+WorkingDirectory=<CODE DIRECTORY>
+ExecStart=<PATH TO GUNICORN> felix.wsgi --pid /run/gunicorn/pid --workers 8 --bind 127.0.0.1:8000 --timeout 120
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

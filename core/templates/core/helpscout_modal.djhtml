@@ -1,0 +1,18 @@
+{% load static %}
+
+<div id="modal_helpscout" class="felix-modal-container">
+    <div class="felix-modal max">
+        <h1></h1>
+        <a href="" target="_blank" class="helpscout_url btn btn-info-container btn-primary btn-sm">View on HelpScout</a>
+        <div class="loader font-15 c-primary fw-300 m-50 hide">
+            <center>
+                <i class="fa fa-spin fa-spinner m-t-6 m-r-5"></i> Loading thread, please wait...
+            </center>
+        </div>
+        <div class="content squeeze-top-sm"></div>
+        <div class="button-container">
+            <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+        </div>
+    </div>
+    
+</div>

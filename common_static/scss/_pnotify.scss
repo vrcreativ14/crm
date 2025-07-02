@@ -1,0 +1,21 @@
+/* ==============
+  Pnotify overrides
+===================*/
+ .ui-pnotify {
+ 	.ui-pnotify-closer, .ui-pnotify-sticker {
+ 		font-family: 'themify';
+
+ 		.glyphicon.glyphicon-remove:after {
+ 			content: "\e646";
+ 			font-size: 10px;
+ 		}
+ 		.glyphicon.glyphicon-pause:after {
+ 			content: "\e6ae";
+ 			font-size: 10px;
+ 		}
+ 		.glyphicon.glyphicon-play:after {
+ 			content: "\e6ad";
+ 			font-size: 12px;
+ 		}
+ 	}
+ }

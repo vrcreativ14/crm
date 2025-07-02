@@ -1,0 +1,68 @@
+/*
+ CRM Quotes Section
+ */
+#quote_form {
+	.card {
+		.preloader {
+			position: absolute;
+		    top: 20px;
+		    right: 20px;
+		}
+	}
+
+	.product-row {
+		padding: 10px 0;
+		background-color: #f9f9f9;
+		border-bottom: 1px solid #DDD;
+
+		&:nth-child(odd) {
+			background-color: #F1F1F1;
+		}
+
+		.remove-product {
+			color: red;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.temp-product-row {
+		display: none;
+	}
+}
+
+#modal_auto_quote_form {
+	h2 {
+		font-size: 24px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #EFEFEF;
+	}
+}
+
+.quote-insurers-modal {
+	.insurer-block-container {
+		cursor: pointer;
+		position: relative;
+
+		margin: 1rem 0;
+		.product-logo-container {
+			height: 80px;
+			img {
+				max-width: 70px !important;
+    			max-height: 60px !important;
+			}
+		}
+		div.badge {
+			position: absolute;
+			top: -7px;
+			margin: auto;
+			right: 0;
+			left: 0;
+			z-index: 1;
+			font-size: 8px;
+			width: 60%;
+			max-width: 100px;
+		}
+	}
+}

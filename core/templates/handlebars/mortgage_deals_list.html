@@ -1,0 +1,28 @@
+{% load humanize  %}
+{% for deal in deals %}
+<tr data-url="{% url 'mortgage:deal-edit' deal.deal_id %}" id="mortgage-row-{{deal.deal_id}}" data-stage="{{deal.stage}}">
+    <td class="link">
+        <label class="felix-checkbox">
+            <input class="select-record" type="checkbox" data-id="{{ deal.deal_id }}" value="{{deal.deal_id }}" />
+            <span class="checkmark"></span>
+        </label>
+    </td>
+    <td class="capitalize text-left">
+        {% if deal.stage == 'preApproval' %}Pre Approval
+        {% elif deal.stage == 'loanDisbursal' %}Loan Disbursal
+        {% elif deal.stage == 'propertyTransfer' %}Under Process
+        {% else %}{{ deal.stage }}
+        {% endif %}
+    </td>
+    <td data-name="created_on" data-sort="{{ deal.created_date | date:'Ymd' }}" data-search="{{ deal.created_date | date:'Ymd' }}">{{ deal.created_date | date:'M. d, Y' }}</td>
+    <td class="capitalize" data-name="customer__name"><a href={% url 'customers:edit' deal.customer.pk %}>{{ deal.customer.name }}</a></td>
+    <td data-name="bank" class="link capitalize" data-name="cached_bank_name" href="#">{% if deal.deal_bank.bank.logo %}<img src="{{deal.deal_bank.bank.logo.url}}" alt="-"/>{% else %}-{% endif %}</td>
+    <td data-name="property_price" data-sort="{{ deal.property_price }}" style="min-width: 140px;">{{ deal.property_price | intcomma }} <small>AED</small></td>
+    <td data-name="down_payment" data-sort="{{ deal.down_payment }}" style="min-width: 140px;">{{ deal.down_payment | intcomma }} <small>AED</small></td>
+    <td data-name="loan_amount" data-sort="{{ deal.loan_amount }}" style="min-width: 140px;">{{ deal.loan_amount | intcomma }} <small>AED</small></td>
+    <td data-name="tenure" data-sort="{{ deal.tenure }}" style="min-width: 85px;">{{ deal.tenure }} <small> Months</small></td>
+    <td data-name="user">{% if deal.user %}{{ deal.user }}{% else %}-{% endif %}</td>
+    <td data-name="referrer" data-search="{% if deal.referrer %}referrer-{{ deal.referrer }}{% else %}Unassigned{% endif %}" style="min-width: 100px;">{% if deal.referrer %}{{ deal.referrer }}{% else %}-{% endif %}</td>
+    <td class="text-right" data-sort="{{ deal.updated_on | date:'Ymd' }}" data-name="updated_on" style="min-width: 120px;">{{ deal.updated_on | date:'M. d, Y' }}</td>
+</tr>
+{% endfor %}

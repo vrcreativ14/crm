@@ -1,0 +1,109 @@
+{% extends "mortgage/deal/components/stage_form.html" %}
+{% load static %}
+{% load humanize %}
+{% load mortgage %}
+{% block head %}
+{% block extra_css %}
+<style>
+/* New CSS */
+.mortgage-quote-details .table img{
+    height: 50px;
+    width: auto;
+}
+.mortgage-quote-details .table tr td{
+    text-align: right;
+}
+</style>
+{% endblock %}
+
+<div class="mortgage-quote-details deal-overview deal-process pre-approval display">
+
+    <div class="row mb-4">
+        <div class="col-4 text-left">
+            <div class="heading text-capitalize">Sub stages</div>
+            <ul class="sub-stages deal-stages-breadcrumb mt-4">
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Settlement" key="Settlement" stage="propertyTransfer" stage_number="7" %}
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Property Transfer" key="Property Transfer" stage="propertyTransfer" stage_number="7" %}
+                {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Payment" key="Payment" stage="propertyTransfer" stage_number="7" %}
+                <li class="d-none"></li>
+            </ul>
+        </div>
+        <div class="col-8">
+            {% include 'mortgage/deal/components/quick_customer_link.djhtml' %}
+        </div>
+    </div>
+{{deal.current_sub_stage.sub_stage}}
+    <div class="text-left">
+        <div class="sub-stages-content settlement-content" {% if deal.current_sub_stage.sub_stage != 'Settlement' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8">
+                    <p>Is there an existing mortgage on the property?<span class="text-red">*</span></p>
+                    <div class="d-flex mb-3">
+                        <label class="d-flex align-items-center">
+                            <input class="mr-1" type="radio" name="exisitng-property" value="yes" />
+                            Yes
+                        </label>
+                        <label class="ml-4 d-flex align-items-center">
+                            <input class="mr-1" type="radio" name="exisitng-property" value="no" />
+                            No
+                        </label>
+                    </div>
+                    <p>Once the settlement is complete, move to next stage.</p>
+                    <button type="button" class="mt-5 ml-0 btn-nexus btn-nexus-blue" onclick="deal_sub_tages_processor('property-transfer-content')">Next</button>
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-stages-content property-transfer-content" {% if deal.current_sub_stage.sub_stage != 'Property Transfer' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8">
+                    <p>Once the property transfer is done, move to the next stage.</p>
+                    <button type="button" class="ml-0 mt-5 btn-nexus btn-nexus-blue" onclick="deal_sub_tages_processor('payment-content')">Next</button>
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-stages-content payment-content" {% if deal.current_sub_stage.sub_stage != 'Payment' and deal.stage == 'propertyTransfer' %}style="display:none;"{% endif %}>
+            <div class="row">
+                <div class="col-8 payment-content-form">
+                    <p>Once the invoice is sent to the bank and paid, move to the next stage.</p>
+                    <div class="heading text-capitalize pb-2">Bank Reference Number<span class="text-danger">*</span></div>
+                    <div class="w-50"><input type="text" class="bank-reference-number form-control" id="bank-reference-number" name="bank-reference-number" value="{{ order.bank_reference_number }}" required/></div>
+                    
+                    <div class="heading text-capitalize pb-2">Loan Amount<span class="text-danger">*</span></div>
+                    <div class="w-50"><input type="number" min="0" class="loan-amount form-control price-input" id="mortgage-loan-amount" name="loan-amount" value="{{ order.loan_amount }}" required/></div>
+                    
+                    <div class="heading text-capitalize pb-2">Property Price<span class="text-danger">*</span></div>
+                    <div class="w-50"><input type="number" min="0" class="property-price form-control price-input" id="mortgage-property-price" name="property-price" value="{{ order.property_price }}" required/></div>
+                    
+                    <div class="heading text-capitalize pb-2">Tenure(Months)<span class="text-danger">*</span></div>
+                    <div class="w-50"><input type="number" min="0" class="tenure-months form-control" id="mortgage-tenure-months" name="tenure-months" value="{{ order.tenure_months }}" required/></div>
+                    
+                    <div class="heading text-capitalize pb-2">LTV(%)<span class="text-danger">*</span></div>
+                    <div class="w-50"><input type="number" min="0" step="0.01" class="ltv form-control" id="mortgage-ltv" name="ltv" value="{{ order.ltv }}" required/></div>
+                </div>
+                <div class="col-4">
+                    {% include 'mortgage/deal/components/nav_sub_stages.djhtml' %}
+                </div>
+                <div class="col-12 text-right">
+                    <div class="mt-5 mb-4" style="border-bottom: 2px solid #c9c7c7;"></div>
+                    {% block button %}
+                    {% if deal.stage == "propertyTransfer" %}
+                    <button type="submit" class="btn btn-success">
+                        Closed Won
+                    </button>
+                    {% endif %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

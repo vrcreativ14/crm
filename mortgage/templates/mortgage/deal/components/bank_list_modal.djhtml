@@ -1,0 +1,45 @@
+{% load static %}
+<div id="modal_quote_banks" class="felix-modal-container quote-insurers-modal">
+    <div class="felix-modal insurers">
+        <div class="close-bar"><a href="javascript:" class="close"></a></div>
+        <h1>Select a Bank</h1>
+        <form method="POST" id="new-bank-interest-form" action="{% url 'mortgage:quotes' %}" style="height:85vh;overflow:scroll;">
+            <input class="form-control" type="hidden" name="deals" value="{{deal.pk}}">
+            <input type="hidden" class="send-email" name="send_email" value="false" />
+            <div class="content squeeze-top-sm">
+                <center>
+                    <div class="row bank-selection">
+                        {% for id, bank in allowed_banks.items %}
+                        <div class="col-3">
+                            {% if quote %}
+                            <input type="hidden" name="remove" value="true"/>
+                            {% endif %}
+                            <input class="d-none" id="bank-id-{{ bank.pk }}" type="checkbox" name="banks" value="{{ bank.pk }}"
+                            {% if quote %}
+                                {% for x in quote_info.data.quote_details %}
+                                    {% if x.bank_pk == bank.pk %}
+                                        checked
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            />
+                            <label for="bank-id-{{ bank.pk }}" title="click to select this bank" class="add-another-product">
+                                <div class="product-logo-container">
+                                    <img src="{{ bank.logo }}" alt="{{ bank.name }}" data-id="{{bank.pk}}" data-name="{{bank.name}}" data-img="{{bank.logo}}"/>
+                                </div>
+                                <div class="heading light m-t-10">{{ bank.name }}</div>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </center>
+            </div>
+
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn-nexus btn-nexus-grey">Close</a>
+                <button data-modal-close href="javascript:" class="btn-nexus btn-nexus-golden">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

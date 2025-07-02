@@ -1,0 +1,84 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+
+{% if deal.quote %}
+
+	<div class="heading m-b-5">Quote Summary {% if modification_allowed %}<a href="#" class="edit-quote font-12 fw-400 m-l-10">Edit Quote</a>{% endif %}</div>
+
+	<p>Let's wait for the customer to select a product, or you can process the order manually</p>
+
+	<div class="products m-t-40 m-b-40">
+		<div class="row justify-content-md-center">
+			{% for product in deal.quote.get_active_quoted_products %}
+			<div class="col-lg-3 m-b-20 product-preview" data-qpid="{{ product.id }}" title="click to select this product">
+				<div class="product-logo-container col-2">
+					<span class="spacer"></span>
+					<img src="{{ product.product.get_logo }}">
+				</div>
+				<div class="heading light m-t-10">{{ product.product.name }}</div>
+				<div class="font-13 c-vlgrey">Sale Price: {{ companysettings.get_currency_display }} {{ product.get_sale_price|intcomma }}</div>
+				<div class="font-12 c-lgrey">Insurer Quote Reference: {% if product.insurer_quote_reference %}{{ product.insurer_quote_reference }}{% else %}-{% endif %}</div>
+				<div class="font-11 c-vlgrey">Sum Insured: {{ companysettings.get_currency_display }} {{ product.insured_car_value|intcomma }}</div>
+
+				<span class="add-ons-preview-label font-10 c-vgrey">Default add-ons: </span>
+				{% for addon in product.default_add_ons %}
+				<span title="default add-on" class="badge badge-default badge-font-light m-t-10">
+					{{ addon|capfirst|replace_with_space:'_' }}
+				</span>
+				{% endfor %}
+			</div>
+			{% endfor %}
+			{% for product in deal.quote.get_unpublished_quoted_products %}
+			<div
+				class="col-lg-3 m-b-20 product-preview not-published" title="This product is not published." data-id="{{ product.product.id }}"
+			>
+				<div class="product-logo-container col-2">
+					<span class="spacer"></span>
+					<img src="{{ product.product.get_logo }}">
+				</div>
+				<div class="heading light m-t-10">{{ product.product.name }}</div>
+				<div class="font-13 c-vlgrey">Base Premium: {{ companysettings.get_currency_display }} {{ product.premium|intcomma }}</div>
+				<div class="font-12 c-lgrey">Insurer Quote Reference: {% if product.insurer_quote_reference %}{{ product.insurer_quote_reference }}{% else %}-{% endif %}</div>
+				<div class="font-11 c-vlgrey">Sum Insured: {{ companysettings.get_currency_display }} {{ product.insured_car_value|intcomma }}</div>
+
+				<span class="add-ons-preview-label font-10 c-vgrey">Default add-ons: </span> 
+				{% for addon in product.default_add_ons %}
+				<span title="default add-on" class="badge badge-default badge-font-light m-t-10">
+					{{ addon|capfirst|replace_with_space:'_' }}
+				</span>
+				{% endfor %}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="copy-link-container">
+		<span class="link-label">Quote Link</span>
+		<div class="link">
+			<input id="input_quote_url2" readonly="readonly" type="text" value="{{ absolute_quote_url }}">
+		</div>
+		<div class="float-right">
+			<div class="copy felix_tooltip">
+				<span class="tooltiptext">Click to copy</span>
+				<a onclick="Utilities.General.copyToClipboard(this)" onmouseout="Utilities.General.revertClipboardLabel(this)" href="javascript:" data-copyfrom="input_quote_url2"><i class="ti-files"></i></a>
+			</div>
+			<div class="open felix_tooltip">
+				<span class="tooltiptext">Click to open</span>
+				<a href="{{ absolute_quote_url }}" target="_blank" class="m-l-5 float-right"><i class="ti-new-window"></i></a>
+			</div>
+			<div class="open felix_tooltip">
+				<span class="tooltiptext">Download PDF</span>
+				<a href="{{ quote_pdf_download_url }}" target="_blank" class="m-l-5 float-right"><i class="ti-download"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="m-b-50">&nbsp;</div>
+	{% if not deal.get_order %}
+	<center class="m-t-50">
+		<button class="prepare-order btn btn-outline-primary btn-md">Manually prepare order</button>
+	</center>
+	{% endif %}
+{% else %}
+	<p>No quote found for this deal.</p>
+{% endif %}

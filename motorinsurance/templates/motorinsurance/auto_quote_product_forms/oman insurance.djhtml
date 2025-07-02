@@ -1,0 +1,88 @@
+{% load static %}
+
+{% with form=form %}
+    {% include 'motorinsurance/auto_quote_product_forms/generic_form.djhtml' %}
+{% endwith %}
+
+
+<script type="text/javascript">
+    var oman_vehicles_data = false;
+    var autoquote_form = $('#modal_auto_quote_form');
+    var model_id = '#modal_auto_quote_form #id_model';
+    var spec_id = '#modal_auto_quote_form #id_specification';
+    var vehicle_id = '#modal_auto_quote_form #id_vehicle';
+    var insured_value = '#modal_auto_quote_form #id_insured_value';
+
+    $(document).ready(function() {
+        var loader = autoquote_form.find('.content');
+        var endpoint = DjangoUrls['motorinsurance:auto-quote-oic-mmt-tree']();
+
+        $(model_id).change(function() {
+            loader.addClass('loader');
+
+            Utilities.Form.updateSearchableSelectOptions(spec_id, [], 'Select Specification');
+            Utilities.Form.updateSearchableSelectOptions(vehicle_id, [], 'Select Vehicle');
+            autoquote_form.find('.oman-price-range-label').remove();
+            $(insured_value).removeClass('error');
+
+            $(spec_id).prop('disabled', true).trigger('chosen:updated');
+            $(vehicle_id).prop('disabled', true).trigger('chosen:updated');
+
+            $.get(endpoint, {'type': 'specifications', 'model_id': $(this).val()}, function(data) {
+                Utilities.Form.updateSearchableSelectOptions(spec_id, data['response'], 'Select Specification');
+                $(spec_id).prop('disabled', false).trigger('chosen:updated');
+
+                loader.removeClass('loader');
+            });
+        });
+
+        $(spec_id).change(function() {
+            loader.addClass('loader');
+
+            $(vehicle_id).prop('disabled', true).trigger('chosen:updated');
+            autoquote_form.find('.oman-price-range-label').remove();
+            $(insured_value).removeClass('error');
+
+            $.get(endpoint, {'type': 'vehicles', 'specification_id': $(this).val()}, function(data) {
+                oman_vehicles_data = data['response'];
+                var cleaned_data = oman_vehicles_data.map(function(v){
+                    return [v['id'], v['bodyType'] + ' ' + v['engineSize']];
+                });
+
+                Utilities.Form.updateSearchableSelectOptions(vehicle_id, cleaned_data, 'Select Vehicle');
+
+                $(vehicle_id).prop('disabled', false).trigger('chosen:updated');
+
+                loader.removeClass('loader');
+            });
+        });
+        $(vehicle_id).change(checkForPriceRange);
+
+        $(insured_value).blur(checkForPriceRange);
+
+        function checkForPriceRange() {
+            var selected_vehicle_id = $(vehicle_id).val();
+
+            $(insured_value).removeClass('error');
+
+            if(!selected_vehicle_id) return;
+
+            $.each(oman_vehicles_data, function() {
+
+                if(this.id == selected_vehicle_id) {
+                    autoquote_form.find('.oman-price-range-label').remove();
+
+                    $(insured_value).after(
+                        '<small class="oman-price-range-label">Estimated vehicle value is <b>'+ accounting.format(this.minimumRetailPrice)+'</b> to <b>' + accounting.format(this.maximumRetailPrice) + '</b></small>'
+                    );
+                    if(
+                        $(insured_value).val() && (
+                            parseInt($(insured_value).val()) < this.minimumRetailPrice || parseInt($(insured_value).val()) > this.maximumRetailPrice
+                        )
+                    )
+                        $(insured_value).addClass('error');
+                }
+            });
+        }
+    });
+</script>

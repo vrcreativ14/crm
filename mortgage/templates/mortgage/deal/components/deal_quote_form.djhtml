@@ -1,0 +1,373 @@
+{% load static %}
+{% block extra_css %}
+<style>
+    .mortgage-deal-processes form p{
+        display:flex;
+        align-items: center;
+    }
+    .mortgage-deal-processes form p label{
+        width: 175px !important;
+        font-size: 0.9rem;
+        margin-right: 1rem;
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .mortgage-deal-processes form input[type=text],.mortgage-deal-processes form input[type=date],.mortgage-deal-processes form input[type=number]{
+        display: block;
+        width: 100%;
+        max-width: 250px;
+        padding: .375rem .75rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: unset !important;
+        border-radius: .25rem;
+        -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        -webkit-box-shadow: 0 1px 5px 0 rgba(0,0,0,.21)!important;
+        box-shadow: 0 1px 5px 0 rgba(0,0,0,.21)!important;
+    }
+    .mortgage-deal-processes .row #modal_new_rate_banks{
+        padding-left:15px;
+    }
+    .mortgage-deal-processes #modal_new_rate_banks{
+        padding-left:0;
+    }
+    #selected-banks-list{
+        list-style: none;
+        padding-left: 0;
+    }
+    #selected-banks-list li{
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+    #selected-banks-list li .text-danger{
+        cursor: pointer;
+    }
+    #selected-banks-list img,.mortgage-deal-processes table img{
+        width: 120px;
+        height: auto;
+    }
+    .show-selected-bank-table th{
+        width: 350px;
+    }
+    table th{
+        min-width: 250px;
+    }
+</style>
+{% endblock %}
+{% load mortgage %}
+{% load humanize %}
+{% load motorinsurance %}
+<div data-quote-id="{{ quote.pk }}">
+    {% if quote %}
+        <div class="row mb-4">
+            <div class="col-2">
+                <div class="heading mb-3">Sub Stages</div>
+                <ul class="sub-stages deal-stages-breadcrumb">
+                    {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Select Bank" key="Select Bank" stage="quote" stage_number="1" %}
+                    {% include 'mortgage/deal/components/sub_stages_content.djhtml' with name="Confirm Bank" key="Confirm Bank" stage="quote" stage_number="1" %}
+                    <li class="d-none"></li>
+                </ul>
+            </div>
+            <div class="col-10">
+                {% include 'mortgage/deal/components/quick_customer_link.djhtml' %}
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if quote %}
+        <div style="overflow-x:scroll;" class="sub-stages-content select-bank-content" {% if deal.current_sub_stage.sub_stage != 'Select Bank' %}style="display:none;"{% endif %}>
+            <div class="row mb-4">
+                <div class="col-6">
+                    <div class="heading">Update Quote</div>
+                    <p>Your quote was created {{ quote.created_on }}. You can update your quote and resend it to your customer</p>
+                </div>
+                <div class="col-6 d-done">
+                    {% include 'mortgage/deal/components/quote_main_details.djhtml' %}
+                </div>
+            </div>
+            {% include 'mortgage/deal/components/deal_quote_bank_table.djhtml' %}
+        </div>
+
+        <div class="sub-stages-content confirm-bank-content row" {% if deal.current_sub_stage.sub_stage != 'Confirm Bank' and deal.stage == 'quote' %}style="display:none;"{% endif %}>
+            <div class="col-3">                
+                <div class="heading">Proposed Bank</div>
+                <a class="d-block mt-2 text-nexus-blue modal-trigger" data-toggle="modal" data-target="{% if quote_info %}#bank-more-details-{{quote_info.bank_pk}}{% else %}#bank-more-details-9{% endif %}">more details</a>
+                <br>
+                <p>Waiting for the client to confirm the bank.</p>
+                <form class="mt-4" action="{% url 'mortgage:stage' %}" method="POST" id="deal-stage-quote-form">
+                    <input type="hidden" name="deal" value={{deal.pk}}>
+                    <input type="hidden" name="stage" value="quote">
+                    <input type="hidden" name="bank" value="0">
+                    {% if deal.stage == 'quote' %}
+                    <button type="button" class="ml-0 btn-nexus btn-nexus-dark-grey" onclick="deal_sub_tages_processor('select-bank')">Previous</button>
+                    <button type="submit" class="btn-nexus btn-nexus-blue">Next</button>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="col-9 info-container">
+                <div class="w-50 text-left">
+                    <img width="150" src="{% if quote_info %}{{quote_info.bank_logo}}{% endif %}"/>
+                    <p class="name mt-1 pl-4">{% if quote_info %}{{quote_info.bank_name}}{% endif %}</p>
+                </div>
+            </div>
+        </div>
+        {% include 'mortgage/deal/components/bank_info_modal.djhtml' %}
+    {% endif %}
+
+    {% if quote %}
+        <div class="row mt-4" id="selected-banks">
+            <div class="col-12 col-md-8 mb-4" id="modal_new_rate_banks" style="display:none;">
+                <form class="shadow-2-strong" method="POST" id="modal_new_rate_banks_form" action="{% url 'mortgage:segmented-customer' pk=deal.pk %}">
+                    <div class="image"></div>
+                    <input type="hidden" name="deal" value="{{deal.pk}}">
+                    <input type="hidden" name="is_segmented" value="True">
+                    <input id="bank-id" type="hidden" name="banks" value="3">
+                    {{interest_form.as_p}}
+                    <input class="ml-0 btn-nexus btn-nexus-golden" type="submit">
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {% include 'handlebars/deal_quote_add_product.html' %}
+</div>
+
+{% block extra_js %}
+<script>
+    function unselect_mortgage_bank(id){
+        $('table td').removeClass('selected');
+        $('table td,table th').removeClass('unselected');
+    }
+    function select_mortgage_bank(id){
+        $('table td').removeClass('selected');
+        $('table td,table th').addClass('unselected');
+        $('table td.col-td-'+id).removeClass('unselected');
+        $('table td.col-td-'+id).addClass('selected');
+        deal_sub_tages_processor('confirm-bank', id)
+    }
+    function delete_bank(id){
+        $('.bank-'+id).remove();
+        $('#modal_quote_banks .insurer-block-container').each(function( index ) {
+            const bank_id = $(this).attr('data-id');
+            if(bank_id==id){
+                $(this).show();
+            }
+            if($('#selected-banks-list li').length == 0){
+                $('#new-quote-form-div').hide();
+                $('.deal-overview .new-deal').addClass('display');
+            }
+        });
+    }
+    // A $( document ).ready() block.
+    $( document ).ready(function() {
+        let selected_bank = "{{ selected_bank }}"
+        if(selected_bank){
+            $('table td,table th').addClass('unselected');
+            $('table td.col-td-'+selected_bank).removeClass('unselected');
+            $('table td.col-td-'+selected_bank).addClass('selected');
+        }
+
+        $('.quote-select-bank').on('click',function(){
+            const bank_id = $(this).attr('data-bank');
+            $('.show-selected-bank-table td').removeClass('table-success');
+            $('.select-option-'+bank_id).prop('checked','true');
+            $('.col-td-'+bank_id).addClass('table-success');
+        });
+
+        $('body').on('click', '.trigger-select-bank', function() {
+            var _form = $('#deal-stage-quote-form')
+            if ($('#deal-stage-quote-form input[name="bank"]')[0] === undefined && $(this).attr("data-value")!='NA'){
+                _form.append('<input type="hidden" name="bank" value='+ $(this).attr("data-value")+'>')
+            }else{
+                if($(this).attr("data-value")!='NA'){
+                    $('#deal-stage-quote-form input[name="bank"]').val($(this).attr("data-value"))
+                }else{
+                    $('#deal-stage-quote-form input[name="bank"]').remove();
+                }
+            }
+            $('.confirm-bank-content img').attr('src',$('.show-selected-bank-table tr .selected img').attr('src'));
+            $('.confirm-bank-content p.name').html($('.show-selected-bank-table tr .selected p.name').html());
+            $('.confirm-bank-content .modal-trigger').attr('data-target','#bank-more-details-'+$(this).attr("data-value"));
+            return true
+        });
+
+        $('body').on('click', '.show-bank-modal', function() {
+            $('#modal_quote_banks').show();
+            $('#modal_quote_banks .insurer-block-container').each(function( index ) {
+                const bank_id = $(this).attr('data-id');
+                if($('input').hasClass('bank-hide-data-'+bank_id)){
+                    $(this).hide();
+                }
+            });
+        });
+
+        $('body').on('click', '#selected', function() {
+            $('#modal_quote_banks').show();
+            $('#modal_quote_banks .insurer-block-container').each(function( index ) {
+                const bank_id = $(this).attr('data-id');
+                if($('input').hasClass('bank-hide-data-'+bank_id)){
+                    $(this).hide();
+                }
+            });
+        });
+
+        $('.new-bank-rate').on('click', function(event) {
+            const self = $(this);
+            setTimeout(function(){
+                if($('#new-bank-rate-'+self.attr('data-bank-id')).is(':checked')) {
+                    $('#modal_new_rate_banks').show();
+                }else{
+                    $('#modal_new_rate_banks').hide();
+                }
+                const _id = $('#new-bank-rate-'+self.attr('data-bank-id')).val();
+                const _image = self.attr('data-image');
+
+                $('#modal_new_rate_banks #bank-id').val(_id);
+                $('#modal_new_rate_banks_form .image').html('<img class="image" src="'+_image+'" />');
+            }, 200);
+        });
+
+        $('body').on('click', '#modal_quote_banks .insurer-block-container', function(evt){
+            $(this).hide();
+            let _id = $(this).attr('data-id');
+            let _name = $(this).attr('data-name');
+            let _logo = $(this).find('img').attr('src');
+            let y = '<li class="bank-'+_id+'"> \
+            <button class="btn btn-danger btn-sm mr-2" onclick="delete_bank('+_id+')">Remove</button> \
+            <input type="hidden" name="banks" value="'+_id+'"> \
+            <img class="ml-2" src="'+ _logo +'" width="170px" height="80px" alt="'+_name+'" <br>\
+            <div><strong>'+_name+'</strong><br/><label> Add a different rate </label>\
+            <input class="new-bank-rate" type="radio" name="banks-options" id="new-bank-rate" value="'+ _id +'"></div> \
+           </li> '
+            y = y+ $('#selected-banks-list').html();
+            $('#selected-banks-list').html(y);
+            $('#new-quote-form-div').show();
+        });
+
+
+        $('#modal_new_rate_banks_form').on('submit',function(e){
+            e.preventDefault();
+            var data = {};
+            $("#modal_new_rate_banks_form input").each(function( index ) {
+                data[$(this).attr('name')] = $(this).val();
+            });
+            $("#modal_new_rate_banks_form select").each(function( index ) {
+                data[$(this).attr('name')] = $(this).val();
+            });
+
+            $.post(
+                "{% url 'mortgage:segmented-customer' pk=deal.pk %}",
+                data,
+            function(data, status){
+                Utilities.Notify.success('Updated successfully', 'Success');
+                setTimeout(function(){ location.reload(); }, 2000);
+            });
+        });
+
+        $('#new-bank-interest-form').on('submit',function(e){
+            e.preventDefault();
+            setTimeout(function(){
+                fetch("{% url 'mortgage:quotes' %}", {
+                    method: "POST",
+                    body: new FormData(e.target),
+                }).then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    return Promise.reject(response);
+                }).then(function (data) {
+                    Utilities.Notify.success('Updated successfully', 'Success');
+                    setTimeout(function(){ location.reload(); }, 500);
+                }).catch(function (error) {
+                    console.warn(error);
+                });
+            }, 500);
+        });
+        $('.new-bank-interest-form').on('submit',function(e){
+            e.preventDefault();
+            setTimeout(function(){
+                fetch("{% url 'mortgage:quotes' %}", {
+                    method: "POST",
+                    body: new FormData(e.target),
+                }).then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    return Promise.reject(response);
+                }).then(function (data) {
+                    Utilities.Notify.success('Updated successfully', 'Success');
+                    setTimeout(function(){ location.reload(); }, 500);
+                }).catch(function (error) {
+                    console.warn(error);
+                });
+            }, 500);
+        });
+    });
+</script>
+<script type="text/javascript">
+    function convert_num_format(self) {
+        if ($(self).val() == '') {
+            return
+        }
+        let num = $(self).val();
+        num = num.replace(/[, ]+/g, "").trim();
+        num = parseFloat(num).toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+        $(self).val(num);
+        if (($(self).attr('id')).includes('addition')) {
+
+        } else if (($(self).attr('id')).includes('rate') || ($(self).attr('id')).includes('percentage')) {
+            $(self).val(num + '%')
+        }
+    }
+
+    function change_num_text(type = false){
+        if(!type){
+            $('#modal_new_rate_banks_form input[type=number],#modal_new_rate_banks_form input[type=text]').each(function( index, value ) {
+                $(this).prop('type','text');
+                if($(this).attr('id')=='id_introduction_period_in_years' || $(this).attr('id')=='id_eibor_duration'){
+                    return
+                }else{
+                    $(this).val('');   
+                }
+                $(this).addClass('number-to-text-format')
+                convert_num_format(this)
+            });
+        } else {
+            $('.number-to-text-format').each(function (index, value) {
+                convert_num_format(this)
+            });
+        }
+    }
+
+    function CustomAutoComma(self){
+        var value = $(self).val()
+        $(self).val(accounting.formatNumber(value, 0, ',', '.'));
+    }
+
+    // A $( document ).ready() block.
+    $(document).ready(function () {
+        change_num_text();
+        $('.number-to-text-format').on('input', function () {
+            CustomAutoComma(this)
+        });
+        $('.number-to-text-format').on('change focusout', function () {
+            convert_num_format(this)
+        });
+        $('.number-to-text-format').on('focus', function () {
+            if ($(this).val() == '') {
+                return
+            }
+            let num = $(this).val();
+            num = num.replace(/[, ]+/g, "").trim();
+            $(this).val(parseFloat(num));
+        });
+    });
+</script>
+{% endblock %}

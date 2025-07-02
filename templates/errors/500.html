@@ -1,0 +1,12 @@
+{% extends 'error_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}500 - Server Error Occurred{% endblock %}
+
+{% block content %}
+<div class="error-container error-500">
+	<div class="bg"></div>
+	<div class="title">Server Error</div>
+	<div class="message">Sorry, something went wrong. Please try again or contact support if the error persists.</div>
+</div>	
+{% endblock %}

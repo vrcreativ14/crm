@@ -1,0 +1,988 @@
+{% extends 'base.djhtml' %}
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+{% load permission_tags %}
+
+{% block page_title %}Deals{% endblock %}
+{% block body_class %}motor-deals{% endblock %}
+{% block current_nav %}deals{% endblock %}
+
+{% block breadcrumb %}
+    <!-- Page-Title -->
+    <div class="breadcrumb">
+        <a class="back" href="{{ back_url }}">
+            <i class="ti-arrow-left"></i>
+        </a>
+        <ul>
+            <li><a href="{{ back_url }}">Deals</a></li>
+            <li class="muted">/</li>
+            <li>
+                {% if deal %}
+                    {{ deal.customer.name }} (<span class="deal-title">{{ deal.get_car_title }}</span>)
+                {% else %}
+                    Add new deal
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+    <!-- end page title end breadcrumb -->
+{% endblock %}
+
+{% block content %}
+    <div class="deal-detail-settings">
+        <a class="dropdown-toggle" data-toggle="dropdown"
+           href="javascript:"
+           role="button"
+           aria-haspopup="false" aria-expanded="false">
+            <i class="ti-settings"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+            {% if user|can:'create_motor_deals' %}
+                <a class="dropdown-item duplicate-deal" href="javascript:">
+                    <i class="ti-layers m-r-7"></i> Duplicate Deal
+                </a>
+            {% endif %}
+            {% if not deal.is_deleted %}
+                <a href="#" data-redirect-to="{% url 'motorinsurance:deal-edit' pk=deal.pk %}"
+                   data-url="{% url 'motorinsurance:delete-deal' pk=deal.pk %}" data-id="{{ deal.pk }}"
+                   class="dropdown-item btn-delete-record">
+                    <i class="ti-trash"></i> Delete
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="deal-container container-fluid squeeze"
+         data-id="{{ deal.pk }}"
+         data-title="{{ deal.get_title }}"
+         data-status="{{ deal.stage }}"
+    >
+        {% if deal.is_deleted %}
+            {% include 'core/_deleted_record_message.djhtml' %}
+        {% endif %}
+        <div class="row">
+            <!-- *******
+                 LEFT Column
+                        ****** -->
+            <div class="col col-lg-4 col-xl-3">
+                <!-- Deal Title-->
+                <div class="card info-container m-b-20">
+                    <div class="deal-title-container"
+                         title="{{ deal.get_car_title }} at {{ companysettings.get_currency_display }} {{ deal.vehicle_insured_value|intcomma }}">
+                        <div class="deal-title">
+                            <span class="title">{{ deal.get_car_title }}</span>
+                            <span class="price">at {{ companysettings.get_currency_display }} {{ deal.vehicle_insured_value|intcomma }}</span>
+                        </div>
+                    </div>
+                    <div class="deal-statuses">
+                        {% if deal.get_tags %}
+                            {% for tag in deal.get_tags %}
+                                <span class="m-t-15 m-r-4 badge badge-default badge-font-light badge-{{ tag|slugify }}">{{ tag }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="info-table m-t-0">
+                        <div class="deal-email-settings__cc m-t-20 row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                CC Emails
+                                <span class="help-icon"
+                                      title="Copy these email addresses for all system generated emails relating to this deal."></span>
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="cc_emails"
+                                   data-class="form-control-sm"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="CC Emails"
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}?type=email">
+                                    {{ deal.cc_emails }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="deal-email-settings__bcc row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                BCC Emails
+                                <span class="help-icon"
+                                      title="Blind-copy these email addresses for all system generated emails relating to this deal."></span>
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="bcc_emails"
+                                   data-class="form-control-sm"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="BCC Emails"
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}?type=email">
+                                    {{ deal.bcc_emails }}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Referrer
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="javascript:"
+                                   class="deal-inline-update-field select-editable editable"
+                                   data-name="producer_id"
+                                   data-type="select"
+                                   data-emptytext="Add"
+                                   data-pk="{{ deal.pk }}"
+                                   data-value="{% if deal.producer %}{{ deal.producer.pk }}{% endif %}"
+                                   data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=agents"
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model='deal' %}"
+                                   data-title="Select">{% if deal.producer %}{{ deal.producer }}{% endif %}</a>
+                            </div>
+                        </div>
+
+                        <a href="javascript:" class="toggle-details {% if deal.stage == 'new' %}less{% endif %}"></a>
+                    </div>
+                </div>
+
+                <!-- Customer Info-->
+                <div class="card info-container m-b-20">
+                    <div class="title">
+                        <div class="initials rounded-circle">
+                            {{ deal.customer.get_initials }}
+                        </div>
+                        <div class="person-name">
+                            <a href="#"
+                               class="text-editable"
+                               data-name="name"
+                               data-class="form-control"
+                               data-pk="{{ deal.customer.pk }}"
+                               data-title="Customer Name"
+                               data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="customer" %}"
+                            >{{ deal.customer.name }}</a>
+                            <span>Customer <a class="font-12 fw-400"
+                                              href="{% url 'customers:edit' pk=deal.customer.pk %}">(View)</a></span>
+                        </div>
+                    </div>
+
+                    <div class="info-table">
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                Phone <a title="click to start WhatsApp chat with {{ deal.customer.name }}"
+                                         href="{% if deal.customer.phone %}https://wa.me/{{ deal.customer.get_whatsapp_formatted_number }}{% endif %}"
+                                         target="_blank" class="whatsapp-customer-icon"
+                                         onclick="return __CUSTOMERS._triggerWhatsAppClick(this)">
+                                <img src="{% static "images/whatsapp-logo.png" %}"/>
+                            </a>
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable whatsapp-customer-phone-field"
+                                   data-name="phone"
+                                   data-class="form-control-sm"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Customer Phone"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="customer" %}"
+                                >{{ deal.customer.phone }}</a>
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Email</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="email"
+                                   data-class="form-control-sm"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Email Address"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="customer" %}?type=email"
+                                >{{ deal.customer.email }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Nationality</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="nationality"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.customer.nationality }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select nationality"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="customer" %}"
+                                   data-source="{% url 'core:countries-list' %}"
+                                >{{ deal.customer.get_nationality_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Gender</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="gender"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.customer.gender }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select gender"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="customer" %}"
+                                   data-source='{{ gender_list }}'
+                                >{{ deal.customer.get_gender_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">DOB</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="dob"
+                                   data-class="form-control datepicker"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-value="{{ deal.customer.dob|date:'d-m-Y' }}"
+                                   data-title="Select DOB"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="customer" %}?type=date"
+                                >{{ deal.customer.dob|date:'M d, Y' }}</a>
+                            </div>
+                        </div>
+
+                        <a href="javascript:" class="toggle-details {% if deal.stage == 'new' %}less{% endif %}"></a>
+                    </div>
+                </div>
+
+                <!-- Customer Driving Profile -->
+                <div class="card info-container m-b-20">
+                    <div class="heading">Driving Info</div>
+                    <div class="info-table">
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">First license country</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="first_license_country"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.customer.motorinsurancecustomerprofile.first_license_country }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select nationality"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="motorprofile" %}"
+                                   data-source="{% url 'core:countries-list' %}"
+                                >{{ deal.customer.motorinsurancecustomerprofile.get_first_license_country_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">First license age</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="first_license_age"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.customer.motorinsurancecustomerprofile.first_license_age }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="motorprofile" %}"
+                                   data-source="{{ license_age_list }}"
+                                >{{ deal.customer.motorinsurancecustomerprofile.get_first_license_age_display }}</a>
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">UAE license age</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="uae_license_age"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.customer.motorinsurancecustomerprofile.uae_license_age }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="motorprofile" %}"
+                                   data-source="{{ license_age_list }}"
+                                >{{ deal.customer.motorinsurancecustomerprofile.get_uae_license_age_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">First license issue date</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="first_license_issue_date"
+                                   data-class="form-control-sm datepicker"
+                                   data-value="{{ deal.customer.motorinsurancecustomerprofile.first_license_issue_date|date:"d-m-Y" }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select date"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="motorprofile" %}?type=date"
+                                   data-source="{{ license_age_list }}"
+                                >{{ deal.customer.motorinsurancecustomerprofile.first_license_issue_date|date:"M d, Y" }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">UAE license issue date</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="uae_license_issue_date"
+                                   data-class="form-control-sm datepicker"
+                                   data-value="{{ deal.customer.motorinsurancecustomerprofile.uae_license_issue_date|date:"d-m-Y" }}"
+                                   data-pk="{{ deal.customer.pk }}"
+                                   data-title="Select date"
+                                   data-url="{% url 'customers:update-customer-field' pk=deal.customer.pk model="motorprofile" %}?type=date"
+                                   data-source="{{ license_age_list }}"
+                                >{{ deal.customer.motorinsurancecustomerprofile.uae_license_issue_date|date:"M d, Y" }}</a>
+                            </div>
+                        </div>
+                        <a href="javascript:" class="toggle-details {% if deal.stage == 'new' %}less{% endif %}"></a>
+                    </div>
+                </div>
+
+                <!-- Deal Info-->
+                <div class="card info-container m-b-20">
+                    <div class="heading">Deal Info</div>
+                    <div class="info-table">
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Enquiry type</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="lead_type"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.lead_type }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select type"
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=motor_lead_types"
+                                >{{ deal.get_lead_type_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Vehicle</div>
+                            <div class="col col-lg-8 vehicle-editable editable-icon">
+                                <a href="javascript:" class="car-title">{{ deal.get_car_title }}</a>
+                                <div class="editableform-loading hide" style="width: 35px; height: 35px;"></div>
+                                <div class="vehicle-editable-container editable-container">
+                                    {{ deal_form.car_year }}
+                                    <div class="select-with-reset">
+                                        <select data-value="{{ deal.car_make_id }}" id="id_car_make" name="car_make"
+                                                placeholder="Car Make"></select>
+                                        <span class="reset"><i class="ti-close"></i></span>
+                                    </div>
+                                    <div class="select-with-reset">
+                                        <select data-value="{{ deal.car_trim_id }}" id="id_car_trim" name="car_trim"
+                                                placeholder="Car Model"></select>
+                                        <span class="reset"><i class="ti-close"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control input-sm" name="custom_car_name"
+                                           id="id_custom_car_name" value="{{ deal.custom_car_name }}"
+                                           placeholder="Custom car name..."/>
+                                    <div class="editable-buttons">
+                                        <button type="button"
+                                                class="vehicle-submit btn btn-success editable-submit btn-sm"><i
+                                                class="ti-check"></i></button>
+                                        <button type="button"
+                                                class="vehicle-cancel btn btn-danger editable-cancel btn-sm"><i
+                                                class="ti-close"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row vehicle-body-type {% if not deal.car_trim.algo_driven_data|length %}hide{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Body Type</div>
+                            <div class="col col-lg-8">
+                                <span class="float-left">
+                                    {% if deal.car_trim.algo_driven_id and deal.car_trim.algo_driven_data %}
+                                        {% if deal.car_trim.algo_driven_data.body %}
+                                            {{ deal.car_trim.algo_driven_data.body }}
+                                        {% else %}
+                                            n/a
+                                        {% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row vehicle-cylinders {% if not deal.car_trim.algo_driven_data|length %}hide{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">No. of Cylinders</div>
+                            <div class="col col-lg-8">
+                                <span class="float-left">
+                                    {% if deal.car_trim.algo_driven_id and deal.car_trim.algo_driven_data %}
+                                        {% if deal.car_trim.algo_driven_data.cylinders %}
+                                            {{ deal.car_trim.algo_driven_data.cylinders }}
+                                        {% else %}
+                                            n/a
+                                        {% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row vehicle-seats {% if not deal.car_trim.algo_driven_data|length %}hide{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">No. of Seats</div>
+                            <div class="col col-lg-8">
+                                <span class="float-left">
+                                    {% if deal.car_trim.algo_driven_id and deal.car_trim.algo_driven_data %}
+                                        {% if deal.car_trim.algo_driven_data.seats %}
+                                            {{ deal.car_trim.algo_driven_data.seats }}
+                                        {% else %}
+                                            n/a
+                                        {% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Sum Insured</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <span class="float-left">{{ companysettings.get_currency_display }}&nbsp;</span>
+                                <a href="#"
+                                   class="number-editable short-width"
+                                   data-name="vehicle_insured_value"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.vehicle_insured_value }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                >{{ deal.vehicle_insured_value|intcomma }}</a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Valuation Guide (beta)</div>
+                            <div class="col col-lg-8 editable-icon">
+                                {% if request.company.get_algodrive_usage_for_current_month >= request.company.workspacemotorsettings.algodriven_credits %}
+                                <button title="Your organisation has already used up your monthly quota of request.company.workspacemotorsettings.algodriven_credits vehicle valuation checks. To enable more checks please reach out to us via live chat. At the beginning of next month you will automatically get another 20 free valuation checks." type="button" disabled="disabled" 
+                                    class="check-vehicle-value btn btn-primary btn-xs btn-fit p-1 pl-2 pr-2">Check
+                                </button>
+                                {% else %}
+                                <button type="button"
+                                    class="check-vehicle-value btn btn-primary btn-xs btn-fit p-1 pl-2 pr-2">Check
+                                </button>
+                                {% endif %}
+                                <span class="valuation-guide-display d-block m-t-5 hide"></span>
+                                <span class="valuation-guide-loader d-block m-t-5 hide">
+                                    <img src="{% static "images/preloader.gif" %}" width="18"/> loading. please wait...
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Chassis Number</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="chassis_number"
+                                   data-class="form-control-sm"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Chassis Number"
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}">
+                                    {{ deal.chassis_number }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Emirate of registration</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="place_of_registration"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.place_of_registration }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{{ emirates_list }}"
+                                >{{ deal.get_place_of_registration_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Current cover</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="current_insurance_type"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.current_insurance_type }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=insurance_types"
+                                >{{ deal.get_current_insurance_type_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">
+                                No. of Passengers
+                                <span class="help-icon"
+                                      title="This is the number of passengers excluding the driver and is used to calculate the Personal Accident Benefit premium. Eg. for a typical family sedan with space for 1 driver and 4 passengers you would enter '4' for this field."></span>
+                            </div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="number-editable short-width"
+                                   data-name="number_of_passengers"
+                                   data-min="1"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.number_of_passengers }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                >{{ deal.number_of_passengers|intcomma }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Current Insurer</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="current_insurer"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.current_insurer }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=insurers"
+                                >{{ deal.get_current_insurer_display }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">First registration date</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="text-editable"
+                                   data-name="date_of_first_registration"
+                                   data-class="form-control-sm datepicker"
+                                   data-value="{{ deal.date_of_first_registration|date:"d-m-Y" }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select date"
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}?type=date"
+                                >{{ deal.date_of_first_registration|date:"M d, Y" }}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Years without claim</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="years_without_claim"
+                                   data-class="form-control-sm"
+                                   data-value="{{ deal.years_without_claim }}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=motor_years_without_claims"
+                                >{{ deal.get_years_without_claim_display }}</a>
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">No claim certificate available?</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="claim_certificate_available"
+                                   data-class="form-control-sm"
+                                   data-value="{% if deal.claim_certificate_available is None %}-1{% elif deal.claim_certificate_available %}1{% else %}0{% endif %}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{{ boolean_values_json }}"
+                                >
+                                    {% if deal.claim_certificate_available is None %}{% elif deal.claim_certificate_available %}
+                                        Yes{% else %}No{% endif %}</a>
+                            </div>
+                        </div>
+
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">Vehicle Usage</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="private_car"
+                                   data-class="form-control-sm"
+                                   data-value="{% if deal.private_car is None %}-1{% elif deal.private_car %}1{% else %}0{% endif %}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source='[{"value": -1, "text": "Select an option"}, {"value": 0, "text": "Commercial"}, {"value": 1, "text": "Private"}]'
+                                >{% if deal.private_car is None %}{% elif deal.private_car %}Private{% else %}
+                                    Commercial{% endif %}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">The car is unmodified?</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="car_unmodified"
+                                   data-class="form-control-sm"
+                                   data-value="{% if deal.car_unmodified is None %}-1{% elif deal.car_unmodified %}1{% else %}0{% endif %}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{{ boolean_values_json }}"
+                                >{% if deal.car_unmodified is None %}{% elif deal.car_unmodified %}Yes{% else %}
+                                    No{% endif %}</a>
+                            </div>
+                        </div>
+                        <div class="row editable collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                            <div class="col col-lg-4 label p-l-20 p-r-0">The car is GCC spec?</div>
+                            <div class="col col-lg-8 editable-icon">
+                                <a href="#"
+                                   class="select-editable"
+                                   data-name="car_gcc_spec"
+                                   data-class="form-control-sm"
+                                   data-value="{% if deal.car_gcc_spec is None %}-1{% elif deal.car_gcc_spec %}1{% else %}0{% endif %}"
+                                   data-pk="{{ deal.pk }}"
+                                   data-title="Select..."
+                                   data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model="deal" %}"
+                                   data-source="{{ boolean_values_json }}"
+                                >{% if deal.car_gcc_spec is None %}{% elif deal.car_gcc_spec %}Yes{% else %}
+                                    No{% endif %}</a>
+                            </div>
+                        </div>
+                        <a href="javascript:" class="toggle-details {% if deal.stage == 'new' %}less{% endif %}"></a>
+                    </div>
+                </div>
+
+                <!-- Lead Source Info-->
+                {% if companysettings.lead_source_allowed and deal.lead and deal.lead.meta_info %}
+                    <div class="card info-container m-b-20">
+                        <div class="heading">UTM Deal Details</div>
+                        <div class="info-table">
+                            <div class="row">
+                                <div class="col col-lg-4 label p-l-20 p-r-0">UTM Source</div>
+                                <div class="col col-lg-8 capitalize">
+                                    {% if deal.lead.meta_info.utm_source %}
+                                        {{ deal.lead.meta_info.utm_source }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                                <div class="col col-lg-4 label p-l-20 p-r-0">UTM Medium</div>
+                                <div class="col col-lg-8 capitalize">
+                                    {% if deal.lead.meta_info.utm_medium %}
+                                        {{ deal.lead.meta_info.utm_medium }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row collapsable {% if deal.stage == 'new' %}flex{% endif %}">
+                                <div class="col col-lg-4 label p-l-20 p-r-0">UTM Campaign</div>
+                                <div class="col col-lg-8 capitalize">
+                                    {% if deal.lead.meta_info.utm_campaign %}
+                                        {{ deal.lead.meta_info.utm_campaign }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <a href="javascript:"
+                               class="toggle-details {% if deal.stage == 'new' %}less{% endif %}"></a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- *******
+                 RIGHT Column
+                        ****** -->
+            <div class="col col-lg-8 col-xl-9">
+                <div class="card info-container m-b-20">
+                    <div class="deal-actions row">
+                        <div class="col col-lg-6 assigned_to">
+                            <span class="text-muted font-12">Assigned to:</span>
+                            <a href="javascript:"
+                               class="deal-inline-update-field select-editable editable"
+                               data-name="assigned_to_id"
+                               data-type="select"
+                               data-emptytext="Add"
+                               data-pk="{{ deal.pk }}"
+                               data-value="{% if deal.assigned_to %}{{ deal.assigned_to.pk }}{% endif %}"
+                               data-source="{% url 'motorinsurance:deal-attributes-list' pk=deal.pk %}?type=agents"
+                               data-url="{% url 'motorinsurance:update-deal-field' pk=deal.pk model='deal' %}"
+                               data-title="Select">
+                                {% if deal.assigned_to %}{{ deal.assigned_to }}{% else %}-{% endif %}</a>
+                        </div>
+
+                        <!-- Deal Stage Jump Dropdown -->
+                        <div class="col col-lg-6 align-right">
+                            <div class="deal-settings">
+                                <a class="handle" data-toggle="dropdown"
+                                   href="#"
+                                   role="button"
+                                   aria-haspopup="false" aria-expanded="false">
+                                    <i class="ti-settings"></i>
+                                </a>
+                                <div class="dropdown-menu stage-dropdown">
+                                    <a data-value="new" class="dropdown-item text-muted" href="#">Move to New Deal</a>
+                                    <a data-value="quote" class="dropdown-item" href="#">Move to Quote</a>
+                                    <a data-value="order" class="dropdown-item" href="#">Move to Order</a>
+                                    <a data-value="housekeeping" class="dropdown-item" href="#">Move to Housekeeping</a>
+                                    <a data-value="closed-won" class="dropdown-item" href="#">Mark as Closed - Won</a>
+                                    <a data-value="closed-lost" class="dropdown-item" href="#">Mark as Closed - Lost</a>
+                                </div>
+                            </div>
+                            <button class="manual-email-trigger btn btn-outline-primary btn-sm m-r-5"
+                                    onclick="__DEALS._triggerCustomEmailModal('latest')">
+                                Email
+                            </button>
+                            <button type="button" data-id="{{ deal.pk }}"
+                                    class="m-b-20 btn-sm btn btn-outline-danger float-right btn-fit open-lost-deal hide">
+                                Mark as Lost
+                            </button>
+                        </div>
+                    </div>
+
+                    <ul class="deal-stages-breadcrumb">
+                        <li data-id='new' class="no-underline" {% if deal.stage == 'new' %}
+                            data-item="deal-overview"{% endif %}>
+                            <a href="#">
+                                New Deal
+                                <span class="duration">{{ deal.created_on|naturalday|capfirst }}</span>
+                            </a>
+                        </li>
+                        <li data-id='quote' data-item="quote-overview">
+                            <a href="javascript:">
+                                <i class="stage-warning fas fa-exclamation-triangle {% if not deal.quote.outdated %}hide{% endif %}"></i>
+                                Quote
+                                {% if deal.quote %}
+                                    <span class="duration">{{ deal.quote.created_on|naturalday|capfirst }}</span>
+                                    <span class="quote-views">Viewed {{ deal.quote.number_of_views }} time(s)</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li data-id='order' data-item="order-overview">
+                            <a href="#">
+                                Order
+                                {% if deal.get_order %}
+                                    <span class="duration">{{ deal.get_order.created_on|naturalday|capfirst }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li data-id='housekeeping' data-item="housekeeping-overview">
+                            <a href="#">Housekeeping</a>
+                        </li>
+                        <li data-id='closed' data-item="closed-overview">
+                            <a href="#">Closed</a>
+                        </li>
+                    </ul>
+
+                    <div class="toggle-deal-processes show-div align-right m-t-40">
+                        <div class="collapse">
+                            Collapse <i class="ti-angle-up"></i>
+                        </div>
+                        <div class="expand">
+                            Expand <i class="ti-angle-down"></i>
+                        </div>
+                    </div>
+
+                    <!-- Main Deal Processes Container -->
+                    <div class="deal-processes info-table m-t-10 m-b-10"></div>
+                </div>
+                <!--- Activities/Notes/Documents -->
+                <div class="card info-container m-b-20">
+                    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active show" data-toggle="tab" href="#tab_all" role="tab"
+                               aria-selected="true">Timeline</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_tasks" role="tab" aria-selected="true">Tasks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_notes" role="tab" aria-selected="true">Notes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_documents" role="tab" aria-selected="true">Documents</a>
+                        </li>
+                        {% if helpscout_enabled %}
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tab_helpscout" role="tab"
+                                   aria-selected="true"><img src="{% static 'images/help-scout-logo.svg' %}"
+                                                             width="70"/></a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab_history" role="tab" aria-selected="true">History</a>
+                        </li>
+                    </ul>
+
+                    <!-- All -->
+                    <div class="tab-content">
+                        <div class="tab-pane p-3 active show" id="tab_all" role="tabpanel">
+                            <button data-felix-modal="modal_add_note" class="btn btn-info-container btn-primary btn-sm">
+                                Add Note
+                            </button>
+                            <button data-felix-modal="modal_task"
+                                    class="add-task btn btn-info-container btn-primary btn-sm">Add Task
+                            </button>
+                            <button class="add-documents btn btn-info-container btn-secondary btn-sm">Add Documents
+                            </button>
+
+                            <div id="delete_note_csrftoken">
+                                {% csrf_token %}
+                                </div>
+                            {% if deal.notes.all %}
+                                <ul class="trail note-trail">
+                                    {% for note in deal.notes.all %}
+                                        {% include 'core/_note.djhtml' with delete_form_action='motorinsurance:deal-delete-note' %}
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <ul class="trail note-trail hide"></ul>
+                                <br><br>
+                                <div class="small-note note-trail">
+                                    No record found for this deal.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- History -->
+                        <div class="tab-pane p-3" id="tab_history" role="tabpanel"></div>
+
+                        <!-- Activities/Tasks -->
+                        <div class="tab-pane p-3" id="tab_tasks" role="tabpanel">
+                            <button data-felix-modal="modal_task"
+                                    class="add-task btn btn-info-container btn-primary btn-sm">Add Task
+                            </button>
+
+                            <div class="hide">
+                                <form name="tasks-filter-form" id="id_tasks-fitler-form">
+                                    <input type="hidden" name="filter_type" id="filter_type" value="all"/>
+                                    <input type="hidden" name="order_by" id="order_by" value="-due_datetime"/>
+                                </form>
+                            </div>
+
+                            <div class="task-actions float-right">
+                                <div class="task-loader">
+                                    <img src="{% static "images/preloader2.svg" %}"/> loading...
+                                </div>
+                                <button data-type='all' class="btn btn-outline-primary active btn-sm">All</button>
+                                <button data-type='todo' class="btn btn-outline-primary btn-sm">To Do</button>
+                                <button data-type='done' class="btn btn-outline-primary btn-sm">Done</button>
+                                <button data-type='today' class="btn btn-outline-primary btn-sm">Today</button>
+                                <button data-type='tomorrow' class="btn btn-outline-primary btn-sm">Tomorrow</button>
+                                <button data-type='overdue' class="btn btn-outline-primary btn-sm">Overdue</button>
+                            </div>
+                            <ul class="trail task-trail">
+                                <li class="no-record">No task found</li>
+                            </ul>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="tab-pane p-3" id="tab_notes" role="tabpanel">
+                            <button data-felix-modal="modal_add_note" class="btn btn-info-container btn-primary btn-sm">
+                                Add Note
+                            </button>
+
+                            {% if deal.notes.all %}
+                                <ul class="trail note-trail">
+                                    {% for note in deal.notes.all %}
+                                        {% include 'core/_note.djhtml' with delete_form_action='motorinsurance:deal-delete-note' %}
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <ul class="trail note-trail hide"></ul>
+                                <br><br>
+                                <div class="small-note note-trail">
+                                    There are no notes for this deal.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Documents -->
+                        <div
+                                class="tab-pane p-3"
+                                id="tab_documents"
+                                role="tabpanel"
+                                data-attachments-url="{% url 'motorinsurance:attachments' pk=deal.pk %}"
+                                data-delete-url="{% url 'motorinsurance:delete-attachment' pk=0 %}"
+                                data-copy-url="{% url 'motorinsurance:copy-attachment' pk=deal.pk attachment_id=0 %}">
+                            <input type="file" name="file" id="document_upload"
+                                   data-url="{{ attachment_form.helper.form_action }}"/>
+                            <div class="progress-bar-container squeeze">
+                                <div class="progress-bar"><span></span></div>
+                            </div>
+                            <button class="float-right btn btn-primary btn-sm preview-documents mt-3">Preview
+                                Documents
+                            </button>
+                            <span class="documents-section"></span>
+                        </div>
+
+                        {% if helpscout_enabled %}
+                            <!-- Help Scout -->
+                            <div class="tab-pane p-4" id="tab_helpscout" role="tabpanel">
+                                <ul class="trail helpscout-trail">
+                                    <li class="no-record">No conversation found</li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODALS -->
+        {% include 'core/_documents_viewer.djhtml' %}
+
+        {% with post_url=note_form_action %}
+            {% include 'core/_note_form.djhtml' %}
+        {% endwith %}
+
+        {% include 'core/_task_form.djhtml' %}
+
+        {% if companysettings.auto_quote_allowed %}
+            {% include 'motorinsurance/auto_quote_product_forms/modal.djhtml' %}
+        {% endif %}
+
+        {% if helpscout_enabled %}
+            {% include 'core/helpscout_modal.djhtml' %}
+        {% endif %}
+        <!-- Modal Ends -->
+
+        {% include 'handlebars/task_li.html' %}
+        {% include 'handlebars/documents.html' %}
+
+        {% if helpscout_enabled %}
+            {% include 'handlebars/helpscout_li.html' %}
+            {% include 'handlebars/helpscout_conversation.html' %}
+        {% endif %}
+
+        <button data-felix-modal="modal_edit_customer_email"
+                class="hide btn btn-info-container btn-primary btn-sm"></button>
+
+        <button data-felix-modal="modal_required_fields_quote_form"
+                class="hide btn btn-info-container btn-primary btn-sm"></button>
+
+        {% include 'motorinsurance/deal/components/email_field_form.djhtml' %}
+        {% include 'motorinsurance/deal/components/required_fields_for_quote_form.djhtml' %}
+
+        <button data-felix-modal="modal_send_custom_email"
+                class="hide btn btn-info-container btn-primary btn-sm"></button>
+
+        {% include 'motorinsurance/deal/components/custom_email_form.djhtml' %}
+
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+    <link rel="stylsheet" href="{% static "plugins/fileuploader/jquery-fileuploader.css" %}"/>
+    <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
+    <script src="{% static "plugins/fileuploader/felix-fileuploader.min.js" %}"></script>
+    <script type="text/javascript">
+        window.products_data = [];
+
+        function confirm_delete() {
+            if (window.confirm('Are you sure to delete this document?')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    </script>
+
+
+    {% if debug %}
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    {% else %}
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    {% endif %}
+{% endblock %}

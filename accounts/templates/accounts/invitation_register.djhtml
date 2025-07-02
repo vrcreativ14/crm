@@ -1,0 +1,117 @@
+{% extends 'login_base.djhtml' %}
+{% load static %}
+
+{% block page_title %}Accept Invitation{% endblock %}
+
+{% block content %}
+{% if not invitation %}
+    <center>Invalid or expired token.</center>
+{% else %}
+    <h4 class="text-muted font-18 m-b-5 text-center">
+        Hi {% if invitation.first_name %}{{ invitation.first_name }}{% else %}{{ invitation.email }}{% endif %},
+    </h4>
+    <p class="text-muted text-center">Please complete this form to activate your account.</p>
+    <div class="container form-contain">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_first_name">First Name</label>
+            {{ form.first_name }}
+        </div>
+        <div class="form-group">
+            <label for="id_last_name">Last Name</label>
+            {{ form.last_name }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">Password *</label>
+            <div class="password-field">
+                {{ form.password }}
+                <div class="password-show-toggle"><i class="ti-eye c-lgrey"></i></div>
+                <div class="strength-meter">
+                     <span title="very weak"></span>
+                     <span title="weak"></span>
+                     <span title="strong"></span>
+                     <span title="very strong"></span>
+                 </div>
+            </div>
+            {% if form.password.errors %}
+            <ul class="errorlist">
+                <li>{{ form.password.errors }}</li>
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="id_confirm_password">Confirm Password *</label>
+            <div class="password-field">
+                {{ form.confirm_password }}
+                <div class="password-show-toggle"><i class="ti-eye c-lgrey"></i></div>
+            </div>
+            {{ form.confirm_password.errors }}
+        </div>
+        <div class="form-group row m-t-20">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-primary-new w-md waves-effect waves-light" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    $('.password-show-toggle').click(function() {
+        var field = $(this).prev('input');
+
+        if(field.is(':password')) {
+            $(this).html('<i class="ti-eye"></i>');
+            field.attr('type', 'text');
+        } else {
+            $(this).html('<i class="ti-eye c-lgrey"></i>');
+            field.attr('type', 'password');
+        }
+    });
+
+    $('#id_password').keyup(function() {
+        var strength = 0;
+        var password = $(this).val();
+
+        if(!password.length)
+            return 0;
+
+        if (password.length > 0)
+            strength += 1;
+        // If password contains both lower and uppercase characters, increase strength value.
+        if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/))
+            strength += 1;
+        // If it has numbers and characters, increase strength value.
+        if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/))
+            strength += 1;
+        // If it has one special character, increase strength value.
+        if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/))
+            strength += 1;
+        // If it has two special characters, increase strength value.
+        if (password.match(/(.*[!,%,&,@,#,$,^,*,?,_,~].*[!,%,&,@,#,$,^,*,?,_,~])/))
+            strength += 1;
+
+        $('.strength-meter').removeClass('very-weak weak strong very-strong');
+        if(strength == 0) {
+        }
+        else if(strength < 2) {
+            $('.strength-meter').addClass('very-weak');
+        }
+        else if(strength < 3) {
+            $('.strength-meter').addClass('weak');
+        }
+        else if(strength < 4) {
+            $('.strength-meter').addClass('strong');
+        }
+        else if(strength <= 5) {
+            $('.strength-meter').addClass('very-strong');
+        }
+    });
+
+</script>
+{% endblock %}

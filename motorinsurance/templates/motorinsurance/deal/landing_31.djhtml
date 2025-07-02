@@ -1,0 +1,335 @@
+{% extends 'motor_base.djhtml' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+{% block content %}
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+	<link rel="icon" href="{% static 'images/icon.png' %}" sizes="518x518"  type="image/x-icon"/>
+
+
+	<title>Nexus</title>
+	<style type="text/css">
+	:root {
+    --ward: #dfb76c;}
+
+		.header{
+			padding: 20px 30px;
+			border-bottom: 2px solid #ebebeb;
+		}
+		.logo img{
+			width: 42%;
+			display: block;
+			margin: auto;
+		}
+		.num p{
+			font-family: Roboto;
+			color: #8191a5;
+			margin-bottom: 0rem !important;
+		}
+		.num a{
+			color: #dbae58;
+			font-weight: bold;
+			font-size: 26px;
+		}
+		.num a:hover{
+			text-decoration: none;
+		}
+		.form-body{
+			background-color: #f5f5f5;
+			background-image: url(images/background.png);
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+		
+
+		}
+		.form-body{
+			padding: 40px 10px;
+		}
+		
+		h1{
+      font-family: 'Montserrat-Bold' ;
+      font-size: 30px;
+    }
+    h2{
+      font-family: 'Montserrat-SemiBold' ;
+      font-size: 22px;
+    }
+    p{
+      font-family: 'Montserrat-Regular' ;
+      font-size: 17.5px;
+    }
+    button{
+      font-family: 'Montserrat-Medium' ;
+      font-size: 15px;
+    }
+    input{
+    	font-family: 'Montserrat-Regular' ;
+      font-size: 13px;
+    }
+    
+    .form-body p{
+      color: #737374;
+      padding: 7px;
+    }
+		.progress-row img{
+			display: block;
+			margin: auto;
+
+		}
+		.progress-row .col-md-1,.progress-row .col-md-4,.progress-row .col-1{
+			padding: 0px !important;
+		}
+progress {
+  border-radius: 0px; 
+  width: 100%;
+  height: 8px;
+}
+progress::-webkit-progress-bar {
+  background-color: #c5c5c5 !important;
+}
+progress::-webkit-progress-value {
+  background-color: #dfb76c !important;
+  
+}
+
+::-moz-progress-value {
+  background-color: #dfb76c !important;
+  
+}
+.select-body{
+	margin-top: 2rem;
+	padding: 2rem 0rem 8rem 2rem;
+	background-color: #fff;
+	color: #000 !important;
+	border-radius: 15px;
+
+}
+
+button{
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 10px;
+	border: 1px solid #f3f3f3;
+    box-shadow: 5px 4px 3px 0px #f3f3f3;
+	width: 370px;
+	margin-top: 1rem;
+	text-align: left;
+}
+button:hover{
+	background-color: #dfb76c;
+	border-radius: 10px;
+	border: 1px solid #dfb76c;
+	margin-top: 1rem;
+	color: #fff;
+}
+button:hover img{
+	filter:brightness(500%);
+}
+button span{
+	padding: 0px 15px ;
+	font-weight: 500;
+}
+button:focus{
+	outline: none;
+}
+.person{
+	width: 30%;
+}
+.car{
+	width: 70%;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #c5c5c5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dfb76c;
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #dfb76c;
+  border-radius: 8px;
+}
+@media (max-width: 768px) {
+	p{
+		font-size: 14.5px;
+	}
+	.select-body h2{
+		font-size: 16px;
+	}
+	button{
+		width: 100%;
+		font-size: 14px;
+	}
+	.none{
+		display: none;
+	}
+	.header {
+    padding: 20px 5px;
+  }
+	 .logo img{
+  	width: 40%;
+  	margin: 0;
+  }
+  .num{
+  	padding-top: 0.7rem;
+  	text-align: right;
+  }
+  .num a {
+  	font-size: 18px;
+  	text-align: right;
+}
+.num p {
+    font-size: 12px;
+    font-weight: 500;
+  text-align: right;}
+.form-body p {
+    color: #737374;
+    padding: 10px ;}
+ .person{
+	width: 66%;
+}
+.car{
+	padding-top: 8px;
+	width:120%;
+}
+.select-body {
+    
+    padding: 2rem 0rem 8rem 0rem;}}
+    @media (max-width: 500px) {
+	
+  .logo img{
+  	width: 70%;
+  	margin: 0;
+  }}
+
+@media (max-width: 360px) {
+	button{
+	width: 100%;
+}
+button span{
+	    padding: 0px 0px;
+
+	font-size: 15px;
+}
+}
+
+	</style>
+
+
+</head>
+
+<body>
+	<!--header section-->
+	<section class="header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-4 col-6 logo">
+					<img src="{% static 'images/nexus-logo.png' %}" alt="Nexus Logo">
+				</div>
+				<div class="col-lg-4 col-6 none">
+					
+				</div>
+				<div class="col-lg-4 col-6 num">
+					<center>
+						<p>Need some help? Call Us</p>
+						<p><a href="tel:+97142378294">+971 4 237 8294</a></p>
+					</center>
+					
+				</div>
+
+			</div>
+		</div>
+	</section>
+	<!--end of header section-->
+	<!--form section-->
+	<section class="form-body">
+		<div class="container">
+			<div class="row d-flex justify-content-center">
+				<div class="col-md-10 col-12">
+					<!--text row-->
+					<div class="row">
+						<center>
+							<h1>Find the most competitive car insurance quote in the UAE</h1>
+							<p>We are offering up to 20% off on some deals. Complete this short 2 minute form so we can email you the most competitive quotes.</p>
+						</center>
+					</div>
+					<!--end of text row-->
+					<!--progress row-->
+					<div class="row progress-row d-flex justify-content-center" >
+						<div class="col-1">
+							<img src="{% static 'images/car.png' %}" alt="car" class="car">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="10" max="100"> 10% </progress>
+
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/person.png' %}" alt="person" class="person">
+						</div>
+						<div class="col-4">
+							<progress id="file" value="0" max="100"> 0% </progress>
+						</div>
+						<div class="col-1">
+							<img src="{% static 'images/file.png' %}" class="person" alt="file">
+
+						</div>
+					</div>
+					<!--end of progress row-->
+					<!--select row-->
+					<div class="row select-body">
+						<div class="col-12">
+							<h2>What do you need insurance for?</h2>
+
+						</div>
+					
+							<div class="col-12">
+								<button><img src="{% static 'images/car-1.png' %}" width="8%"> <span>To Renew your car's insurance policy</span></button>
+							</div>
+							<div class="col-12">
+								<button><img src="{% static 'images/car-2.png' %}" width="12%"> <span>To insure a brand new car</span></button>
+							</div>
+							<div class="col-12">
+								<button><img src="{% static 'images/car.png' %}" width="12%"> <span>To insure a used car</span></button>
+							</div>
+						
+							<div class="col-12 second-q">
+								<form action="/motor-insurance/motor-step2/">
+								<button class="next-btn">Next</button>
+							</form>
+							</div>						
+							
+					</div>
+					<!--end of select row-->
+				</div>
+			</div>
+
+		</div>
+		
+		
+	</section>
+	<!--end of form section-->
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+</html>

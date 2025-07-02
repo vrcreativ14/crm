@@ -1,0 +1,60 @@
+{% load static %}
+{% load permission_tags %}
+{% with request.resolver_match.url_name as page_name %}
+<ul class="navigation-menu">
+    {% if user|can:'company_dashboard' %}
+        <li class="{% if page_name == 'dashboard'%}active{% endif %}">
+            <a data-elem="dashboard" href="{% url 'accounts:dashboard' %}">
+                <i class="ti-dashboard"></i> Dashboard
+            </a>
+        </li>
+    {% endif %}
+
+    {% if user|can:'list_motor_deals' %}
+        <li class="{% if page_name == 'deals' or page_name == 'deal-edit'%}active{% endif %}">
+            <a data-elem="deals" href="{% url 'motorinsurance:deals' %}">
+                <i class="ti-car"></i>Deals
+            </a>
+        </li>
+    {% endif %}
+
+    {% if user|can:'list_customers' %}
+        <li class="{% if page_name == 'customers' or page_name == 'edit'%}active{% endif %}">
+            <a data-elem="customers" href="{% url 'customers:customers' %}">
+                <i class="ti-user"></i>People
+            </a>
+        </li>
+    {% endif %}
+    {% if user|can:'list_tasks' %}
+    <li class="{% if page_name == 'tasks'%}active{% endif %}">
+        <a data-elem="tasks" href="{% url 'motorinsurance:tasks' %}?assigned_to={{ request.user.pk }}">
+            <i class="ti-time"></i>Tasks
+        </a>
+    </li>
+    {% endif %}
+    {% if user|can:'list_motor_policies' %}
+    <li class="{% if page_name == 'policies'%}active{% endif %}">
+        <a data-elem="policies" href="{% url 'motorinsurance:policies' %}">
+            <i class="ti-shield"></i>Policies
+        </a>
+    </li>
+    {% endif %}
+    {% if user|can:'list_motor_policies' and user|can:'create_motor_deals' %}
+    <li class="{% if page_name == 'renewals'%}active{% endif %}">
+        <a data-elem="renewals" href="{% url 'motorinsurance:renewals' %}">
+            <i class="ti-loop"></i>Renewals
+            <span class="badge-with-counts renewals-menu-counter">
+                <span class="badge-counter">0</span>
+            </span>
+        </a>
+    </li>
+    {% endif %}
+    {% if request.company.workspacemotorsettings.access_forms_module %}
+    <li class="{% if page_name == 'company-forms'%}active{% endif %}">
+        <a data-elem="company-forms" href="{% url 'accounts:company-forms' %}">
+            <i class="ti-agenda"></i>Forms
+        </a>
+    </li>
+    {% endif %}
+</ul>
+{% endwith %}

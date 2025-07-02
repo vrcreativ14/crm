@@ -1,0 +1,359 @@
+{% load static %}
+
+<div id="vue-aman-motor-autoquote-form"></div>
+
+
+<script type="text/x-template" id="vue-aman-motor-autoquote-form-template">
+    <div>
+        <div class="form-group">
+            <label for="chassis-number" class="label">Chassis Number</label>
+            <input type="text" id="chassis-number" name="chassis-number" class="form-control" v-model="chassisNumber"
+                   :disabled="!canEditChassisNumber()">
+        </div>
+        <button type="button" class="btn btn-secondary" :disabled="!canLoadCarInfo()" @click="loadCarInfo">Load Car
+            Information
+        </button>
+        <div class="mt-5" v-if="hasVehicleDetails">
+            <h3>Vehicle Details</h3>
+            <a href="#" @click="hideVehicleDetails = !hideVehicleDetails">show/hide details</a>
+            <ul class="list-unstyled" :class="{hide: hideVehicleDetails}">
+                <li v-for="(value, name) in vehicleDetails">
+                    {% verbatim %}
+                    <b>{{ name }}: </b>
+                    {{ value }}
+                    {% endverbatim %}
+                </li>
+            </ul>
+        </div>
+
+        <div class="mt-5" v-if="hasVehicleDetails">
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.sum_insured.label }} <span class="c-primary">*</span></div>
+                {{ form.sum_insured }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.policy_class.label }} <span class="c-primary">*</span></div>
+                {{ form.policy_class }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.used_vehicle.label }} <span class="c-primary">*</span></div>
+                {{ form.used_vehicle }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.agency_repair.label }} <span class="c-primary">*</span></div>
+                <select class="form-control" name="{{ form.agency_repair.name }}" id="{{ form.agency_repair.id_for_label }}" v-model="agencyRepair">
+                    <option value="0">non agency repair</option>
+                    <option value="1" :disabled="!allowAgencyRepair()">agency repair</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.vehicle_usage.label }} <span class="c-primary">*</span></div>
+                {{ form.vehicle_usage }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.vehicle_code.label }} <span class="c-primary">*</span></div>
+                <template v-if="hasVehicleCode">
+                    <input type="hidden" :value="vehicleCode" name="vehicle_code">
+                    <span class="form-text">{% verbatim %}{{ vehicleCodeDisplay }}{% endverbatim %}</span>
+                </template>
+                <template v-else>
+                    {{ form.vehicle_code }}
+                    <span class="form-text text-danger">No vehicle code returned from AMAN API.</span>
+                </template>
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.body_code.label }} <span class="c-primary">*</span></div>
+                <template v-if="hasBodyCode">
+                    <input type="hidden" :value="bodyCode" name="body_code">
+                    <span class="form-text">{% verbatim %}{{ bodyCodeDisplay }}{% endverbatim %}</span>
+                </template>
+                <template v-else>
+                    {{ form.body_code }}
+                    <span class="form-text text-danger">No body code returned from AMAN API.</span>
+                </template>
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.year_manufactured.label }} <span class="c-primary">*</span></div>
+                <template v-if="hasYearManufactured">
+                    <input type="hidden" :value="yearManufactured" name="year_manufactured">
+                    {% verbatim %}{{ yearManufactured }}{% endverbatim %}
+                </template>
+                <template v-else>
+                    {{ form.year_manufactured }}
+                    <span class="form-text text-danger">No year of manufacture returned from AMAN API.</span>
+                </template>
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.aaa.label }} <span class="c-primary">*</span></div>
+                {{ form.aaa }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.pabd.label }} <span class="c-primary">*</span></div>
+                {{ form.pabd }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.pabp.label }} <span class="c-primary">*</span></div>
+                {{ form.pabp }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.off_road.label }} <span class="c-primary">*</span></div>
+                {{ form.off_road }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.oman_cover.label }} <span class="c-primary">*</span></div>
+                {{ form.oman_cover }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.license_city.label }} <span class="c-primary">*</span></div>
+                {{ form.license_city }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.license_registration_date.label }} <span class="c-primary">*</span>
+                </div>
+                <input type="date" id="{{ form.license_registration_date.id_for_label }}" name="{{ form.license_registration_date.name }}"
+                    class="form-control">
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.emirate_of_registration.label }} <span class="c-primary">*</span></div>
+                {{ form.emirate_of_registration }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.first_registration_date.label }} <span class="c-primary">*</span></div>
+                <input type="date" id="{{ form.first_registration_date.id_for_label }}" name="{{ form.first_registration_date.name }}"
+                    v-model="firstRegistrationDate" class="form-control">
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.last_registration_date.label }} <span class="c-primary">*</span></div>
+                <input type="date" id="{{ form.last_registration_date.id_for_label }}" name="{{ form.last_registration_date.name }}"
+                    class="form-control">
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.seats.label }} <span class="c-primary">*</span></div>
+                <template v-if="hasSeats">
+                    <input type="hidden" name="seats" :value="seats">
+                    {% verbatim %}{{ seats }}{% endverbatim %}
+                </template>
+                <template v-else>
+                    {{ form.seats }}
+                    <span class="form-text text-danger">No number of seats returned from AMAN API.</span>
+                </template>
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.weight.label }} <span class="c-primary">*</span></div>
+                {{ form.weight }}
+            </div>
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.cylinders.label }} <span class="c-primary">*</span></div>
+                <template v-if="hasCylinders">
+                    <input type="hidden" name="cylinders" :value="cylinders">
+                    {% verbatim %}{{ cylinders }}{% endverbatim %}
+                </template>
+                <template v-else>
+                    {{ form.cylinders }}
+                    <span class="form-text text-danger">No number of cylinders returned from AMAN API.</span>
+                </template>
+            </div>
+
+            <div class="form-group">
+                <div class="label m-b-5">{{ form.discount_percentage.label }} <span class="c-primary">*</span></div>
+                <select class="form-control" name="{{ form.discount_percentage.name }}" id="{{ form.discount_percentage.id_for_label }}">
+                    <option :value="discount[0]" v-for="discount in availableDiscounts">
+                        {% verbatim %}{{ discount[1] }}{% endverbatim %}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <fieldset id="autoquoter-extra-fieldset" v-if="hasVehicleDetails">
+            <legend>
+                Please update the following deal information
+                <span class="help-icon"
+                      title="These pieces of information will be updated in the customer and deal record."></span>
+            </legend>
+            {% for field in form %}
+                {% if '___' in field.name %}
+                    <div class="form-group">
+                        {% if field.field.widget.input_type == 'checkbox' %}
+                            <label class="label m-b-5 felix-checkbox-form">
+                                {{ field.label }}
+                                {{ field }}
+                                <div class="control__indicator"></div>
+                            </label>
+                        {% else %}
+                            <div class="label m-b-5">{{ field.label }} <span class="c-primary">*</span></div>
+                            {{ field }}
+                        {% endif %}
+                        {{ field.error }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </fieldset>
+    </div>
+</script>
+
+<script src="{% static "libs/luxon.min.js" %}"></script>
+
+<script type="application/javascript">
+  const vue = new Vue({
+    el: "#vue-aman-motor-autoquote-form",
+    template: "#vue-aman-motor-autoquote-form-template",
+    data: {
+      state: "idle",
+      chassisNumber: "",
+      vehicleDetails: null,
+      hideVehicleDetails: true,
+      sumInsured: "",
+      availableDiscounts: null,
+
+      agencyRepair: '0',
+      usedVehicle: '',
+      firstRegistrationDate: '',
+    },
+    methods: {
+      allowAgencyRepair() {
+        if (this.usedVehicle !== '0') { // New vehicle
+          return false;
+        }
+
+        if (this.firstRegistrationDate.length === 0) {
+          return true;
+        }
+
+        const firstRegistrationDate = luxon.DateTime.fromISO(this.firstRegistrationDate);
+        const now = luxon.DateTime.local();
+        const diff = luxon.Interval.fromDateTimes(firstRegistrationDate, now);
+
+        return diff.length('months') <= 12;
+      },
+      canEditChassisNumber: function () {
+        return this.state !== "loading-vehicle-info";
+      },
+      canLoadCarInfo: function () {
+        return this.state !== "loading-vehicle-info" && this.chassisNumber.length === 17;
+      },
+      loadCarInfo: function () {
+        let url = "{% url "motorinsurance:auto-quote-aman-vehicle-info" pk=deal.pk chassis_number="CN" %}";
+        const finalUrl = url.replace("CN", this.chassisNumber);
+
+        this.state = "loading-vehicle-info";
+
+        $.get(finalUrl).success((response) => {
+          this.vehicleDetails = response;
+          this.sumInsured = this.vehicleDetails.SUM_INSURED;
+        }).error(function (error) {
+          console.log(error);
+        }).then(() => {
+          this.state = "idle";
+          this.$nextTick(this.loadDiscountsInfo);
+        });
+      },
+      loadDiscountsInfo: function () {
+        const finalUrl = "{% url "motorinsurance:auto-quote-aman-discounts-info" pk=deal.pk %}";
+        this.state = "loading-discounts-info";
+
+        $.get(finalUrl).success((response) => {
+          this.availableDiscounts = response;
+        }).error((error) => {
+          this.availableDiscounts = [];
+          console.log(error);
+        }).then(() => {
+          this.state = "idle";
+        });
+      }
+    },
+    watch: {
+      hasVehicleDetails: function (newVal, oldVal) {
+        if (newVal)
+          this.$nextTick(function () {
+            $('#autoquoter-extra-fieldset').addClass('hide');
+            if ($('#autoquoter-extra-fieldset .form-group').length)
+              $('#autoquoter-extra-fieldset').removeClass('hide');
+          })
+      },
+
+      usedVehicle() {
+        if (!this.allowAgencyRepair()) {
+          this.agencyRepair = '0'; // Reset to non-agency repair
+        }
+      },
+      firstRegistrationDate() {
+        if (!this.allowAgencyRepair()) {
+          this.agencyRepair = '0'; // Reset to non-agency repair
+        }
+      }
+    },
+    computed: {
+      hasVehicleDetails: function () {
+        return this.vehicleDetails !== null;
+      },
+
+      vehicleCode: function () {
+        if (this.hasVehicleDetails) {
+          return this.vehicleDetails.VEH_CODE || "";
+        } else {
+          return "";
+        }
+      },
+      vehicleCodeDisplay: function () {
+        if (this.hasVehicleCode) {
+          return this.vehicleDetails.VEHICLE_MAKE;
+        } else {
+          return 'No vehicle code returned from AMAN API';
+        }
+      },
+      hasVehicleCode: function () {
+        return this.vehicleCode.length > 0;
+      },
+
+      bodyCode: function () {
+        if (this.hasVehicleDetails) {
+          return this.vehicleDetails.BODY_CODE || "";
+        } else {
+          return "";
+        }
+      },
+      bodyCodeDisplay: function () {
+        if (this.hasBodyCode) {
+          return this.vehicleDetails.BODY_TYPE;
+        } else {
+          return 'No body code returned from AMAN API';
+        }
+      },
+      hasBodyCode: function () {
+        return this.bodyCode.length > 0;
+      },
+
+      yearManufactured: function () {
+        if (this.hasVehicleDetails) {
+          return this.vehicleDetails.YEAR_MANUFACTURED || "";
+        } else {
+          return "";
+        }
+      },
+      hasYearManufactured: function () {
+        return this.yearManufactured.length > 0;
+      },
+
+      seats: function () {
+        if (this.hasVehicleDetails) {
+          return this.vehicleDetails.SEATS || "";
+        } else {
+          return "";
+        }
+      },
+      hasSeats: function () {
+        return this.seats.length > 0;
+      },
+
+      cylinders: function () {
+        if (this.hasVehicleDetails) {
+          return this.vehicleDetails.CYLINDER || "";
+        } else {
+          return "";
+        }
+      },
+      hasCylinders: function () {
+        return this.cylinders.length > 0;
+      }
+    }
+  });
+</script>

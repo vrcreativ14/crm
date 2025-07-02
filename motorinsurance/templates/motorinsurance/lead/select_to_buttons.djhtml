@@ -1,0 +1,8 @@
+{% load static %}
+
+<div class="field-select-buttons">
+    <input type="hidden" class="select-to-button-field" name="{{ field_name }}" id="id_{{ field_name }}" required/>
+    {% for k, v in options %}
+        <button type="button" class="pure-button" data-value="{{ k }}">{{ v }}</button>
+    {% endfor %}
+</div>

@@ -1,0 +1,23 @@
+<div style="align-self: end;">
+
+
+    {% csrf_token %}
+{% if class %}
+<button id="{{stage}}" class="{{class}}">
+    {{name}}
+  </button>
+  {% elif color %}
+    
+    <button id="{{stage}}" class="loader-blue {{action}} float-right btn-nexus">{{name}}</button>
+    
+{% else %}
+  <button id="{{stage}}" class="mt-4 ml-0 btn-nexus btn-nexus-golden {{action}} float-right">
+    {{name}}
+  </button>
+{% endif %}
+
+
+<script>
+   
+</script>
+</div>

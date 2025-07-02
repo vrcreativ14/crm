@@ -1,0 +1,24 @@
+/* =============
+   TASKS
+============= */
+
+.tasks-list {
+    .task-status {
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 3px;
+        margin-bottom: -2px;
+
+        &.done {
+            background-color: #6FD088;
+        }
+        &.overdue {
+            background-color: #F24734;
+        }
+        &.todo {
+            background-color: #DDD;
+        }
+    }
+}

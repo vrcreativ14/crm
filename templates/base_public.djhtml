@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block page_title %}{% endblock %}</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="keywords" content="{% block page_meta_keywords %}{% endblock %} "/>
+        <meta name="description" content="{% block page_meta_description %}{% endblock %} "/>
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+        <!--Ends-->
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+              integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+              crossorigin="anonymous" />
+
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css"
+              href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+        <link rel="stylesheet" type="text/css" href="{% static 'dist/style.public.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'public/css/override/nexusadvice.felix.insure.css' %}" />
+        <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        {% block extra_css %}{% endblock %}
+
+        <script src="{% static "js/jquery-3.6.0.min.js" %}"></script>
+
+        <script type="text/javascript">
+        var current_company_info = {
+                ID: "{{ request.company.id }}",
+                NAME: "{{ request.company.name }}",
+            };
+        </script>
+
+        {% if not debug %}
+        <script src="https://browser.sentry-cdn.com/4.6.5/bundle.min.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+          Sentry.init({ dsn: 'https://20400fe8766f455b9324381244872d60@sentry.io/175964', environment: '{{ environment }}' });
+          Sentry.configureScope(function(scope) {
+            scope.setTag("public", true);
+          });
+        </script>
+
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-K4RTQ3Q');</script>
+        <!-- End Google Tag Manager -->
+        <!-- Amplitude -->
+        <script type="text/javascript">
+          (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
+          ;r.type="text/javascript";r.async=true
+          ;r.src="https://cdn.amplitude.com/libs/amplitude-4.4.0-min.gz.js"
+          ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
+          e.amplitude.runQueuedFunctions()}else{
+          console.log("[Amplitude] Error: could not load SDK")}}
+          ;var i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)
+          ;function s(e,t){e.prototype[t]=function(){
+          this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+          var o=function(){this._q=[];return this}
+          ;var a=["add","append","clearAll","prepend","set","setOnce","unset"]
+          ;for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[]
+          ;return this}
+          ;var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
+          ;for(var p=0;p<l.length;p++){s(c,l[p])}n.Revenue=c
+          ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId"]
+          ;function v(e){function t(t){e[t]=function(){
+          e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
+          for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
+          e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+          ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
+          ;e.amplitude=n})(window,document);
+
+          amplitude.getInstance().init("{{ amplitude_api_key }}");
+        </script>
+        <!-- End of Amplitude -->
+        {% endif %}
+
+    </head>
+    <body class="{% block body_class %}{% endblock %}">
+        {% if not debug %}
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4RTQ3Q"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        {% endif %}
+        <header class="{% block header_class %}{% endblock %}">
+            <div class="container">
+                <div class="sub-container row">
+                    <div class="col col-lg-8 col-md-6 col-sm-6">
+                        <div class="item logo-container">
+                            <a href="#" title="{{ request.company }}"></a>
+                        </div>
+                        <div class="logo-secondary-container">
+                            <a href="#" title="{{ request.company }}"></a>
+                        </div>
+                    </div>
+                    {% if request.company.companysettings.phone %}
+                        <div class="col col-lg-4 col-md-6 col-sm-6 need-some-help">
+                            <div class="help-text">Need some help? Call us at</div>
+                            <div class="call-us">
+                                <span class="hide-on-desktop hide-on-tablet"><a href="tel:{{ request.company.companysettings.phone }}">{{ request.company.companysettings.phone }}</a></span>
+                                <span class="hide-on-mobile"> {{ request.company.companysettings.phone }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+
+        <script src="{% static 'js/reverse.js' %}"></script>
+        <script src="{% static 'js/utilities.js' %}"></script>
+        <script src="{% static 'dist/scripts.public.min.js' %}"></script>
+
+        {% block extra_js %}{% endblock %}
+
+    </body>
+</html>

@@ -1,0 +1,124 @@
+{% load static %}
+<div id="modal_add_note" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>New Note</h1>
+        <form id="note_form" method="post" action="{{ post_url }}">
+            {% csrf_token %}
+            <div class="content has-bg note">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="">Note Content *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea placeholder="Enter note content here" class="form-control modal-textarea" name="content" id="id_content" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+                <button type="submit" class="update-profile btn btn-success btn-wide-md btn-md">
+                    <span>Save Note</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="modal_update_note" class="felix-modal-container">
+    <div class="felix-modal">
+        <h1>Edit Note</h1>
+        <form id="note_form_edit" method="post" action="{% url 'mortgage:note-edit'%}">
+            {% csrf_token %}
+            <input type="hidden" name="pk">
+            <div class="content has-bg note">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label class="">Note Content *</label>
+                        </div>
+                        <div class="col-lg-9">
+                            <textarea placeholder="Enter note content here" class="form-control modal-textarea" name="content" id="id_content" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a data-modal-close href="javascript:" class="btn btn-outline-secondary btn-md">Close</a>
+                <button id="save-note-button" type="submit" class="update-profile btn btn-success btn-wide-md btn-md">
+                    <span>Save Note</span>
+                    <div class="ball-spinner"></div>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+        $("#note_form_edit").submit( function(el){
+            el.preventDefault()
+        $.ajax({
+            method: $(el.target).attr('method'),
+            url: $(el.target).attr('action'),
+            dataType: "json",
+            data:$(el.target).serialize(),
+            success: function(response){
+                Utilities.Notify.success(response.message, 'Success');
+                $("#modal_update_note").toggle()
+            },
+            error: function(errors){
+                Utilities.Notify.error(errors.responseJSON.errors, 'Error');
+            }
+        })
+        })
+
+        const prependNoteInTrail = function (content){
+            $('.note-trail').prepend('<li>' + content + '</li>');
+            $('.note-trail').removeClass('hide');
+            $('.small-note.note-trail').remove();
+        }
+
+        $("#note_form").submit(function(e){
+            let _note_form = $('#note_form');
+            e.preventDefault()
+            $.ajax({
+                method: $(e.target).attr('method'),
+                url: $(e.target).attr('action'),
+                dataType: "json",
+                data:$(e.target).serialize(),
+                success: function(response, status, xhr, form) {
+                    debugger
+                        $('#save-note-button').removeClass('loader');
+                        debugger
+                        console.log('response')
+                        console.log(response)
+                        if(response.success) {
+                            Utilities.Notify.success('Note added successfully.', 'Success');
+
+                            _note_form.find('[data-modal-close]').click();
+
+                            let note = '<div class="label">Note created</div>';
+                                if('note_pk' in response.note){
+                                    note += '<div class="note note-id-'+response.note.note_pk+'">' + response.note.content + '</div>';
+                                }else{
+                                    note += '<div class="note">' + response.note.content + '</div>';
+                                }
+                                note += '<div class="text-muted">' + response.note.created_on + ' ';
+                                note += 'by ' + response.note.added_by;
+                                note += '</div>';
+                                if('note_pk' in response.note){
+                                     note += '<div><span title="Click to remove" id="delete-mortgage-note" data-deleteurl="/mortgage/deals/notes/delete/'+response.note.note_pk+'/" onclick="deleteMortgageNote(this)" class="remove task-remove"> <i class="ti-trash"></i> </span> <span title="Click to edit" data-felix-modal="modal_update_note"  data-pk="'+response.note.note_pk+'" class="edit task-edit" onclick="editMortgageNote(this)"><i class="ti-pencil-alt"></i></span></div>'
+                                }
+
+                            prependNoteInTrail(note);
+                        } else {
+                            Utilities.Notify.error('Please check all the required fields.', 'Error');
+                            Utilities.Form.addErrors(form, response.errors);
+                        }
+                    }
+            })
+        })
+</script>

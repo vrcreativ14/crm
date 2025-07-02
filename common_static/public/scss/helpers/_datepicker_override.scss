@@ -1,0 +1,31 @@
+.datepicker-container {
+    font-size: 13px !important;
+    &.datepicker-top-left,
+    &.datepicker-top-right {
+        border-top-color: $felix-color-primary !important;
+        &:before {
+            border-bottom-color: $felix-color-primary !important;    
+        }
+    }
+
+    [data-view='month'] {
+        background-color: $felix-color-primary;
+        color: #FFF !important;
+    }
+
+    ul[data-view='days'] {
+        li.picked,
+        li:hover {
+            color: #FFF !important;
+            background-color:$felix-color-primary;
+        }
+
+        li.highlighted {
+            color: $felix-color-primary;
+        }
+
+        li.disabled:hover {
+            color: #CCC !important;
+        }
+    } 
+}

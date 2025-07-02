@@ -1,0 +1,162 @@
+{% load static %}
+{% load humanize %}
+{% load motorinsurance %}
+<form 
+	name="policy_form" 
+	method="post" 
+	id="policy_form" 
+	enctype="multipart/form-data"
+	action="{% url 'motorinsurance:deal-update-policy' pk=deal.pk %}"
+	>
+	{% csrf_token %}
+	<input type="hidden" name="send_email" id="id_send_email" value="" />
+	<div class="policy_form">
+		{% if companysettings.doc_parser_allowed %}
+		<div class="loader font-15 c-primary fw-400 m-12 d-inline hide">
+			<i class="fa fa-spin fa-spinner m-t-6 m-r-5"></i> Scanning policy document, please wait...
+			<button type="button" class="btn btn-info-container btn-primary btn-sm policy-document-parser-dismiss">Cancel</button>
+		</div>
+		{% endif %}
+		<div class="heading float-left">
+			Policy Details
+		</div>
+		<div class="clear"></div>
+		<div class="row">
+			<div class="col-lg-2 col-md-4 col-sm-12">
+				<div class="label m-b-5 mt-1">Policy start date *</div>
+				<div class="date-field">
+					<input type="text" name="policy_start_date" value="{{ policy_form.policy_start_date.value|date:'d-m-Y' }}" class="form-control datepicker"  required="" id="id_policy_start_date" />
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-4 col-sm-12">
+				<div class="label m-b-5 mt-1">Policy term</div>
+				<select name="policy-term" id="id_policy_term">
+					<option value="13">13 months</option>
+					<option value="12">12 months</option>
+					<option value="0">Custom</option>
+				</select>
+			</div>
+			<div class="col-lg-2 col-md-4 col-sm-12">
+				<div class="label m-b-5 mt-1">Policy expiry date *</div>
+				<div class="date-field">
+					<input type="text" name="policy_expiry_date" value="{{ policy_form.policy_expiry_date.value|date:'d-m-Y' }}" class="form-control datepicker" autocomplete="off" required="" id="id_policy_expiry_date" />
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-4 col-sm-12">
+				<div class="label m-b-5 mt-1">Policy number *</div>
+				{{ policy_form.reference_number }}
+			</div>
+			<div class="col-lg-3 col-md-4 col-sm-12">
+				<div class="label m-b-5 mt-1">Invoice number</div>
+				{{ policy_form.invoice_number }}
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col col-lg-4 col-md-6 col-sm-12">
+				<div class="label m-b-5">
+					Upload policy document *
+				</div>
+				<div class="felix-file-uploader">
+					<input 
+						type="file"
+						id="id_policy_document"
+						name="policy_document"
+						class="filestyle single-file-input"
+						data-input="false" 
+						data-buttonname="btn-secondary"
+						data-fileuploader-limit="1"
+						{% if policy_form.instance.policy_document %}
+							data-fileuploader-files='[{
+								"name": "{{ policy_form.instance.get_policy_document_name }}",
+								"file": "{{ policy_form.instance.get_policy_document_url }}",
+								"data": {
+									"label": "Policy document"
+								}
+							}]'
+						{% endif %}
+					/>
+					{% if companysettings.doc_parser_allowed %}
+					<button type="button" id="trigger_policy_document_parser" href="javascript:" class="hide btn btn-info-container btn-primary btn-sm">Extract Policy Number (beta)</button>
+					<div id="policy_document_no_scan" class="hide font-12 text-muted m-l-5">
+						<i class="ti-alert"></i> Text extraction not available for this insurer <span class="help-icon" title=""></span>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="col col-lg-4 col-md-6 col-sm-12">
+				<div class="label m-b-5">Upload invoice document</div>
+				<div class="felix-file-uploader">
+					<input 
+						type="file"
+						id="id_invoice_document"
+						name="invoice_document"
+						class="filestyle single-file-input"
+						data-input="false" 
+						data-buttonname="btn-secondary"
+						data-fileuploader-limit="1"
+						{% if policy_form.instance.invoice_document %}
+							data-fileuploader-files='[{
+								"name": "{{ policy_form.instance.get_invoice_document_name }}",
+								"file": "{{ policy_form.instance.get_invoice_document_url }}",
+								"data": {
+									"label": "Invoice document"
+								}
+							}]'
+						{% endif %}
+					/>
+				</div>
+			</div>
+			<div class="col col-lg-4 col-md-6 col-sm-12">
+				<div class="label m-b-5">Other documents</div>
+				<div class="felix-file-uploader">
+					<input 
+						type="file"
+						id="id_other_documents"
+						name="other_documents"
+						class="filestyle multi-file-input"
+						data-input="false" 
+						data-buttonname="btn-secondary"
+						data-fileuploader-limit="5"
+						{% if policy_form.instance.get_attachments %}
+							data-fileuploader-files='
+								[{% for document in policy_form.instance.get_attachments %}
+									{
+										"name": "{{ document.label }}",
+										"file": "{{ document.get_file_url }}",
+										"data": {
+											"id": "{{document.pk}}"
+										}
+									}
+									{% if not forloop.last %},{% endif %}
+								{% endfor %}]'
+						{% endif %}
+					/>
+				</div>
+			</div>
+		</div>
+
+		<hr class="m-t-50 m-b-25" />
+		{% if deal.policy %}
+			<button type="button" class="create-send-policy save-and-send float-right btn btn-primary btn-md btn-wide-deal m-l-10">
+				Update & Send
+			</button>
+			<button type="button" class="loader-blue create-policy float-right btn btn-outline-primary btn-md btn-wide-deal m-l-10">
+				Update
+			</button>
+			
+			<button type="button" class="cancel-policy float-right btn btn-outline-secondary btn-md btn-wide-deal">Cancel</button>
+		{% else %}
+			<button type="button" class="create-send-policy save-and-send float-right btn btn-primary btn-md btn-wide-deal m-l-10">
+				Save & Send
+			</button>
+			<button type="button" class="loader-blue create-policy float-right btn btn-outline-primary btn-md btn-wide-deal m-l-10">
+				Save
+			</button>
+		{% endif %}
+	</div>
+</form>
+
+<form action="{% url 'motorinsurance:deal-policy-document-parser' pk=deal.pk %}" class="" id="temp_document_parser_form" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+</form>

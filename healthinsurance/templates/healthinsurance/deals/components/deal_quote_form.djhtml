@@ -1,0 +1,801 @@
+{% load static %}
+{% load humanize %}
+
+
+<!-- <div class="products-preview">
+    <div class="products">
+        <div class="row product">
+            <div class="product-logo-container col-lg-2 col-md-3 m-l-30">
+                <img src="" />
+            </div>
+        </div>
+    </div>
+
+</div> -->
+<style>
+    .files input {
+    outline: 2px dashed #92b0b3;
+    outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    padding: 120px 0px 85px 35%;
+    text-align: center !important;
+    margin: 0;
+    width: 100% !important;
+}
+.files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
+ }
+.files{ position:relative}
+.files:after {  pointer-events: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 50px;
+    right: 0;
+    height: 56px;
+    content: "";
+    background-image: url('/static/images/icons/medical.svg');
+    display: block;
+    margin: 0 auto;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.color input{ background-color:#f1f1f1;}
+.files:before {
+    position: absolute;
+    bottom: 10px;
+    left: 0;  pointer-events: none;
+    width: 100%;
+    right: 0;
+    height: 57px;
+    content: " or drag it here. ";
+    display: block;
+    margin: 0 auto;
+    color: #2ea591;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+}
+</style>
+<div>
+    {% include 'healthinsurance/deals/components/insurer_list_modal.djhtml' %}
+<input type="hidden" id="id_selected_insurer" value="" />
+    <div class="deal-form info-container hide" data-quote-id="{{ deal.quote.pk }}">
+    
+        <div class="heading m-b-5">Create a new quote</div>
+        <div style="display: flex;justify-content:space-between;">
+        <p>Next, let's add some products to the quote based on the shared information by customer</p>
+        <div style="display: flex;" class="renewal_details hide">
+            <div style="margin-right: 80px;">
+                <input class="form-check-input" type="checkbox" value="" id="is_renewal_checkbox">
+                <label class="form-check-label">
+                    Renewal ?
+                </label>
+            </div>
+        <div class="renewal_document hide" >
+            <label class="form-check-label">
+                Renewal Document
+            </label>
+            {% csrf_token %}            
+            <input type="file" class="renewal_document_file" multiple="multiple" name="renewal_document" style="max-width:170px;"/>        
+      
+        </div>
+    </div>
+    </div>
+        
+        
+    
+        <div class="products-preview deal-processes hide">
+            {% include 'healthinsurance/deals/components/insurer_list_modal.djhtml' %}
+            <div class="products deal-process">
+                {% for qp in quoted_plans %}
+            <div class="row product" data-id={{ qp.pk }}>
+                <div class="product-logo-container col-lg-2 col-md-3 m-l-30">
+                    <span class="spacer"></span>
+                    <img src="{{ qp.plan.insurer.logo.url }}" style="width:100px;height:100px;">
+                </div>
+                <div class="details col-lg-5 col-md-5 col-sm-7">
+                    <div class="heading light">{{ qp.plan.name }}</div>
+                    <div class="text-muted font-12">Total Premium: {{qp.plan.currency}} {{ qp.total_premium }}</div>
+                    <!-- <div class="text-muted font-12">Insurer Quote Reference: {% if qp.insurer_quote_reference %}{{ qp.insurer_quote_reference }} {% else %}-{% endif %}</div> -->
+                
+                </div>
+            
+            <div title="Click to remove" class="remove product-remove" data-id="{{ qp.plan.pk }}"><i class="ti-trash"></i></div>
+            <div title="Click to edit" style="margin-left:10px;" class="edit product-edit" data-id="{{ qp.plan.pk }}" ><i class="ti-pencil-alt"></i></div>
+        </div>
+        {% endfor %}
+            </div>
+                <div>
+                    <br/>
+                    <br/>
+                <button class="btn btn-outline-primary btn-md" data-felix-modal="modal_quote_insurers">
+                    Add Another Product
+                </button>
+            </div>
+            <hr />
+    
+            <div class="row no-hover">
+                <div class="status-field col-lg-6 col-md-6 col-sm-5">
+                    {% if deal.quote %}
+                    <!-- <input name="quote_status" id="id_quote_status" type="checkbox" switch='success' name="" {% if  deal.quote.status == 'published'%}checked{% endif %} />
+                    <label data-on-label="published" data-off-label="unpublished" for="id_quote_status" class=""></label> -->
+                    <div class="row"></div>
+                    {% endif %}
+                </div>
+                
+                <div class="col col-lg-6 float-right">
+                    {% if deal.health_quote_deals %}
+                    {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Update & Send' class='loader-blue quote-submit send-email m-r-10 float-right btn btn-primary btn-md btn-wide-deal' %}
+                    {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Update' class='loader-blue quote-submit m-r-10 float-right btn btn-outline-primary btn-md btn-wide-deal' color='gray' %}
+                    <button class="cancel-quote m-r-10 float-right btn btn-outline-secondary btn-md btn-wide-deal"> Cancel </button>
+                    {% else %}
+                    {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Save & Send' class='loader-blue quote-submit send-email m-r-10 float-right btn btn-primary btn-md btn-wide-deal' %}
+                    {% include "healthinsurance/deals/components/next_step_button.djhtml" with name='Save' class='loader-blue quote-submit m-r-10 float-right btn btn-outline-primary btn-md btn-wide-deal' color='gray' %}
+                    {% endif %}
+                    {% if deal.quote %}
+                    <button class="cancel-edit-quote m-r-10 float-right btn btn-outline-secondary btn-md btn-wide-deal">
+                        Cancel
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="form {% if deal.health_quote_deals %}hide{% endif %} health-deal-add-product">
+            <input type="hidden" name="edited_qp_id" id="edited_qp_id" value="" />
+            <input type="hidden" name="edited_id" id="edited_id" value="" />
+            <div class="products-container">
+                <div class="row product-row">
+                    <input type="hidden" id="product_name" value="" />
+                    <input type="hidden" id="product_logo" value="" />
+                    <input type="hidden" id="copay_mode_id" value="" />
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <!--Product-->
+                            <div class="col-lg-4 initial_form">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Product *</div>
+                                    <select name="product" id="id_product" class="product-field form-control" onchange="updateQuoteForm(this)">
+                                        <option value="" disabled="disabled">Select Product</option>
+                                        {% for product in products %}
+                                            {% if product.is_active %}
+                                                <option value="{{ product.id }}" data-insurer-id="{{ product.insurer_id }}">{{ product.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <!--quote_reference-->
+                            <!-- <div class="col-lg-4 insurer initial_form">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Insurer Quote Reference</div>                                    
+                                    <input type="text" name="insurer_quote_reference" class="form-control" id="id_insurer_quote_reference" value="" />
+                                </div>
+                            </div> -->
+    
+                            
+                            <div class="col-lg-4 initial_form">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Total Premium (inc VAT) *</div>
+                                    <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text plan_currency"></span>
+                                      </div>
+                                    <input type="text" name="total_premium" class="form-control auto-format-money-field" id="id_total_premium" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 currencies">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Currency</div>
+                                    <select class="form-control" name="currency" id="id_currency">                                    
+                                        <option value="" disabled selected>Select Currency</option>
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <!--Premium-->
+                            <!-- <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Base Premium incl. 5% VAT *</div>
+                                    {{ quoted_product_form.premium }}
+                                    <input type="text" name="base_premium" class="form-control auto-format-money-field" id="id_base_premium"  />  
+                                    
+                                </div>
+                            </div> -->
+                            <!--Area Of Cover-->
+                            <div class="col-lg-4 area_of_cover plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Area of Cover</div>
+                                    <select class="form-control" name="area_of_cover" id="id_area_of_cover">                                    
+                                        <option value="" disabled selected>Select Area Of Cover</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+    
+                            <div class="col-lg-4 payment_frequency plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Payment Frequency</div>
+                                    <select class="form-control" name="payment_frequency" id="id_payment_frequency">                                    
+                                        <option value="" disabled selected>Select Payment Frequency</option>
+                                    </select>                                
+                                </div>
+                            </div>
+    
+                            <!--Copayment(Outpatient)-->
+                            <div class="col-lg-4 consultation_copay plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Consultation Copayment</div>
+                                    <select class="form-control" name="consultation_copayment" id="id_consultation_copayment">                                    
+                                        <option value="" disabled selected>Select Consultation Copayment</option>
+                                    </select>                                    
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 pharmacy_copay plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Pharmacy Copayment</div>
+                                    <select class="form-control" name="pharmacy_copayment" id="id_pharmacy_copayment">                                    
+                                        <option value="" disabled selected>Select Pharmacy Copayment</option>
+                                    </select>                                    
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 diagnostics_copay plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Diagnostics Copayment</div>
+                                    <select class="form-control" name="diagnostics_copayment" id="id_diagnostics_copayment">                                    
+                                        <option value="" disabled selected>Select Diagnostics Copayment</option>
+                                    </select>                                    
+                                </div>
+                            </div>
+                            
+                            <!-- <div class="col-lg-4 deductible plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Deductible (Outpatient Consultation)</div>
+                                    <select class="form-control" name="deductible" id="id_deductible">                                    
+                                        <option value="" disabled selected>Select Deductible</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <!--Network-->
+                            <div class="col-lg-4 network plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Network</div>
+                                    <select class="form-control" name="network" id="id_network">                                    
+                                        <option value="" disabled selected>Select Network</option>
+                                    </select>                                    
+                                </div>
+                            </div>
+                            <!--Annual Limit-->
+                            <div class="col-lg-4 annual_limit plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Annual Limit</div>
+                                    <select class="form-control" name="annual_limit" id="id_annual_limit">                                    
+                                        <option value="" disabled selected>Select Annual Limit</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!--Physiotherapy-->
+                            <div class="col-lg-4 physiotherapy plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Physiotherapy</div>
+                                    <select class="form-control" name="physiotherapy" id="id_physiotherapy">                                    
+                                        <option value="" disabled selected>Select Physiotherapy</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!--Pre-Existing Cover-->
+                            <div class="col-lg-4 pre_existing_cover initial_form hide">                           
+                                    <div class="label m-b-5">Pre-Existing Cover</div>
+                                    <select class="form-control" name="pre_existing_cover" id="id_pre_existing_cover">                                    
+                                        <option value="" disabled selected>Select Pre-Existing Cover</option>
+                                    </select>
+                            </div>
+                            
+                            <div class="col-lg-4 alternative_medicine plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Alternative Medicine</div>
+                                    <select class="form-control" name="alternative_medicine" id="id_alternative_medicine">                                    
+                                        <option value="" disabled selected>Select Alternative Medicine</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4 maternity_benefits plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Maternity Benefits</div>
+                                    <select class="form-control" name="maternity_benefits" id="id_maternity_benefits">                                    
+                                        <option value="" disabled selected>Select Maternity Benefits</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!--Pre-Existing Cover-->
+                            <!-- <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Maternity Benefits</div>
+                                    <select name="alternative_medicine" id="id_alternative_medicine">                                    
+                                        <option value="" disabled selected>Select Maternity Benefits</option>
+                                    </select>
+                                    
+                                </div>
+                            </div> -->
+                            <!--Maternity waiting period-->
+                            <div class="col-lg-4 maternity_waiting_period plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Maternity waiting period</div>
+                                    <select class="form-control" name="maternity_waiting_period" id="id_maternity_waiting_period">
+                                        <option value="" disabled selected>Select Maternity waiting period</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!--Dental-->
+                            <div class="col-lg-4 dental_benefits plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Dental Cost</div>
+                                    <select class="form-control" name="dental_cost" id="id_dental_cost">                                    
+                                        <option value="" disabled selected>Select Dental Cost</option>
+                                        
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!--Wellness Benefits/Health screening-->
+                            <div class="col-lg-4 wellness_benefits plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Wellness Benefits/Health screening</div>
+                                    <select class="form-control" name="alternative_medicine" id="id_alternative_medicine">                                    
+                                        <option value="" disabled selected>Select Wellness Benefits/Health screening</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+                            <!--Optical Cost-->
+                            <div class="col-lg-4 optical_benefits plan_dependent hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Optical Benefits</div>
+                                    <select class="form-control" name="optical" id="id_optical">                                    
+                                        <option value="" disabled selected>Select Optical Cost</option>
+                                    </select>
+                                    
+                                </div>
+                            </div>
+
+                             <!--Deductible-->
+                             <div class="col-lg-4 inpatient_deductible hide">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Inpatient Deductible</div>
+                                    <select class="form-control" name="inpatient_deductible" id="id_inpatient_deductible">                                    
+                                        <option value="" disabled selected>Select Inpatient Deductible</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 enable_repatriation hide">
+                                <div class="form-check" style="margin-top: 25px;">
+                                    <input class="form-check-input" type="checkbox" value="" id="enable_repatriation_checkbox">
+                                    <label class="form-check-label" for="enable_repatriation_checkbox">
+                                      Enable Repatriation Benefits
+                                    </label>
+                                  </div>
+                            </div>
+                            
+
+    
+                           
+                            <div class="clear m-10">
+
+                            </div>
+    
+                        </div>
+                        <br/>
+                        
+                        <div class="heading m-b-5">Premium Breakdown</div>
+                        <div class="row">
+                            <div class="col-lg-4 initial_form">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Primary Member Premium (excl VAT)</div>
+                                    
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text plan_currency"></span>
+                                          </div>                                        
+                                        <input type="number" name="primary_member_premium" class="form-control auto-format-money-field member_premium" id="id_primary_member_premium"/>  
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                            {% for member in deal.primary_member.additional_members.all %}
+                            <div class="col-lg-4 initial_form">
+                                <div class="form-group">
+                                    <div class="label m-b-5">Member {{ forloop.counter }} Premium (excl VAT) ({{member.name}})</div>
+                                    {% comment %} <select name="optical" id="id_optical">                                    
+                                        <option value="" disabled selected>Select Optical Cost</option>
+                                    </select> {% endcomment %}
+                                    
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text plan_currency"></span>
+                                          </div>
+                                         <input type="number" name="member_{{member.id}}_premium" class="form-control auto-format-money-field member_premium additional_member" id="member_{{member.id}}_premium"  />  
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" class="add-product float-right btn btn-success btn-md m-l-10 m-t-10">
+                <span class="add-label">Add product</span><span class="edit-label hide">Update product</span>
+            </button>
+            <button type="button" class="float-right btn-cancel-generate-new-quote btn btn-outline-secondary btn-md m-t-10">
+                Cancel
+            </button>
+        </div>
+        <script>
+
+
+            $('#is_renewal_checkbox').on('change', function(){
+                debugger
+                if(this.checked)
+                    $('.renewal_document').toggleClass('hide', false)
+                else
+                $('.renewal_document').toggleClass('hide', true)
+            })
+            $('.currencies select').on('change', function(){
+                $('.plan_currency').html($(".currencies select option:selected").text())
+            })
+            function updateQuoteForm(e, action, id=""){
+                debugger
+                let plan_id = e.value
+                data = {}
+                if(!plan_id){
+                    if(id)
+                    plan_id = id
+                }
+                let url = "{% url 'health-insurance:plan-details' pk=11 %}"
+                url = url.replace('11',plan_id)
+                window.products_data[e.value];
+            $.ajax({
+                    url: url ,
+                        method: 'GET',
+                        async: false,
+                        success: function( result ) {
+                            debugger
+                            console.log(result)
+                            window.products_data = result
+                            let networks = result['data']['network']
+                            let copay_mode = result['data']['copay_mode'].toLowerCase()
+                            $('#copay_mode_id').val(copay_mode)
+                            $(".network select option").remove();
+                                $(".network").toggleClass("hide", false);
+                                for (let i in networks) {
+                                $(".network select").append($("<option></option>")
+                                .attr("value", networks[i]['id']).text(networks[i]['network']));
+    
+                                if(result['data']['is_network_fixed'])
+                                    $(".network select").val(networks[i]['id'])
+                            }
+                            if( ! result['data']['is_network_fixed']){
+                                $(".network").toggleClass("hide", false);    
+                            }
+                            else{
+                                $(".network").toggleClass("hide", true)                            
+                            }
+
+                            let currencies = result['data']['currencies']
+                            if(!currencies.length){
+                                $(".currencies").toggleClass("hide", false);   
+                            }
+                            else{
+                                $(".currencies").toggleClass("hide", true)                            
+                            $(".currencies select option").remove();
+                                $(".currencies").toggleClass("hide", false);
+                                for (let i in currencies) {
+                                $(".currencies select").append($("<option></option>")
+                                .attr("value", currencies[i]['id']).text(currencies[i]['name']));
+                            }
+                        }
+                        $('.plan_currency').html($(".currencies select option:selected").text())
+
+                            let area_of_cover = result['data']['area_of_cover']
+                            $(".area_of_cover select option").remove();
+                                $(".area_of_cover").toggleClass("hide", false);
+                                for (let i in area_of_cover) {
+                                $(".area_of_cover select").append($("<option></option>")
+                                .attr("value", area_of_cover[i]['id']).text(area_of_cover[i]['area']));
+    
+                                if(result['data']['is_area_of_cover_fixed'])
+                                    $(".area_of_cover select").val(area_of_cover[i]['id'])
+                            }
+                            if( ! result['data']['is_area_of_cover_fixed']){
+                                $(".area_of_cover").toggleClass("hide", false);   
+                            }
+                            else{
+                                $(".area_of_cover").toggleClass("hide", true)                            
+                            }
+    
+                            
+                            let deductibles = result['data']['inpatient_deductible']
+                                $(".inpatient_deductible select option").remove();
+                                for (let i in deductibles) {
+                                $(".inpatient_deductible select").append($("<option></option>")
+                                .attr("value", deductibles[i]['id']).text(deductibles[i]['deductible']));
+    
+                                if(result['data']['is_consultation_copay_fixed'])
+                                    $(".deductible select").val(deductibles[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_inpatient_deductible_fixed']){
+                                $(".inpatient_deductible").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".inpatient_deductible").toggleClass("hide", true)                          
+                            }
+    
+                            $(".pre_existing_cover select option").remove();
+                            let covers = result['data']['pre_existing_cover']
+                            for (let i in covers) {
+                                    $(".pre_existing_cover select").append($("<option></option>")
+                                .attr("value", covers[i]['id']).text(covers[i]['cover']));
+                                
+                                if(result['data']['is_pre_existing_cover_fixed'])
+                                    $(".payment_frequency select").val(covers[i]['id'])
+                            }
+                            if( !result['data']['is_pre_existing_cover_fixed']){
+                                $(".pre_existing_cover").toggleClass("hide", false);
+                            }
+                            else{
+                                $(".pre_existing_cover").toggleClass("hide", true)
+                            }
+
+
+                            $(".payment_frequency select option").remove();
+                            let frequencies = result['data']['payment_frequency']
+                            for (let i in frequencies) {
+                                    $(".payment_frequency select").append($("<option></option>")
+                                .attr("value", frequencies[i]['id']).text(frequencies[i]['frequency']));
+                                
+                                if(result['data']['is_payment_frequency_fixed'])
+                                    $(".payment_frequency select").val(frequencies[i]['id'])
+                            }
+                            if( !result['data']['is_payment_frequency_fixed']){
+                                
+                                $(".payment_frequency").toggleClass("hide", false);
+                            }
+                            else{
+                                $(".payment_frequency").toggleClass("hide", true)
+                            }
+                            $(".diagnostics_copay select option").remove();
+                            let copayments_d = result['data']['diagnostics_copay']
+                                for (let i in copayments_d) {
+                                    $(".diagnostics_copay select").append($("<option></option>")
+                                .attr("value", copayments_d[i]['id']).text(copayments_d[i]['copayment']));
+                                if(result['data']['is_copayment_fixed'])
+                                    $(".diagnostics_copay select").val(copayments_d[i]['id'])
+                            }
+                            if (copay_mode != 'variable')
+                                $(".diagnostics_copay select").attr('disabled', true)
+                            else
+                                $(".diagnostics_copay select").attr('disabled', false)
+                        
+    
+                            if( ! result['data']['is_diagnostics_copay_fixed']){
+                                $(".diagnostics_copay").toggleClass("hide", false);                                                        
+                            }
+                            else{
+                                $(".diagnostics_copay").toggleClass("hide", true);                            
+                            }
+                            
+                            $(".pharmacy_copay select option").remove();
+                            let copayments_p = result['data']['pharmacy_copay']
+                                for (let i in copayments_p) {
+                                    $(".pharmacy_copay select").append($("<option></option>")
+                                .attr("value", copayments_p[i]['id']).text(copayments_p[i]['copayment']));
+                                if(result['data']['is_copayment_fixed'])
+                                    $(".pharmacy_copay select").val(copayments_p[i]['id'])
+                            }
+                            if (copay_mode != 'variable')
+                                $(".pharmacy_copay select").attr('disabled', true)
+                            else
+                                $(".pharmacy_copay select").attr('disabled', false)
+                        
+    
+                            if( ! result['data']['is_pharmacy_copay_fixed']){
+                                $(".pharmacy_copay").toggleClass("hide", false);                                                        
+                            }
+                            else{
+                                $(".pharmacy_copay").toggleClass("hide", true);                            
+                            }
+
+
+                            $(".consultation_copay select option").remove();
+                            let copayments = result['data']['consultation_copay']
+                                for (let i in copayments) {
+                                    $(".consultation_copay select").append($("<option></option>")
+                                .attr("value", copayments[i]['id']).text(copayments[i]['copayment']));
+                                if(result['data']['is_copayment_fixed'])
+                                    $(".consultation_copay select").val(copayments[i]['id'])                                    
+                            }
+    
+                            if( ! result['data']['is_consultation_copay_fixed']){
+                                $(".consultation_copay").toggleClass("hide", false);                                                        
+                            }
+                            else{
+                                $(".consultation_copay").toggleClass("hide", true);                            
+                            }
+
+                            if (copay_mode != 'variable'){
+                                        let consultation_copays = products_data['data']['consultation_copay']
+                                        for(let i in consultation_copays){
+                                        if(consultation_copays[i]['id'] == $(".consultation_copay select").val()){
+                                                $(".pharmacy_copay select").val(consultation_copays[i]['pharmacy_copay'])
+                                                $(".diagnostics_copay select").val(consultation_copays[i]['diagnostics_copay'])
+                                        }
+                                    }
+                                }
+                          
+                            $(".annual_limit select option").remove();
+                            let limits = result['data']['annual_limit']
+                                for (let i in limits) {
+                                    $(".annual_limit select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['limit']));
+                                if(result['data']['is_annual_limit_fixed'])
+                                    $(".annual_limit select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_annual_limit_fixed']){                            
+                                $(".annual_limit").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".annual_limit").toggleClass("hide", true)                            
+                            }
+    
+                            $(".physiotherapy select option").remove();
+                            limits = result['data']['physiotherapy']
+                                for (let i in limits) {
+                                    $(".physiotherapy select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['sessions']));
+                                if(result['data']['is_physiotherapy_session_fixed'])
+                                    $(".physiotherapy select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_physiotherapy_session_fixed']){                            
+                                $(".physiotherapy").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".physiotherapy").toggleClass("hide", true)                            
+                            }
+    
+                            $(".alternative_medicine select option").remove();
+                            limits = result['data']['alternative_medicine']
+                                for (let i in limits) {
+                                    $(".alternative_medicine select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['medicine']));
+                                if(result['data']['is_alternative_medicine_fixed'])
+                                    $(".alternative_medicine select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_alternative_medicine_fixed']){                            
+                                $(".alternative_medicine").toggleClass("hide", false);
+                            }
+                            else{
+                                $(".alternative_medicine").toggleClass("hide", true)                            
+                            }
+    
+                            $(".maternity_waiting_period select option").remove();
+                            limits = result['data']['maternity_waiting_period']
+                                for (let i in limits) {
+                                    $(".maternity_waiting_period select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['period']));
+                                if(result['data']['is_maternity_waiting_period_fixed'])
+                                $(".maternity_waiting_period select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_maternity_waiting_period_fixed']){                            
+                                $(".maternity_waiting_period").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".maternity_waiting_period").toggleClass("hide", true)                            
+                            }
+
+
+                            $(".maternity_benefits select option").remove();
+                            limits = result['data']['maternity_benefits']
+                                for (let i in limits) {
+                                    $(".maternity_benefits select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['benefit']));
+                                if(result['data']['is_maternity_benefits_fixed'])
+                                $(".maternity_benefits select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_maternity_benefits_fixed']){                            
+                                $(".maternity_benefits").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".maternity_benefits").toggleClass("hide", true)                            
+                            }
+
+    
+                            $(".optical_benefits select option").remove();
+                            limits = result['data']['optical_benefits']
+                                for (let i in limits) {
+                                    $(".optical_benefits select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['benefit']));
+                                if(result['data']['is_optical_benefits_fixed'])
+                                $(".optical_benefits select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_optical_benefit_fixed']){
+                                $(".optical_benefits").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".optical_benefits").toggleClass("hide", true)                            
+                            }
+    
+                            $(".dental_benefits select option").remove();
+                            limits = result['data']['dental_benefits']
+                                for (let i in limits) {
+                                    $(".dental_benefits select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['benefit']));
+                                if(result['data']['is_dental_benefit_fixed'])
+                                $(".dental_benefits select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_dental_benefit_fixed']){
+                                $(".dental_benefits").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".dental_benefits").toggleClass("hide", true)                           
+                            }
+    
+                            $(".wellness_benefits select option").remove();
+                            limits = result['data']['wellness_benefits']
+                                for (let i in limits) {
+                                    $(".wellness_benefits select").append($("<option></option>")
+                                .attr("value", limits[i]['id']).text(limits[i]['benefit']));
+                                if(result['data']['is_wellness_benefit_fixed'])
+                                $(".wellness_benefits select").val(limits[i]['id'])
+                            }
+    
+                            if( ! result['data']['is_wellness_benefit_fixed']){
+                                $(".wellness_benefits").toggleClass("hide", false);                            
+                            }
+                            else{
+                                $(".wellness_benefits").toggleClass("hide", true)                            
+                            }
+                            
+                            $(".enable_repatriation input").prop('checked', false)
+                            if(result['data']['is_repatriation_benefit_enabled'])
+                                $(".enable_repatriation").toggleClass("hide", false)
+                            else
+                                $(".enable_repatriation").toggleClass("hide", true)
+                        },
+                        error: function(data){
+                            //Utilities.Notify.error('Note not deleted', 'Error');
+    
+                        }
+                })
+          }
+        </script>
+    </div>
+    {% if quote and not quote.is_deleted %}
+    
+   {% include "healthinsurance/deals/components/saved_quote.djhtml" %}
+
+{% endif %}
+</div>
+{% include 'handlebars/deal_quote_add_product.html' %}
