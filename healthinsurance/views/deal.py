@@ -55,6 +55,20 @@ from core.utils import log_user_activity
 api_logger = logging.getLogger("api.amplitude")
 
 
+def get_email_address_for_deal(deal):
+    if deal.deal_type != DEAL_TYPE_RENEWAL:
+        if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
+            return 'NBInd.medical@nexusadvice.com'
+        else:
+            return 'ind.medical@nexusadvice.com'
+    elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
+          deal.primary_member and 
+          deal.primary_member.visa == EMIRATE_DUBAI):
+        return 'REInd.medical@nexusadvice.com'
+    else:
+        return 'ind.medical@nexusadvice.com'
+
+
 def GetCountries():
         countries = []
         for country in COUNTRIES:
@@ -330,10 +344,10 @@ class NewHealthDeal(View):
                         notification_email = 'auhpls.hotline@nexusadvice.com'
                         bcc_email.append(notification_email)
                     else:
-                        notification_email = 'ind.medical@nexusadvice.com'
+                        notification_email = get_email_address_for_deal(deal)
                         bcc_email.append(notification_email)
 
-                    email_notification(deal, 'new deal internal notification', 'ind.medical@nexusadvice.com')
+                    email_notification(deal, 'new deal internal notification', get_email_address_for_deal(deal))
                     if deal.stage == STAGE_BASIC:
                         email_notification(deal, 'basic new deal', deal.primary_member.email, cc_emails = cc_email, bcc_emails = bcc_email)
                     else:
@@ -1546,7 +1560,7 @@ class StageProcessView(View):
             notification_email = 'auhpls.hotline@nexusadvice.com'
             bcc_email.append(notification_email)
         else:
-            notification_email = 'ind.medical@nexusadvice.com'
+            notification_email = get_email_address_for_deal(deal)
             bcc_email.append(notification_email)
         if stage == STAGE_QUOTE or stage == STAGE_BASIC:
                 if request.POST.get("plan"):

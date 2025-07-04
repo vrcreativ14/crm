@@ -57,25 +57,41 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     ]
 
     @classmethod
-    def _get_from_email_for_deal(cls, deal):
-        if deal.user and deal.user.first_name:
-            return f'{deal.user.first_name} at Nexus Insurance Brokers - ind.medical@nexusadvice.com'
+    def _get_email_address_for_deal(cls, deal):
+        if deal.deal_type != DEAL_TYPE_RENEWAL:
+            if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
+                return 'NBInd.medical@nexusadvice.com'
+            else:
+                return 'ind.medical@nexusadvice.com'
+        elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
+              deal.primary_member and 
+              deal.primary_member.visa == EMIRATE_DUBAI):
+            return 'REInd.medical@nexusadvice.com'
         else:
-            return f'Nexus Insurance Brokers - ind.medical@nexusadvice.com'
+            return 'ind.medical@nexusadvice.com'
+
+    @classmethod
+    def _get_from_email_for_deal(cls, deal):
+        email_address = cls._get_email_address_for_deal(deal)
+        if deal.user and deal.user.first_name:
+            return f'{deal.user.first_name} at Nexus Insurance Brokers - {email_address}'
+        else:
+            return f'Nexus Insurance Brokers - {email_address}'
 
     @classmethod
     def _get_reply_to_for_deal(cls, deal):
         reply_to_name = 'Nexus Insurance Brokers'
-        reply_to_address = 'ind.medical@nexusadvice.com'
+        reply_to_address = cls._get_email_address_for_deal(deal)
 
         return f'{reply_to_name} - {reply_to_address}'
 
     @classmethod
     def _get_cc_mails_for_deal(cls, deal):
+        email_address = cls._get_email_address_for_deal(deal)
         if deal.referrer and deal.referrer.first_name:
-            return f'{deal.user.first_name} at Nexus Insurance Brokers - ind.medical@nexusadvice.com'
+            return f'{deal.user.first_name} at Nexus Insurance Brokers - {email_address}'
         else:
-            return f'Nexus Insurance Brokers - ind.medical@nexusadvice.com'
+            return f'Nexus Insurance Brokers - {email_address}'
 
     def dispatch(self, *args, **kwargs):
         email_type = kwargs['type']
@@ -442,7 +458,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
             bcc_emails.append('auhpls.hotline@nexusadvice.com')
         else:
-            bcc_emails.append('ind.medical@nexusadvice.com')
+            bcc_emails.append(self._get_email_address_for_deal(deal))
 
         if deal.referrer and deal.referrer.email:
             cc_emails.append(deal.referrer.email)
@@ -504,6 +520,19 @@ class StageEmailNotification(AuditTrailMixin):
         self.to_email = recipient if recipient else deal.customer.email
         self.attachments = attachments
         self.user = deal.user if deal.user else None
+
+    def _get_email_address_for_deal(self, deal):
+        if deal.deal_type != DEAL_TYPE_RENEWAL:
+            if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
+                return 'NBInd.medical@nexusadvice.com'
+            else:
+                return 'ind.medical@nexusadvice.com'
+        elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
+              deal.primary_member and 
+              deal.primary_member.visa == EMIRATE_DUBAI):
+            return 'REInd.medical@nexusadvice.com'
+        else:
+            return 'ind.medical@nexusadvice.com'
 
     def GetEmailContent(self, **kwargs):
         email_type = self.email_type
