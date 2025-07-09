@@ -60,13 +60,13 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     def _get_email_address_for_deal(cls, deal):
         if deal.deal_type != DEAL_TYPE_RENEWAL:
             if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
-                return 'nbind.medical@nexusadvice.com'
+                return 'NBInd.medical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
               deal.primary_member and 
               deal.primary_member.visa == EMIRATE_DUBAI):
-            return 'rwind.medical@nexusadvice.com'
+            return 'RWInd.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
 
@@ -524,13 +524,13 @@ class StageEmailNotification(AuditTrailMixin):
     def _get_email_address_for_deal(self, deal):
         if deal.deal_type != DEAL_TYPE_RENEWAL:
             if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
-                return 'nbind.medical@nexusadvice.com'
+                return 'NBInd.medical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
               deal.primary_member and 
               deal.primary_member.visa == EMIRATE_DUBAI):
-            return 'rwind.medical@nexusadvice.com'
+            return 'RWInd.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
 

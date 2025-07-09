@@ -31,13 +31,13 @@ class SendHealthInsuranceEmail:
         if hasattr(deal, 'deal_type') and deal.deal_type != DEAL_TYPE_RENEWAL:
             if (hasattr(deal, 'primary_member') and deal.primary_member and 
                 hasattr(deal.primary_member, 'visa') and deal.primary_member.visa == EMIRATE_DUBAI):
-                return 'nbind.medical@nexusadvice.com'
+                return 'NBInd.medical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (hasattr(deal, 'deal_type') and deal.deal_type == DEAL_TYPE_RENEWAL and 
               hasattr(deal, 'primary_member') and deal.primary_member and 
               hasattr(deal.primary_member, 'visa') and deal.primary_member.visa == EMIRATE_DUBAI):  # Renewal for Dubai
-            return 'rwind.medical@nexusadvice.com'
+            return 'RWInd.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
 
