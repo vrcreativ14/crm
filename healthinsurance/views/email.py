@@ -44,7 +44,8 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         'quote',
         'quote_updated',
         'documents',
-        'final_quote',
+        'final_quote_standard',
+        'final_quote_non_standard',
         'payment',
         'payment_confirmation',
         'policy_issuance',
@@ -59,13 +60,13 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
     @classmethod
     def _get_email_address_for_deal(cls, deal):
         if deal.deal_type != DEAL_TYPE_RENEWAL:
-            if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
+            if deal.primary_member and deal.primary_member.visa != EMIRATE_ABU_DHABI:
                 return 'NBInd.medical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
               deal.primary_member and 
-              deal.primary_member.visa == EMIRATE_DUBAI):
+              deal.primary_member.visa != EMIRATE_ABU_DHABI):
             return 'REInd.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
@@ -156,7 +157,8 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
                 allowed_templates['renewal_basic'] = 'Renewal Basic'
             return allowed_templates
         if deal_stage >= 4:
-            allowed_templates['final_quote'] = 'Final Quote'
+            allowed_templates['final_quote_standard'] = 'Final Quote standard'
+            allowed_templates['final_quote_non_standard'] = 'Final quote (non standard)'
 
         if deal_stage >= 5 and deal.current_sub_stage and deal.current_sub_stage.sub_stage == PAYMENT_CONFIRMATION:
             allowed_templates['payment'] = 'Payment'
@@ -189,7 +191,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         elif email_type == 'order_confirmation':
             message = emailer.prepare_email_content_for_order_summary(deal)
 
-        elif email_type == 'final_quote':
+        elif email_type == 'final_quote_standard' or email_type == 'final_quote_non_standard':
             message = emailer.prepare_email_content_for_final_quote(deal, quote)
             sms_content = ''
             
@@ -400,7 +402,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             sms_content = 'Hi {}, your health-insurance documents is ready'.format(deal.customer.name)
             
 
-        elif email_type == 'final_quote':
+        elif email_type == 'final_quote_standard' or email_type=='final_quote_non_standard':
             message = emailer.prepare_email_content_for_final_quote(deal, quote)
             subject = message.get('subject')
             content = message.get('email_content')
@@ -523,13 +525,13 @@ class StageEmailNotification(AuditTrailMixin):
 
     def _get_email_address_for_deal(self, deal):
         if deal.deal_type != DEAL_TYPE_RENEWAL:
-            if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
+            if deal.primary_member and deal.primary_member.visa != EMIRATE_ABU_DHABI:
                 return 'NBInd.medical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
               deal.primary_member and 
-              deal.primary_member.visa == EMIRATE_DUBAI):
+              deal.primary_member.visa != EMIRATE_ABU_DHABI):
             return 'REInd.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
@@ -559,7 +561,7 @@ class StageEmailNotification(AuditTrailMixin):
             subject = message.get('subject')
             content = message.get('email_content')
 
-        elif email_type == 'final_quote':
+        elif email_type == 'final_quote_standard' or email_type == 'final_quote_non_standard':
             message = emailer.prepare_email_content_for_final_quote(deal)
             subject = message.get('subject')
             content = message.get('email_content')

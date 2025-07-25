@@ -21,7 +21,7 @@ from felix.constants import INVITATION_EXPIRE_DAYS
 from felix.settings import POSTMARK_TOKEN
 from felix.settings import DOMAIN
 from healthinsurance_shared.models import MessageTemplates
-from healthinsurance.constants import DEAL_TYPE_RENEWAL, EMIRATE_DUBAI   
+from healthinsurance.constants import DEAL_TYPE_RENEWAL, EMIRATE_DUBAI, EMIRATE_ABU_DHABI   
 
 class SendHealthInsuranceEmail:
     def __init__(self, company):
@@ -30,13 +30,13 @@ class SendHealthInsuranceEmail:
     def _get_email_address_for_deal(self, deal):
         if hasattr(deal, 'deal_type') and deal.deal_type != DEAL_TYPE_RENEWAL:
             if (hasattr(deal, 'primary_member') and deal.primary_member and 
-                hasattr(deal.primary_member, 'visa') and deal.primary_member.visa == EMIRATE_DUBAI):
+                hasattr(deal.primary_member, 'visa') and deal.primary_member.visa != EMIRATE_ABU_DHABI):
                 return 'NBInd.medical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (hasattr(deal, 'deal_type') and deal.deal_type == DEAL_TYPE_RENEWAL and 
               hasattr(deal, 'primary_member') and deal.primary_member and 
-              hasattr(deal.primary_member, 'visa') and deal.primary_member.visa == EMIRATE_DUBAI):  # Renewal for Dubai
+              hasattr(deal.primary_member, 'visa') and deal.primary_member.visa != EMIRATE_ABU_DHABI):  # Renewal for Dubai
             return 'REInd.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
