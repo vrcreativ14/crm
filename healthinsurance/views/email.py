@@ -402,8 +402,15 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             sms_content = 'Hi {}, your health-insurance documents is ready'.format(deal.customer.name)
             
 
-        elif email_type == 'final_quote_standard' or email_type=='final_quote_non_standard':
-            message = emailer.prepare_email_content_for_final_quote(deal, quote)
+        elif email_type == 'final_quote_standard':
+            message = emailer.prepare_email_content_for_final_quote_standard(deal, quote)
+            subject = message.get('subject')
+            content = message.get('email_content')
+            wa_msg_content = message.get('wa_msg_content')
+            sms_content = ''
+
+        elif email_type=='final_quote_non_standard':
+            message = emailer.prepare_email_content_for_final_quote_non_standard(deal, quote)
             subject = message.get('subject')
             content = message.get('email_content')
             wa_msg_content = message.get('wa_msg_content')
@@ -561,7 +568,7 @@ class StageEmailNotification(AuditTrailMixin):
             subject = message.get('subject')
             content = message.get('email_content')
 
-        elif email_type == 'final_quote_standard' or email_type == 'final_quote_non_standard':
+        elif email_type == 'final_quote_standard':
             message = emailer.prepare_email_content_for_final_quote(deal)
             subject = message.get('subject')
             content = message.get('email_content')

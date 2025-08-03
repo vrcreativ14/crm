@@ -219,7 +219,7 @@ class SendHealthInsuranceEmail:
         
         return self.render_context(message, ctx)
 
-    def prepare_email_content_for_final_quote(self, deal, quote):
+    def prepare_email_content_for_final_quote_standard(self, deal, quote):
         order = deal.get_order()
         quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         ctx = {
@@ -231,7 +231,22 @@ class SendHealthInsuranceEmail:
         }
         if deal.user:
             ctx.update({'assigned_to':deal.user})
-        message = self.get_message_templates(type = 'Final Quote')
+        message = self.get_message_templates(type = 'Final Quote Standard')
+        return self.render_context(message, ctx)
+    
+    def prepare_email_content_for_final_quote_non_standard(self, deal, quote):
+        order = deal.get_order()
+        quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+        ctx = {
+            'company_name': 'Nexus Insurance Brokers',
+            'customer_name': deal.customer.name,
+            'quote_url' : quote_url,
+            'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
+            'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
+        }
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+        message = self.get_message_templates(type = 'Final Quote (non standard)')
         return self.render_context(message, ctx)
 
     def prepare_email_content_for_final_quote_submitted(self, deal):
