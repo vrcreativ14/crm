@@ -44,6 +44,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         'quote',
         'quote_updated',
         'documents',
+        'final_quote',
         'final_quote_standard',
         'final_quote_non_standard',
         'payment',
