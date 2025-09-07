@@ -20,11 +20,26 @@ from core.utils import clean_and_validate_email_addresses
 from felix.constants import INVITATION_EXPIRE_DAYS
 from felix.settings import POSTMARK_TOKEN
 from felix.settings import DOMAIN
-from healthinsurance_shared.models import MessageTemplates   
+from healthinsurance_shared.models import MessageTemplates
+from healthinsurance.constants import DEAL_TYPE_RENEWAL, EMIRATE_DUBAI, EMIRATE_ABU_DHABI   
 
 class SendHealthInsuranceEmail:
     def __init__(self, company):
         self.company = company
+
+    def _get_email_address_for_deal(self, deal):
+        if hasattr(deal, 'deal_type') and deal.deal_type != DEAL_TYPE_RENEWAL:
+            if (hasattr(deal, 'primary_member') and deal.primary_member and 
+                hasattr(deal.primary_member, 'visa') and deal.primary_member.visa != EMIRATE_ABU_DHABI):
+                return 'NBInd.medical@nexusadvice.com'
+            else:
+                return 'ind.medical@nexusadvice.com'
+        elif (hasattr(deal, 'deal_type') and deal.deal_type == DEAL_TYPE_RENEWAL and 
+              hasattr(deal, 'primary_member') and deal.primary_member and 
+              hasattr(deal.primary_member, 'visa') and deal.primary_member.visa != EMIRATE_ABU_DHABI):  # Renewal for Dubai
+            return 'REInd.medical@nexusadvice.com'
+        else:
+            return 'ind.medical@nexusadvice.com'
 
     def get_email_template(self,**kwargs):
         type = kwargs.get('type')
@@ -204,7 +219,7 @@ class SendHealthInsuranceEmail:
         
         return self.render_context(message, ctx)
 
-    def prepare_email_content_for_final_quote(self, deal, quote):
+    def prepare_email_content_for_final_quote_standard(self, deal, quote):
         order = deal.get_order()
         quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
         ctx = {
@@ -216,7 +231,22 @@ class SendHealthInsuranceEmail:
         }
         if deal.user:
             ctx.update({'assigned_to':deal.user})
-        message = self.get_message_templates(type = 'Final Quote')
+        message = self.get_message_templates(type = 'Final Quote Standard')
+        return self.render_context(message, ctx)
+    
+    def prepare_email_content_for_final_quote_non_standard(self, deal, quote):
+        order = deal.get_order()
+        quote_url = f"https://{DOMAIN}/health-insurance-quote/{quote.reference_number}/{deal.pk}/"
+        ctx = {
+            'company_name': 'Nexus Insurance Brokers',
+            'customer_name': deal.customer.name,
+            'quote_url' : quote_url,
+            'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
+            'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
+        }
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+        message = self.get_message_templates(type = 'Final Quote (non standard)')
         return self.render_context(message, ctx)
 
     def prepare_email_content_for_final_quote_submitted(self, deal):
