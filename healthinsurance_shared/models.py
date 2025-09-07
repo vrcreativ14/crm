@@ -363,12 +363,19 @@ class Term(models.Model):
 class QuestionCategory(models.Model):
      name = models.CharField(max_length=500, blank=False, null=False, unique=True)
      synonyms = models.ManyToManyField(Term)
+
+     class Meta:
+            verbose_name_plural = "QuestionCategories"
+
      def __str__(self):
           return self.name
 
 class QuestionSubCategory(models.Model):
      name = models.CharField(max_length=500, blank=False, null=False, unique=True)
      category = models.ForeignKey(QuestionCategory, on_delete=models.CASCADE)
+
+     class Meta:
+            verbose_name_plural = "QuestionSubCategories"
 
      def __str__(self):
           return self.name
@@ -411,6 +418,9 @@ class Qna(models.Model):
      answer_type = models.CharField(choices=options, max_length=30)
      answer_options = models.CharField(max_length=500, blank=True, null=True)
 
+     class Meta:
+            verbose_name_plural = "QNA"
+            
      def __str__(self):
           return self.question
 
@@ -446,6 +456,9 @@ class MAF(models.Model):
      provider = models.ForeignKey(Insurer, on_delete=models.CASCADE, related_name='company_name')
      #questions = models.ManyToManyField(Question)
      qna_json = models.JSONField(null=True, blank=True)
+
+     class Meta:
+            verbose_name_plural = "MAF"
 
      def __str__(self):
           return self.provider.name
