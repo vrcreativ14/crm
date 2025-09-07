@@ -5,6 +5,7 @@ from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
 
 
+
 class MessageTemplatesResource(resources.ModelResource):
     class Meta:
         model = MessageTemplates
@@ -196,6 +197,8 @@ class MessageTemplatesAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 class VisaCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [VisaCategoryResource]
 
+class QuestionAdmin(admin.ModelAdmin):
+    search_fields = ['insurers__name', 'categories__name']
 
 admin.site.register(Area_Of_Cover, Area_Of_CoverAdmin)
 admin.site.register(Network, NetworkAdmin)
@@ -222,3 +225,9 @@ admin.site.register(VisaCategory, VisaCategoryAdmin)
 admin.site.register(MessageTemplates, MessageTemplatesAdmin)
 admin.site.register(MessageType, MessageTypeAdmin)
 admin.site.register(Currency)
+admin.site.register(MAF)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Qna)
+admin.site.register(RelatedQuestion)
+admin.site.register(QuestionCategory)
+admin.site.register(QuestionSubCategory)
