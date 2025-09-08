@@ -66,7 +66,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
               deal.primary_member and 
               deal.primary_member.visa == EMIRATE_DUBAI):
-            return 'REInd.medical@nexusadvice.com'
+            return 'rwind.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
 
@@ -530,7 +530,7 @@ class StageEmailNotification(AuditTrailMixin):
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
               deal.primary_member and 
               deal.primary_member.visa == EMIRATE_DUBAI):
-            return 'REInd.medical@nexusadvice.com'
+            return 'rwind.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
 
