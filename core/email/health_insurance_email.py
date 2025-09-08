@@ -37,7 +37,7 @@ class SendHealthInsuranceEmail:
         elif (hasattr(deal, 'deal_type') and deal.deal_type == DEAL_TYPE_RENEWAL and 
               hasattr(deal, 'primary_member') and deal.primary_member and 
               hasattr(deal.primary_member, 'visa') and deal.primary_member.visa != EMIRATE_ABU_DHABI):  # Renewal for Dubai
-            return 'REInd.medical@nexusadvice.com'
+            return 'rwind.medical@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
 

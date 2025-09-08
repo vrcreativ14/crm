@@ -64,7 +64,7 @@ def get_email_address_for_deal(deal):
     elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
           deal.primary_member and 
           deal.primary_member.visa != EMIRATE_ABU_DHABI):
-        return 'REInd.medical@nexusadvice.com'
+        return 'rwind.medical@nexusadvice.com'
     else:
         return 'ind.medical@nexusadvice.com'
 
