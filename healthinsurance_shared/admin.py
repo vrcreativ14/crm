@@ -94,6 +94,25 @@ class InpatientDeductibleResource(resources.ModelResource):
     class Meta:
         model = InpatientDeductible
 
+class QuestionResource(resources.ModelResource):
+    class Meta:
+        model = Question
+
+class RelatedQuestionResource(resources.ModelResource):
+    class Meta:
+        model = RelatedQuestion
+
+class QuestionCategoryResource(resources.ModelResource):
+    class Meta:
+        model = QuestionCategory
+
+class QuestionSubCategoryResource(resources.ModelResource):
+    class Meta:
+        model = QuestionSubCategory
+
+class QnaResource(resources.ModelResource):
+    class Meta:
+        model = Qna
 
 class InpatientDeductibleAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     search_fields = ['deductible']
@@ -197,8 +216,24 @@ class MessageTemplatesAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 class VisaCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [VisaCategoryResource]
 
-class QuestionAdmin(admin.ModelAdmin):
+class QuestionAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [QuestionResource]
     search_fields = ['insurers__name', 'categories__name']
+
+class RelatedQuestionAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [RelatedQuestionResource]
+
+class QuestionCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [QuestionCategoryResource]
+
+class QuestionSubCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [QuestionSubCategoryResource]
+
+class QnaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [QnaResource]
+
+class RelatedQuestionAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    resource_classes = [RelatedQuestionResource]
 
 admin.site.register(Area_Of_Cover, Area_Of_CoverAdmin)
 admin.site.register(Network, NetworkAdmin)
@@ -227,7 +262,7 @@ admin.site.register(MessageType, MessageTypeAdmin)
 admin.site.register(Currency)
 admin.site.register(MAF)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Qna)
-admin.site.register(RelatedQuestion)
-admin.site.register(QuestionCategory)
-admin.site.register(QuestionSubCategory)
+admin.site.register(Qna, QnaAdmin)
+admin.site.register(RelatedQuestion, RelatedQuestionAdmin)
+admin.site.register(QuestionCategory, QuestionCategoryAdmin)
+admin.site.register(QuestionSubCategory, QuestionSubCategoryAdmin)
