@@ -61,12 +61,19 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         if deal.deal_type != DEAL_TYPE_RENEWAL:
             if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
                 return 'NBInd.medical@nexusadvice.com'
+            elif deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
+                return 'auhpls.hotline@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
-        elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
-              deal.primary_member and 
-              deal.primary_member.visa == EMIRATE_DUBAI):
-            return 'rwind.medical@nexusadvice.com'
+
+        elif deal.deal_type == DEAL_TYPE_RENEWAL and deal.primary_member:
+            if deal.primary_member.visa == EMIRATE_DUBAI:
+                return 'rwind.medical@nexusadvice.com'
+            elif deal.primary_member.visa == EMIRATE_ABU_DHABI:
+                return 'auhpls.hotline@nexusadvice.com'
+            else:
+                return 'ind.medical@nexusadvice.com'
+
         else:
             return 'ind.medical@nexusadvice.com'
 
@@ -525,14 +532,22 @@ class StageEmailNotification(AuditTrailMixin):
         if deal.deal_type != DEAL_TYPE_RENEWAL:
             if deal.primary_member and deal.primary_member.visa == EMIRATE_DUBAI:
                 return 'NBInd.medical@nexusadvice.com'
+            elif deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
+                return 'auhpls.hotline@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
-        elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
-              deal.primary_member and 
-              deal.primary_member.visa == EMIRATE_DUBAI):
-            return 'rwind.medical@nexusadvice.com'
+
+        elif deal.deal_type == DEAL_TYPE_RENEWAL and deal.primary_member:
+            if deal.primary_member.visa == EMIRATE_DUBAI:
+                return 'rwind.medical@nexusadvice.com'
+            elif deal.primary_member.visa == EMIRATE_ABU_DHABI:
+                return 'auhpls.hotline@nexusadvice.com'
+            else:
+                return 'ind.medical@nexusadvice.com'
+
         else:
             return 'ind.medical@nexusadvice.com'
+
 
     def GetEmailContent(self, **kwargs):
         email_type = self.email_type
