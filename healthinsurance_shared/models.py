@@ -352,3 +352,115 @@ class MessageTemplates(models.Model):
             return f'{self.type.name} - {self.subject} - {self.insurer}'
         else:
             return f'{self.type.name} - {self.subject}'
+
+
+class Term(models.Model):
+     name = models.CharField(max_length=500)
+
+     def __str__(self):
+          return self.name
+
+class QuestionCategory(models.Model):
+     name = models.CharField(max_length=500, blank=False, null=False, unique=True)
+     synonyms = models.ManyToManyField(Term)
+
+     class Meta:
+            verbose_name_plural = "QuestionCategories"
+
+     def __str__(self):
+          return self.name
+
+class QuestionSubCategory(models.Model):
+     name = models.CharField(max_length=500, blank=False, null=False, unique=True)
+     category = models.ForeignKey(QuestionCategory, on_delete=models.CASCADE)
+
+     class Meta:
+            verbose_name_plural = "QuestionSubCategories"
+
+     def __str__(self):
+          return self.name
+
+
+class AnswerCategory(models.Model):
+     name = models.CharField(max_length=200)
+     
+
+class Question(models.Model):
+     answer_form = [
+     ("B","Boolean"),
+     ("D","Dropdown"),
+     ("R","Radio"),
+     ("T","Text"),
+     ('D', "Date"),
+    ]
+     categories = models.ManyToManyField(QuestionSubCategory)
+     insurers = models.ManyToManyField(Insurer)
+     #subcategory = models.ForeignKey(QuestionSubCategory, on_delete=models.CASCADE, blank=True, null=True)
+     text = models.CharField(max_length=600)
+     answer_form = models.CharField(max_length=20, choices=answer_form, blank=False, null=False)
+     #answer_boolean = models.BooleanField()
+     answers = models.CharField(max_length=600, blank=True, null=True)
+     help_text = models.TextField(blank=True)
+     #linked_questions = models.ManyToManyField()
+
+     def __str__(self):
+          return self.text
+
+class Qna(models.Model):
+     options = [
+     ("B","Boolean"),
+     ("D","Dropdown"),
+     ("R","Radio"),
+     ("T","Text"),
+     ('D', "Date"),
+    ]
+     question = models.CharField(max_length=600)
+     answer_type = models.CharField(choices=options, max_length=30)
+     answer_options = models.CharField(max_length=500, blank=True, null=True)
+
+     class Meta:
+            verbose_name_plural = "QNA"
+            
+     def __str__(self):
+          return self.question
+
+
+
+class RelatedQuestion(models.Model):
+     options = [
+     ("B","Boolean"),
+     ("D","Dropdown"),
+     ("R","Radio"),
+     ("T","Text"),
+     ('D', "Date"),
+    ]
+     type = [
+          ('Singular', 'Singular'),
+          ('Plural', 'Plural')
+     ]
+     text = models.CharField(max_length=600, blank=False)
+     type = models.CharField(choices = type, max_length=30, default='Singular')
+     answer_form = models.CharField(choices=options, max_length=30, default='Boolean')
+     category = models.ManyToManyField(QuestionSubCategory)
+     related_to = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
+     answers = models.CharField(max_length=600, blank=True, null=True)
+     qna = models.ManyToManyField(Qna, blank=True)
+     condition_boolean = models.BooleanField()
+     help_text = models.TextField(blank=True)
+
+     def __str__(self):
+            return self.text
+
+
+class MAF(models.Model):
+     provider = models.ForeignKey(Insurer, on_delete=models.CASCADE, related_name='company_name')
+     #questions = models.ManyToManyField(Question)
+     qna_json = models.JSONField(null=True, blank=True)
+
+     class Meta:
+            verbose_name_plural = "MAF"
+
+     def __str__(self):
+          return self.provider.name
+
+
