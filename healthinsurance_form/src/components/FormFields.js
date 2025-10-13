@@ -167,6 +167,7 @@ const FormFields = ({country_of_stay = false,type,name,placeholder = "",labelNam
                             <ul>
                                 {Countries_sort.filter((country) => (country.name.toLowerCase()).includes(search.toLowerCase())
                                 ).map((country,index) => {
+                                    if(country.name.toLowerCase() == 'england') return
                                     if(index>=15 && search!='' && name!='country_of_stay')return
                                     if(country_of_stay && !(country.code in restrictedCountry))return
                                     return(
