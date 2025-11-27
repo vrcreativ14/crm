@@ -59,8 +59,6 @@ def get_email_address_for_deal(deal):
     if deal.deal_type != DEAL_TYPE_RENEWAL:
         if deal.primary_member and deal.primary_member.visa != EMIRATE_ABU_DHABI:
             return 'NBInd.medical@nexusadvice.com'
-        if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-            return 'auhpls.hotline@nexusadvice.com'
         else:
             return 'ind.medical@nexusadvice.com'
     elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
@@ -972,7 +970,7 @@ class DealQuotedProductsView(LoginRequiredMixin, PermissionRequiredMixin, Detail
                     "network":qp.network.id if qp.network else '',
                     "annual_limit":qp.annual_limit.id if qp.annual_limit else '',
                     'physiotherapy': qp.physiotherapy.id if qp.physiotherapy else '',
-                    'alternative_medicine': qp.alternative_medicine.id if qp.physiotherapy else '',
+                    'alternative_medicine': qp.alternative_medicine.id if qp.alternative_medicine else '',
                     'maternity_benefits': qp.maternity_benefits.id if qp.maternity_benefits else '',
                     'maternity_waiting_period': qp.maternity_waiting_period.id if qp.maternity_waiting_period else '',
                     'dental_benefits': qp.dental_benefits.id if qp.dental_benefits else '',
@@ -1960,6 +1958,8 @@ class QuoteAPIView(View):
                         sp['is_previous_plan_selected'] = True
 
                     response["data"]["selected_plan"] = sp
+                    deal_details['currency'] = selected_plan.currency.name if selected_plan.currency else 'AED'
+                    response["data"]["deal"] = deal_details
             if stage_number == 4:
                 quote_file = DealFiles.objects.filter(deal = deal, type = "final_quote")
                 quote_file = quote_file[0].file.url if quote_file.exists() else ""
@@ -2028,7 +2028,8 @@ class QuoteAPIView(View):
                         "certificate_of_insurance": certificate_of_insurance,
                         "medical_card": medical_card,
                         "confirmation_of_cover": confirmation_of_cover,
-                        "is_policy_link_active": policy.get_policy_link_status()
+                        "is_policy_link_active": policy.get_policy_link_status(),
+                        "currency": selected_plan.currency.name if selected_plan.currency else 'AED'
                     }
                     response["data"]["policy"] = policy_details
 
@@ -2398,3 +2399,4 @@ def DealJsonView(request):
                 return JsonResponse({'success': False,
                                      'message': f'Error while fetching deal list:{e}'
                                 })
+        
