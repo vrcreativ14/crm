@@ -259,3 +259,17 @@ class Order(AuditTrailMixin, models.Model):
             settings.DOMAIN,
             reverse("health-insurance:order-pdf-view", kwargs={"pk": self.pk})
         )
+
+
+
+class MAF(models.Model):
+    #  provider = models.ForeignKey(Insurer, on_delete=models.CASCADE, related_name='insurer')
+     quote = models.ForeignKey(Quote, on_delete=models.CASCADE)
+     #questions = models.ManyToManyField(Question)
+     qna_json = models.JSONField(null=True, blank=True)
+
+     class Meta:
+            verbose_name_plural = "MAF"
+
+     def __str__(self):
+          return self.quote.deal.primary_member.name
