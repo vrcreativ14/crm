@@ -447,7 +447,7 @@ class Question(models.Model):
      #answer_boolean = models.BooleanField()
      answers = models.CharField(max_length=600, blank=True, null=True)
      help_text = models.TextField(blank=True)
-     related_questions = models.ManyToManyField(RelatedQuestion)
+     related_questions = models.ManyToManyField(RelatedQuestion, blank=True)
      #linked_questions = models.ManyToManyField()
 
      def __str__(self):
