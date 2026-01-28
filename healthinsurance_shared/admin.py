@@ -218,16 +218,19 @@ class VisaCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 
 class QuestionAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [QuestionResource]
-    search_fields = ['insurers__name', 'categories__name']
+    list_filter = ["insurers", "categories", 'categories__category__name']
+    search_fields = ['insurers__name', 'categories__name', 'categories__category__name']
 
 class RelatedQuestionAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [RelatedQuestionResource]
 
 class QuestionCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [QuestionCategoryResource]
+    list_filter = ["name"]
 
 class QuestionSubCategoryAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [QuestionSubCategoryResource]
+    list_filter = ["name", "category"]
 
 class QnaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_classes = [QnaResource]
@@ -260,7 +263,7 @@ admin.site.register(VisaCategory, VisaCategoryAdmin)
 admin.site.register(MessageTemplates, MessageTemplatesAdmin)
 admin.site.register(MessageType, MessageTypeAdmin)
 admin.site.register(Currency)
-admin.site.register(MAF)
+#admin.site.register(MAF)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Qna, QnaAdmin)
 admin.site.register(RelatedQuestion, RelatedQuestionAdmin)
