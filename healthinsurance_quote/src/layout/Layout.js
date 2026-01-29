@@ -3,7 +3,7 @@ import Breadcrumb from './Breadcrumb';
 import Header from './Header';
 import ContentHeader from './ContentHeader';
 import BGImage from '../assets/bg-img.svg'
-import Message from '../assets/Message.svg'
+import Message from '../assets/message.svg'
 import ContactForm from '../components/ContactForm';
 
 const Layout = ({children,currentTab,name,stepContent,comparison = false}) => {
