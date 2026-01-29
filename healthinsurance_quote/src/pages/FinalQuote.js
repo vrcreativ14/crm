@@ -65,7 +65,7 @@ const FinalQuote = ({type = 1}) => {
 
     const name = 'Hi <span class="text-capitalize">'+data.primary_member.name+'</span>,'
     const currentTab = 'final'
-	const stepContent = "Great news, we have received the final quote from the insurer! Please download and check the document. If you are happy, kindly sign it and upload it below."
+	const stepContent = "Great news, we have received the final quote from the insurer!!!! Please download and check the document. If you are happy, kindly sign it and upload it below."
 
     return(
         <Layout currentTab={currentTab} name={name} stepContent={stepContent}>
