@@ -383,28 +383,7 @@ class QuestionSubCategory(models.Model):
 
 class AnswerCategory(models.Model):
      name = models.CharField(max_length=200)
-     
 
-class Question(models.Model):
-     answer_form = [
-     ("B","Boolean"),
-     ("D","Dropdown"),
-     ("R","Radio"),
-     ("T","Text"),
-     ('D', "Date"),
-    ]
-     categories = models.ManyToManyField(QuestionSubCategory)
-     insurers = models.ManyToManyField(Insurer)
-     #subcategory = models.ForeignKey(QuestionSubCategory, on_delete=models.CASCADE, blank=True, null=True)
-     text = models.CharField(max_length=600)
-     answer_form = models.CharField(max_length=20, choices=answer_form, blank=False, null=False)
-     #answer_boolean = models.BooleanField()
-     answers = models.CharField(max_length=600, blank=True, null=True)
-     help_text = models.TextField(blank=True)
-     #linked_questions = models.ManyToManyField()
-
-     def __str__(self):
-          return self.text
 
 class Qna(models.Model):
      options = [
@@ -425,14 +404,13 @@ class Qna(models.Model):
           return self.question
 
 
-
 class RelatedQuestion(models.Model):
      options = [
-     ("B","Boolean"),
-     ("D","Dropdown"),
-     ("R","Radio"),
-     ("T","Text"),
-     ('D', "Date"),
+     ("boolean","Boolean"),
+     ("dropdown","Dropdown"),
+     ("radio","Radio"),
+     ("text","Text"),
+     ('date', "Date"),
     ]
      type = [
           ('Singular', 'Singular'),
@@ -442,25 +420,64 @@ class RelatedQuestion(models.Model):
      type = models.CharField(choices = type, max_length=30, default='Singular')
      answer_form = models.CharField(choices=options, max_length=30, default='Boolean')
      category = models.ManyToManyField(QuestionSubCategory)
-     related_to = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
+     #related_to = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True, related_name = 'related_question')
      answers = models.CharField(max_length=600, blank=True, null=True)
      qna = models.ManyToManyField(Qna, blank=True)
      condition_boolean = models.BooleanField()
      help_text = models.TextField(blank=True)
+     related_answer = models.CharField(max_length=600, blank=True, null=True)
 
      def __str__(self):
             return self.text
 
+     def getanswerList(self):
+            return self.answers.split(',') if self.answers else ''
 
-class MAF(models.Model):
-     provider = models.ForeignKey(Insurer, on_delete=models.CASCADE, related_name='company_name')
-     #questions = models.ManyToManyField(Question)
-     qna_json = models.JSONField(null=True, blank=True)
 
-     class Meta:
-            verbose_name_plural = "MAF"
+
+class Question(models.Model):
+     answer_form = [
+     ("boolean","Boolean"),
+     ("dropdown","Dropdown"),
+     ("radio","Radio"),
+     ("text","Text"),
+     ('date', "Date"),
+    ]
+     categories = models.ManyToManyField(QuestionSubCategory)
+     insurers = models.ManyToManyField(Insurer)
+     #subcategory = models.ForeignKey(QuestionSubCategory, on_delete=models.CASCADE, blank=True, null=True)
+     text = models.CharField(max_length=600)
+     answer_form = models.CharField(max_length=20, choices=answer_form, blank=False, null=False)
+     #answer_boolean = models.BooleanField()
+     answers = models.CharField(max_length=600, blank=True, null=True)
+     help_text = models.TextField(blank=True)
+     related_questions = models.ManyToManyField(RelatedQuestion, blank=True)
+     priority = models.IntegerField(null=True, blank=True)
+     #linked_questions = models.ManyToManyField()
 
      def __str__(self):
-          return self.provider.name
+          return self.text
+     
+     def getanswerList(self):
+            return self.answers.split(',') if self.answers else ''
+
+
+
+
+
+
+
+
+# class MAF(models.Model):
+#      provider = models.ForeignKey(Insurer, on_delete=models.CASCADE, related_name='company_name')
+#     #  quote = models.ForeignKey(Quote)
+#      #questions = models.ManyToManyField(Question)
+#      qna_json = models.JSONField(null=True, blank=True)
+
+#      class Meta:
+#             verbose_name_plural = "MAF"
+
+#      def __str__(self):
+#           return self.provider.name
 
 
