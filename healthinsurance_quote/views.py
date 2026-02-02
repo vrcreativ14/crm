@@ -1,16 +1,23 @@
 from django.shortcuts import render
+from healthinsurance_shared.models import *
+from healthinsurance.models.quote import *
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from healthinsurance.models.quote import MAF, Quote, Order
+from healthinsurance.models.deal import Deal
+import json
+import pymupdf
 
 def index(request, *args, **kwargs):
     return render(request, 'frontendHealthinsuranceQuote/index.html')
 
 
-
 def QuestionsForm(request, id):
     deal_id = id
-    d = Deal.objects.filter(pk = deal_id)    
+    d = Deal.objects.filter(pk = deal_id)
     quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
     deal = quote[0].deal if quote else None
-    primary_member = deal.primary_member
+    # primary_member = deal.primary_member
     insurer = 'Cigna'
     provider = Insurer.objects.filter(name = 'Cigna')
     questions = ''
@@ -70,14 +77,15 @@ def QuestionsForm(request, id):
 
 @csrf_exempt
 def MafApi(request, id): 
-    quote_id = 287    
-    quote = Quote.objects.filter(pk = quote_id)
+    deal_id = id
+    d = Deal.objects.filter(pk = deal_id)    
+    quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
     quote = quote[0] if quote.exists() else None
-    deal = quote.deal if quote else None
+    # deal = quote.deal if quote else None
     arr = {}
-    maf = MAF.objects.filter(quote = quote)
+    maf = MAF.objects.filter(quote = quote) if quote else None
     if request.method == 'GET':
-        if maf.exists():
+        if maf and maf.exists():
                 maf = maf[0]
                 #o.selected_plan.plan.insurer.name
                 j = maf.qna_json
@@ -86,7 +94,7 @@ def MafApi(request, id):
                 pass
             
         else:
-                primary_member = deal.primary_member
+                # primary_member = deal.primary_member
                 insurer = 'Cigna'
                 provider = Insurer.objects.filter(name = 'Cigna')
                 questions = ''
@@ -133,6 +141,8 @@ def MafApi(request, id):
             saved_data = maf.qna_json
             for key, value in j.items():
                 #saved_data[key] = [saved_data[key], j[key]]
+                if not isinstance(value, dict):
+                     continue
                 for k,v in j[key].items():
                      saved_data[key][k] = j[key][k]
                 pass
@@ -146,11 +156,5 @@ def MafApi(request, id):
             pass
 
         return HttpResponse('Data Saved Successfully')
-    # context = {
-    #     'questions' : questions,
-    #     'deal' : deal,
-    #     'json' : arr,
-    # }
-  
 
 
