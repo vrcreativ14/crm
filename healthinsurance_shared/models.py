@@ -387,11 +387,11 @@ class AnswerCategory(models.Model):
 
 class Qna(models.Model):
      options = [
-     ("B","Boolean"),
-     ("D","Dropdown"),
-     ("R","Radio"),
-     ("T","Text"),
-     ('D', "Date"),
+     ("boolean","Boolean"),
+     ("dropdown","Dropdown"),
+     ("radio","Radio"),
+     ("text","Text"),
+     ('date', "Date"),
     ]
      question = models.CharField(max_length=600)
      answer_type = models.CharField(choices=options, max_length=30)
@@ -406,11 +406,11 @@ class Qna(models.Model):
 
 class RelatedQuestion(models.Model):
      options = [
-     ("B","Boolean"),
-     ("D","Dropdown"),
-     ("R","Radio"),
-     ("T","Text"),
-     ('D', "Date"),
+     ("boolean","Boolean"),
+     ("dropdown","Dropdown"),
+     ("radio","Radio"),
+     ("text","Text"),
+     ('date', "Date"),
     ]
      type = [
           ('Singular', 'Singular'),
@@ -425,9 +425,13 @@ class RelatedQuestion(models.Model):
      qna = models.ManyToManyField(Qna, blank=True)
      condition_boolean = models.BooleanField()
      help_text = models.TextField(blank=True)
+     related_answer = models.CharField(max_length=600, blank=True, null=True)
 
      def __str__(self):
             return self.text
+
+     def getanswerList(self):
+            return self.answers.split(',') if self.answers else ''
 
 
 
@@ -448,10 +452,14 @@ class Question(models.Model):
      answers = models.CharField(max_length=600, blank=True, null=True)
      help_text = models.TextField(blank=True)
      related_questions = models.ManyToManyField(RelatedQuestion, blank=True)
+     priority = models.IntegerField(null=True, blank=True)
      #linked_questions = models.ManyToManyField()
 
      def __str__(self):
           return self.text
+     
+     def getanswerList(self):
+            return self.answers.split(',') if self.answers else ''
 
 
 
