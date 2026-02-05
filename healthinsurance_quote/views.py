@@ -9,6 +9,8 @@ import logging
 import json
 #import pymupdf
 
+api_logger = logging.getLogger("api.amplitude")
+
 def index(request, *args, **kwargs):
     return render(request, 'frontendHealthinsuranceQuote/index.html')
 
@@ -21,7 +23,7 @@ def QuestionsForm(request, id):
             deal = quote[0].deal if quote else None
             # primary_member = deal.primary_member
             insurer = 'Cigna'
-            provider = Insurer.objects.filter(name = 'Cigna')
+            provider = Insurer.objects.filter(name__icontains = 'Cigna')
             questions = ''
             applicant_questions = ''
             arr = {}
