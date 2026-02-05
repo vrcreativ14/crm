@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from healthinsurance.models.quote import MAF, Quote, Order
 from healthinsurance.models.deal import Deal
 import json
-import pymupdf
+#import pymupdf
 
 def index(request, *args, **kwargs):
     return render(request, 'frontendHealthinsuranceQuote/index.html')
