@@ -136,6 +136,12 @@ class SendHealthInsuranceEmail:
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name if deal.customer and deal.customer.name else deal.primary_member.name,
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
         if deal.stage == 'basic':
             quote = deal.get_quote()
             if quote:
@@ -159,8 +165,10 @@ class SendHealthInsuranceEmail:
         }
         if deal.referrer:
             ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
         if updated:
             message = self.get_message_templates(type = 'quote updated')
         else:
@@ -186,8 +194,10 @@ class SendHealthInsuranceEmail:
             ctx.update({'insurer_name':insurer_name})
         if deal.referrer:
             ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
 
         message = self.get_message_templates(type = email_type)
         return self.render_context(message, ctx)
@@ -198,6 +208,12 @@ class SendHealthInsuranceEmail:
             'customer_name': deal.customer.name,
             "upload_url" : "/mortgage-quote/"+str(deal.mortgage_quote_deals.reference_number)+"/"+str(deal.pk)+"/"
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
         message = self.get_message_templates(type = 'documents')
         return self.render_context(message, ctx)
 
@@ -214,8 +230,12 @@ class SendHealthInsuranceEmail:
             message = self.get_message_templates(type = 'order confirmation team notification')
         else:
             message = self.get_message_templates(type = 'order')
+            if deal.referrer:
+                ctx.update({'referrer':deal.referrer})
+                ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
             if deal.user:
                 ctx.update({'assigned_to':deal.user})
+                ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
         
         return self.render_context(message, ctx)
 
@@ -229,8 +249,13 @@ class SendHealthInsuranceEmail:
             'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
             'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
+        if deal.referrer:
+                ctx.update({'referrer':deal.referrer})
+                ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
+
         message = self.get_message_templates(type = 'Final Quote Standard')
         return self.render_context(message, ctx)
     
@@ -244,8 +269,13 @@ class SendHealthInsuranceEmail:
             'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
             'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
+
         message = self.get_message_templates(type = 'Final Quote (non standard)')
         return self.render_context(message, ctx)
 
@@ -257,8 +287,13 @@ class SendHealthInsuranceEmail:
             'insurer_name': order.selected_plan.plan.insurer.name if order and order.selected_plan else '',
             'selected_plan': order.selected_plan.plan.name if order and order.selected_plan else '',
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
+
         message = self.get_message_templates(type = 'Final Quote Submitted')
         return self.render_context(message, ctx)
 
@@ -276,8 +311,13 @@ class SendHealthInsuranceEmail:
             'payment_details': payment_details,
             'quote_url' : quote_url,
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
+
         message = self.get_message_templates(type = 'payment')
         #text_template = get_template('email/heath_insurance_final_quote.html')
         return self.render_context(message, ctx)
@@ -289,8 +329,13 @@ class SendHealthInsuranceEmail:
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.primary_member.name,            
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
+
         message = self.get_message_templates(type = 'payment confirmation')
         return self.render_context(message, ctx)
 
@@ -305,8 +350,12 @@ class SendHealthInsuranceEmail:
             'insurer_name': insurer.name if insurer else '',
             'policy_number': policy.policy_number if policy else '',
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
         if deal.user:
             ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
 
         message = self.get_message_templates(type = 'policy issuance', insurer = insurer)
         #text_template = get_template('email/heath_insurance_policy_issuance.html')
@@ -317,6 +366,12 @@ class SendHealthInsuranceEmail:
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name
         }
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
 
         message = self.get_message_templates(type = 'housekeeping')
         return self.render_context(message, ctx)
@@ -327,6 +382,13 @@ class SendHealthInsuranceEmail:
             'company_name': 'Nexus Insurance Brokers',
             'customer_name': deal.customer.name
         }
+
+        if deal.referrer:
+            ctx.update({'referrer':deal.referrer})
+            ctx['referrer_phone'] = deal.referrer.userprofile.phone if deal.referrer.userprofile and deal.referrer.userprofile.phone else ''
+        if deal.user:
+            ctx.update({'assigned_to':deal.user})
+            ctx['user_phone'] = deal.user.userprofile.phone if deal.user.userprofile and deal.user.userprofile.phone else ''
 
         message = self.get_message_templates(type = 'deal won')
         template = Template(message.get('email_content'))
