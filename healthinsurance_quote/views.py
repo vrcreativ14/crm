@@ -15,78 +15,68 @@ def index(request, *args, **kwargs):
     return render(request, 'frontendHealthinsuranceQuote/index.html')
 
 
-def QuestionsForm(request, id):
-    try:
-            deal_id = id
-            d = Deal.objects.filter(pk = deal_id)
-            quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
-            deal = quote[0].deal if quote else None
-            # primary_member = deal.primary_member
-            insurer = 'Cigna'
-            order = Order.objects.filter(deal = d[0]) if d.exists() else None
-            provider = order[0].selected_plan.plan.insurer if order.exists() else None
-            # provider = Insurer.objects.filter(name__icontains = 'Cigna')
-            questions = ''
-            applicant_questions = ''
-            arr = {}
-            j = {}
-            if provider:
-                    medical_questions = Question.objects.filter(insurers = provider, categories__category__name='Medical')
-                    # for q in questions:
-                    #      if q.answers:
-                    #         a = q.answers.split(',')
-                    #         q.answers = a
-                    applicant_questions = Question.objects.filter(insurers = provider, categories__name='Applicant Details').order_by('priority')
-                    application_questions = Question.objects.filter(insurers = provider, categories__name='Application Details')
-                    if quote.exists():
-                        quote = quote[0]
-                        maf = MAF.objects.filter(quote = quote)
-                        if maf.exists():
-                            arr = maf[0].qna_json
-                            arr['saved'] = True
-                        else:            
-                                for q in questions:
-                                    j = {}
-                                    print(q)
-                                    j['qid'] = q.pk
-                                    j['type'] = q.answer_form
-                                    j['answer'] = False if q.answer_form == 'B' else ''
-                                    rq_arr = []
-                                    for rq in q.related_questions.all():                                
-                                        rq_dict = {}
-                                    #j['rq']['']
-                                        for qn in rq.qna.all():
-                                            #j[q.pk][rq.pk][qn.pk] = []
-                                            rq_dict['rqid'] = qn.pk
-                                            rq_dict['text'] = qn.question
-                                            rq_dict['type'] = qn.answer_type
-                                            rq_dict['answer'] = False if qn.answer_type == 'B' else ''
-                                            rq_arr.append(rq_dict)
-                                            rq_dict = {}
-                                    
-                                        j['rq'] = rq_arr
-                                    arr[q.pk] = j
-                                arr['saved'] = False
-                            #arr.append(j)
-                            # else:
-                            #     print('questions' + questions)
-                        
-                    context = {
-                        'medical_questions' : medical_questions,
-                        'applicant_questions' : applicant_questions,
-                        'application_questions' : application_questions,
-                        'deal' : deal,
-                        'json' : arr,
-                    }
-                    return render(request, 'frontendHealthinsuranceQuote/cigna.html', context)
-            
-            else:
-                 return JsonResponse({'success':False, 'message': 'Provider does not exists'})
-    
-    except Exception as e:
-            api_logger.error('Error in MAF form {}'.format(e))
-            return JsonResponse({'success': False, 'message': 'Could not retreive data for this MAF'})
-    
+
+def QuestionsForm(request, secretKey, id, str):
+    deal_id = id
+    d = Deal.objects.filter(pk = deal_id)    
+    quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
+    deal = quote[0].deal if quote else None
+    primary_member = deal.primary_member
+    insurer = 'Cigna'
+    provider = Insurer.objects.filter(name = 'Cigna')
+    questions = ''
+    applicant_questions = ''
+    arr = {}
+    j = {}
+    if provider:
+            medical_questions = Question.objects.filter(insurers = provider[0], categories__category__name='Medical')
+            # for q in questions:
+            #      if q.answers:
+            #         a = q.answers.split(',')
+            #         q.answers = a
+            applicant_questions = Question.objects.filter(insurers = provider[0], categories__name='Applicant Details').order_by('priority')
+            application_questions = Question.objects.filter(insurers = provider[0], categories__name='Application Details')
+    if quote.exists():
+        quote = quote[0]
+        maf = MAF.objects.filter(quote = quote)
+        if maf.exists():
+            arr = maf[0].qna_json
+            arr['saved'] = True
+        else:            
+                for q in questions:
+                    j = {}
+                    print(q)
+                    j['qid'] = q.pk
+                    j['type'] = q.answer_form
+                    j['answer'] = False if q.answer_form == 'B' else ''
+                    rq_arr = []
+                    for rq in q.related_questions.all():                                
+                        rq_dict = {}
+                    #j['rq']['']
+                        for qn in rq.qna.all():
+                            #j[q.pk][rq.pk][qn.pk] = []
+                            rq_dict['rqid'] = qn.pk
+                            rq_dict['text'] = qn.question
+                            rq_dict['type'] = qn.answer_type
+                            rq_dict['answer'] = False if qn.answer_type == 'B' else ''
+                            rq_arr.append(rq_dict)
+                            rq_dict = {}
+                    
+                        j['rq'] = rq_arr
+                    arr[q.pk] = j
+                arr['saved'] = False
+            #arr.append(j)
+            # else:
+            #     print('questions' + questions)
+        
+    context = {
+        'medical_questions' : medical_questions,
+        'applicant_questions' : applicant_questions,
+        'application_questions' : application_questions,
+        'deal' : deal,
+        'json' : arr,
+    }
+    return render(request, 'frontendHealthinsuranceQuote/cigna.html', context)
 
 
 @csrf_exempt

@@ -47,7 +47,8 @@ const Summary = () => {
         const { data: res } = await RequestHandler.post('health-insurance/quote-api/',rawData)
         if(res.success){
             Notifications('Success','Plan was selected.','success')
-            return navigate('/health-insurance-quote/'+secretCode+'/'+id+'/policy-documents/'+quoteID)
+			return navigate('/health-insurance-quote/'+secretCode+'/'+id+'/maf/'+quoteID)
+            //return navigate('/health-insurance-quote/'+secretCode+'/'+id+'/policy-documents/'+quoteID)
         }else{
             Notifications('Error','Something went wrong, pls contact us.','error')
         }
