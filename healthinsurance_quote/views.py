@@ -5,7 +5,7 @@ def index(request, *args, **kwargs):
 
 
 
-def QuestionsForm(request, id):
+def QuestionsForm(request, secretKey, id, str):
     deal_id = id
     d = Deal.objects.filter(pk = deal_id)    
     quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
