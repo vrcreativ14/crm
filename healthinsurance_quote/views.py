@@ -21,11 +21,12 @@ def QuestionsForm(request, secretKey, id, str):
     d = Deal.objects.filter(pk = deal_id)    
     quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
     deal = quote[0].deal if quote else None
-    primary_member = deal.primary_member
-    insurer = 'Cigna'
-    provider = Insurer.objects.filter(name = 'Cigna')
+    order = Order.objects.filter(deal = d[0]) if d.exists() else None
+    provider = order[0].selected_plan.plan.insurer if order.exists() else None
     questions = ''
+    medical_questions = ''
     applicant_questions = ''
+    application_questions = ''
     arr = {}
     j = {}
     if provider:
