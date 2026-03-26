@@ -30,13 +30,13 @@ def QuestionsForm(request, secretKey, id, str):
     arr = {}
     j = {}
     if provider:
-            medical_questions = Question.objects.filter(insurers = provider[0], categories__category__name='Medical')
+            medical_questions = Question.objects.filter(insurers = provider, categories__category__name='Medical')
             # for q in questions:
             #      if q.answers:
             #         a = q.answers.split(',')
             #         q.answers = a
-            applicant_questions = Question.objects.filter(insurers = provider[0], categories__name='Applicant Details').order_by('priority')
-            application_questions = Question.objects.filter(insurers = provider[0], categories__name='Application Details')
+            applicant_questions = Question.objects.filter(insurers = provider, categories__name='Applicant Details').order_by('priority')
+            application_questions = Question.objects.filter(insurers = provider, categories__name='Application Details')
     if quote.exists():
         quote = quote[0]
         maf = MAF.objects.filter(quote = quote)
