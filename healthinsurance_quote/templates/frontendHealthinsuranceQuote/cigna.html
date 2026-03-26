@@ -1,12 +1,5 @@
 {% extends "frontendHealthinsuranceQuote/base.html" %}
-
-
-
-
-
 {% block page %}
-  
-
 <div class="container">
   <p>
         Please complete this application form in full, sign and return it to us, either by email or post. For details of where to send this, please
@@ -22,23 +15,22 @@ Please complete this form in BLOCK CAPITALS.
 <div class="" style="width: 100%;">
     <ul class="nav nav-underline nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link nav-heading nav-link-applicants active" aria-current="page" href="#members">Applicant Details</a>
+    <a class="nav-link nav-heading nav-link-applicants active" aria-current="page" href="#members" data-name="applicants-details">Applicant Details</a>
   </li>
   
   <li class="nav-item">
-    <a class="nav-link nav-heading nav-link-medical" href="#details">Medical History</a>
+    <a class="nav-link nav-heading nav-link-medical" href="#details" data-name="medical-details">Medical History</a>
   </li>
   <!-- <li class="nav-item">
     <a class="nav-link" href="#details">Medical History</a>
   </li> -->
   <li class="nav-item">
-    <a class="nav-link nav-heading nav-link-application" href="#application">Application Details</a>
+    <a class="nav-link nav-heading nav-link-application" href="#application" data-name="application-details">Application Details</a>
   </li>
 </ul>
 </div>
 
 <br/>
-
     <div class="tab-content">
       <input id="json-data" type="hidden" data-json='{{json}}' />
         <div id="members" class="tab-pane tab-heading active" role="tabpanel" aria-labelledby="members">
@@ -47,7 +39,7 @@ Please complete this form in BLOCK CAPITALS.
             <ul class="nav nav-pills nav-fill">
 
               <li class="nav-item">
-    <a class="nav-link nav-subheading nav-link-policyholder active" aria-current="page" href="#policyholder">Policyholder</a>
+    <a class="nav-link nav-subheading nav-link-members active" aria-current="page" href="#policyholder">Policyholder</a>
   </li>
 
            {% for member in deal.primary_member.additional_members.all  %}
@@ -58,53 +50,122 @@ Please complete this form in BLOCK CAPITALS.
            </ul>
           </div>
 
-          <div class="tab-content ">
+          <div class="tab-content">
             <div id="policyholder" class="tab-pane tab-subheading active" role="tabpanel" aria-labelledby="policyholder">
           <div class="row mb-3">
           {% for aq in applicant_questions %}
-          
           <div class="form-group col-md-4 mb-4">
-            <label class="form-check-label label">{{aq}}</label>
+            <label class="form-check-label label question-text">{{aq}} </label>
             {% if aq.answer_form == 'radio' %}
             {% for an in aq.getanswerList %}
-                    <div class="form-check form-check-inline ml-2">
-            <input class="form-check-input" type="radio" name="{{aq.pk}}" id="{{an}}">
+            <div class="form-check form-check-inline ml-2">
+            <input class="form-check-input applicant-answer" type="radio" name="{{aq.pk}}" id="{{an}}" data-member="primary" data-question="{{aq}}" value="{{an}}" />
             <label class="form-check-label label" for="{{an}}">
               {{an}}
             </label>
           </div>
           {% endfor %}
-                
-
-
           {% elif aq.answer_form == 'dropdown' %}
-                 <select class="form-select">
+                 <select class="form-select applicant-answer" data-member="primary" data-question="{{aq}}" >
                   <option value="">Please Select</option>           
           {% for an in aq.getanswerList %}
               <option value="{{an}}">{{an}}</option>
           {% endfor %}
         </select>
             {% elif aq.answer_form == 'date' %}
-
              <div class="col">
-            <label>Date of Birth</label>
-            {% include "frontendHealthinsuranceQuote/components/calendar.html" %}
+            <label>{{aq}}</label>
+            {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" datamember="primary" dataquestion="{{aq}}" %}
         </div>
+            {% elif aq.answer_form == 'boolean' %}
 
-
+            <div class="form-check form-check-inline ml-2">
+  <input class="form-check-input policy-holder-answer" type="radio" name="{{aq.pk}}" value=true  data-member="primary" data-question="{{aq.pk}}" />   
+  
+  <label class="label form-check-label" for="no_policyholder_q_{{forloop.counter}}">
+    <!-- {% if k == 'primary' %}{{ v.q.pk|stringformat:"i" }}{% endif %} -->
+     <!-- {% if k == q.pk|stringformat:"i" and v.answer == 'false' and json.saved == 'true' %} checked {% endif %} -->
+     Yes
+  </label>
+</div>
+<div class="form-check form-check-inline ml-2">
+  <input class="form-check-input policy-holder-answer" type="radio" name="{{aq.pk}}" value=false id="" data-member="primary" data-question="{{aq.pk}}" />   
+  <label class="label form-check-label" for="yes_policyholder_q_{{forloop.counter}}">
+    No
+  </label>
+</div>
            
             {% else%}
-                <input class="form-control" 
+                <input class="form-control applicant-answer" data-member="primary" data-question="{{aq}}"
                 {% if aq.help_text %}
                 placeholder="{{aq.help_text}}"/>
                 {% else %}
                 placeholder="{{aq}}"/>
                 {% endif %}
              {% endif %}
+
+             <br/>
+
+             {% for rq in aq.related_questions.all %}
+        <label class="form-check-label label">{{rq}}</label> <br/>
+        {% if rq.answer_form == 'radio' %}
+            {% for an in rq.getanswerList %}
+            <div class="form-check form-check-inline ml-2">
+            <input class="form-check-input applicant-answer" type="radio" name="{{aq.pk}}" id="{{an}}" data-member="primary" data-question="{{aq}}" value="{{an}}" />
+            <label class="form-check-label label" for="{{an}}">
+              {{an}}
+            </label>
+          </div>
+          {% endfor %}
+          {% elif rq.answer_form == 'dropdown' %}
+                 <select class="form-select applicant-answer" data-member="primary" data-question="{{aq}}" >
+                  <option value="">Please Select</option>           
+          {% for an in rq.getanswerList %}
+              <option value="{{an}}">{{an}}</option>
+          {% endfor %}
+        </select>
+            {% elif rq.answer_form == 'date' %}
+
+             <div class="col">
+            <label>{{rq}}</label>
+            {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" datamember="primary" dataquestion="{{rq}}" %}
         </div>
-        
+
+            {% elif rq.answer_form == 'boolean' %}
+
+            <div class="form-check form-check-inline ml-2">
+  <input class="form-check-input applicant-answer" type="radio" name="{{rq.pk}}" value=true  data-member="primary" data-question="{{rq.pk}}" />   
+  
+  <label class="label form-check-label" for="no_policyholder_q_{{forloop.counter}}">
+    <!-- {% if k == 'primary' %}{{ v.q.pk|stringformat:"i" }}{% endif %} -->
+     <!-- {% if k == q.pk|stringformat:"i" and v.answer == 'false' and json.saved == 'true' %} checked {% endif %} -->
+     Yes
+  </label>
+</div>
+<div class="form-check form-check-inline ml-2">
+  <input class="form-check-input applicant-answer" type="radio" name="{{rq.pk}}" value=false id="" data-member="primary" data-question="{{rq.pk}}" />   
+  <label class="label form-check-label" for="yes_policyholder_q_{{forloop.counter}}">
+    No
+  </label>
+</div>
+           
+            {% else%}
+                <input class="form-control applicant-answer" data-member="primary" data-question="{{rq}}"
+                {% if rq.help_text %}
+                placeholder="{{rq.help_text}}"/>
+                {% else %}
+                placeholder="{{rq}}"/>
+                {% endif %}
+             {% endif %}
+        {% endfor %}
+        </div>
           {% endfor %}
           </div>
+
+          <div class="div mb-5" style="display: flex;flex-direction: row;">
+  
+  <button class="btn btn-submit btn-success save-next-btn-members mt-10 ml-auto" title="Save Data for Policyholder" data-member="primary">Save & Next</button>
+</div>
         </div>
 
          {% for member in deal.primary_member.additional_members.all  %}
@@ -113,23 +174,20 @@ Please complete this form in BLOCK CAPITALS.
           <div id="member{{member.pk}}" class="tab-pane tab-subheading" role="tabpanel" aria-labelledby="member{{member.pk}}">
              <div class="row mb-3">
           {% for aq in applicant_questions %}
-          
           <div class="form-group col-md-4 mb-4">
-            <label class="form-check-label label">{{aq}}</label>
+            <label class="form-check-label label question-text">{{aq}}</label>
             {% if aq.answer_form == 'radio' %}
             {% for an in aq.getanswerList %}
                     <div class="form-check form-check-inline ml-2">
-            <input class="form-check-input" type="radio" name="{{aq.pk}}" id="{{an}}">
+            <input class="form-check-input applicant-answer" type="radio" name="{{aq.pk}}" id="{{an}}" data-member="{{member.pk}}">
             <label class="form-check-label label" for="{{an}}">
               {{an}}
             </label>
           </div>
           {% endfor %}
-                
-
 
           {% elif aq.answer_form == 'dropdown' %}
-                 <select class="form-select">
+                 <select class="form-select applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}">
                   <option value="">Please Select</option>           
           {% for an in aq.getanswerList %}
               <option value="{{an}}">{{an}}</option>
@@ -139,23 +197,83 @@ Please complete this form in BLOCK CAPITALS.
 
              <div class="col">
             <label>Date of Birth</label>
-            {% include "frontendHealthinsuranceQuote/components/calendar.html" %}
+            {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" datamember="{{member.pk}}" %}
         </div>
-
-
-           
-            {% else%}
-                <input class="form-control" 
+            {% else %}
+                <input class="form-control applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}"
                 {% if aq.help_text %}
                 placeholder="{{aq.help_text}}"/>
                 {% else %}
                 placeholder="{{aq}}"/>
                 {% endif %}
              {% endif %}
+
+<br/>
+
+             {% for rq in aq.related_questions.all %}
+        <label class="form-check-label label">{{rq}}</label> <br/>
+        {% if rq.answer_form == 'radio' %}
+            {% for an in rq.getanswerList %}
+            <div class="form-check form-check-inline ml-2">
+            <input class="form-check-input applicant-answer" type="radio" name="{{aq.pk}}" id="{{an}}" data-member="primary" data-question="{{rq}}" value="{{an}}" />
+            <label class="form-check-label label" for="{{an}}">
+              {{an}}
+            </label>
+          </div>
+          {% endfor %}
+          {% elif rq.answer_form == 'dropdown' %}
+                 <select class="form-select applicant-answer" data-member="primary" data-question="{{rq}}" >
+                  <option value="">Please Select</option>           
+          {% for an in rq.getanswerList %}
+              <option value="{{an}}">{{an}}</option>
+          {% endfor %}
+        </select>
+            {% elif rq.answer_form == 'date' %}
+             <div class="col">
+            <label>{{rq}}</label>
+            {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" datamember="primary" dataquestion="{{rq}}" %}
         </div>
+
+            {% elif rq.answer_form == 'boolean' %}
+
+            <div class="form-check form-check-inline ml-2">
+  <input class="form-check-input applicant-answer" type="radio" name="{{rq.pk}}" value=true  data-member="primary" data-question="{{rq.pk}}" />   
+  
+  <label class="label form-check-label" for="no_policyholder_q_{{forloop.counter}}">
+    <!-- {% if k == 'primary' %}{{ v.q.pk|stringformat:"i" }}{% endif %} -->
+     <!-- {% if k == q.pk|stringformat:"i" and v.answer == 'false' and json.saved == 'true' %} checked {% endif %} -->
+     Yes
+  </label>
+</div>
+<div class="form-check form-check-inline ml-2">
+  <input class="form-check-input applicant-answer" type="radio" name="{{rq.pk}}" value=false id="" data-member="primary" data-question="{{rq.pk}}" />   
+  <label class="label form-check-label" for="yes_policyholder_q_{{forloop.counter}}">
+    No
+  </label>
+</div>
+           
+            {% else%}
+                <input class="form-control applicant-answer" data-member="primary" data-question="{{rq}}"
+                {% if rq.help_text %}
+                placeholder="{{rq.help_text}}"/>
+                {% else %}
+                placeholder="{{rq}}"/>
+                {% endif %}
+             {% endif %}
+        {% endfor %}
+        </div>
+
+
+        
         
           {% endfor %}
           </div>
+
+          <div class="div mb-5" style="display: flex;flex-direction: row;">
+  <button class="btn btn-submit btn-primary edit-previous-btn hide">Previous Question</button>
+  <button class="btn btn-submit btn-success save-next-btn-members mt-10 ml-auto" title="Save Data for Member{{forloop.counter}}" data-member="{{member.pk}}">Save & Next</button>
+</div>
+
           </div>
          
          {% endfor %}
@@ -304,6 +422,8 @@ Please complete this form in BLOCK CAPITALS.
             </tbody>
             <input id="current-member" type="hidden" data-member="" data-question="" value="" />
             <input id="current-question" type="hidden" data-member="" data-question="" value="" />
+            <input id="deal-id" type="hidden" value="{{deal.pk}}" />
+            <input id="maf-stage" type="hidden" value="applicant-details" />
 </table>
 
 <div class="div" style="display: flex;flex-direction: row;">
@@ -346,13 +466,13 @@ Please complete this form in BLOCK CAPITALS.
         <div id="application" class="tab-pane tab-heading" role="tabpanel" aria-labelledby="application">
           <div class="row mb-3">
           {% for aq in application_questions  %}
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 mb-4 test">
 
             <label class="form-check-label label">{{aq}}</label>
             {% if aq.answer_form == 'radio' %}
             {% for an in aq.getanswerList %}
                     <div class="form-check form-check-inline ml-2">
-            <input class="form-check-input" type="radio" name="{{aq.pk}}" id="{{an}}">
+            <input class="form-check-input" type="radio" name="{{aq.pk}}" id="{{an}}" />
             <label class="form-check-label label" for="{{an}}">
               {{an}}
             </label>
@@ -370,13 +490,10 @@ Please complete this form in BLOCK CAPITALS.
         </select>
             {% elif aq.answer_form == 'date' %}
 
-             <div class="col">
-            <label>Date of Birth</label>
+             
+            
             {% include "frontendHealthinsuranceQuote/components/calendar.html" %}
-        </div>
-
-
-           
+        
             {% else%}
                 <input class="form-control" 
                 {% if aq.help_text %}
@@ -386,19 +503,13 @@ Please complete this form in BLOCK CAPITALS.
                 {% endif %}
              {% endif %}
         </div>
-
+{% endfor %}
           </div>
 
-          {% endfor %}
+          
           </div>
         </div>
-
-
-    
 </div>
-
-
-
 
 
 
@@ -406,13 +517,29 @@ Please complete this form in BLOCK CAPITALS.
   var j = {}
   var saved_data = {}
   var current_answer = {}
+  var applicants_details = {}
 
   function displayCurrentQuestion(){
-          $('.questions-table tr.current').addClass('saved')
+    if($('.nav-link-members.active').parent().next().find('.nav-link-members').length == 0)
+          $('.nav-link-medical').click()
+    let stage = $('.nav-link.active').data('name')
+    debugger
+    switch(true){
+      case stage.includes('medical'): $('.questions-table tr.current').addClass('saved')
           $('.questions-table tr.current').addClass('hide')
           $('.questions-table tr.current').next('tr').removeClass('hide')
           $('.questions-table tr.current').next('tr').addClass('current')
           $('.questions-table tr.saved').removeClass('current')
+          console.log('medical')
+          break;
+      case stage.includes('applicant'): 
+      $('.nav-link-members.active').parent().next().find('.nav-link-members').click()
+      console.log('applicant')
+                                break;
+      default: alert('saved');break;
+
+    }
+          
   }
 
   function displayPreviousQuestion(){
@@ -424,8 +551,9 @@ Please complete this form in BLOCK CAPITALS.
   }
 
   function getData(){
+    let deal_id = $('#deal-id').val()
     $.ajax({
-        url: "/health-insurance-quote/maf/api/267",
+        url: `/health-insurance-quote/maf/api/${deal_id}`,
         context: document.body
       }).done(function(res) {
         
@@ -438,15 +566,18 @@ Please complete this form in BLOCK CAPITALS.
     });
   }
 
-  function saveData(){
+  function saveData(post_json){
+    
+    let deal_id = $('#deal-id').val()
+    console.log('going to save')
     $.ajax({
-        url: "/health-insurance-quote/maf/api/267",
+        url: `/health-insurance-quote/maf/api/${deal_id}`,
         method: "POST",
-        data: {'data':JSON.stringify(saved_data),'question':''},
+        data: {'data':JSON.stringify(post_json),'question':''},
         dataType: 'json',
         context: document.body,
       }).done(function(res) {
-        
+        console.log('save')
         console.log(res)
           //$( this ).addClass( "done" );
           // j = JSON.stringify(res)
@@ -458,7 +589,8 @@ Please complete this form in BLOCK CAPITALS.
           // $('.questions-table tr.current').next('tr').removeClass('hide')
           // $('.questions-table tr.current').next('tr').addClass('current')
           // $('.questions-table tr.saved').removeClass('current')
-          displayCurrentQuestion()
+          console.log('hjgjgjgjgjhghgj')
+          
           $('.edit-previous-btn').removeClass('hide')
           saved_data = {}
     });
@@ -606,8 +738,49 @@ Please complete this form in BLOCK CAPITALS.
   $('.save-next-btn').on('click', function(){
     debugger
       saveData()
-
   })
+
+   $('.save-next-btn-members').on('click', function(){
+    debugger
+    let dict = {}
+    let m = $(this).data('member')
+    //let q = $(this).data('member')
+    let answers = ''
+    if(m == 'primary'){
+      dict['primary'] = {}
+      answers = $(':input.applicant-answer[data-member="primary"]')
+    }
+    else{
+      dict[m] = {}
+      answers = $(`.applicant-answer[data-member=${m}]`)
+    }
+    // applicants_details = dict
+       
+    for(let k in answers){
+      let q = $(answers[k]).data('question')
+      if(!answers[k]) continue;
+      if(isNaN(k)) continue;
+      if(q && answers[k].type == 'radio'){
+        let q_name = $(answers[k]).attr('name')
+        let v = $(`input[name=${q_name}]:checked`).val()
+        dict[m][q] = v
+      }
+      else if(q && answers[k].type.includes('select')){
+        dict[m][q] = $(answers[k]).val()
+      }
+      else if(q && answers[k].type == 'text'){
+        dict[m][q] = $(answers[k]).val()
+      }
+        console.log(k)
+    }
+    applicants_details['applicants_details'] = dict
+    
+    saveData(applicants_details)
+    displayCurrentQuestion()
+    
+  })
+
+  
 
   $('.edit-previous-btn').on('click', function(){
     debugger
@@ -686,6 +859,7 @@ Please complete this form in BLOCK CAPITALS.
         $('' + active_tab).addClass('active')
         $(this).addClass('active')
     })
+    
     $('.nav-link-members').click(function(){
       debugger
         $('.nav-subheading.active').removeClass('active')

@@ -34,7 +34,7 @@ const Documents = () => {
 
     async function handleFormSubmit(event){
         event.preventDefault()
-        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','signed_renewal_document','primary_previousinsurance','primary_other','plan_census','plan_bor']
+        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','signed_renewal_document','primary_previousinsurance','primary_other','plan_bor']
         // const docsPrimNames = {
         //     'primary_passport':'Primary member Passport',
         //     'primary_emiratesid':'Primary member Emirates ID',
@@ -90,14 +90,13 @@ const Documents = () => {
     }
 
     function validateDocUpload(){
-        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','signed_renewal_document','primary_previousinsurance','primary_other','plan_census','plan_bor']
+        const docsPrim = ['primary_passport','primary_emiratesid','primary_visa','primary_maf','signed_renewal_document','primary_previousinsurance','primary_other','plan_bor']
         const docsPrimNames = {
             'primary_passport':'Primary member Passport documents',
             'primary_emiratesid':'Primary member Emirates ID documents',
             'primary_visa':'Primary member Visa documents',
             'primary_maf':'Plan document MAF',
             'signed_renewal_document':'Renewal quote document',
-            'plan_census':'Plan document Census',
             'plan_bor':'Plan document Bor'
         }
         
@@ -109,7 +108,6 @@ const Documents = () => {
         }
         let findError = false
         docsPrim.map((docIndex) => {
-            if(!data.selected_plan.census && docIndex=='plan_census')return
             if(!data.selected_plan.bor && docIndex=='plan_bor')return
             if(docIndex=='primary_maf' && 'is_previous_plan_selected' in data.selected_plan && data.selected_plan.is_previous_plan_selected)return
             if(docIndex=='signed_renewal_document' && (!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected))return
@@ -138,8 +136,9 @@ const Documents = () => {
     let planDoc = true
 
     if(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected)planDoc = true
-    if(data.selected_plan.census)planDoc = true
     if(data.selected_plan.bor)planDoc = true
+
+    const mafOnly = ((('is_renewal' in data.selected_plan) && data.selected_plan.is_renewal) && (!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected)) ? true:false
 
     return(
         <Layout currentTab={currentTab} name={name} stepContent={stepContent}>
@@ -154,14 +153,13 @@ const Documents = () => {
                             <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Previous Medical Insurance (Card / Certificate)" filekey="primary_previousinsurance" desc='If any' required={false}/>
                             <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Other Documents" filekey="primary_other" desc='If any' required={false} info="Please upload any other documents (Signed renewal terms, Policy Census...)"/>
                         </DocumentSection>
-                        {planDoc &&
-                            <DocumentSection title="Plan Documents" defaultTab={true}>
-                                {(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Medical Application Form" filekey="primary_maf" info="Please download the Medical Application Form (MAF) using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].maf).replace(/&amp;/g, "&")+'">Download MAF <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
-                                {(('is_previous_plan_selected' in data.selected_plan) && data.selected_plan.is_previous_plan_selected) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Upload Signed Quote" filekey="signed_renewal_document" info="Please download the Renewal Quote Form using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].plan_renewal_document).replace(/&amp;/g, "&")+'">Download Renewal Quote <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
-                                {(data.selected_plan.census) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Census" filekey="plan_census" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.census).replace(/&amp;/g, "&")+'">Download Census <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
-                                {(data.selected_plan.bor) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bor" filekey="plan_bor" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.bor).replace(/&amp;/g, "&")+'">Download Bor <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
-                            </DocumentSection>
-                        }
+                        <DocumentSection title="Plan Documents" defaultTab={true}>
+                            {(!('is_previous_plan_selected' in data.selected_plan) || !data.selected_plan.is_previous_plan_selected) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Medical Application Form" filekey="primary_maf" info="Please download the Medical Application Form (MAF) using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].maf).replace(/&amp;/g, "&")+'">Download MAF <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                            {(!mafOnly && planDoc) && <>
+                            {((('is_renewal' in data.selected_plan) && data.selected_plan.is_renewal) && (('is_previous_plan_selected' in data.selected_plan) && data.selected_plan.is_previous_plan_selected)) && <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Upload Signed Quote" filekey="signed_renewal_document" info="Please download the Renewal Quote Form using the link below. Kindly sign it, then upload the signed copy of the form." desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(selectedPlan[0].plan_renewal_document).replace(/&amp;/g, "&")+'">Download Renewal Quote <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                            {(data.selected_plan.bor) &&  <UploadDoc setuploadDoc={setuploadDoc} uploadDoc={uploadDoc} name="Bor" filekey="plan_bor" desc={'<p className="font-size-bigger-upload"><a target="_blank" className="text-fade-grey" href="'+decodeURI(data.selected_plan.bor).replace(/&amp;/g, "&")+'">Download Bor <i className="fas fa-arrow-circle-down"></i></a></p>'}/>}
+                            </>}
+                        </DocumentSection>
                         {data.additional_members.length>0 && data.additional_members.map((member,index) => {
                             return(
                                 <DocumentSection key={'members-documents-'+index} title={"Dependent: <b class='text-capitalize'>"+member.name+"</b> (<small>"+member.relation+"</small>)"} defaultTab={true}>
