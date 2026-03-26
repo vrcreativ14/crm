@@ -34,6 +34,7 @@ const App = () => {
 					<Route exact path="/health-insurance-quote/:secretCode/:id/payment/:quoteID/" element={<Payments/>}/>
 					<Route exact path="/health-insurance-quote/:secretCode/:id/payment-thankyou/:quoteID/" element={<ThankyouPage type="3"/>}/>
 					<Route exact path="/health-insurance-quote/:secretCode/:id/policy-issued/:quoteID/" element={<Policy/>}/>
+					<Route exact path="/health-insurance-quote/:secretCode/:id/maf/:quoteID/" Component={() => {window.location.href=''}}/>
 					{/* <Route exact path="/health-insurance-quote/:secretCode/:id/payment/:stageType/:quoteID/" component={Static}></Route> */}
 					{/* <Route exact path="/health-insurance-quote/:secretCode/:id/issued/:stageType/:quoteID/" component={Static}></Route> */}
 				</Routes>
