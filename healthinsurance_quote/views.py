@@ -1,13 +1,3 @@
-from django.shortcuts import render, redirect
-from healthinsurance_shared.models import *
-from healthinsurance.models.quote import *
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from healthinsurance.models.quote import MAF, Quote, Order
-from healthinsurance.models.deal import Deal
-import logging
-import json
-import pymupdf
 
 api_logger = logging.getLogger("api.amplitude")
 
