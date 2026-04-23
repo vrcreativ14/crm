@@ -223,7 +223,7 @@ def DocumentPDF(quote_id):
         medical_details = j['medical_details']
         application_details = j['application_details']
         if applicant_details:
-             app
+             pass
         doc=pymupdf.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
         p = 0
         w = 0
