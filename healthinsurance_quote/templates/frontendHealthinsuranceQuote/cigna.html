@@ -15,17 +15,17 @@ Please complete this form in BLOCK CAPITALS.
 <div class="" style="width: 100%;">
     <ul class="nav nav-underline nav-pills nav-fill">
   <li class="nav-item">
-    <a class="nav-link nav-heading nav-link-applicants active" aria-current="page" href="#members" data-name="applicants-details">Applicant Details</a>
+    <a aria-current="page" href="#members" data-name="applicants-details" {% if current_stage == 'applicants_details' %} class="nav-link nav-heading nav-link-applicants active" {% else %} class="nav-link nav-heading nav-link-applicants" {% endif %}>Applicant Details</a>
   </li>
   
   <li class="nav-item">
-    <a class="nav-link nav-heading nav-link-medical" href="#details" data-name="medical-details">Medical History</a>
+    <a href="#details" data-name="medical-details" class="nav-link nav-heading nav-link-medical {% if current_stage == 'medical_details' %} active" {% else %} " {% endif %}>Medical History</a>
   </li>
   <!-- <li class="nav-item">
     <a class="nav-link" href="#details">Medical History</a>
   </li> -->
   <li class="nav-item">
-    <a class="nav-link nav-heading nav-link-application" href="#application" data-name="application-details">Application Details</a>
+    <a href="#application" data-name="application-details" class="nav-link nav-heading nav-link-application {% if current_stage == 'application_details' %} active" {% else %} " {% endif %}>Application Details</a>
   </li>
 </ul>
 </div>
@@ -33,18 +33,18 @@ Please complete this form in BLOCK CAPITALS.
 <br/>
     <div class="tab-content">
       <input id="json-data" type="hidden" data-json='{{json}}' />
-        <div id="members" class="tab-pane tab-heading active" role="tabpanel" aria-labelledby="members">
+        <div id="members" role="tabpanel" aria-labelledby="members"  {% if current_stage == 'applicants_details' %} class="tab-pane tab-heading active" {% else %} class="tab-pane tab-heading" {% endif %}>
 
           <div class="">
             <ul class="nav nav-pills nav-fill">
 
               <li class="nav-item">
-    <a class="nav-link nav-subheading nav-link-members active" aria-current="page" href="#policyholder">Policyholder</a>
+    <a class="nav-link nav-subheading nav-link-members active" aria-current="page" href="#policyholder" name="policyholder">Policyholder</a>
   </li>
 
            {% for member in deal.primary_member.additional_members.all  %}
            <li class="nav-item">
-    <a class="nav-link nav-subheading nav-link-members" aria-current="page" href="#member{{member.pk}}">Dependent {{forloop.counter}}</a>
+    <a class="nav-link nav-subheading nav-link-members" aria-current="page" href="#member{{member.pk}}" name="#member{{member.pk}}">Dependent {{forloop.counter}}</a>
   </li>
            {% endfor %}
            </ul>
@@ -55,6 +55,7 @@ Please complete this form in BLOCK CAPITALS.
           <div class="row mb-3">
           {% for aq in applicant_questions %}
           <div class="form-group col-md-4 mb-4">
+            
             <label class="form-check-label label question-text">{{aq}} </label>
             {% if aq.answer_form == 'radio' %}
             {% for an in aq.getanswerList %}
@@ -95,8 +96,9 @@ Please complete this form in BLOCK CAPITALS.
   </label>
 </div>
            
-            {% else%}
-                <input class="form-control applicant-answer" data-member="primary" data-question="{{aq}}"
+            {% else %}
+           
+                <input class="form-control applicant-answer" data-member="primary" data-question="{{aq}}"          
                 {% if aq.help_text %}
                 placeholder="{{aq.help_text}}"/>
                 {% else %}
@@ -158,7 +160,8 @@ Please complete this form in BLOCK CAPITALS.
                 {% endif %}
              {% endif %}
         {% endfor %}
-        </div>
+       
+      </div>
           {% endfor %}
           </div>
 
@@ -280,8 +283,9 @@ Please complete this form in BLOCK CAPITALS.
 
         </div>
 </div>
-        <div id="details" class="tab-pane tab-heading" role="tabpanel" aria-labelledby="details">
-            <table id="questions-table" class="table table-responsive table-striped table-bordered questions-table">
+        <div id="details" role="tabpanel" aria-labelledby="details" class="tab-pane tab-heading {% if current_stage == 'medical_details' %} active" {% else %} " {% endif %}>
+          
+          <table id="questions-table" class="table table-responsive table-striped table-bordered questions-table">
               <div class="alert alert-success hide" role="alert">
   
 </div>
@@ -514,11 +518,70 @@ Please complete this form in BLOCK CAPITALS.
 
 
 
+
+
+
 <script>
   var j = {}
   var saved_data = {}
   var current_answer = {}
   var applicants_details = {}
+
+ // $('.nav-link-members').click(function(){
+   
+ // })
+
+ function setInput(elem, value){
+  let type = elem.attr('type')
+  switch(type){
+      case 'text':
+      case undefined:
+        elem.val(value);
+        break;
+      case 'radio':
+        break;
+      case 'select':
+        break;
+
+      default: 
+          break;
+  }
+ }
+
+ function fillData(){
+  let type = ''
+  let elem = ''
+  let value = ''
+  if(j['saved'] = true){
+    for(let i in j){
+        switch(i){
+          case 'applicants_details':
+          for(let k in j['applicants_details']){
+              // if(k == 'primary'){
+              //   for(let v in j['applicants_details']['primary']){
+              //     elem = $(`.applicant-answer[data-member='primary'][data-question=${v}]`)
+              //     type = $(`.applicant-answer[data-member='primary'][data-question=${v}]`).attr('type')
+              //     setInput(elem)
+                  
+              //   }
+              // }
+              // else{
+                for(let v in j['applicants_details'][k]){
+                  elem = $(`.applicant-answer[data-member=${k}][data-question=${v}]`)
+                  value = j['applicants_details'][k][v]
+                  setInput(elem, value)
+                }
+              //}
+          }
+          break;
+          case 'medical_details':
+          break;
+          case 'application_details':
+          break;
+        }
+    }
+  }
+ }
 
   function displayCurrentQuestion(){
     if($('.nav-link-members.active').parent().next().find('.nav-link-members').length == 0)
@@ -601,17 +664,48 @@ Please complete this form in BLOCK CAPITALS.
 
   }
 
+  function setApplicantsDetails(){
+
+  }
+
   function setsavedMAF(){    
     for(let key in j){
       debugger
-      for(let qk in j[key] ){
-        if(key != 'primary'){
-          if(j[key][qk]['answer'] == true){
+      for(let m in j[key]){
+        for(let qk in j[key][m]){
+
+          if(key == 'applicants_details' || key == 'application_details'){
+
+            let elem = $(`.applicant-answer[data-member=${m}][data-question='${qk}']`)
+            // elem.forEach((num) => {
+            //     console.log(num);
+            // });
+
+            let type = elem.attr('type')
+            switch(type){
+                case 'radio': 
+                $(`.applicant-answer[data-member=${m}][data-question=${qk}][value=${j[key][m][qk]}]`).attr('checked', true)
+                break;
+                case 'text': 
+                case undefined: 
+                elem.val(j[key][m][qk])
+                break;
+
+                default:
+                  break;
+            }
+              
+          }
+
+          else{
+        if(m != 'primary'){
+          
+          if(j[key][m][qk]['answer'] == true){
               $(`.additional-member-answer[data-member=${key}][data-question=${qk}][value=true]`).attr('checked', 'checked')
               $(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
           }
           else{
-              $(`.additional-member-answer[data-member=${key}][data-question=${qk}][value=false]`).attr('checked', 'checked')
+              $(`.additional-member-answer[data-member=${qk}][data-question=${qk}][value=false]`).attr('checked', 'checked')
               //$(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
           }
         }
@@ -625,6 +719,8 @@ Please complete this form in BLOCK CAPITALS.
           }
         }
       }
+      }
+    }
     }
   
   displayCurrentQuestion()
@@ -646,7 +742,13 @@ Please complete this form in BLOCK CAPITALS.
     let q = $(this).data('question')
     let previous_q = j['next-question'] ? (parseInt(j['next-question']) - 1) : 0
     if(this.value == 'true'){
+      if($(this).closest('td').find('.add-health-info').closest('tr').find('.table-related-questions tr').length > 0)
         $(this).closest('td').find('.add-health-info').click()
+      else{
+        if(m == 'primary'){
+          saved_data['primary'] = {}
+        }
+      }
     }
     else{
         if(m == 'primary'){
@@ -808,7 +910,8 @@ Please complete this form in BLOCK CAPITALS.
     $('#current-member').val(member)
     $('#current-question').val(question)
     if(j['saved'] == true){
-      let member_json = j['next-question'] ? j[member][previous_q]['rq'] : j[member][question]['rq']
+      //let member_json = j['medical_questions'] && j['next-question'] ? j[member][previous_q]['rq'] : j[member][question]['rq']
+      let member_json = j['medical_questions'] && j['medical_questions'][member] ? j['medical_questions'][member][question]['rq'] : ''
       let related_question_answers = $('.modal-body table tr .relative-question-answer')
       related_question_answers.each(function(elem){
            let rq = $(related_question_answers[elem]).data('related-question')
@@ -863,6 +966,9 @@ Please complete this form in BLOCK CAPITALS.
     
     $('.nav-link-members').click(function(){
       debugger
+       if(!$(this).hasClass('active')){
+
+    }
         $('.nav-subheading.active').removeClass('active')
         $('.tab-subheading.active').removeClass('active')
         let active_tab = $(this).attr('href')
