@@ -9,8 +9,27 @@ import logging
 import json
 import pymupdf
 
-
 api_logger = logging.getLogger("api.amplitude")
+
+form_stages_integer = {
+     1:'applicants_details',
+     2:'medical_details',
+     3:'application_details',
+}
+
+form_stages = {
+     'applicants_details':1,
+     'medical_details':2,
+     'application_details':3,
+}
+
+def get_next_stage_integer(stage_str):
+     try:
+        # if stage_str != 'medical_details':
+        return form_stages_integer[form_stages[stage_str] + 1]
+     except:
+        return 'applicants_details'
+
 
 def index(request, *args, **kwargs):
     return render(request, 'frontendHealthinsuranceQuote/index.html')
@@ -52,29 +71,33 @@ def QuestionsForm(request, secretKey, id, str):
                         if maf.exists():
                             arr = maf[0].qna_json
                             arr['saved'] = True
+                            current_stage = arr['current_stage']
                             for key,value in arr.items():
                                 if not isinstance(value, dict):
                                     continue
                                 # for key, value in arr[k]:
                                 #      count = count + 1
-                                stages.remove(key)
-                                if len(arr[key]) < len(members):
-                                     current_stage = key
-                                else:
-                                     current_stage = stages[0]
-                            if current_stage in arr:
-                                for k,v in arr[current_stage].items():
-                                    members.remove(k)
-                                current_member = members[0]
-                            else:
-                                current_member = 'primary'
+                                # stages.remove(key)
+                                # if len(arr[key]) < len(members):
+                                #      current_stage = key
+                                # else:
+                                #      current_stage = stages[0]
+                            if current_stage == 'applicants_details':
+                                 current_member = int(arr['current_member'])
+                            #     for k,v in arr[current_stage].items():
+                            #         members.remove(k)
+                            #     current_member = members[0]
+                            # else:
+                            #     current_member = 'primary'
                                       
                                      
 
                                 
                                 
                                      
-                        else:            
+                        else:   
+                                current_stage = 'applicants_details'
+                                current_member = 'primary'        
                                 for q in questions:
                                     j = {}
                                     print(q)
@@ -130,10 +153,12 @@ def MafApi(request, id):
     try:
         deal_id = id
         d = Deal.objects.filter(pk = deal_id)
-        quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
+        deal = d[0] if d.exists() else None
+        quote = Quote.objects.filter(deal = deal) if deal else None
         quote = quote[0] if quote.exists() else None
         # deal = quote.deal if quote else None
         arr = {}
+        answer_json = {}
         maf = MAF.objects.filter(quote = quote) if quote else None
         if request.method == 'GET':
             if maf and maf.exists():
@@ -142,16 +167,76 @@ def MafApi(request, id):
                     j = maf.qna_json
                     arr = j
                     arr['saved'] = True
+                    answer_json = arr
                     pass
                 
             else:
                     # primary_member = deal.primary_member
                     # insurer = 'Cigna'
-                    provider = Insurer.objects.filter(name = 'Cigna')
+                    order = Order.objects.filter(deal = d[0]) if d.exists() else None
+                    provider = order[0].selected_plan.plan.insurer if order.exists() else None
+                    # provider = Insurer.objects.filter(name = 'Cigna')
+                    answer_json['saved'] = False
+                    answer_json['applicants_details'] = {}
+                    answer_json['medical_details'] = {}
+                    answer_json['application_details'] = {}
+                    medical_questions = Question.objects.filter(insurers = provider, categories__category__name='Medical')
+                    applicant_questions = Question.objects.filter(insurers = provider, categories__name='Applicant Details').order_by('priority')
+                    application_questions = Question.objects.filter(insurers = provider, categories__name='Application Details')
+
+                    answer_json['applicants_details']['primary'] = {}
+                    for q in applicant_questions:
+                            answer_json['applicants_details']['primary'][q.text] = ''
+                            for rq in q.related_questions.all():
+                                 answer_json['applicants_details']['primary'][q.pk] = {'rq':{rq.pk:''}}
+                                 answer_json['applicants_details']['primary'][q.text]['rq'][rq.pk]['answer'] = ''
+                        
+                    answer_json['medical_details']['primary'] = {}
+                    for q in medical_questions:
+                            answer_json['medical_details']['primary'][q.pk] = ''
+                            for rq in q.related_questions.all():
+                                 answer_json['medical_details']['primary'][q.pk] = {'rq':{rq.pk:''}}
+                        
+                    
+                    answer_json['application_details']['primary'] = {}
+                    for q in application_questions:
+                            answer_json['application_details']['primary'][q.pk] = ''
+                            for rq in q.related_questions.all():
+                                 answer_json['application_details']['primary'][q.pk] = {'rq':{rq.pk:''}}
+                                 
+
+                    # for k,v in answer_json.items():
+                    for member in deal.primary_member.additional_members.all():
+                        answer_json['applicants_details'][member.pk] = {}
+                        for q in applicant_questions:                            
+                            answer_json['applicants_details'][member.pk][q.text] = ''
+                            for rq in q.related_questions.all():
+                                 answer_json['applicants_details'][member.pk][q.pk] = {'rq':{rq.pk:''}}
+                                 
+
+
+                        answer_json['medical_details'][member.pk] = {}
+                        for q in medical_questions:                            
+                            answer_json['medical_details'][member.pk][q.pk] = ''
+                            for rq in q.related_questions.all():
+                                 answer_json['medical_details'][member.pk][q.pk] = {'rq':{rq.pk:''}}
+                                 
+                        
+                        answer_json['application_details'][member.pk] = {}
+                        for q in application_questions:
+                            answer_json['application_details'][member.pk][q.pk] = ''
+                            for rq in q.related_questions.all():
+                                 answer_json['application_details'][member.pk][q.pk] = {'rq':{rq.pk:''}}
+                                 
+
+
+
+                         
+                    
                     questions = ''
                     j = {}
                     if provider:
-                        questions = Question.objects.filter(insurers = provider[0])
+                        questions = Question.objects.filter(insurers = provider)
                         for q in questions:
                             j = {}
                             print(q)
@@ -180,25 +265,37 @@ def MafApi(request, id):
                         print('questions' + questions)
 
 
-
-            return JsonResponse(arr, safe=False)
+            result = {
+                'answer_json': answer_json,
+                'question_json': arr,
+            }
+            return JsonResponse(result, safe=False)
 
         elif request.method == 'POST':
             print(request)
             j = json.loads(request.POST.get('data'))
             j['saved'] = True
+            
             if maf.exists():
                 maf = maf[0]
                 saved_data = maf.qna_json
-                for key, value in j.items():
-                    #saved_data[key] = [saved_data[key], j[key]]
+                if j['current_member'] == False:
+                     if not j.get('next_question'):
+                        j['current_stage'] = get_next_stage_integer(saved_data['current_stage'])
+                for key, value in j.items():                    
+                    if key == 'current_member' or key == 'current_stage':
+                         saved_data[key] = j[key]
+                    
                     if not isinstance(value, dict):
                         continue
                     for k,v in j[key].items():
                         saved_data[key][k] = j[key][k]
                     pass
+
                 
-                maf.qna_json = saved_data
+                saved_data['current_member'] = j['current_member']
+                
+                maf.qna_json = j
                 maf.save()
             else:
                 # quote = quote[0] if quote.exists() else None
@@ -223,8 +320,6 @@ def DocumentPDF(quote_id):
         applicant_details = j['applicant_details']
         medical_details = j['medical_details']
         application_details = j['application_details']
-        if applicant_details:
-             pass
         doc=pymupdf.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
         p = 0
         w = 0
@@ -237,4 +332,3 @@ def DocumentPDF(quote_id):
      
      else:
           return "Quote doesn't exists"
-     
