@@ -39,20 +39,29 @@ Please complete this form in BLOCK CAPITALS.
             <ul class="nav nav-pills nav-fill">
 
               <li class="nav-item">
-    <a class="nav-link nav-subheading nav-link-members active" aria-current="page" href="#policyholder" name="policyholder">Policyholder</a>
+    <a class="nav-link nav-subheading nav-link-members {% if current_member == 'primary' %} active {% endif %}" aria-current="page" href="#policyholder" name="policyholder">Policyholder</a>
   </li>
 
            {% for member in deal.primary_member.additional_members.all  %}
+           
            <li class="nav-item">
-    <a class="nav-link nav-subheading nav-link-members" aria-current="page" href="#member{{member.pk}}" name="#member{{member.pk}}">Dependent {{forloop.counter}}</a>
+    <a id="" {% if current_member == member.pk %} class="nav-link nav-subheading nav-link-members active" {% else %} class="nav-link nav-subheading nav-link-members" {% endif %} aria-current="page" href="#member{{member.pk}}" name="#member{{member.pk}}">Dependent {{forloop.counter}}</a>
   </li>
+
+          
            {% endfor %}
+           
            </ul>
           </div>
 
           <div class="tab-content">
-            <div id="policyholder" class="tab-pane tab-subheading active" role="tabpanel" aria-labelledby="policyholder">
-          <div class="row mb-3">
+            <div id="policyholder" class="tab-pane tab-subheading {% if current_member == 'primary' %} active {% endif %}" role="tabpanel" aria-labelledby="policyholder" data-member="primary">
+          
+               <hr/>
+            <label class="label"><b>Details for {{deal.primary_member.name}}</b></span> 
+              <hr/>
+          
+              <div class="row mb-3">
           {% for aq in applicant_questions %}
           <div class="form-group col-md-4 mb-4">
             
@@ -81,7 +90,7 @@ Please complete this form in BLOCK CAPITALS.
             {% elif aq.answer_form == 'boolean' %}
 
             <div class="form-check form-check-inline ml-2">
-  <input class="form-check-input policy-holder-answer" type="radio" name="{{aq.pk}}" value=true  data-member="primary" data-question="{{aq.pk}}" />   
+  <input class="form-check-input member-answer" type="radio" name="{{aq.pk}}" value=true  data-member="primary" data-question="{{aq.pk}}" />   
   
   <label class="label form-check-label" for="no_policyholder_q_{{forloop.counter}}">
     <!-- {% if k == 'primary' %}{{ v.q.pk|stringformat:"i" }}{% endif %} -->
@@ -90,7 +99,7 @@ Please complete this form in BLOCK CAPITALS.
   </label>
 </div>
 <div class="form-check form-check-inline ml-2">
-  <input class="form-check-input policy-holder-answer" type="radio" name="{{aq.pk}}" value=false id="" data-member="primary" data-question="{{aq.pk}}" />   
+  <input class="form-check-input member-answer" type="radio" name="{{aq.pk}}" value=false id="" data-member="primary" data-question="{{aq.pk}}" />   
   <label class="label form-check-label" for="yes_policyholder_q_{{forloop.counter}}">
     No
   </label>
@@ -167,22 +176,25 @@ Please complete this form in BLOCK CAPITALS.
 
           <div class="div mb-5" style="display: flex;flex-direction: row;">
   
-  <button class="btn btn-submit btn-success save-next-btn-members mt-10 ml-auto" title="Save Data for Policyholder" data-member="primary">Save & Next</button>
+  <button class="btn btn-submit btn-success save-next-btn-members mt-10 ml-auto" title="Save Data for Policyholder" data-member="primary" data-category="applicants_details">Save & Next</button>
 </div>
         </div>
 
          {% for member in deal.primary_member.additional_members.all  %}
 
-         
-          <div id="member{{member.pk}}" class="tab-pane tab-subheading" role="tabpanel" aria-labelledby="member{{member.pk}}">
-             <div class="row mb-3">
+          
+          <div id="member{{member.pk}}" {% if current_member == member.pk %} class="tab-pane tab-subheading active" {% else %} class="tab-pane tab-subheading" {% endif %} role="tabpanel" aria-labelledby="member{{member.pk}}" data-member="{{member.pk}}">
+            <hr/>
+            <label class="label"><b>Details for {{member.name}}</b></span> 
+              <hr/>
+            <div class="row mb-3">
           {% for aq in applicant_questions %}
           <div class="form-group col-md-4 mb-4">
             <label class="form-check-label label question-text">{{aq}}</label>
             {% if aq.answer_form == 'radio' %}
             {% for an in aq.getanswerList %}
                     <div class="form-check form-check-inline ml-2">
-            <input class="form-check-input applicant-answer" type="radio" name="{{aq.pk}}" id="{{an}}" data-member="{{member.pk}}">
+            <input class="form-check-input applicant-answer" type="radio" name="{{aq.pk}}" id="{{an}}" data-member="{{member.pk}}" data-question="{{aq}}" value="{{an}}">
             <label class="form-check-label label" for="{{an}}">
               {{an}}
             </label>
@@ -190,7 +202,7 @@ Please complete this form in BLOCK CAPITALS.
           {% endfor %}
 
           {% elif aq.answer_form == 'dropdown' %}
-                 <select class="form-select applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}">
+                 <select class="form-select applicant-answer" data-question="{{aq}}" data-member="{{member.pk}}" >
                   <option value="">Please Select</option>           
           {% for an in aq.getanswerList %}
               <option value="{{an}}">{{an}}</option>
@@ -200,7 +212,8 @@ Please complete this form in BLOCK CAPITALS.
 
              <div class="col">
             <label>Date of Birth</label>
-            {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" datamember="{{member.pk}}" %}
+            <!-- {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" dataquestion="{{aq}}"  datamember="{{member.pk}}" %} -->
+             <input type="text" class="datepicker applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}" name="dob" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Select Date" />
         </div>
             {% else %}
                 <input class="form-control applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}"
@@ -274,11 +287,12 @@ Please complete this form in BLOCK CAPITALS.
 
           <div class="div mb-5" style="display: flex;flex-direction: row;">
   <button class="btn btn-submit btn-primary edit-previous-btn hide">Previous Question</button>
-  <button class="btn btn-submit btn-success save-next-btn-members mt-10 ml-auto" title="Save Data for Member{{forloop.counter}}" data-member="{{member.pk}}">Save & Next</button>
+  <button class="btn btn-submit btn-success save-next-btn-members mt-10 ml-auto" title="Save Data for Member{{forloop.counter}}" data-member="{{member.pk}}" data-category="applicants_details">Save & Next</button>
 </div>
 
           </div>
          
+          
          {% endfor %}
 
         </div>
@@ -311,7 +325,7 @@ Please complete this form in BLOCK CAPITALS.
               {% else %}
               class="hide">
               {% endif %}
-              {{q}}
+              
             {% if q.answer_form == 'Boolean' or q.answer_form == 'boolean' or q.answer_form == 'B'  %}
         
 
@@ -322,10 +336,11 @@ Please complete this form in BLOCK CAPITALS.
       <table class="table table-striped">
         {% for rq in q.related_questions.all %}
         <thead>
-          <th class="related-question" id="{{rq.pk}}" class="col-4">{{rq}}</th>
+          <th class="related-question col-4" id="{{rq.pk}}" data-question="{{rq.pk}}" >{{rq}}</th>
           <th class="col-6">{{rq.help_text}}</th>
         </thead>
          <tbody>
+          
       {% for qna in rq.qna.all %}
       <tr>
         <td class="qna" id="{{qna.pk}}">
@@ -337,6 +352,20 @@ Please complete this form in BLOCK CAPITALS.
         {% endif %}
       </td>
       </tr>
+      {% empty %}
+      <tr>
+            <td>
+
+              {% if rq.answer_form == 'text' %}
+
+              <input class="form-control relative-question-answer" data-question="{{q.pk}}" data-related-question="{{rq.pk}}"/>
+
+              {% elif rq.answer_form == 'boolean' %}
+          
+              {% endif %}
+
+            </td>
+          </tr>
       {% endfor %} 
       </tbody>
      
@@ -350,7 +379,7 @@ Please complete this form in BLOCK CAPITALS.
 
 
 <div class="form-check form-check-inline">
-  <input class="form-check-input policy-holder-answer" type="radio" name="policyholder_q_{{forloop.counter}}" value=true id="no_policyholder_q_{{forloop.counter}}" data-member="primary" data-question="{{q.pk}}" data-policyholder-answer="" />   
+  <input class="form-check-input member-answer" type="radio" name="policyholder_q_{{forloop.counter}}" value=true id="no_policyholder_q_{{forloop.counter}}" data-member="primary" data-question="{{q.pk}}" data-policyholder-answer="" />   
   
   <label class="label form-check-label" for="no_policyholder_q_{{forloop.counter}}">
     <!-- {% if k == 'primary' %}{{ v.q.pk|stringformat:"i" }}{% endif %} -->
@@ -359,26 +388,26 @@ Please complete this form in BLOCK CAPITALS.
   </label>
 </div>
 <div class="form-check form-check-inline mb-2">
-  <input class="form-check-input policy-holder-answer" type="radio" name="policyholder_q_{{forloop.counter}}" value=false id="yes_policyholder_q_{{forloop.counter}}" data-member="primary" data-question="{{q.pk}}" data-policyholder-answer="" />   
+  <input class="form-check-input member-answer" type="radio" name="policyholder_q_{{forloop.counter}}" value=false id="yes_policyholder_q_{{forloop.counter}}" data-member="primary" data-question="{{q.pk}}" data-policyholder-answer="" />   
   <label class="label form-check-label" for="yes_policyholder_q_{{forloop.counter}}">
     No
   </label>
 </div>
 <br/>
-<a id="add-info-{{forloop.counter}}-{{q.pk}}" class="font-12 add-health-info pe-auto text-purple ml-1 hide"  data-toggle="modal" data-placement="top" title="Additional health information if answer is yes" data-question="{{q.pk}}" data-member="primary"><i class="bi bi-plus-circle mr-1"></i>Additional Info.</a>
+<a id="add-info-{{forloop.counter}}-{{q.pk}}" class="font-12 add-health-info pe-auto text-purple ml-1 hide"  data-toggle="modal" data-placement="top" title="Additional health information if answer is yes" data-question="{{q.pk}}" data-member="primary"><i class="bi bi-pencil-fill"></i></i>Additional Info.</a>
 </td>
 
 {% for member in deal.primary_member.additional_members.all  %}
  <td class="nowrap">
   
     <div class="form-check form-check-inline">
-      <input class="form-check-input additional-member-answer" type="radio" name="member_q_{{forloop.counter}}_{{q.pk}}" value="true" id="no_q_{{forloop.counter}}_{{q.pk}}" data-member="{{member.pk}}" data-question="{{q.pk}}" />
+      <input class="form-check-input member-answer  additional-member-answer" type="radio" name="member_q_{{forloop.counter}}_{{q.pk}}" value="true" id="no_q_{{forloop.counter}}_{{q.pk}}" data-member="{{member.pk}}" data-question="{{q.pk}}" />
       <label class="label form-check-label" for="no_q_{{forloop.counter}}">
-        Yes {{member.pk}}
+        Yes
       </label>
     </div>
     <div class="form-check form-check-inline mb-2">
-      <input class="form-check-input additional-member-answer" type="radio" name="member_q_{{forloop.counter}}_{{q.pk}}" value="false" id="yes_q_{{forloop.counter}}_{{q.pk}}" data-member="{{member.pk}}" data-question="{{q.pk}}" />
+      <input class="form-check-input member-answer additional-member-answer" type="radio" name="member_q_{{forloop.counter}}_{{q.pk}}" value="false" id="yes_q_{{forloop.counter}}_{{q.pk}}" data-member="{{member.pk}}" data-question="{{q.pk}}" />
       <label class="label form-check-label" for="yes_q_{{forloop.counter}}_{{q.pk}}">
         No
       </label>
@@ -386,7 +415,7 @@ Please complete this form in BLOCK CAPITALS.
 
 <br/>
 
-<a id="add-info-{{forloop.counter}}-{{q.pk}}" class="font-12 add-health-info pe-auto text-purple mt-5 hide"  data-toggle="modal" data-target="#modal-additional-info" data-placement="top" title="Additional health information if answer is yes" data-question="{{q.pk}}" data-member="{{member.pk}}"><i class="bi bi-plus-circle mr-1"></i> Additional Info.</a>
+<a id="add-info-{{forloop.counter}}-{{q.pk}}" class="font-12 add-health-info pe-auto text-purple mt-5 hide"  data-toggle="modal" data-target="#modal-additional-info" data-placement="top" title="Additional health information if answer is yes" data-question="{{q.pk}}" data-member="{{member.pk}}"><i class="bi bi-pencil-fill"></i> Additional Info.</a>
 
 </td>
 {% endfor %}
@@ -425,8 +454,9 @@ Please complete this form in BLOCK CAPITALS.
             
             
             </tbody>
-            <input id="current-member" type="hidden" data-member="" data-question="" value="" />
-            <input id="current-question" type="hidden" data-member="" data-question="" value="" />
+            <input id="current-member" type="hidden" value="" />
+            <input id="current-question" type="hidden" value="" />
+            <input id="next-question" type="hidden" value="" />
             <input id="deal-id" type="hidden" value="{{deal.pk}}" />
             <input id="maf-stage" type="hidden" value="applicant-details" />
 </table>
@@ -531,6 +561,12 @@ Please complete this form in BLOCK CAPITALS.
    
  // })
 
+ const stages = {
+  'applicants_details': 1,
+  'medical_details': 2,
+  'application_details': 3,
+ }
+
  function setInput(elem, value){
   let type = elem.attr('type')
   switch(type){
@@ -584,16 +620,21 @@ Please complete this form in BLOCK CAPITALS.
  }
 
   function displayCurrentQuestion(){
+    debugger
     if($('.nav-link-members.active').parent().next().find('.nav-link-members').length == 0)
           $('.nav-link-medical').click()
     let stage = $('.nav-link.active').data('name')
     debugger
     switch(true){
-      case stage.includes('medical'): $('.questions-table tr.current').addClass('saved')
-          $('.questions-table tr.current').addClass('hide')
-          $('.questions-table tr.current').next('tr').removeClass('hide')
-          $('.questions-table tr.current').next('tr').addClass('current')
-          $('.questions-table tr.saved').removeClass('current')
+      case stage.includes('medical'): 
+      let current = $('.questions-table tr.current')
+      let next = $('.questions-table tr.current').next('tr')
+          current.addClass('saved')
+          current.addClass('hide')
+          current.removeClass('current')
+          next.removeClass('hide')
+          next.addClass('current')
+         // $('.questions-table tr.saved').removeClass('current')
           console.log('medical')
           break;
       case stage.includes('applicant'): 
@@ -608,9 +649,12 @@ Please complete this form in BLOCK CAPITALS.
 
   function displayPreviousQuestion(){
           //$('.questions-table tr.current').addClass('saved')
-          $('.questions-table tr.current').addClass('hide')
-          $('.questions-table tr.current').prev('tr').removeClass('hide')
-          $('.questions-table tr.current').prev('tr').addClass('current')
+          let current = $('.questions-table tr.current')
+          let prev = $('.questions-table tr.current').prev('tr')
+          current.addClass('hide')          
+          prev.removeClass('hide')
+          prev.addClass('current')
+          current.removeClass('current')
           //$('.questions-table tr.saved').removeClass('current')
   }
 
@@ -622,11 +666,14 @@ Please complete this form in BLOCK CAPITALS.
       }).done(function(res) {
         
         console.log(res)
+        debugger
           //$( this ).addClass( "done" );
           j = JSON.stringify(res)
           j = JSON.parse(j)
-          if(j['saved'] == true)
-          setsavedMAF()
+          if(j['answer_json']['saved'] == true){
+              setsavedMAF()
+          }
+          
     });
   }
 
@@ -647,15 +694,19 @@ Please complete this form in BLOCK CAPITALS.
           // j = JSON.stringify(res)
           // j = JSON.parse(j)
           alert('posted')
-          saved_data['saved_question'] = $('#current-question').val()
+          // if(j['current_stage'] == 'medical_details'){
+          //   $('#questions-table')
+          // }
+          
           // $('.questions-table tr.current').addClass('saved')
           // $('.questions-table tr.current').addClass('hide')
           // $('.questions-table tr.current').next('tr').removeClass('hide')
           // $('.questions-table tr.current').next('tr').addClass('current')
           // $('.questions-table tr.saved').removeClass('current')
           console.log('hjgjgjgjgjhghgj')
-          
-          $('.edit-previous-btn').removeClass('hide')
+          let prev = $('.questions-table tr.current').prev('tr')
+          if(prev.length > 0)
+            $('.edit-previous-btn').removeClass('hide')
           saved_data = {}
     });
   }
@@ -669,11 +720,15 @@ Please complete this form in BLOCK CAPITALS.
   }
 
   function setsavedMAF(){    
-    for(let key in j){
+    for(let key in j['answer_json']){
       debugger
-      for(let m in j[key]){
-        for(let qk in j[key][m]){
-
+      
+      if(typeof(j['answer_json'][key]) == 'object')
+      for(let m in j['answer_json'][key]){
+    if(stages[key] > stages[j['answer_json']['current_stage']]) continue;
+        if(typeof(j['answer_json'][key]) == 'object')
+        for(let qk in j['answer_json'][key][m]){
+          
           if(key == 'applicants_details' || key == 'application_details'){
 
             let elem = $(`.applicant-answer[data-member=${m}][data-question='${qk}']`)
@@ -684,11 +739,12 @@ Please complete this form in BLOCK CAPITALS.
             let type = elem.attr('type')
             switch(type){
                 case 'radio': 
-                $(`.applicant-answer[data-member=${m}][data-question=${qk}][value=${j[key][m][qk]}]`).attr('checked', true)
+                if(j['answer_json'][key][m][qk])
+                $(`.applicant-answer[data-member=${m}][data-question=${qk}][value=${j['answer_json'][key][m][qk]}]`).attr('checked', true)
                 break;
                 case 'text': 
                 case undefined: 
-                elem.val(j[key][m][qk])
+                elem.val(j['answer_json'][key][m][qk])
                 break;
 
                 default:
@@ -698,32 +754,49 @@ Please complete this form in BLOCK CAPITALS.
           }
 
           else{
-        if(m != 'primary'){
+      //  if(m != 'primary'){
           
-          if(j[key][m][qk]['answer'] == true){
-              $(`.additional-member-answer[data-member=${key}][data-question=${qk}][value=true]`).attr('checked', 'checked')
-              $(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
+          if(j['answer_json'][key][m][qk]['answer'] == true){
+              $(`.member-answer[data-member=${m}][data-question=${qk}][value=true]`).attr('checked', 'checked')
+              $(`.add-health-info[data-member=${m}][data-question=${qk}]`).removeClass('hide')
           }
           else{
-              $(`.additional-member-answer[data-member=${qk}][data-question=${qk}][value=false]`).attr('checked', 'checked')
+              $(`.member-answer[data-member=${m}][data-question=${qk}][value=false]`).attr('checked', 'checked')
               //$(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
           }
-        }
-        else{
-          if(j[key][qk]['answer'] == true){
-              $(`.policy-holder-answer[data-member=${key}][data-question=${qk}][value=true]`).attr('checked', 'checked')
-              $(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
-          }
-          else{
-              $(`.policy-holder-answer[data-member=${key}][data-question=${qk}][value=false]`).attr('checked', 'checked')              
-          }
-        }
+        
+
+
+       // }
+       // else{
+          // if(j['answer_json'][key][m][qk]['answer'] == true){
+          //     $(`.policy-holder-answer[data-member=${key}][data-question=${qk}][value=true]`).attr('checked', 'checked')
+          //     $(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
+          // }
+          // else{
+          //     $(`.policy-holder-answer[data-member=${key}][data-question=${qk}][value=false]`).attr('checked', 'checked')              
+          // }
+       // }
       }
       }
     }
     }
   
-  displayCurrentQuestion()
+  
+      if(j['answer_json']['next_question']){
+          $('.questions-table tr.current').addClass('hide')
+          $('.questions-table tr.current').removeClass('current')
+          let current_question = j['answer_json']['next_question']
+          $(`#questions-table tr[data-question-id=${current_question}]`).removeClass('hide')
+          $(`#questions-table tr[data-question-id=${current_question}]`).addClass('current')
+          let prev = $('.questions-table tr.current').prev('tr')
+          if(prev.length > 0)
+          $('.edit-previous-btn').removeClass('hide')
+        }
+
+    //displayCurrentQuestion()
+
+
   }
 
   $(document).ready(function(){
@@ -735,13 +808,36 @@ Please complete this form in BLOCK CAPITALS.
   //setsavedMAF()
   });
 
-  $('.policy-holder-answer, .additional-member-answer').on('change', function(){
+  $('.policy-holder-answer, .member-answer').on('change', function(){
     debugger
+    let json = j['answer_json']
+    console.log(json)
+    let category = 'medical_details'
     let m = $(this).data('member')
     //let q = j['next-question'] ? j['next-question'] : $(this).data('question')
     let q = $(this).data('question')
+    let next_q = $(this).closest('tr').next('tr').data('question-id')
+    $('#current-question').val(q)
+    $('#next-question').val(next_q)
+    $('#current-member').val(m)
     let previous_q = j['next-question'] ? (parseInt(j['next-question']) - 1) : 0
+     j[category] = {}
     if(this.value == 'true'){
+      if(json['saved'] == true){
+       
+        // if(j[category] && j[category][m] && j[category][m][q]){
+        //     j[category][m][q] = true
+        // }
+        // else{
+          
+        // }
+          
+          json[category][m][q]['answer'] = true
+        }
+        else{
+          
+          json[category][m][q]['answer'] = true
+        }
       if($(this).closest('td').find('.add-health-info').closest('tr').find('.table-related-questions tr').length > 0)
         $(this).closest('td').find('.add-health-info').click()
       else{
@@ -749,46 +845,51 @@ Please complete this form in BLOCK CAPITALS.
           saved_data['primary'] = {}
         }
       }
+
+      $(`.add-health-info[data-member=${m}][data-question=${q}]`).removeClass('hide')
     }
     else{
-        if(m == 'primary'){
-        saved_data['primary'] = {}
-        if(j['saved'] == true){
-          if(j['next-question']){
-              //temp = j['primary']
-              saved_data['primary'][q] = j['primary'][previous_q]
-              for (let i in saved_data['primary'][q]){
-                if(i == 'rq'){
-                for(let k in saved_data['primary'][q]['rq']){
-                    saved_data['primary'][q]['rq'][k]['answer'] = ''
-          }
-        }
-}
-          }
-          else
-              saved_data['primary'] = j['primary']
+//         if(m == 'primary'){
+//         saved_data['primary'] = {}
+//         if(j['saved'] == true){
+//           if(j['next-question']){
+//               //temp = j['primary']
+//               saved_data['primary'][q] = j['primary'][previous_q]
+//               for (let i in saved_data['primary'][q]){
+//                 if(i == 'rq'){
+//                 for(let k in saved_data['primary'][q]['rq']){
+//                     saved_data['primary'][q]['rq'][k]['answer'] = ''
+//           }
+//         }
+// }
+//           }
+//           else
+//               saved_data['primary'] = j['primary']
           
-        }
-        else{
-          saved_data['primary'][q] = j[q]
-        }
+//         }
+//         else{
+//           saved_data['primary'][q] = j[q]
+//         }
         
-         saved_data['primary'][q]['answer'] = false
-    }
-    else{
-      saved_data[m] = {}
-      if(j['saved'] == true){
-        if(j['next-question'])
-              saved_data[m][q] = j[m][previous_q]
-          else
-              saved_data[m] = j[m]
-          //saved_data[m] = j[m]
-        }
-        else{
-        saved_data[m][q] = j[q]
-        }
-        saved_data[m][q]['answer'] = false
-    }
+//          saved_data['primary'][q]['answer'] = false
+//     }
+    //else{
+      //json[category][m] = {}
+      // if(j['saved'] == true){
+      //   if(j['next-question'])
+      //         saved_data[m][q] = j[m][previous_q]
+      //     else
+      //         saved_data[m] = j[m]
+      //     //saved_data[m] = j[m]
+      //   }
+      //   else{
+      //   saved_data[m][q] = j[q]
+      //   }
+        //saved_data[m][q]['answer'] = false
+        
+        json[category][m][q]['answer'] = false
+        $(`.add-health-info[data-member=${m}][data-question=${q}]`).addClass('hide')
+   // }
     }
   })
 
@@ -796,57 +897,72 @@ Please complete this form in BLOCK CAPITALS.
   $('.save-btn-related-questions').on('click', function(){
     let m = $('#current-member').val()
     let q = $('#current-question').val()
+    let category = $(this).data('question_category')
     //let q = $('#current-values').data('question')
     //$('.save-btn-related-questions').closest('.modal-content').find('.table-related-questions')
-    let answers = $('.save-btn-related-questions').closest('.modal-content').find('.modal-body tbody textarea')
+    let answers = $('.save-btn-related-questions').closest('.modal-content').find('.modal-body tbody textarea, .modal-body tbody input')
+    saved_data[category] = {}
+    let json = j['answer_json']
     debugger
-    if(m == 'primary'){
-        saved_data['primary'] = {}
-        if(j['saved'] == true){
-          saved_data['primary'] = j['primary']
-        }
-        else{
-          saved_data['primary'][q] = j[q]
-        }
-         saved_data['primary'][q]['answer'] = true    
+    //if(m == 'primary'){
+        json[category][m][q]['answer'] = true
+        // if(j[category]){
+        //   saved_data[category]['primary'] = j[category]['primary']
+        // }
+        // else{
+        //   saved_data[category]['primary'][q] = j[q]
+        // }
+         //saved_data[category]['primary'][q]['answer'] = true    
          answers.each(function(){
-          let t = $(this).data('question')
-          saved_data['primary'][q]['rq'][t]['answer'] = $(this).val()
+          let t = $(this).data('related-question')
+          json[category][m][q]['rq'][t] = $(this).val()
         })
         //current_answer['primary'][q] = saved_data['primary'][q]
-    }
-    else{
-        saved_data[m] = {}
-        if(j['saved'] == true){
-          saved_data[m] = j[m]
-        }
-        else{
-          saved_data[m][q] = j[q]
-        }
-        saved_data[m][q]['answer'] = true
-        answers.each(function(){
-          let t = $(this).data('question')
-          saved_data[m][q]['rq'][t]['answer'] = $(this).val()
-        })
+    //}
+    //else{
+        // saved_data[category][m] = {}
+        // if(j['saved'] == true){
+        //   saved_data[category][m] = j[m]
+        // }
+        // else{
+        //   saved_data[category][m][q] = j[q]
+        // }
+        // saved_data[category][m][q]['answer'] = true
+        // answers.each(function(){
+        //   let t = $(this).data('question')
+        //   saved_data[category][m][q]['rq'][t]['answer'] = $(this).val()
+        // })
         //current_answer[m][q] = saved_data[m][q]
-    }
+    //}
     
     $('#modal-additional-info').modal('hide')
     $('div.alert').removeClass('hide')
     $('div.alert').addClass('show')
     $('div.alert').html('Your answers have been saved')
-    saved_data['next-question'] = q + 1
+    json[category]['next-question'] = q + 1
   })
 
   $('.save-next-btn').on('click', function(){
     debugger
-      saveData()
+    if(j['answer_json']['current_stage'] == 'medical_details'){
+     j['answer_json']['saved_question'] = $(`#questions-table tr.current`).data('question-id')
+     j['answer_json']['next_question'] = $(`#questions-table tr.current`).next().data('question-id')
+          }
+      saveData(j['answer_json'])
+      displayCurrentQuestion()
+      let prev = $('.questions-table tr.current').prev('tr')
+      if(prev.length > 0)
+        $('.edit-previous-btn').removeClass('hide')
   })
 
    $('.save-next-btn-members').on('click', function(){
     debugger
     let dict = {}
     let m = $(this).data('member')
+    let category = $(this).data('category')
+    let next_member = $(this).closest('div.tab-pane').next().data('member')
+    if($(this).closest('div.tab-pane').next().length == 0)
+    next_member = false
     //let q = $(this).data('member')
     let answers = ''
     if(m == 'primary'){
@@ -858,27 +974,33 @@ Please complete this form in BLOCK CAPITALS.
       answers = $(`.applicant-answer[data-member=${m}]`)
     }
     // applicants_details = dict
-       
+    j['answer_json']['current_stage'] = category
+    j['answer_json']['current_member'] = next_member
     for(let k in answers){
       let q = $(answers[k]).data('question')
+      
       if(!answers[k]) continue;
       if(isNaN(k)) continue;
       if(q && answers[k].type == 'radio'){
         let q_name = $(answers[k]).attr('name')
-        let v = $(`input[name=${q_name}]:checked`).val()
-        dict[m][q] = v
+        let v = $(`input[data-member=${m}][data-question=${q}][name=${q_name}]:checked`).val()
+        //dict[m][q] = v
+        j['answer_json'][category][m][q] = v
       }
       else if(q && answers[k].type.includes('select')){
-        dict[m][q] = $(answers[k]).val()
+        //dict[m][q] = $(answers[k]).val()
+        j['answer_json'][category][m][q] = $(answers[k]).val()
       }
       else if(q && answers[k].type == 'text'){
-        dict[m][q] = $(answers[k]).val()
+        //dict[m][q] = $(answers[k]).val()
+        j['answer_json'][category][m][q] = $(answers[k]).val()
       }
         console.log(k)
     }
     applicants_details['applicants_details'] = dict
     
-    saveData(applicants_details)
+    //saveData(applicants_details)
+    saveData(j['answer_json'])
     displayCurrentQuestion()
     
   })
@@ -887,10 +1009,11 @@ Please complete this form in BLOCK CAPITALS.
 
   $('.edit-previous-btn').on('click', function(){
     debugger
+    
     displayPreviousQuestion()
-    for(let m in j){
-
-    }
+     let prev = $('.questions-table tr.current').prev('tr')
+      if(prev.length == 0)
+      $(this).addClass('hide')
   })
 
   $('.add-health-info').on('click', function(){
@@ -898,26 +1021,30 @@ Please complete this form in BLOCK CAPITALS.
     let member = $(this).data('member')
     let question = $(this).data('question')
     let previous_q = j['next-question'] ? parseInt(j['next-question']) - 1 : 0
+    let json = j['answer_json']
     $('#modal-additional-info').modal('show')
     let t = $(this).closest('tr').find('.question-text').html()
     $('#modal-additional-info .modal-title').html(t)
     $(this).closest('tr').find('.table-related-questions').removeClass('hide')
+    
     let rqt = $(this).closest('tr').find('.table-related-questions').html()
     $('.modal-body').html(rqt)
     $(this).closest('tr').find('.table-related-questions').addClass('hide')
     $('.modal-footer .save-btn-related-questions').attr('data-member', member)
     $('.modal-footer .save-btn-related-questions').attr('data-question', question)
+    $('.modal-footer .save-btn-related-questions').attr('data-question_category', 'medical_details')
     $('#current-member').val(member)
     $('#current-question').val(question)
-    if(j['saved'] == true){
+    if(json['saved'] == true){
       //let member_json = j['medical_questions'] && j['next-question'] ? j[member][previous_q]['rq'] : j[member][question]['rq']
       let member_json = j['medical_questions'] && j['medical_questions'][member] ? j['medical_questions'][member][question]['rq'] : ''
       let related_question_answers = $('.modal-body table tr .relative-question-answer')
       related_question_answers.each(function(elem){
            let rq = $(related_question_answers[elem]).data('related-question')
            //let q = $(related_question_answers[elem]).data('question')
-           let answer = member_json[rq]['answer']
+           let answer = json['medical_details'][member][question]['rq'][rq]
            $(related_question_answers[elem]).html(answer)
+           $(related_question_answers[elem]).val(answer)
       })
     }
     //$('#current-values').attr('data-question', question)
