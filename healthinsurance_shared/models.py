@@ -453,13 +453,18 @@ class Question(models.Model):
      help_text = models.TextField(blank=True)
      related_questions = models.ManyToManyField(RelatedQuestion, blank=True)
      priority = models.IntegerField(null=True, blank=True)
+     #selected_answer = models.CharField(max_length=600, blank=True, null=True)
      #linked_questions = models.ManyToManyField()
 
      def __str__(self):
           return self.text
      
      def getanswerList(self):
-            return self.answers.split(',') if self.answers else ''
+            arr = self.answers.split(',') if self.answers else ''
+            arr2 = []
+            for i in arr:
+                 arr2.append(i.strip())
+            return arr2
 
 
 

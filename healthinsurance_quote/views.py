@@ -7,7 +7,7 @@ from healthinsurance.models.quote import MAF, Quote, Order
 from healthinsurance.models.deal import Deal
 import logging
 import json
-import pymupdf
+#import pymupdf
 
 api_logger = logging.getLogger("api.amplitude")
 
@@ -25,7 +25,6 @@ form_stages = {
 
 def get_next_stage_integer(stage_str):
      try:
-        # if stage_str != 'medical_details':
         return form_stages_integer[form_stages[stage_str] + 1]
      except:
         return 'applicants_details'
@@ -46,11 +45,9 @@ def QuestionsForm(request, secretKey, id, str):
             quote = Quote.objects.filter(deal = d[0]) if d.exists() else ''
             quote_id = quote[0].id if quote.exists() else None
             deal = quote[0].deal if quote.exists() else None
-            # primary_member = deal.primary_member
             insurer = 'Cigna'
             order = Order.objects.filter(deal = d[0]) if d.exists() else None
             provider = order[0].selected_plan.plan.insurer if order.exists() else None
-            # provider = Insurer.objects.filter(name__icontains = 'Cigna')
             questions = ''
             applicant_questions = ''
             arr = {}
@@ -59,10 +56,6 @@ def QuestionsForm(request, secretKey, id, str):
                  members.append(m.pk)
             if provider:
                     medical_questions = Question.objects.filter(insurers = provider, categories__category__name='Medical')
-                    # for q in questions:
-                    #      if q.answers:
-                    #         a = q.answers.split(',')
-                    #         q.answers = a
                     applicant_questions = Question.objects.filter(insurers = provider, categories__name='Applicant Details').order_by('priority')
                     application_questions = Question.objects.filter(insurers = provider, categories__name='Application Details')
                     if quote.exists():
@@ -75,25 +68,9 @@ def QuestionsForm(request, secretKey, id, str):
                             for key,value in arr.items():
                                 if not isinstance(value, dict):
                                     continue
-                                # for key, value in arr[k]:
-                                #      count = count + 1
-                                # stages.remove(key)
-                                # if len(arr[key]) < len(members):
-                                #      current_stage = key
-                                # else:
-                                #      current_stage = stages[0]
+                                
                             if current_stage == 'applicants_details':
-                                 current_member = int(arr['current_member'])
-                            #     for k,v in arr[current_stage].items():
-                            #         members.remove(k)
-                            #     current_member = members[0]
-                            # else:
-                            #     current_member = 'primary'
-                                      
-                                     
-
-                                
-                                
+                                 current_member = int(arr['current_member'])         
                                      
                         else:   
                                 current_stage = 'applicants_details'
@@ -107,7 +84,7 @@ def QuestionsForm(request, secretKey, id, str):
                                     rq_arr = []
                                     for rq in q.related_questions.all():                                
                                         rq_dict = {}
-                                    #j['rq']['']
+                                    
                                         for qn in rq.qna.all():
                                             #j[q.pk][rq.pk][qn.pk] = []
                                             rq_dict['rqid'] = qn.pk
@@ -120,9 +97,7 @@ def QuestionsForm(request, secretKey, id, str):
                                         j['rq'] = rq_arr
                                     arr[q.pk] = j
                                 arr['saved'] = False
-                            #arr.append(j)
-                            # else:
-                            #     print('questions' + questions)
+                            
                         
                         context = {
                             'medical_questions' : medical_questions,
@@ -139,8 +114,6 @@ def QuestionsForm(request, secretKey, id, str):
                          pass
             else:
                  return redirect('/health-insurance-quote/{}/{}'.format(secretKey,id))
-
-                 #return JsonResponse({'success':False, 'message': 'Provider does not exists'})
     
     except Exception as e:
             api_logger.error('Error in MAF form {}'.format(e))
@@ -320,13 +293,13 @@ def DocumentPDF(quote_id):
         applicant_details = j['applicant_details']
         medical_details = j['medical_details']
         application_details = j['application_details']
-        doc=pymupdf.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
+        #doc=pymupdf.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
         p = 0
         w = 0
-        for page in doc:
-            print(page)
-            for w in page.widgets():
-                print('{} -- {} -- {} -- {} -- {} -- {}'.format(w.field_name, w.field_label, w.field_type_string, w.field_value, w.choice_values ,w.button_states()))
+        # for page in doc:
+        #     print(page)
+        #     for w in page.widgets():
+        #         print('{} -- {} -- {} -- {} -- {} -- {}'.format(w.field_name, w.field_label, w.field_type_string, w.field_value, w.choice_values ,w.button_states()))
      
         return HttpResponse('pdf')
      
