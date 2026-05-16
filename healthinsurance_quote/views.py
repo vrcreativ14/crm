@@ -153,9 +153,9 @@ def MafApi(request, id):
                     answer_json['applicants_details'] = {}
                     answer_json['medical_details'] = {}
                     answer_json['application_details'] = {}
-                    medical_questions = Question.objects.filter(insurers = provider, categories__category__name='Medical')
-                    applicant_questions = Question.objects.filter(insurers = provider, categories__name='Applicant Details').order_by('priority')
-                    application_questions = Question.objects.filter(insurers = provider, categories__name='Application Details')
+                    medical_questions = Question.objects.filter(insurers = provider, categories__category__name__icontains='medical')
+                    applicant_questions = Question.objects.filter(insurers = provider, categories__name__icontains='applicant details').order_by('priority')
+                    application_questions = Question.objects.filter(insurers = provider, categories__name__icontains='application details')
 
                     answer_json['applicants_details']['primary'] = {}
                     for q in applicant_questions:
