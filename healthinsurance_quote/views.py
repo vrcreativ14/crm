@@ -182,7 +182,7 @@ def MafApi(request, id):
                     for member in deal.primary_member.additional_members.all():
                         answer_json['applicants_details'][member.pk] = {}
                         for q in applicant_questions:                            
-                            answer_json['applicants_details'][member.pk][q.text] = ''
+                            answer_json['applicants_details'][member.pk][q.pk] = ''
                             for rq in q.related_questions.all():
                                  answer_json['applicants_details'][member.pk][q.pk] = {'rq':{rq.pk:''}}
                                  
