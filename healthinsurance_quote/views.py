@@ -161,7 +161,7 @@ def MafApi(request, id):
                     for q in applicant_questions:
                             answer_json['applicants_details']['primary'][q.text] = ''
                             for rq in q.related_questions.all():
-                                 answer_json['applicants_details']['primary'][q.pk] = {'rq':{rq.pk:''}}
+                                 answer_json['applicants_details']['primary'][q.text] = {'rq':{rq.pk:''}}
                                  answer_json['applicants_details']['primary'][q.text]['rq'][rq.pk]['answer'] = ''
                         
                     answer_json['medical_details']['primary'] = {}
