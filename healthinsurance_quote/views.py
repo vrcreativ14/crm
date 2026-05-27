@@ -7,7 +7,7 @@ from healthinsurance.models.quote import MAF, Quote, Order
 from healthinsurance.models.deal import Deal
 import logging
 import json
-import pymupdf
+import fitz
 
 api_logger = logging.getLogger("api.amplitude")
 
