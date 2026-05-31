@@ -8,7 +8,7 @@ from healthinsurance.models.deal import Deal
 import logging
 import json
 import fitz
-import requests
+# import requests
 
 api_logger = logging.getLogger("api.amplitude")
 
@@ -302,9 +302,9 @@ def DocumentPDF(request, id):
         doc = provider.maf if provider else None
         
         # doc=fitz.open("C:/Users/asus/Downloads/CIGNA MEDICAL APPLICATION FORM.pdf")
-        r = requests.get(doc.path)
-        data = r.content
-        doc = fitz.Document(stream=data)
+        # r = requests.get(doc.path)
+        # data = r.content
+        # doc = fitz.Document(stream=data)
         # j = maf[0].qna_json
         # applicant_details = j['applicants_details']
         # medical_details = j['medical_details']
