@@ -8,6 +8,7 @@ from healthinsurance.models.deal import Deal
 import logging
 import json
 import fitz
+import requests
 
 api_logger = logging.getLogger("api.amplitude")
 
@@ -283,25 +284,41 @@ def MafApi(request, id):
         return JsonResponse({'success': False, 'message': 'Could not get/post data for this MAF'})
 
 
-def DocumentPDF(quote_id):
-     quote = Quote.objects.filter(pk = quote_id)
-     maf = MAF.objects.filter(quote = quote[0]) if quote.exists() else None
-     maf = maf[0] if maf.exists() else None
-     if maf and quote:
-     #  doc=pymupdf.open("C:/Users/asus/Downloads/CIGNA MEDICAL APPLICATION FORM.pdf")
-        j = maf.qna_json
-        applicant_details = j['applicant_details']
-        medical_details = j['medical_details']
-        application_details = j['application_details']
-        #doc=pymupdf.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
+def DocumentPDF(request, id):
+    #  quote = Quote.objects.filter(pk = id)
+    #  maf = MAF.objects.filter(quote = quote[0]) if quote.exists() else None
+    #  maf = maf[0] if maf.exists() else None
+    d = Deal.objects.filter(pk = int(id))
+    deal = d[0] if d.exists() else None 
+    quote = Quote.objects.filter(deal = deal) if deal else None
+    quote = quote[0] if quote.exists() else None
+        # deal = quote.deal if quote else None
+    arr = {}
+    answer_json = {}
+    maf = MAF.objects.filter(quote = quote) if quote else None
+    if maf and quote:
+        order = Order.objects.filter(deal = deal) if deal else None
+        provider = order[0].selected_plan.plan.insurer if order.exists() else None
+        doc = provider.maf if provider else None
+        
+        # doc=fitz.open("C:/Users/asus/Downloads/CIGNA MEDICAL APPLICATION FORM.pdf")
+        r = requests.get(doc.path)
+        data = r.content
+        doc = fitz.Document(stream=data)
+        # j = maf[0].qna_json
+        # applicant_details = j['applicants_details']
+        # medical_details = j['medical_details']
+        # application_details = j['application_details']
+        
+        # doc=fitz.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
         p = 0
         w = 0
-        # for page in doc:
-        #     print(page)
-        #     for w in page.widgets():
-        #         print('{} -- {} -- {} -- {} -- {} -- {}'.format(w.field_name, w.field_label, w.field_type_string, w.field_value, w.choice_values ,w.button_states()))
+        for page in doc:
+            print(page)
+            for w in page.widgets():
+                print('{} -- {} -- {} -- {} -- {} -- {}'.format(w.field_name, w.field_label, w.field_type_string, w.field_value, w.choice_values ,w.button_states()))
      
         return HttpResponse('pdf')
      
-     else:
+    else:
           return "Quote doesn't exists"
