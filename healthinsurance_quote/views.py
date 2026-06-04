@@ -7,7 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 from healthinsurance.models.quote import MAF, Quote, Order
 from healthinsurance.models.deal import Deal
 from io import BytesIO
-from azure.storage.blob import BlobServiceClient
 import logging
 import json
 import fitz
@@ -291,9 +290,6 @@ def MafApi(request, id):
 
 
 def DocumentPDF(request, id):
-    #  quote = Quote.objects.filter(pk = id)
-    #  maf = MAF.objects.filter(quote = quote[0]) if quote.exists() else None
-    #  maf = maf[0] if maf.exists() else None
     d = Deal.objects.filter(pk = id)
     deal = d[0] if d.exists() else None 
     quote = Quote.objects.filter(deal = deal) if deal else None
@@ -305,37 +301,29 @@ def DocumentPDF(request, id):
     if maf and quote:
         order = Order.objects.filter(deal = deal) if deal else None
         provider = order[0].selected_plan.plan.insurer if order.exists() else None
-        doc = provider.maf if provider else None
-        # pdf_document = fitz.open(doc.name)
-        # doc=fitz.open("C:/Users/asus/Downloads/CIGNA MEDICAL APPLICATION FORM.pdf")
-        # r = requests.get('https://nexusbrokersprdsac01.blob.core.windows.net/container-private/health_insurance_plan_/8-cigna/2022-11-17_28e4ebc33f764d848c1dc3b22bf3a720_App.pdf?se=2026-06-01T18%3A34%3A23Z&sp=r&sv=2018-03-28&sr=b&sig=I4ahza/eysLEcrctceyWjPdZvF48eV1duVMZNVvHW7A%3D')
-        # data = r.content
-        # doc = fitz.Document(stream=data)
-        # j = maf[0].qna_json
-        # applicant_details = j['applicants_details']
-        # medical_details = j['medical_details']
-        # application_details = j['application_details']
-        
-        # doc=fitz.open("C:/Users/asus/proj/nexus/CIGNA_MEDICAL_APPLICATION_FORM____.pdf")
-        blob_name = 'abc.pdf'
-        blob_service_client = BlobServiceClient.from_connection_string(settings.AZURE_STORAGE_KEY)
-        blob_client = blob_service_client.get_blob_client(container="test", blob=doc.name)
-        pdf_bytes = blob_client.download_blob().content_as_bytes()
-        doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-        print('connected')
+        pdf_document = fitz.open('{}_maf.pdf'.format(provider.name.lower()))
+        j = maf[0].qna_json
+        applicant_details = j['applicants_details']
+        medical_details = j['medical_details']
+        application_details = j['application_details']
         p = 0
         w = 0
-        for page in doc:
+        for page in pdf_document:
             print(page)
             for w in page.widgets():
                 print('{} -- {} -- {} -- {} -- {} -- {}'.format(w.field_name, w.field_label, w.field_type_string, w.field_value, w.choice_values ,w.button_states()))
-                w.field_value = 'Diplomat'
+                w.field_value = applicant_details.get(w.field_name.split(':')[0])
                 w.update()
             
-        doc.save('filled')
-     
-        # return HttpResponse('pdf')
-        return FileResponse(doc, as_attachment=True, filename='abc.pdf')
+        pdf_document.save('filled')
+        output_buffer = BytesIO()
+        pdf_document.save(output_buffer)
+        pdf_bytes = output_buffer.getvalue()
+        pdf_document.close()
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="' + 'abc.pdf' + '"'
+        return response
+        # return FileResponse(pdf_document, as_attachment=True, filename='abc.pdf')
      
     else:
           return "Quote doesn't exists"
