@@ -12,20 +12,20 @@ Please complete this form in BLOCK CAPITALS.
   Your answers have been saved
 </div> -->
 
-<div class="" style="width: 100%;">
+<div class="stages" style="width: 100%;">
     <ul class="nav nav-underline nav-pills nav-fill">
   <li class="nav-item">
-    <a aria-current="page" href="#members" data-name="applicants-details" {% if current_stage == 'applicants_details' %} class="nav-link nav-heading nav-link-applicants active" {% else %} class="nav-link nav-heading nav-link-applicants" {% endif %}>Applicant Details</a>
+    <a aria-current="page" href="#members" data-name="applicants_details" {% if current_stage == 'applicants_details' %} class="nav-link nav-heading nav-link-applicants active" {% else %} class="nav-link nav-heading nav-link-applicants" {% endif %}>Applicant Details</a>
   </li>
   
   <li class="nav-item">
-    <a href="#details" data-name="medical-details" class="nav-link nav-heading nav-link-medical {% if current_stage == 'medical_details' %} active" {% else %} " {% endif %}>Medical History</a>
+    <a href="#details" data-name="medical_details" class="nav-link nav-heading nav-link-medical {% if current_stage == 'medical_details' %} active" {% else %} " {% endif %}>Medical History</a>
   </li>
   <!-- <li class="nav-item">
     <a class="nav-link" href="#details">Medical History</a>
   </li> -->
   <li class="nav-item">
-    <a href="#application" data-name="application-details" class="nav-link nav-heading nav-link-application {% if current_stage == 'application_details' %} active" {% else %} " {% endif %}>Application Details</a>
+    <a href="#application" data-name="application_details" class="nav-link nav-heading nav-link-application {% if current_stage == 'application_details' %} active" {% else %} " {% endif %}>Application Details</a>
   </li>
 </ul>
 </div>
@@ -63,7 +63,7 @@ Please complete this form in BLOCK CAPITALS.
           
               <div class="row mb-3">
           {% for aq in applicant_questions %}
-          <div class="form-group col-md-4 mb-4">
+          <div class="form-group col-md-4 mb-4 column">
             
             <label class="form-check-label label question-text">{{aq}} </label>
             {% if aq.answer_form == 'radio' %}
@@ -117,6 +117,7 @@ Please complete this form in BLOCK CAPITALS.
 
              <br/>
 
+             <div class="related-question hide">
              {% for rq in aq.related_questions.all %}
         <label class="form-check-label label">{{rq}}</label> <br/>
         {% if rq.answer_form == 'radio' %}
@@ -171,6 +172,7 @@ Please complete this form in BLOCK CAPITALS.
         {% endfor %}
        
       </div>
+      </div>
           {% endfor %}
           </div>
 
@@ -181,7 +183,6 @@ Please complete this form in BLOCK CAPITALS.
         </div>
 
          {% for member in deal.primary_member.additional_members.all  %}
-
           
           <div id="member{{member.pk}}" {% if current_member == member.pk %} class="tab-pane tab-subheading active" {% else %} class="tab-pane tab-subheading" {% endif %} role="tabpanel" aria-labelledby="member{{member.pk}}" data-member="{{member.pk}}">
             <hr/>
@@ -189,7 +190,7 @@ Please complete this form in BLOCK CAPITALS.
               <hr/>
             <div class="row mb-3">
           {% for aq in applicant_questions %}
-          <div class="form-group col-md-4 mb-4">
+          <div class="form-group col-md-4 mb-4 column">
             <label class="form-check-label label question-text">{{aq}}</label>
             {% if aq.answer_form == 'radio' %}
             {% for an in aq.getanswerList %}
@@ -215,6 +216,26 @@ Please complete this form in BLOCK CAPITALS.
             <!-- {% include "frontendHealthinsuranceQuote/components/calendar.html" with class="applicant-answer" dataquestion="{{aq}}"  datamember="{{member.pk}}" %} -->
              <input type="text" class="datepicker applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}" name="dob" data-date-format="dd/mm/yyyy" data-language='en' placeholder="Select Date" />
         </div>
+
+{% elif aq.answer_form == 'boolean' %}
+
+            <div class="form-check form-check-inline ml-2">
+  <input class="form-check-input member-answer" type="radio" name="{{aq.pk}}" value=true  data-member="{{member.pk}}" data-question="{{aq.pk}}" />   
+  
+  <label class="label form-check-label" for="no_policyholder_q_{{forloop.counter}}">
+    <!-- {% if k == 'primary' %}{{ v.q.pk|stringformat:"i" }}{% endif %} -->
+     <!-- {% if k == q.pk|stringformat:"i" and v.answer == 'false' and json.saved == 'true' %} checked {% endif %} -->
+     Yes
+  </label>
+</div>
+<div class="form-check form-check-inline ml-2">
+  <input class="form-check-input member-answer" type="radio" name="{{aq.pk}}" value=false id="" data-member="{{member.pk}}" data-question="{{aq.pk}}" />   
+  <label class="label form-check-label" for="yes_policyholder_q_{{forloop.counter}}">
+    No
+  </label>
+</div>
+
+
             {% else %}
                 <input class="form-control applicant-answer" data-member="{{member.pk}}" data-question="{{aq}}"
                 {% if aq.help_text %}
@@ -225,7 +246,7 @@ Please complete this form in BLOCK CAPITALS.
              {% endif %}
 
 <br/>
-
+          <div class="related-question hide">
              {% for rq in aq.related_questions.all %}
         <label class="form-check-label label">{{rq}}</label> <br/>
         {% if rq.answer_form == 'radio' %}
@@ -278,10 +299,9 @@ Please complete this form in BLOCK CAPITALS.
              {% endif %}
         {% endfor %}
         </div>
+        </div>
 
 
-        
-        
           {% endfor %}
           </div>
 
@@ -619,7 +639,7 @@ Please complete this form in BLOCK CAPITALS.
   }
  }
 
-  function displayCurrentQuestion(){
+  function displayCurrentQuestion(showNextQuestion = false){
     debugger
     if($('.nav-link-members.active').parent().next().find('.nav-link-members').length == 0)
           $('.nav-link-medical').click()
@@ -632,11 +652,15 @@ Please complete this form in BLOCK CAPITALS.
       if(next.length == 0){
         window.location.reload()
       }
+      if(current.prev().length != 0 || showNextQuestion){
+       
           current.addClass('saved')
           current.addClass('hide')
           current.removeClass('current')
           next.removeClass('hide')
           next.addClass('current')
+           if(next.children().length == 0) displayCurrentQuestion(true)
+      }
          // $('.questions-table tr.saved').removeClass('current')
           console.log('medical')
           break;
@@ -673,7 +697,7 @@ Please complete this form in BLOCK CAPITALS.
           //$( this ).addClass( "done" );
           j = JSON.stringify(res)
           j = JSON.parse(j)
-          if(j['answer_json']['saved'] == true){
+          if(j['answer_json'] && j['answer_json']['saved'] == true){
               setsavedMAF()
           }
           
@@ -743,7 +767,7 @@ Please complete this form in BLOCK CAPITALS.
             switch(type){
                 case 'radio': 
                 if(j['answer_json'][key][m][qk])
-                $(`.applicant-answer[data-member=${m}][data-question=${qk}][value=${j['answer_json'][key][m][qk]}]`).attr('checked', true)
+                $(`.applicant-answer[data-member=${m}][data-question='${qk}'][value='${j['answer_json'][key][m][qk]}']`).attr('checked', true)
                 break;
                 case 'text': 
                 case undefined: 
@@ -761,10 +785,10 @@ Please complete this form in BLOCK CAPITALS.
           
           if(j['answer_json'][key][m][qk]['answer'] == true){
               $(`.member-answer[data-member=${m}][data-question=${qk}][value=true]`).attr('checked', 'checked')
-              $(`.add-health-info[data-member=${m}][data-question=${qk}]`).removeClass('hide')
+              $(`.add-health-info[data-member=${m}][data-question='${qk}']`).removeClass('hide')
           }
           else{
-              $(`.member-answer[data-member=${m}][data-question=${qk}][value=false]`).attr('checked', 'checked')
+              $(`.member-answer[data-member=${m}][data-question='${qk}'][value=false]`).attr('checked', 'checked')
               //$(`.add-health-info[data-member=${key}][data-question=${qk}]`).removeClass('hide')
           }
         
@@ -787,12 +811,14 @@ Please complete this form in BLOCK CAPITALS.
   
   
       if(j['answer_json']['next_question']){
+        let prev = $('.questions-table tr.current').prev('tr')
+        if(prev.length == 0) return;
           $('.questions-table tr.current').addClass('hide')
           $('.questions-table tr.current').removeClass('current')
           let current_question = j['answer_json']['next_question']
           $(`#questions-table tr[data-question-id=${current_question}]`).removeClass('hide')
           $(`#questions-table tr[data-question-id=${current_question}]`).addClass('current')
-          let prev = $('.questions-table tr.current').prev('tr')
+          
           if(prev.length > 0)
           $('.edit-previous-btn').removeClass('hide')
         }
@@ -815,7 +841,7 @@ Please complete this form in BLOCK CAPITALS.
     debugger
     let json = j['answer_json']
     console.log(json)
-    let category = 'medical_details'
+    let category = $('div.stages li a.active').data('name')
     let m = $(this).data('member')
     //let q = j['next-question'] ? j['next-question'] : $(this).data('question')
     let q = $(this).data('question')
@@ -825,8 +851,10 @@ Please complete this form in BLOCK CAPITALS.
     $('#current-member').val(m)
     let previous_q = j['next-question'] ? (parseInt(j['next-question']) - 1) : 0
      j[category] = {}
+
+     
     if(this.value == 'true'){
-      if(json['saved'] == true){
+      if(json[category][m][q]){
        
         // if(j[category] && j[category][m] && j[category][m][q]){
         //     j[category][m][q] = true
@@ -837,19 +865,23 @@ Please complete this form in BLOCK CAPITALS.
           
           json[category][m][q]['answer'] = true
         }
-        else{
+        // else{
           
-          json[category][m][q]['answer'] = true
-        }
+        //   json[category][m][q]['answer'] = true
+        // }
       if($(this).closest('td').find('.add-health-info').closest('tr').find('.table-related-questions tr').length > 0)
         $(this).closest('td').find('.add-health-info').click()
+
+      if($(this).closest('div.column').find('div.related-question').length>0)
+        $(this).closest('div.column').find('div.related-question').removeClass('hide')
+
       else{
         if(m == 'primary'){
           saved_data['primary'] = {}
         }
       }
 
-      $(`.add-health-info[data-member=${m}][data-question=${q}]`).removeClass('hide')
+      $(`.add-health-info[data-member=${m}][data-question='${q}]'`).removeClass('hide')
     }
     else{
 //         if(m == 'primary'){
@@ -891,7 +923,10 @@ Please complete this form in BLOCK CAPITALS.
         //saved_data[m][q]['answer'] = false
         
         json[category][m][q]['answer'] = false
-        $(`.add-health-info[data-member=${m}][data-question=${q}]`).addClass('hide')
+        if($(`.add-health-info[data-member=${m}][data-question='${q}']`).length != 0)
+        $(`.add-health-info[data-member=${m}][data-question='${q}']`).addClass('hide')
+        if($(this).closest('div.column').find('div.related-question').length>0)
+          $(this).closest('div.column').find('div.related-question').addClass('hide')
    // }
     }
   })
@@ -948,12 +983,14 @@ Please complete this form in BLOCK CAPITALS.
   $('.save-next-btn').on('click', function(){
     debugger
     let prev = $('.questions-table tr.current').prev('tr')
+    let next = $('.questions-table tr.current').next('tr')
     if(j['answer_json']['current_stage'] == 'medical_details'){
      j['answer_json']['saved_question'] = $(`#questions-table tr.current`).data('question-id')
      j['answer_json']['next_question'] = $(`#questions-table tr.current`).next().data('question-id')
     }
       saveData(j['answer_json'])
-      displayCurrentQuestion()
+      displayCurrentQuestion(true)
+     
       if(prev.length > 0)
         $('.edit-previous-btn').removeClass('hide')
   })
@@ -986,7 +1023,7 @@ Please complete this form in BLOCK CAPITALS.
       if(isNaN(k)) continue;
       if(q && answers[k].type == 'radio'){
         let q_name = $(answers[k]).attr('name')
-        let v = $(`input[data-member=${m}][data-question=${q}][name=${q_name}]:checked`).val()
+        let v = $(`input[data-member=${m}][data-question='${q}'][name=${q_name}]:checked`).val()
         //dict[m][q] = v
         j['answer_json'][category][m][q] = v
       }
