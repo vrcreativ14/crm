@@ -64,7 +64,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
             if deal.primary_member and deal.primary_member.visa != EMIRATE_ABU_DHABI:
                 return 'NBInd.medical@nexusadvice.com'
             elif deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-                return 'auhpls.hotline@nexusadvice.com'
+                return 'AUHmedical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
@@ -468,7 +468,7 @@ class HandleEmailContent(LoginRequiredMixin, PermissionRequiredMixin, DetailView
         if deal.user and deal.user.email:
             bcc_emails.append(deal.user.email)
         if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-            bcc_emails.append('auhpls.hotline@nexusadvice.com')
+            bcc_emails.append('AUHmedical@nexusadvice.com')
         else:
             bcc_emails.append(self._get_email_address_for_deal(deal))
 
@@ -538,7 +538,7 @@ class StageEmailNotification(AuditTrailMixin):
             if deal.primary_member and deal.primary_member.visa != EMIRATE_ABU_DHABI:
                 return 'NBInd.medical@nexusadvice.com'
             elif deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-                return 'auhpls.hotline@nexusadvice.com'
+                return 'AUHmedical@nexusadvice.com'
             else:
                 return 'ind.medical@nexusadvice.com'
         elif (deal.deal_type == DEAL_TYPE_RENEWAL and 
