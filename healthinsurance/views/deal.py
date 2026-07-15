@@ -341,7 +341,7 @@ class NewHealthDeal(View):
                         cc_email.append(deal.referrer.email)
                     #bcc_email.append('ind.medical@nexusadvice.com')
                     if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-                        notification_email = 'auhpls.hotline@nexusadvice.com'
+                        notification_email = 'AUHmedical@nexusadvice.com'
                         bcc_email.append(notification_email)
                     else:
                         notification_email = get_email_address_for_deal(deal)
@@ -1557,7 +1557,7 @@ class StageProcessView(View):
         if deal.referrer and deal.referrer.email:
             cc_email.append(deal.referrer.email)
         if deal.primary_member and deal.primary_member.visa == EMIRATE_ABU_DHABI:
-            notification_email = 'auhpls.hotline@nexusadvice.com'
+            notification_email = 'AUHmedical@nexusadvice.com'
             bcc_email.append(notification_email)
         else:
             notification_email = get_email_address_for_deal(deal)
